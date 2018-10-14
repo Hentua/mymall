@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.modules.member.dao.MemberInfoDao">
+    
+	<sql id="memberInfoColumns">
+		a.id AS "id",
+		a.referee AS "referee",
+		a.referee_id AS "refereeId",
+		a.balance AS "balance",
+		a.avatar AS "avatar",
+		a.create_date AS "createDate",
+		a.update_date AS "updateDate",
+		a.register_way AS "registerWay",
+		a.update_by AS "updateBy.id",
+		a.create_by AS "createBy.id",
+		a.del_flag AS "delFlag",
+		a.nickname AS "nickname",
+		a.sex AS "sex"
+	</sql>
+	
+	<sql id="memberInfoJoins">
+	</sql>
+    
+	<select id="get" resultType="MemberInfo">
+		SELECT 
+			<include refid="memberInfoColumns"/>
+		FROM member_info a
+		left join sys_user u on u.id = a.id
+		<include refid="memberInfoJoins"/>
+		<where>
+			<if test="id != null and id != ''">
+				a.id = #{id}
+			</if>
+			<if test="referee != null and referee != ''">
+				(a.referee = #{referee} or u.login_name = #{referee})
+			</if>
+			<if test="mobile != null and mobile != ''">
+				u.login_name = #{mobile}
+			</if>
+		</where>
+	</select>
+	
+	<select id="findList" resultType="MemberInfo">
+		SELECT 
+			<include refid="memberInfoColumns"/>
+		FROM member_info a
+		<include refid="memberInfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="MemberInfo">
+		SELECT 
+			<include refid="memberInfoColumns"/>
+		FROM member_info a
+		<include refid="memberInfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO member_info(
+			id,
+			referee,
+			referee_id,
+			balance,
+			avatar,
+			create_date,
+			update_date,
+			register_way,
+			update_by,
+			create_by,
+			del_flag,
+			nickname,
+			sex
+		) VALUES (
+			#{id},
+			#{referee},
+			#{refereeId},
+			#{balance},
+			#{avatar},
+			#{createDate},
+			#{updateDate},
+			#{registerWay},
+			#{updateBy.id},
+			#{createBy.id},
+			#{delFlag},
+			#{nickname},
+			#{sex}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE member_info SET 	
+			referee = #{referee},
+			referee_id = #{refereeId},
+			balance = #{balance},
+			avatar = #{avatar},
+			update_date = #{updateDate},
+			register_way = #{registerWay},
+			update_by = #{updateBy.id},
+			nickname = #{nickname},
+			sex = #{sex}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE member_info SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

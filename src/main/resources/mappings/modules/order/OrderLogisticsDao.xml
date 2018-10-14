@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.modules.order.dao.OrderLogisticsDao">
+    
+	<sql id="orderLogisticsColumns">
+		a.id AS "id",
+		a.order_no AS "orderNo",
+		a.express_no AS "expressNo",
+		a.consignee_realname AS "consigneeRealname",
+		a.consignee_telphone AS "consigneeTelphone",
+		a.consignee_telphone_backup AS "consigneeTelphoneBackup",
+		a.consignee_address AS "consigneeAddress",
+		a.consignee_zip AS "consigneeZip",
+		a.logistics_type AS "logisticsType",
+		a.logistics_id AS "logisticsId",
+		a.logistics_fee AS "logisticsFee",
+		a.agency_fee AS "agencyFee",
+		a.delivery_amount AS "deliveryAmount",
+		a.orderlogistics_status AS "orderlogisticsStatus",
+		a.logistics_settlement_status AS "logisticsSettlementStatus",
+		a.logistics_result_last AS "logisticsResultLast",
+		a.logistics_result AS "logisticsResult",
+		a.logistics_create_time AS "logisticsCreateTime",
+		a.logistics_update_time AS "logisticsUpdateTime",
+		a.logistics_settlement_time AS "logisticsSettlementTime",
+		a.logistics_pay_channel AS "logisticsPayChannel",
+		a.logistics_pay_no AS "logisticsPayNo",
+		a.reconciliation_status AS "reconciliationStatus",
+		a.reconciliation_time AS "reconciliationTime"
+	</sql>
+	
+	<sql id="orderLogisticsJoins">
+		LEFT JOIN order_info b ON b.id = a.order_no
+	</sql>
+    
+	<select id="get" resultType="OrderLogistics">
+		SELECT 
+			<include refid="orderLogisticsColumns"/>
+		FROM order_logistics a
+		<include refid="orderLogisticsJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="OrderLogistics">
+		SELECT 
+			<include refid="orderLogisticsColumns"/>
+		FROM order_logistics a
+		<include refid="orderLogisticsJoins"/>
+		<where>
+			
+			<if test="orderNo != null and orderNo != ''">
+				AND a.order_no = #{orderNo}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="OrderLogistics">
+		SELECT 
+			<include refid="orderLogisticsColumns"/>
+		FROM order_logistics a
+		<include refid="orderLogisticsJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO order_logistics(
+			id,
+			order_no,
+			express_no,
+			consignee_realname,
+			consignee_telphone,
+			consignee_telphone_backup,
+			consignee_address,
+			consignee_zip,
+			logistics_type,
+			logistics_id,
+			logistics_fee,
+			agency_fee,
+			delivery_amount,
+			orderlogistics_status,
+			logistics_settlement_status,
+			logistics_result_last,
+			logistics_result,
+			logistics_create_time,
+			logistics_update_time,
+			logistics_settlement_time,
+			logistics_pay_channel,
+			logistics_pay_no,
+			reconciliation_status,
+			reconciliation_time
+		) VALUES (
+			#{id},
+			#{orderNo},
+			#{expressNo},
+			#{consigneeRealname},
+			#{consigneeTelphone},
+			#{consigneeTelphoneBackup},
+			#{consigneeAddress},
+			#{consigneeZip},
+			#{logisticsType},
+			#{logisticsId},
+			#{logisticsFee},
+			#{agencyFee},
+			#{deliveryAmount},
+			#{orderlogisticsStatus},
+			#{logisticsSettlementStatus},
+			#{logisticsResultLast},
+			#{logisticsResult},
+			#{logisticsCreateTime},
+			#{logisticsUpdateTime},
+			#{logisticsSettlementTime},
+			#{logisticsPayChannel},
+			#{logisticsPayNo},
+			#{reconciliationStatus},
+			#{reconciliationTime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE order_logistics SET 	
+			order_no = #{orderNo},
+			express_no = #{expressNo},
+			consignee_realname = #{consigneeRealname},
+			consignee_telphone = #{consigneeTelphone},
+			consignee_telphone_backup = #{consigneeTelphoneBackup},
+			consignee_address = #{consigneeAddress},
+			consignee_zip = #{consigneeZip},
+			logistics_type = #{logisticsType},
+			logistics_id = #{logisticsId},
+			logistics_fee = #{logisticsFee},
+			agency_fee = #{agencyFee},
+			delivery_amount = #{deliveryAmount},
+			orderlogistics_status = #{orderlogisticsStatus},
+			logistics_settlement_status = #{logisticsSettlementStatus},
+			logistics_result_last = #{logisticsResultLast},
+			logistics_result = #{logisticsResult},
+			logistics_create_time = #{logisticsCreateTime},
+			logistics_update_time = #{logisticsUpdateTime},
+			logistics_settlement_time = #{logisticsSettlementTime},
+			logistics_pay_channel = #{logisticsPayChannel},
+			logistics_pay_no = #{logisticsPayNo},
+			reconciliation_status = #{reconciliationStatus},
+			reconciliation_time = #{reconciliationTime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM order_logistics
+		<choose>
+			<when test="id !=null and id != ''">
+				WHERE id = #{id}
+			</when>
+			<otherwise>
+				WHERE order_no = #{orderNo}
+			</otherwise>
+		</choose>
+	</update>
+	
+</mapper>

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.modules.billboard.dao.IndexBillboardDao">
+    
+	<sql id="indexBillboardColumns">
+		a.id AS "id",
+		a.title AS "title",
+		a.image AS "image",
+		a.sort AS "sort",
+		a.type AS "type",
+		a.app_flag AS "appFlag",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks"
+	</sql>
+	
+	<sql id="indexBillboardJoins">
+	</sql>
+    
+	<select id="get" resultType="IndexBillboard">
+		SELECT 
+			<include refid="indexBillboardColumns"/>
+		FROM index_billboard a
+		<include refid="indexBillboardJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="IndexBillboard">
+		SELECT 
+			<include refid="indexBillboardColumns"/>
+		FROM index_billboard a
+		<include refid="indexBillboardJoins"/>
+		<where>
+			
+			<if test="title != null and title != ''">
+				AND a.title LIKE 
+					<if test="dbName == 'oracle'">'%'||#{title}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{title}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{title},'%')</if>
+			</if>
+			<if test="appFlag != null and appFlag != ''">
+				AND a.app_flag = #{appFlag}
+			</if>
+			<if test="type != null and type != ''">
+				AND a.type = #{type}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.sort asc
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="IndexBillboard">
+		SELECT 
+			<include refid="indexBillboardColumns"/>
+		FROM index_billboard a
+		<include refid="indexBillboardJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO index_billboard(
+			id,
+			title,
+			image,
+			sort,
+			type,
+			app_flag,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks
+		) VALUES (
+			#{id},
+			#{title},
+			#{image},
+			#{sort},
+			#{type},
+			#{appFlag},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE index_billboard SET 	
+			title = #{title},
+			image = #{image},
+			sort = #{sort},
+			type = #{type},
+			app_flag = #{appFlag},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM index_billboard
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

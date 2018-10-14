@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.modules.goods.dao.GoodsCategoryDao">
+    
+	<sql id="goodsCategoryColumns">
+		a.id AS "id",
+		a.parent_category_id AS "parentCategoryId",
+		a.category_name AS "categoryName",
+		a.depth AS "depth",
+		a.status AS "status",
+		a.create_by AS "createBy.id",
+		cu.name AS "createBy.name",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		uu.name AS "updateBy.name",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.sort as "sort",
+		a.image as "image",
+		pgc.category_name as "parentCategoryName"
+	</sql>
+
+
+	<sql id="goodsCategoryColumnsByApi">
+		a.id AS "id",
+		a.parent_category_id AS "parentCategoryId",
+		a.category_name AS "categoryName",
+		a.depth AS "depth",
+		a.status AS "status",
+		a.remarks AS "remarks",
+		a.sort as "sort",
+		a.image as "image"
+	</sql>
+
+	<sql id="goodsCategoryJoins">
+		left join goods_category pgc on a.parent_category_id = pgc.id
+		left join sys_user cu on cu.id = a.create_by
+		left join sys_user uu on uu.id = a.update_by
+	</sql>
+    
+	<select id="get" resultType="GoodsCategory">
+		SELECT 
+			<include refid="goodsCategoryColumns"/>
+		FROM goods_category a
+		<include refid="goodsCategoryJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="GoodsCategory">
+		SELECT
+		<include refid="goodsCategoryColumns"/>
+		FROM goods_category a
+		<include refid="goodsCategoryJoins"/>
+		<where>
+
+			<if test="parentCategoryId != null and parentCategoryId != ''">
+				AND a.parent_category_id = #{parentCategoryId}
+			</if>
+			<if test="categoryName != null and categoryName != ''">
+				AND a.category_name = #{categoryName}
+			</if>
+			<if test="depth != null and depth != ''">
+				AND a.depth = #{depth}
+			</if>
+			<if test="status != null">
+				AND a.status = #{status}
+			</if>
+			<if test="createBy != null and createBy.id != null and createBy.id != ''">
+				AND a.create_by = #{createBy.id}
+			</if>
+			<if test="createDate != null and createDate != ''">
+				AND a.create_date = #{createDate}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findListByApi" resultType="GoodsCategory">
+		SELECT 
+			<include refid="goodsCategoryColumnsByApi"/>
+		FROM goods_category a
+		<where>
+			<if test="parentCategoryId != null and parentCategoryId != ''">
+				AND a.parent_category_id = #{parentCategoryId}
+			</if>
+			<if test="categoryName != null and categoryName != ''">
+				AND a.category_name = #{categoryName}
+			</if>
+			<if test="depth != null and depth != ''">
+				AND a.depth = #{depth}
+			</if>
+			<if test="status != null">
+				AND a.status = #{status}
+			</if>
+			<if test="createBy != null and createBy.id != null and createBy.id != ''">
+				AND a.create_by = #{createBy.id}
+			</if>
+			<if test="createDate != null and createDate != ''">
+				AND a.create_date = #{createDate}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="GoodsCategory">
+		SELECT 
+			<include refid="goodsCategoryColumns"/>
+		FROM goods_category a
+		<include refid="goodsCategoryJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO goods_category(
+			id,
+			parent_category_id,
+			category_name,
+			depth,
+			status,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			image,
+			sort
+		) VALUES (
+			#{id},
+			#{parentCategoryId},
+			#{categoryName},
+			#{depth},
+			#{status},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{image},
+			#{sort}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE goods_category SET 	
+			parent_category_id = #{parentCategoryId},
+			category_name = #{categoryName},
+			depth = #{depth},
+			status = #{status},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			image = #{image},
+			sort = #{sort}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM goods_category
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

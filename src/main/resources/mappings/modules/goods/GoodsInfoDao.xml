@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.modules.goods.dao.GoodsInfoDao">
+    
+	<sql id="goodsInfoColumns">
+		a.id AS "id",
+		a.goods_category_id AS "goodsCategoryId",
+		a.goods_name AS "goodsName",
+		a.goods_barcode AS "goodsBarcode",
+		a.goods_title AS "goodsTitle",
+		a.goods_type AS "goodsType",
+		a.status AS "status",
+		a.unit AS "unit",
+		a.original_price AS "originalPrice",
+		a.goods_price AS "goodsPrice",
+		a.sales_total AS "salesTotal",
+		a.image AS "image",
+		a.goods_desp AS "goodsDesp",
+		a.is_deleted AS "isDeleted",
+		a.onlinetime AS "onlinetime",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.merchant_id as "merchantId"
+	</sql>
+	
+	<sql id="goodsInfoJoins">
+	</sql>
+    
+	<select id="get" resultType="GoodsInfo">
+		SELECT 
+			<include refid="goodsInfoColumns"/>
+		FROM goods_info a
+		<include refid="goodsInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+
+	<!-- 广告位关联商品列表 -->
+	<select id="findListByBillboard" resultType="GoodsInfo">
+		SELECT
+		<include refid="goodsInfoColumns"/>
+		FROM goods_info a
+		left join index_billboard_goods ibg on a.id = ibg.goods_id
+		<where>
+			ibg.billboard_id = #{billboard.id}
+			<if test="goods != null and goods.goodsCategoryId != null and goods.goodsCategoryId != ''">
+				AND a.goods_category_id = #{goods.goodsCategoryId}
+			</if>
+			<if test="goods != null and goods.goodsName != null and goods.goodsName != ''">
+				AND a.goods_name LIKE CONCAT('%',#{goods.goodsName},'%')
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy} ${page.sortWay}
+			</when>
+			<otherwise>
+				ORDER BY ibg.sort asc
+			</otherwise>
+		</choose>
+	</select>
+
+	<!-- app商品列表 -->
+	<select id="findListByApi" resultType="GoodsInfo">
+		SELECT
+		<include refid="goodsInfoColumns"/>
+		FROM goods_info a
+		<include refid="goodsInfoJoins"/>
+		<where>
+
+			<if test="goodsCategoryId != null and goodsCategoryId != ''">
+				AND a.goods_category_id = #{goodsCategoryId}
+			</if>
+			<if test="goodsName != null and goodsName != ''">
+				AND a.goods_name LIKE CONCAT('%',#{goodsName},'%')
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy} ${page.sortWay}
+			</when>
+			<otherwise>
+				ORDER BY a.onlinetime DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findList" resultType="GoodsInfo">
+		SELECT 
+			<include refid="goodsInfoColumns"/>
+		FROM goods_info a
+		<include refid="goodsInfoJoins"/>
+		<where>
+			
+			<if test="goodsCategoryId != null and goodsCategoryId != ''">
+				AND a.goods_category_id = #{goodsCategoryId}
+			</if>
+			<if test="goodsName != null and goodsName != ''">
+				AND a.goods_name LIKE CONCAT('%',#{goodsName},'%')
+			</if>
+			<if test="goodsBarcode != null and goodsBarcode != ''">
+				AND a.goods_barcode = #{goodsBarcode}
+			</if>
+			<if test="goodsTitle != null and goodsTitle != ''">
+				AND a.goods_title = #{goodsTitle}
+			</if>
+			<if test="goodsType != null and goodsType != ''">
+				AND a.goods_type = #{goodsType}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="unit != null and unit != ''">
+				AND a.unit = #{unit}
+			</if>
+			<if test="originalPrice != null and originalPrice != ''">
+				AND a.original_price = #{originalPrice}
+			</if>
+			<if test="goodsPrice != null and goodsPrice != ''">
+				AND a.goods_price = #{goodsPrice}
+			</if>
+			<if test="salesTotal != null and salesTotal != ''">
+				AND a.sales_total = #{salesTotal}
+			</if>
+			<if test="isDeleted != null and isDeleted != ''">
+				AND a.is_deleted = #{isDeleted}
+			</if>
+			<if test="beginOnlinetime != null and endOnlinetime != null and beginOnlinetime != '' and endOnlinetime != ''">
+				AND a.onlinetime BETWEEN #{beginOnlinetime} AND #{endOnlinetime}
+			</if>
+			<if test="beginCreateDate != null and endCreateDate != null and beginCreateDate != '' and endCreateDate != ''">
+				AND a.create_date BETWEEN #{beginCreateDate} AND #{endCreateDate}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="GoodsInfo">
+		SELECT 
+			<include refid="goodsInfoColumns"/>
+		FROM goods_info a
+		<include refid="goodsInfoJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO goods_info(
+			id,
+			goods_category_id,
+			goods_name,
+			goods_barcode,
+			goods_title,
+			goods_type,
+			status,
+			unit,
+			original_price,
+			goods_price,
+			sales_total,
+			image,
+			goods_desp,
+			is_deleted,
+			onlinetime,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks
+		) VALUES (
+			#{id},
+			#{goodsCategoryId},
+			#{goodsName},
+			#{goodsBarcode},
+			#{goodsTitle},
+			#{goodsType},
+			#{status},
+			#{unit},
+			#{originalPrice},
+			#{goodsPrice},
+			#{salesTotal},
+			#{image},
+			#{goodsDesp},
+			#{isDeleted},
+			#{onlinetime},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE goods_info SET 	
+			goods_category_id = #{goodsCategoryId},
+			goods_name = #{goodsName},
+			goods_barcode = #{goodsBarcode},
+			goods_title = #{goodsTitle},
+			goods_type = #{goodsType},
+			status = #{status},
+			unit = #{unit},
+			original_price = #{originalPrice},
+			goods_price = #{goodsPrice},
+			sales_total = #{salesTotal},
+			image = #{image},
+			goods_desp = #{goodsDesp},
+			is_deleted = #{isDeleted},
+			onlinetime = #{onlinetime},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM goods_info
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

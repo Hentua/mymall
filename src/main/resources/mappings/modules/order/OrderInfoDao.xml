@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.modules.order.dao.OrderInfoDao">
+    
+	<sql id="orderInfoColumns">
+		a.id AS "id",
+		a.order_no AS "orderNo",
+		a.merchant_code AS "merchantCode",
+		a.order_status AS "orderStatus",
+		a.order_type AS "orderType",
+		a.pay_channel AS "payChannel",
+		a.goods_count AS "goodsCount",
+		a.goods_amount_total AS "goodsAmountTotal",
+		a.logistics_fee AS "logisticsFee",
+		a.order_amount_total AS "orderAmountTotal",
+		a.discount_amount_total AS "discountAmountTotal",
+		a.pay_channel_no AS "payChannelNo",
+		a.create_date AS "createDate",
+		a.create_by AS "createBy.id",
+		a.customer_code AS "customerCode",
+		a.remarks AS "remarks",
+		a.pay_time AS "payTime",
+		a.pay_channel_time AS "payChannelTime",
+		a.coupon_code AS "couponCode",
+		a.discount_rate AS "discountRate"
+	</sql>
+	
+	<sql id="orderInfoJoins">
+	</sql>
+    
+	<select id="get" resultType="OrderInfo">
+		SELECT 
+			<include refid="orderInfoColumns"/>
+		FROM order_info a
+		<include refid="orderInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="OrderInfo">
+		SELECT 
+			<include refid="orderInfoColumns"/>
+		FROM order_info a
+		<include refid="orderInfoJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="OrderInfo">
+		SELECT 
+			<include refid="orderInfoColumns"/>
+		FROM order_info a
+		<include refid="orderInfoJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO order_info(
+			id,
+			order_no,
+			merchant_code,
+			order_status,
+			order_type,
+			pay_channel,
+			goods_count,
+			goods_amount_total,
+			logistics_fee,
+			order_amount_total,
+			discount_amount_total,
+			pay_channel_no,
+			create_date,
+			create_by,
+			customer_code,
+			remarks,
+			pay_time,
+			pay_channel_time,
+			coupon_code,
+			discount_rate
+		) VALUES (
+			#{id},
+			#{orderNo},
+			#{merchantCode},
+			#{orderStatus},
+			#{orderType},
+			#{payChannel},
+			#{goodsCount},
+			#{goodsAmountTotal},
+			#{logisticsFee},
+			#{orderAmountTotal},
+			#{discountAmountTotal},
+			#{payChannelNo},
+			#{createDate},
+			#{createBy.id},
+			#{customerCode},
+			#{remarks},
+			#{payTime},
+			#{payChannelTime},
+			#{couponCode},
+			#{discountRate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE order_info SET 	
+			order_no = #{orderNo},
+			merchant_code = #{merchantCode},
+			order_status = #{orderStatus},
+			order_type = #{orderType},
+			pay_channel = #{payChannel},
+			goods_count = #{goodsCount},
+			goods_amount_total = #{goodsAmountTotal},
+			logistics_fee = #{logisticsFee},
+			order_amount_total = #{orderAmountTotal},
+			discount_amount_total = #{discountAmountTotal},
+			pay_channel_no = #{payChannelNo},
+			customer_code = #{customerCode},
+			remarks = #{remarks},
+			pay_time = #{payTime},
+			pay_channel_time = #{payChannelTime},
+			coupon_code = #{couponCode},
+			discount_rate = #{discountRate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM order_info
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

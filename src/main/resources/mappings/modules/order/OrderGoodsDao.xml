@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.modules.order.dao.OrderGoodsDao">
+    
+	<sql id="orderGoodsColumns">
+		a.id AS "id",
+		a.goods_id AS "goodsId",
+		a.goods_category_id AS "goodsCategoryId",
+		a.goods_name AS "goodsName",
+		a.goods_barcode AS "goodsBarcode",
+		a.goods_title AS "goodsTitle",
+		a.goods_type AS "goodsType",
+		a.unit AS "unit",
+		a.image AS "image",
+		a.goods_desp AS "goodsDesp",
+		a.order_no AS "orderNo",
+		a.goods_price AS "goodsPrice",
+		a.discount_rate AS "discountRate",
+		a.discount_amount AS "discountAmount",
+		a.count AS "count",
+		a.subtotal AS "subtotal"
+	</sql>
+	
+	<sql id="orderGoodsJoins">
+		LEFT JOIN order_info b ON b.id = a.order_no
+	</sql>
+    
+	<select id="get" resultType="OrderGoods">
+		SELECT 
+			<include refid="orderGoodsColumns"/>
+		FROM order_goods a
+		<include refid="orderGoodsJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="OrderGoods">
+		SELECT 
+			<include refid="orderGoodsColumns"/>
+		FROM order_goods a
+		<include refid="orderGoodsJoins"/>
+		<where>
+			
+			<if test="orderNo != null and orderNo != ''">
+				AND a.order_no = #{orderNo}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="OrderGoods">
+		SELECT 
+			<include refid="orderGoodsColumns"/>
+		FROM order_goods a
+		<include refid="orderGoodsJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO order_goods(
+			id,
+			goods_id,
+			goods_category_id,
+			goods_name,
+			goods_barcode,
+			goods_title,
+			goods_type,
+			unit,
+			image,
+			goods_desp,
+			order_no,
+			goods_price,
+			discount_rate,
+			discount_amount,
+			count,
+			subtotal
+		) VALUES (
+			#{id},
+			#{goodsId},
+			#{goodsCategoryId},
+			#{goodsName},
+			#{goodsBarcode},
+			#{goodsTitle},
+			#{goodsType},
+			#{unit},
+			#{image},
+			#{goodsDesp},
+			#{orderNo},
+			#{goodsPrice},
+			#{discountRate},
+			#{discountAmount},
+			#{count},
+			#{subtotal}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE order_goods SET 	
+			goods_id = #{goodsId},
+			goods_category_id = #{goodsCategoryId},
+			goods_name = #{goodsName},
+			goods_barcode = #{goodsBarcode},
+			goods_title = #{goodsTitle},
+			goods_type = #{goodsType},
+			unit = #{unit},
+			image = #{image},
+			goods_desp = #{goodsDesp},
+			order_no = #{orderNo},
+			goods_price = #{goodsPrice},
+			discount_rate = #{discountRate},
+			discount_amount = #{discountAmount},
+			count = #{count},
+			subtotal = #{subtotal}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM order_goods
+		<choose>
+			<when test="id !=null and id != ''">
+				WHERE id = #{id}
+			</when>
+			<otherwise>
+				WHERE order_no = #{orderNo}
+			</otherwise>
+		</choose>
+	</update>
+	
+</mapper>

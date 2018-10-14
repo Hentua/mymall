@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.modules.member.dao.MemberVerifyCodeDao">
+    
+	<sql id="memberVerifyCodeColumns">
+		a.id AS "id",
+		a.phone AS "phone",
+		a.verify_code AS "verifyCode",
+		a.create_date AS "createDate",
+		a.out_time AS "outTime"
+	</sql>
+	
+	<sql id="memberVerifyCodeJoins">
+	</sql>
+
+	<select id="validVerifyCode" resultType="int">
+		select count(0) from member_verify_code a where a.out_time &gt; now() and a.phone=#{telPhone} and a.verify_code=#{verifyCode}
+	</select>
+    
+	<select id="get" resultType="MemberVerifyCode">
+		SELECT 
+			<include refid="memberVerifyCodeColumns"/>
+		FROM member_verify_code a
+		<include refid="memberVerifyCodeJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="MemberVerifyCode">
+		SELECT 
+			<include refid="memberVerifyCodeColumns"/>
+		FROM member_verify_code a
+		<include refid="memberVerifyCodeJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="MemberVerifyCode">
+		SELECT 
+			<include refid="memberVerifyCodeColumns"/>
+		FROM member_verify_code a
+		<include refid="memberVerifyCodeJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO member_verify_code(
+			id,
+			phone,
+			verify_code,
+			create_date,
+			out_time
+		) VALUES (
+			#{id},
+			#{phone},
+			#{verifyCode},
+			#{createDate},
+			#{outTime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE member_verify_code SET 	
+			phone = #{phone},
+			verify_code = #{verifyCode},
+			out_time = #{outTime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM member_verify_code
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
