@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.modules.order.dao.OrderShoppingCartDao">
+    
+	<sql id="orderShoppingCartColumns">
+		a.id AS "id",
+		a.merchant_code AS "merchantCode",
+		a.goods_id AS "goodsId",
+		a.customer_code AS "customerCode",
+		a.goods_count AS "goodsCount",
+		a.create_date AS "createDate",
+		a.create_by AS "createBy.id",
+		a.update_date AS "updateDate",
+		a.update_by AS "updateBy.id",
+		a.remarks AS "remarks"
+	</sql>
+	
+	<sql id="orderShoppingCartJoins">
+	</sql>
+    
+	<select id="get" resultType="OrderShoppingCart">
+		SELECT 
+			<include refid="orderShoppingCartColumns"/>
+		FROM order_shopping_cart a
+		<include refid="orderShoppingCartJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+
+	<select id="get" resultType="OrderShoppingCart" parameterType="OrderShoppingCart">
+		SELECT
+		<include refid="orderShoppingCartColumns"/>
+		FROM order_shopping_cart a
+		<include refid="orderShoppingCartJoins"/>
+		<where>
+			<if test="customerCode != null and customerCode != ''">
+				a.customer_code = #{customerCode}
+			</if>
+			<if test="goodsId != null and goodsId != ''">
+				a.goods_id = #{goodsId}
+			</if>
+		</where>
+	</select>
+
+	<select id="findList" resultType="OrderShoppingCart">
+		SELECT 
+			<include refid="orderShoppingCartColumns"/>
+		FROM order_shopping_cart a
+		<include refid="orderShoppingCartJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="OrderShoppingCart">
+		SELECT 
+			<include refid="orderShoppingCartColumns"/>
+		FROM order_shopping_cart a
+		<include refid="orderShoppingCartJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO order_shopping_cart(
+			id,
+			merchant_code,
+			goods_id,
+			customer_code,
+			goods_count,
+			create_date,
+			create_by,
+			update_date,
+			update_by,
+			remarks
+		) VALUES (
+			#{id},
+			#{merchantCode},
+			#{goodsId},
+			#{customerCode},
+			#{goodsCount},
+			#{createDate},
+			#{createBy.id},
+			#{updateDate},
+			#{updateBy.id},
+			#{remarks}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE order_shopping_cart SET 	
+			goods_count = #{goodsCount}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM order_shopping_cart
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
