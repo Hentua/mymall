@@ -9,8 +9,10 @@ import com.mall.common.utils.StringUtils;
 import com.mall.common.utils.TreeNode;
 import com.mall.common.web.BaseController;
 import com.mall.modules.goods.entity.GoodsCategory;
+import com.mall.modules.goods.entity.GoodsImage;
 import com.mall.modules.goods.entity.GoodsInfo;
 import com.mall.modules.goods.service.GoodsCategoryService;
+import com.mall.modules.goods.service.GoodsImageService;
 import com.mall.modules.goods.service.GoodsInfoService;
 import com.mall.modules.sys.entity.User;
 import com.mall.modules.sys.entity.UserVo;
@@ -36,6 +38,9 @@ public class GoodsInfoApi extends BaseController {
 
     @Autowired
     private GoodsCategoryService goodsCategoryService;
+
+    @Autowired
+    private GoodsImageService goodsImageService;
 
 
     /**
@@ -82,9 +87,11 @@ public class GoodsInfoApi extends BaseController {
     public Result goodsDetails(HttpServletRequest request, HttpServletResponse response) {
         GoodsInfo goodsInfo = goodsInfoService.get(request.getParameter("goodsId"));
         User merchant = UserUtils.get(goodsInfo.getMerchantId());
+        List<GoodsImage> goodsImages = goodsImageService.findListByGoodsId(goodsInfo.getId());
+        goodsInfo.setGoodsImages(goodsImages);
         JSONObject result = new JSONObject();
         result.put("goodsInfo",goodsInfo);
-        result.put("merchant",merchant.getAppUserInfo());
+        result.put("merchant",new UserVo(merchant));
         return ResultGenerator.genSuccessResult(result);
     }
 

@@ -3,6 +3,8 @@ package com.mall.modules.goods.entity;
 import com.mall.common.config.Global;
 import org.hibernate.validator.constraints.Length;
 import java.util.Date;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import com.mall.common.persistence.DataEntity;
@@ -38,6 +40,7 @@ public class GoodsInfo extends DataEntity<GoodsInfo> {
 	private String merchantId; //商家id
 	private String colour; //商品颜色
 	private String billboardType;
+	private List<GoodsImage> goodsImages;
 
 	public GoodsInfo() {
 		super();
@@ -45,6 +48,15 @@ public class GoodsInfo extends DataEntity<GoodsInfo> {
 
 	public GoodsInfo(String id){
 		super(id);
+	}
+
+
+	public List<GoodsImage> getGoodsImages() {
+		return goodsImages;
+	}
+
+	public void setGoodsImages(List<GoodsImage> goodsImages) {
+		this.goodsImages = goodsImages;
 	}
 
 	@Length(min=0, max=64, message="商品分类长度必须介于 0 和 64 之间")

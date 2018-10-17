@@ -110,7 +110,7 @@
         r.data_scope AS "roleList.dataScope" -->
 		mi.referee as "referee",
 		mi.referee_id as "refereeId",
-		mi.nickname as "nickName",
+		mi.nickname as "nickname",
 		mi.register_way as "registerWay"
     </sql>
     

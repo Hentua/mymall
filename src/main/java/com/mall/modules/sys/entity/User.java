@@ -54,7 +54,7 @@ public class User extends DataEntity<User> {
 
 
 	//昵称
-	private String nickName;
+	private String nickname;
 	//推荐码
 	private String referee;
 	//推荐人ID
@@ -72,7 +72,7 @@ public class User extends DataEntity<User> {
 		u.setLoginName(this.getLoginName());
 		u.setEmail(this.getEmail());
 		u.setMobile(this.getMobile());
-		u.setNickName(this.getNickName());
+		u.setNickname(this.getNickname());
 		u.setPhoto(this.getPhoto());
 		u.setPhone(this.getPhone());
 		u.setName(this.getName());
@@ -101,12 +101,12 @@ public class User extends DataEntity<User> {
 		this.registerWay = registerWay;
 	}
 
-	public String getNickName() {
-		return nickName;
+	public String getNickname() {
+		return nickname;
 	}
 
-	public void setNickName(String nickName) {
-		this.nickName = nickName;
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
 	}
 
 	public String getReferee() {

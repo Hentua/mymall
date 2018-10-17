@@ -37,7 +37,7 @@ public class UserVo {
     private String photo;	// 头像
 
     //昵称
-    private String nickName;
+    private String nickname;
     //推荐码
     private String referee;
     //推荐人ID
@@ -51,7 +51,7 @@ public class UserVo {
         this.setLoginName(user.getLoginName());
         this.setEmail(user.getEmail());
         this.setMobile(user.getMobile());
-        this.setNickName(user.getNickName());
+        this.setNickname(user.getNickname());
         this.setPhoto(user.getPhoto());
         this.setPhone(user.getPhone());
         this.setName(user.getName());
@@ -114,12 +114,12 @@ public class UserVo {
         this.photo = photo;
     }
 
-    public String getNickName() {
-        return nickName;
+    public String getNickname() {
+        return nickname;
     }
 
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     public String getReferee() {
