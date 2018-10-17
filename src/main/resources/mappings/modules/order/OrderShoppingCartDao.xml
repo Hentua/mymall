@@ -1,118 +1,172 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mall.modules.order.dao.OrderShoppingCartDao">
-    
-	<sql id="orderShoppingCartColumns">
-		a.id AS "id",
-		a.merchant_code AS "merchantCode",
-		a.goods_id AS "goodsId",
-		a.customer_code AS "customerCode",
-		a.goods_count AS "goodsCount",
-		a.create_date AS "createDate",
-		a.create_by AS "createBy.id",
-		a.update_date AS "updateDate",
-		a.update_by AS "updateBy.id",
-		a.remarks AS "remarks"
-	</sql>
-	
-	<sql id="orderShoppingCartJoins">
-	</sql>
-    
-	<select id="get" resultType="OrderShoppingCart">
-		SELECT 
-			<include refid="orderShoppingCartColumns"/>
-		FROM order_shopping_cart a
-		<include refid="orderShoppingCartJoins"/>
-		WHERE a.id = #{id}
-	</select>
+
+    <sql id="orderShoppingCartColumns">
+        a.id
+        AS
+        "id",
+        a.merchant_code
+        AS
+        "merchantCode",
+        a.goods_id
+        AS
+        "goodsId",
+        a.customer_code
+        AS
+        "customerCode",
+        a.goods_count
+        AS
+        "goodsCount",
+        a.create_date
+        AS
+        "createDate",
+        a.create_by
+        AS
+        "createBy.id",
+        a.update_date
+        AS
+        "updateDate",
+        a.update_by
+        AS
+        "updateBy.id",
+        a.remarks
+        AS
+        "remarks"
+    </sql>
+
+    <resultMap id="ShoppingCartDetail" type="com.mall.modules.order.entity.OrderShoppingCartVo">
+        <result property="merchantCode" column="merchantCode"/>
+        <result property="merchantName" column="merchantName"/>
+        <collection property="orderShoppingCarts" ofType="OrderShoppingCart">
+            <id property="id" column="orderShoppingCarts.id"/>
+            <result property="merchantCode" column="orderShoppingCarts.merchantCode"/>
+            <result property="goodsId" column="orderShoppingCarts.goodsId"/>
+            <result property="customerCode" column="orderShoppingCarts.customerCode"/>
+            <result property="goodsCount" column="orderShoppingCarts.goodsCount"/>
+            <result property="goodsPrice" column="orderShoppingCarts.goodsPrice"/>
+            <result property="goodsName" column="orderShoppingCarts.goodsName"/>
+            <result property="image" column="orderShoppingCarts.image"/>
+        </collection>
+    </resultMap>
+
+    <sql id="orderShoppingCartJoins">
+    </sql>
+
+    <select id="get" resultType="OrderShoppingCart">
+        SELECT
+        <include refid="orderShoppingCartColumns"/>
+        FROM order_shopping_cart a
+        <include refid="orderShoppingCartJoins"/>
+        WHERE a.id = #{id}
+    </select>
 
 
-	<select id="get" resultType="OrderShoppingCart" parameterType="OrderShoppingCart">
-		SELECT
-		<include refid="orderShoppingCartColumns"/>
-		FROM order_shopping_cart a
-		<include refid="orderShoppingCartJoins"/>
-		<where>
-			<if test="customerCode != null and customerCode != ''">
-				a.customer_code = #{customerCode}
-			</if>
-			<if test="goodsId != null and goodsId != ''">
-				a.goods_id = #{goodsId}
-			</if>
-		</where>
-	</select>
+    <select id="getByCondition" resultType="OrderShoppingCart" parameterType="OrderShoppingCart">
+        SELECT
+        <include refid="orderShoppingCartColumns"/>
+        FROM order_shopping_cart a
+        <include refid="orderShoppingCartJoins"/>
+        <where>
+            <if test="customerCode != null and customerCode != ''">
+                and a.customer_code = #{customerCode}
+            </if>
+            <if test="goodsId != null and goodsId != ''">
+                and a.goods_id = #{goodsId}
+            </if>
+        </where>
+    </select>
 
-	<select id="findList" resultType="OrderShoppingCart">
-		SELECT 
-			<include refid="orderShoppingCartColumns"/>
-		FROM order_shopping_cart a
-		<include refid="orderShoppingCartJoins"/>
-		<where>
-			
-		</where>
-		<choose>
-			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
-				ORDER BY ${page.orderBy}
-			</when>
-			<otherwise>
-				ORDER BY a.update_date DESC
-			</otherwise>
-		</choose>
-	</select>
-	
-	<select id="findAllList" resultType="OrderShoppingCart">
-		SELECT 
-			<include refid="orderShoppingCartColumns"/>
-		FROM order_shopping_cart a
-		<include refid="orderShoppingCartJoins"/>
-		<where>
-			
-		</where>		
-		<choose>
-			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
-				ORDER BY ${page.orderBy}
-			</when>
-			<otherwise>
-				ORDER BY a.update_date DESC
-			</otherwise>
-		</choose>
-	</select>
-	
-	<insert id="insert">
-		INSERT INTO order_shopping_cart(
-			id,
-			merchant_code,
-			goods_id,
-			customer_code,
-			goods_count,
-			create_date,
-			create_by,
-			update_date,
-			update_by,
-			remarks
-		) VALUES (
-			#{id},
-			#{merchantCode},
-			#{goodsId},
-			#{customerCode},
-			#{goodsCount},
-			#{createDate},
-			#{createBy.id},
-			#{updateDate},
-			#{updateBy.id},
-			#{remarks}
-		)
-	</insert>
-	
-	<update id="update">
-		UPDATE order_shopping_cart SET 	
-			goods_count = #{goodsCount}
-		WHERE id = #{id}
-	</update>
-	
-	<update id="delete">
-		DELETE FROM order_shopping_cart
-		WHERE id = #{id}
-	</update>
-	
+    <select id="findShoppingCartDetailList" resultMap="ShoppingCartDetail">
+        select a.merchant_code as "merchantCode",
+               a.id           as "orderShoppingCarts.id",
+               a.goods_id      as "orderShoppingCarts.goodsId",
+               a.customer_code as "orderShoppingCarts.customerCode",
+               a.goods_count   as "orderShoppingCarts.goodsCount",
+               m.nickname     as "merchantName",
+               g.goods_name   as "orderShoppingCarts.goodsName",
+               g.goods_price  as "orderShoppingCarts.goodsPrice",
+               g.image        as "orderShoppingCarts.image"
+        from order_shopping_cart a
+                 left join member_info m on m.id = a.customer_code
+                 left join goods_info g on g.id = a.goods_id
+        where a.customer_code = #{customerCode}
+    </select>
+
+    <select id="findList" resultType="OrderShoppingCart">
+        SELECT
+        <include refid="orderShoppingCartColumns"/>
+        FROM order_shopping_cart a
+        <include refid="orderShoppingCartJoins"/>
+        <where>
+
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="findAllList" resultType="OrderShoppingCart">
+        SELECT
+        <include refid="orderShoppingCartColumns"/>
+        FROM order_shopping_cart a
+        <include refid="orderShoppingCartJoins"/>
+        <where>
+
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <insert id="insert">
+        INSERT INTO order_shopping_cart(
+                                        id,
+                                        merchant_code,
+                                        goods_id,
+                                        customer_code,
+                                        goods_count,
+                                        create_date,
+                                        create_by,
+                                        update_date,
+                                        update_by,
+                                        remarks
+            )
+        VALUES (
+                #{id},
+                #{merchantCode},
+                #{goodsId},
+                #{customerCode},
+                #{goodsCount},
+                #{createDate},
+                #{createBy.id},
+                #{updateDate},
+                #{updateBy.id},
+                #{remarks}
+                   )
+    </insert>
+
+    <update id="update">
+        UPDATE order_shopping_cart
+        SET
+            goods_count = #{goodsCount}
+        WHERE id = #{id}
+    </update>
+
+    <update id="delete">
+        DELETE
+        FROM order_shopping_cart
+        WHERE id = #{id}
+    </update>
+
 </mapper>

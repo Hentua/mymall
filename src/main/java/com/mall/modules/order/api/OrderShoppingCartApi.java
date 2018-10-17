@@ -6,6 +6,7 @@ import com.mall.common.utils.ResultGenerator;
 import com.mall.common.utils.StringUtils;
 import com.mall.common.web.BaseController;
 import com.mall.modules.order.entity.OrderShoppingCart;
+import com.mall.modules.order.entity.OrderShoppingCartVo;
 import com.mall.modules.order.service.OrderShoppingCartService;
 import com.mall.modules.sys.entity.User;
 import com.mall.modules.sys.utils.UserUtils;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * 购物车API
@@ -54,15 +56,15 @@ public class OrderShoppingCartApi extends BaseController {
             OrderShoppingCart condition = new OrderShoppingCart();
             condition.setGoodsId(goodsId);
             condition.setCustomerCode(currUser.getId());
-            OrderShoppingCart orderShoppingCart = orderShoppingCartService.get(condition);
+            OrderShoppingCart orderShoppingCart = orderShoppingCartService.getByCondition(condition);
             if(null == orderShoppingCart) {
                 orderShoppingCart = new OrderShoppingCart();
-                orderShoppingCart.setGoodsCount(orderShoppingCart.getGoodsCount() + 1);
-            }else {
                 orderShoppingCart.setGoodsId(goodsId);
                 orderShoppingCart.setCustomerCode(currUser.getId());
                 orderShoppingCart.setGoodsCount(1.00);
                 orderShoppingCart.setMerchantCode(merchantCode);
+            }else {
+                orderShoppingCart.setGoodsCount(orderShoppingCart.getGoodsCount() + 1);
             }
             orderShoppingCartService.save(orderShoppingCart);
             renderString(response, ResultGenerator.genSuccessResult());
@@ -139,5 +141,17 @@ public class OrderShoppingCartApi extends BaseController {
      * @param request 请求体
      * @param response 响应体
      */
-    public void shoppingCartList(HttpServletRequest request, HttpServletResponse response) {}
+    @RequestMapping(value = "shoppingCartList", method = RequestMethod.POST)
+    public void shoppingCartList(HttpServletRequest request, HttpServletResponse response) {
+        User currUser = UserUtils.getUser();
+        try {
+            if(null == currUser) {
+                throw new ServiceException("未登录");
+            }
+            List<OrderShoppingCartVo> orderShoppingCartVos = orderShoppingCartService.findShoppingCartDetailList(currUser.getId());
+            renderString(response, ResultGenerator.genSuccessResult(orderShoppingCartVos));
+        }catch (Exception e) {
+            renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
+        }
+    }
 }

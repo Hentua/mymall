@@ -1,8 +1,8 @@
 package com.mall.modules.order.entity;
 
-import org.hibernate.validator.constraints.Length;
-
+import com.mall.common.config.Global;
 import com.mall.common.persistence.DataEntity;
+import org.hibernate.validator.constraints.Length;
 
 /**
  * 购物车Entity
@@ -16,6 +16,10 @@ public class OrderShoppingCart extends DataEntity<OrderShoppingCart> {
 	private String goodsId;		// 商品ID
 	private String customerCode;		// 买家ID
 	private Double goodsCount;		// 商品数量
+
+	private Double goodsPrice; // 商品价格
+	private String goodsName; // 商品名称
+	private String image; // 商品图片
 	
 	public OrderShoppingCart() {
 		super();
@@ -23,6 +27,33 @@ public class OrderShoppingCart extends DataEntity<OrderShoppingCart> {
 
 	public OrderShoppingCart(String id){
 		super(id);
+	}
+
+	public Double getGoodsPrice() {
+		return goodsPrice;
+	}
+
+	public void setGoodsPrice(Double goodsPrice) {
+		this.goodsPrice = goodsPrice;
+	}
+
+	public String getGoodsName() {
+		return goodsName;
+	}
+
+	public void setGoodsName(String goodsName) {
+		this.goodsName = goodsName;
+	}
+
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		if(null != image){
+			image = Global.getConfig("userfiles.baseURL")+image;
+		}
+		this.image = image;
 	}
 
 	@Length(min=0, max=100, message="卖家ID长度必须介于 0 和 100 之间")

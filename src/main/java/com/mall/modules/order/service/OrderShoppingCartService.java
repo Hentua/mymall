@@ -1,14 +1,15 @@
 package com.mall.modules.order.service;
 
-import java.util.List;
-
+import com.mall.common.persistence.Page;
+import com.mall.common.service.CrudService;
+import com.mall.modules.order.dao.OrderShoppingCartDao;
+import com.mall.modules.order.entity.OrderShoppingCart;
+import com.mall.modules.order.entity.OrderShoppingCartVo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.mall.common.persistence.Page;
-import com.mall.common.service.CrudService;
-import com.mall.modules.order.entity.OrderShoppingCart;
-import com.mall.modules.order.dao.OrderShoppingCartDao;
+import java.util.List;
 
 /**
  * 购物车Service
@@ -19,10 +20,17 @@ import com.mall.modules.order.dao.OrderShoppingCartDao;
 @Transactional(readOnly = true)
 public class OrderShoppingCartService extends CrudService<OrderShoppingCartDao, OrderShoppingCart> {
 
+	@Autowired
+	private OrderShoppingCartDao orderShoppingCartDao;
+
 	public OrderShoppingCart get(String id) {
 		return super.get(id);
 	}
-	
+
+	public OrderShoppingCart getByCondition(OrderShoppingCart condition) {
+		return orderShoppingCartDao.getByCondition(condition);
+	}
+
 	public List<OrderShoppingCart> findList(OrderShoppingCart orderShoppingCart) {
 		return super.findList(orderShoppingCart);
 	}
@@ -39,6 +47,10 @@ public class OrderShoppingCartService extends CrudService<OrderShoppingCartDao, 
 	@Transactional(readOnly = false)
 	public void delete(OrderShoppingCart orderShoppingCart) {
 		super.delete(orderShoppingCart);
+	}
+
+	public List<OrderShoppingCartVo> findShoppingCartDetailList(String customerCode) {
+		return orderShoppingCartDao.findShoppingCartDetailList(customerCode);
 	}
 	
 }
