@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	
 	<groupId>com.mall</groupId>
-	<artifactId>MYMall</artifactId>
+	<artifactId>ROOT</artifactId>
 	<version>1.2.7</version>
 	<packaging>war</packaging>
 	
