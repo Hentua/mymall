@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.modules.goods.dao.GoodsImageDao">
+    
+	<sql id="goodsImageColumns">
+		a.id AS "id",
+		a.goods_id AS "goodsId",
+		a.image_url AS "imageUrl",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks"
+	</sql>
+	
+	<sql id="goodsImageJoins">
+	</sql>
+    
+	<select id="get" resultType="GoodsImage">
+		SELECT 
+			<include refid="goodsImageColumns"/>
+		FROM goods_image a
+		<include refid="goodsImageJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="GoodsImage">
+		SELECT 
+			<include refid="goodsImageColumns"/>
+		FROM goods_image a
+		<include refid="goodsImageJoins"/>
+		<where>
+			<if test="goodsId != null and goodsId != ''">
+				and a.goods_id = #{goodsId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="GoodsImage">
+		SELECT 
+			<include refid="goodsImageColumns"/>
+		FROM goods_image a
+		<include refid="goodsImageJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO goods_image(
+			id,
+			goods_id,
+			image_url,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks
+		) VALUES (
+			#{id},
+			#{goodsId},
+			#{imageUrl},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE goods_image SET 	
+			goods_id = #{goodsId},
+			image_url = #{imageUrl},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM goods_image
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
