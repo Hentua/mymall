@@ -53,17 +53,19 @@ public class OrderInfoApi extends BaseController {
         String orderType = "0";
         String orderStatus = "0";
         double amountTotal = 0.00;
+        // 开始获取表单数据
+        String couponCode = request.getParameter("couponCode");
+        String goodsList = request.getParameter("goodsList");
+        String addressId = request.getParameter("addressId");
         try {
             User currUser = UserUtils.getUser();
             if (null == currUser) {
                 throw new ServiceException("用户未登录");
             }
+            if(StringUtils.isBlank(addressId)) {
+                throw new ServiceException("未选择收货地址");
+            }
             String customerCode = currUser.getId();
-
-            // 开始获取表单数据
-            String couponCode = request.getParameter("couponCode");
-            String goodsList = request.getParameter("goodsList");
-            String addressId = request.getParameter("addressId");
 
             // todo coupon discount and logistics info
 

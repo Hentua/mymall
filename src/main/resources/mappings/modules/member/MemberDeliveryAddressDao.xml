@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.modules.member.dao.MemberDeliveryAddressDao">
+    
+	<sql id="memberDeliveryAddressColumns">
+		a.id AS "id",
+		a.customer_code AS "customerCode",
+		a.realname AS "realname",
+		a.telphone AS "telphone",
+		a.telphone_bak AS "telphoneBak",
+		a.country AS "country",
+		a.province AS "province",
+		a.city AS "city",
+		a.area AS "area",
+		a.detail_address AS "detailAddress",
+		a.zip AS "zip",
+		a.is_default_address AS "isDefaultAddress",
+		a.create_date AS "createDate",
+		a.create_by AS "createBy.id",
+		a.update_date AS "updateDate",
+		a.update_by AS "updateBy.id"
+	</sql>
+	
+	<sql id="memberDeliveryAddressJoins">
+	</sql>
+    
+	<select id="get" resultType="MemberDeliveryAddress">
+		SELECT 
+			<include refid="memberDeliveryAddressColumns"/>
+		FROM member_delivery_address a
+		<include refid="memberDeliveryAddressJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="MemberDeliveryAddress">
+		SELECT 
+			<include refid="memberDeliveryAddressColumns"/>
+		FROM member_delivery_address a
+		<include refid="memberDeliveryAddressJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="MemberDeliveryAddress">
+		SELECT 
+			<include refid="memberDeliveryAddressColumns"/>
+		FROM member_delivery_address a
+		<include refid="memberDeliveryAddressJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO member_delivery_address(
+			id,
+			customer_code,
+			realname,
+			telphone,
+			telphone_bak,
+			country,
+			province,
+			city,
+			area,
+			detail_address,
+			zip,
+			is_default_address,
+			create_date,
+			create_by,
+			update_date,
+			update_by
+		) VALUES (
+			#{id},
+			#{customerCode},
+			#{realname},
+			#{telphone},
+			#{telphoneBak},
+			#{country},
+			#{province},
+			#{city},
+			#{area},
+			#{detailAddress},
+			#{zip},
+			#{isDefaultAddress},
+			#{createDate},
+			#{createBy.id},
+			#{updateDate},
+			#{updateBy.id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE member_delivery_address SET 	
+			customer_code = #{customerCode},
+			realname = #{realname},
+			telphone = #{telphone},
+			telphone_bak = #{telphoneBak},
+			country = #{country},
+			province = #{province},
+			city = #{city},
+			area = #{area},
+			detail_address = #{detailAddress},
+			zip = #{zip},
+			is_default_address = #{isDefaultAddress},
+			update_date = #{updateDate},
+			update_by = #{updateBy.id}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM member_delivery_address
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
