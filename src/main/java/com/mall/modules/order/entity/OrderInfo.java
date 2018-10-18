@@ -21,13 +21,11 @@ public class OrderInfo extends DataEntity<OrderInfo> {
 	private String merchantCode;		// 卖家店铺ID
 	private String orderStatus;		// 订单状态（0-待付款，1-已付款，2-已取消，3-退款申请，4-已退款）
 	private String orderType;		// 订单类型（0-平台自主下单，1-礼包兑换）
-	private String payChannel;		// 支付渠道（0-微信支付，1-礼包）
 	private Double goodsCount;		// 商品总数量
 	private Double goodsAmountTotal;		// 订单商品总金额
 	private Double logisticsFee;		// 运费
 	private Double orderAmountTotal;		// 订单应付总金额
 	private Double discountAmountTotal;		// 订单优惠扣减金额
-	private String payChannelNo;		// 支付渠道返回的订单号
 	private String customerCode;		// 买家ID
 	private Date payTime;		// 平台记录的支付时间
 	private Date payChannelTime;		// 支付渠道记录的支付时间
@@ -86,7 +84,7 @@ public class OrderInfo extends DataEntity<OrderInfo> {
 	public void setOrderStatus(String orderStatus) {
 		this.orderStatus = orderStatus;
 	}
-	
+
 	@Length(min=1, max=2, message="订单类型（0-平台自主下单，1-礼包兑换）长度必须介于 1 和 2 之间")
 	public String getOrderType() {
 		return orderType;
@@ -95,16 +93,7 @@ public class OrderInfo extends DataEntity<OrderInfo> {
 	public void setOrderType(String orderType) {
 		this.orderType = orderType;
 	}
-	
-	@Length(min=1, max=2, message="支付渠道（0-微信支付，1-礼包）长度必须介于 1 和 2 之间")
-	public String getPayChannel() {
-		return payChannel;
-	}
 
-	public void setPayChannel(String payChannel) {
-		this.payChannel = payChannel;
-	}
-	
 	@NotNull(message="商品总数量不能为空")
 	public Double getGoodsCount() {
 		return goodsCount;
@@ -149,16 +138,7 @@ public class OrderInfo extends DataEntity<OrderInfo> {
 	public void setDiscountAmountTotal(Double discountAmountTotal) {
 		this.discountAmountTotal = discountAmountTotal;
 	}
-	
-	@Length(min=0, max=100, message="支付渠道返回的订单号长度必须介于 0 和 100 之间")
-	public String getPayChannelNo() {
-		return payChannelNo;
-	}
 
-	public void setPayChannelNo(String payChannelNo) {
-		this.payChannelNo = payChannelNo;
-	}
-	
 	@Length(min=1, max=100, message="买家ID长度必须介于 1 和 100 之间")
 	public String getCustomerCode() {
 		return customerCode;
