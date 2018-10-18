@@ -7,6 +7,7 @@ import com.mall.common.utils.ResultGenerator;
 import com.mall.common.utils.StringUtils;
 import com.mall.common.web.BaseController;
 import com.mall.modules.member.entity.MemberInfo;
+import com.mall.modules.member.service.MemberDeliveryAddressService;
 import com.mall.modules.member.service.MemberInfoService;
 import com.mall.modules.member.service.MemberVerifyCodeService;
 import com.mall.modules.sys.entity.Office;
@@ -43,6 +44,9 @@ public class MemberInfoApi extends BaseController {
 
     @Autowired
     private SystemService systemService;
+
+    @Autowired
+    private MemberDeliveryAddressService memberDeliveryAddressService;
 
     @RequestMapping(value = "register", method = RequestMethod.POST)
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
