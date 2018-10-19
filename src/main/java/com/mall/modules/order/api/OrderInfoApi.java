@@ -12,9 +12,14 @@ import com.mall.common.utils.StringUtils;
 import com.mall.common.web.BaseController;
 import com.mall.modules.goods.entity.GoodsInfo;
 import com.mall.modules.goods.service.GoodsInfoService;
+import com.mall.modules.member.entity.MemberDeliveryAddress;
+import com.mall.modules.member.service.MemberDeliveryAddressService;
 import com.mall.modules.order.entity.OrderGoods;
 import com.mall.modules.order.entity.OrderInfo;
+import com.mall.modules.order.entity.OrderLogistics;
+import com.mall.modules.order.entity.OrderPaymentInfo;
 import com.mall.modules.order.service.OrderInfoService;
+import com.mall.modules.order.service.OrderPaymentInfoService;
 import com.mall.modules.sys.entity.User;
 import com.mall.modules.sys.utils.UserUtils;
 import com.sohu.idcenter.IdWorker;
@@ -44,19 +49,23 @@ public class OrderInfoApi extends BaseController {
     private OrderInfoService orderInfoService;
     @Autowired
     private GoodsInfoService goodsInfoService;
+    @Autowired
+    private MemberDeliveryAddressService memberDeliveryAddressService;
+    @Autowired
+    private OrderPaymentInfoService orderPaymentInfoService;
 
     @RequestMapping(value = "submitOrder", method = RequestMethod.POST)
     public void submitOrder(HttpServletRequest request, HttpServletResponse response) {
-
         // 基础数据初始化及基本工具定义
         DecimalFormat df = new DecimalFormat("#.00");
-        String orderType = "0";
+        String orderType = request.getParameter("orderType");
         String orderStatus = "0";
         double amountTotal = 0.00;
         // 开始获取表单数据
         String couponCode = request.getParameter("couponCode");
         String goodsList = request.getParameter("goodsList");
         String addressId = request.getParameter("addressId");
+        String paymentNo = String.valueOf(idWorker.getId());
         try {
             User currUser = UserUtils.getUser();
             if (null == currUser) {
@@ -67,13 +76,23 @@ public class OrderInfoApi extends BaseController {
             }
             String customerCode = currUser.getId();
 
-            // todo coupon discount and logistics info
+            MemberDeliveryAddress memberDeliveryAddress = memberDeliveryAddressService.get(addressId);
+            if(null == memberDeliveryAddress) {
+                throw new ServiceException("所选地址不合法");
+            }
+            // todo coupon discount
+
+            // 组装合并订单支付信息
+            OrderPaymentInfo orderPaymentInfo = new OrderPaymentInfo();
+            orderPaymentInfo.setPaymentNo(paymentNo);
+            orderPaymentInfo.setPayChannel(orderType);
 
             // 订单Collection 根据店铺进行订单拆单
             Map<String, OrderInfo> orderInfoMap = Maps.newHashMap();
             // 获取前端传来的商品列表
             JSONArray goodsArr = JSON.parseArray(goodsList);
             // 获取商品信息
+            List<OrderGoods> orderGoodsList;
             for (int i = 0; i < goodsArr.size(); i++) {
 
                 // todo 返佣金
@@ -95,7 +114,6 @@ public class OrderInfoApi extends BaseController {
                 double orderGoodsAmountTotal;
                 double orderGoodsCount;
                 double orderAmountTotal;
-                List<OrderGoods> orderGoodsList;
                 if(orderInfoMap.containsKey(merchantCode)) {
                     orderInfo = orderInfoMap.get(merchantCode);
                     orderGoodsAmountTotal = orderInfo.getGoodsAmountTotal();
@@ -111,10 +129,20 @@ public class OrderInfoApi extends BaseController {
                     orderInfo.setOrderStatus(orderStatus);
                     orderInfo.setOrderType(orderType);
                     orderInfo.setCustomerCode(customerCode);
+                    orderInfo.setPaymentNo(paymentNo);
                     orderGoodsAmountTotal = 0.00;
                     orderGoodsCount = 0.00;
                     orderGoodsList = Lists.newArrayList();
                     orderAmountTotal = 0.00;
+
+                    List<OrderLogistics> orderLogisticsList;
+                    orderLogisticsList = Lists.newArrayList();
+                    OrderLogistics orderLogistics = orderInfoService.genOrderLogistics(orderNo, merchantCode, memberDeliveryAddress);
+                    orderLogisticsList.add(orderLogistics);
+                    orderInfo.setOrderLogisticsList(orderLogisticsList);
+
+                    orderInfo.setLogisticsFee(orderLogistics.getLogisticsFee());
+                    orderAmountTotal += orderLogistics.getLogisticsFee();
                 }
                 orderGoodsCount += goodsCount;
                 double price = goodsInfo.getGoodsPrice();
@@ -141,6 +169,8 @@ public class OrderInfoApi extends BaseController {
             for (OrderInfo orderInfo : orderInfoMap.values()) {
                 orderInfoService.save(orderInfo);
             }
+            orderPaymentInfo.setAmountTotal(amountTotal);
+            orderPaymentInfoService.save(orderPaymentInfo);
             renderString(response, ResultGenerator.genSuccessResult(amountTotal));
         } catch (Exception e) {
             renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));

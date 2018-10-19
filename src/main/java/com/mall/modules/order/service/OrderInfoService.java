@@ -4,6 +4,9 @@ import com.mall.common.persistence.Page;
 import com.mall.common.service.CrudService;
 import com.mall.common.utils.StringUtils;
 import com.mall.modules.goods.entity.GoodsInfo;
+import com.mall.modules.member.entity.MemberDeliveryAddress;
+import com.mall.modules.member.entity.MemberLogisticsFee;
+import com.mall.modules.member.service.MemberLogisticsFeeService;
 import com.mall.modules.order.dao.OrderGoodsDao;
 import com.mall.modules.order.dao.OrderInfoDao;
 import com.mall.modules.order.dao.OrderLogisticsDao;
@@ -29,6 +32,8 @@ public class OrderInfoService extends CrudService<OrderInfoDao, OrderInfo> {
 	private OrderGoodsDao orderGoodsDao;
 	@Autowired
 	private OrderLogisticsDao orderLogisticsDao;
+	@Autowired
+	private MemberLogisticsFeeService memberLogisticsFeeService;
 	
 	public OrderInfo get(String id) {
 		OrderInfo orderInfo = super.get(id);
@@ -109,6 +114,40 @@ public class OrderInfoService extends CrudService<OrderInfoDao, OrderInfo> {
 		orderGoods.setGoodsPrice(goodsInfo.getGoodsPrice());
 		orderGoods.setGoodsName(goodsInfo.getGoodsName());
 		return orderGoods;
+	}
+
+	/**
+	 * 根据用户选择地址组装订单物流信息
+	 *
+	 * @param orderNo 订单号
+	 * @param merchantCode 商户编号
+	 * @param memberDeliveryAddress 地址实体信息
+	 * @return 物流实体信息
+	 */
+	public OrderLogistics genOrderLogistics(String orderNo, String merchantCode, MemberDeliveryAddress memberDeliveryAddress) {
+		String province = memberDeliveryAddress.getProvince();
+		OrderLogistics orderLogistics = new OrderLogistics();
+		OrderInfo orderInfo = new OrderInfo();
+		orderInfo.setOrderNo(orderNo);
+		orderLogistics.setOrderNo(orderInfo);
+		MemberLogisticsFee condition = new MemberLogisticsFee();
+		condition.setMerchantCode(merchantCode);
+		condition.setProvince(province);
+		List<MemberLogisticsFee> memberLogisticsFees = memberLogisticsFeeService.findList(condition);
+		Double logisticsFee;
+		if(memberLogisticsFees.size() > 0) {
+			MemberLogisticsFee memberLogisticsFee = memberLogisticsFees.get(0);
+			logisticsFee = memberLogisticsFee.getLogisticsFee();
+		}else {
+			logisticsFee = 0.00;
+		}
+		orderLogistics.setLogisticsFee(logisticsFee);
+		orderLogistics.setConsigneeAddress(memberDeliveryAddress.getProvinceName() + memberDeliveryAddress.getCityName() + memberDeliveryAddress.getAreaName() + memberDeliveryAddress.getDetailAddress());
+		orderLogistics.setConsigneeTelphone(memberDeliveryAddress.getTelphone());
+		orderLogistics.setConsigneeTelphoneBackup(memberDeliveryAddress.getTelphoneBak());
+		orderLogistics.setConsigneeRealname(memberDeliveryAddress.getRealname());
+		orderLogistics.setConsigneeZip(memberDeliveryAddress.getZip());
+		return orderLogistics;
 	}
 	
 }

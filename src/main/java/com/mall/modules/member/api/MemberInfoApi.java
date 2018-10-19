@@ -303,4 +303,14 @@ public class MemberInfoApi extends BaseController {
         }
     }
 
+    /**
+     * 获取省市区JSON数据
+     * @param request 请求体
+     * @param response 响应体
+     */
+    @RequestMapping(value = "getAreaData", method = RequestMethod.POST)
+    public void getAreaData(HttpServletRequest request, HttpServletResponse response) {
+        renderString(response, ResultGenerator.genSuccessResult(UserUtils.getAreaList()));
+    }
+
 }

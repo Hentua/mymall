@@ -33,6 +33,7 @@ public class OrderInfo extends DataEntity<OrderInfo> {
 	private List<OrderGoods> orderGoodsList = Lists.newArrayList();		// 子表列表
 	private List<OrderLogistics> orderLogisticsList = Lists.newArrayList();		// 子表列表
 	private Double discountRate; // 折扣比例
+	private String paymentNo;
 
 	public OrderInfo() {
 		super();
@@ -179,5 +180,13 @@ public class OrderInfo extends DataEntity<OrderInfo> {
 
 	public void setOrderLogisticsList(List<OrderLogistics> orderLogisticsList) {
 		this.orderLogisticsList = orderLogisticsList;
+	}
+
+	public String getPaymentNo() {
+		return paymentNo;
+	}
+
+	public void setPaymentNo(String paymentNo) {
+		this.paymentNo = paymentNo;
 	}
 }
