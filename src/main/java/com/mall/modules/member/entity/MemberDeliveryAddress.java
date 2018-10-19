@@ -1,10 +1,9 @@
 package com.mall.modules.member.entity;
 
-import org.hibernate.validator.constraints.Length;
-import com.mall.modules.sys.entity.Area;
-import javax.validation.constraints.NotNull;
-
 import com.mall.common.persistence.DataEntity;
+import org.hibernate.validator.constraints.Length;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 收货地址Entity
@@ -18,13 +17,18 @@ public class MemberDeliveryAddress extends DataEntity<MemberDeliveryAddress> {
 	private String realname;		// 收货人姓名
 	private String telphone;		// 收货人电话
 	private String telphoneBak;		// 备用电话
-	private Area country;		// 国家 对应area表ID
-	private Area province;		// 省份 对应area表ID
-	private Area city;		// 城市 对应area表ID
-	private Area area;		// 地区 对应area表ID
+	private String country;		// 国家 对应area表ID
+	private String province;		// 省份 对应area表ID
+	private String city;		// 城市 对应area表ID
+	private String area;		// 地区 对应area表ID
 	private String detailAddress;		// 详细收获地址
 	private String zip;		// 邮政编码
 	private String isDefaultAddress;		// 是否默认收费地址（0-否，1-是）
+
+	private String countryName;
+	private String provinceName;
+	private String cityName;
+	private String areaName;
 	
 	public MemberDeliveryAddress() {
 		super();
@@ -32,6 +36,38 @@ public class MemberDeliveryAddress extends DataEntity<MemberDeliveryAddress> {
 
 	public MemberDeliveryAddress(String id){
 		super(id);
+	}
+
+	public String getCountryName() {
+		return countryName;
+	}
+
+	public void setCountryName(String countryName) {
+		this.countryName = countryName;
+	}
+
+	public String getProvinceName() {
+		return provinceName;
+	}
+
+	public void setProvinceName(String provinceName) {
+		this.provinceName = provinceName;
+	}
+
+	public String getCityName() {
+		return cityName;
+	}
+
+	public void setCityName(String cityName) {
+		this.cityName = cityName;
+	}
+
+	public String getAreaName() {
+		return areaName;
+	}
+
+	public void setAreaName(String areaName) {
+		this.areaName = areaName;
 	}
 
 	@Length(min=1, max=64, message="用户编号长度必须介于 1 和 64 之间")
@@ -71,38 +107,38 @@ public class MemberDeliveryAddress extends DataEntity<MemberDeliveryAddress> {
 	}
 	
 	@NotNull(message="国家 对应area表ID不能为空")
-	public Area getCountry() {
+	public String getCountry() {
 		return country;
 	}
 
-	public void setCountry(Area country) {
+	public void setCountry(String country) {
 		this.country = country;
 	}
 	
 	@NotNull(message="省份 对应area表ID不能为空")
-	public Area getProvince() {
+	public String getProvince() {
 		return province;
 	}
 
-	public void setProvince(Area province) {
+	public void setProvince(String province) {
 		this.province = province;
 	}
 	
 	@NotNull(message="城市 对应area表ID不能为空")
-	public Area getCity() {
+	public String getCity() {
 		return city;
 	}
 
-	public void setCity(Area city) {
+	public void setCity(String city) {
 		this.city = city;
 	}
 	
 	@NotNull(message="地区 对应area表ID不能为空")
-	public Area getArea() {
+	public String getArea() {
 		return area;
 	}
 
-	public void setArea(Area area) {
+	public void setArea(String area) {
 		this.area = area;
 	}
 	

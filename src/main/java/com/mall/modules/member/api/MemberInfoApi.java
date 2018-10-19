@@ -6,6 +6,7 @@ import com.mall.common.utils.ApiExceptionHandleUtil;
 import com.mall.common.utils.ResultGenerator;
 import com.mall.common.utils.StringUtils;
 import com.mall.common.web.BaseController;
+import com.mall.modules.member.entity.MemberDeliveryAddress;
 import com.mall.modules.member.entity.MemberInfo;
 import com.mall.modules.member.service.MemberDeliveryAddressService;
 import com.mall.modules.member.service.MemberInfoService;
@@ -150,6 +151,153 @@ public class MemberInfoApi extends BaseController {
             }
             memberVerifyCodeService.sendVerifyCodeSms(mobile);
             renderString(response, ResultGenerator.genSuccessResult("验证码发送成功"));
+        } catch (Exception e) {
+            renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
+        }
+    }
+
+    /**
+     * 个人收获地址添加
+     *
+     * @param request 请求体
+     * @param response 响应体
+     */
+    @RequestMapping(value = "addDeliveryAddress", method = RequestMethod.POST)
+    @Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    public void addDeliveryAddress(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            MemberDeliveryAddress memberDeliveryAddress = memberDeliveryAddressService.genMemberDeliveryAddress(request);
+            if(null == memberDeliveryAddress) {
+                throw new ServiceException("手机号格式不正确");
+            }
+            beanValidator(memberDeliveryAddress);
+            MemberDeliveryAddress condition = new MemberDeliveryAddress();
+            condition.setCustomerCode(memberDeliveryAddress.getCustomerCode());
+            List<MemberDeliveryAddress> memberDeliveryAddresses = memberDeliveryAddressService.findList(condition);
+            memberDeliveryAddressService.save(memberDeliveryAddress);
+            if(memberDeliveryAddresses.size() > 0 && "1".equalsIgnoreCase(memberDeliveryAddress.getIsDefaultAddress())) {
+                memberDeliveryAddressService.modifyDefaultDeliveryAddress(memberDeliveryAddress.getCustomerCode(), memberDeliveryAddress.getId());
+            }else if(memberDeliveryAddresses.size() <= 0){
+                memberDeliveryAddressService.modifyDefaultDeliveryAddress(memberDeliveryAddress.getCustomerCode(), memberDeliveryAddress.getId());
+            }
+            renderString(response, ResultGenerator.genSuccessResult());
+        }catch (Exception e) {
+            renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
+        }
+    }
+
+    /**
+     * 获取默认收货地址
+     *
+     * @param request 请求体
+     * @param response 响应体
+     */
+    @RequestMapping(value = "getDefaultDeliveryAddress", method = RequestMethod.POST)
+    public void getDefaultDeliveryAddress(HttpServletRequest request, HttpServletResponse response) {
+        User currUser = UserUtils.getUser();
+        String customerCode = currUser.getId();
+        try {
+            MemberDeliveryAddress condition = new MemberDeliveryAddress();
+            condition.setCustomerCode(customerCode);
+            condition.setIsDefaultAddress("1");
+            List<MemberDeliveryAddress> memberDeliveryAddresses = memberDeliveryAddressService.findList(condition);
+            if(memberDeliveryAddresses.size() > 0) {
+                renderString(response, ResultGenerator.genSuccessResult(memberDeliveryAddresses.get(0)));
+            }else {
+                renderString(response, ResultGenerator.genFailResult("收货地址为空"));
+            }
+        }catch (Exception e) {
+            renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
+        }
+    }
+
+    /**
+     * 设置默认收货地址
+     *
+     * @param request 请求体
+     * @param response 响应体
+     */
+    @RequestMapping(value = "modifyDefaultDeliveryAddress", method = RequestMethod.POST)
+    public void modifyDefaultDeliveryAddress(HttpServletRequest request, HttpServletResponse response) {
+        User currUser = UserUtils.getUser();
+        String customerCode = currUser.getId();
+        String addressId = request.getParameter("id");
+        try {
+            if(StringUtils.isBlank(addressId)) {
+                throw new ServiceException("未选择默认收货地址");
+            }
+            memberDeliveryAddressService.modifyDefaultDeliveryAddress(customerCode, addressId);
+            renderString(response, ResultGenerator.genSuccessResult());
+        }catch (Exception e) {
+            renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
+        }
+    }
+
+    /**
+     * 获取收货地址列表
+     *
+     * @param request 请求体
+     * @param response 响应体
+     */
+    @RequestMapping(value = "deliveryAddressList", method = RequestMethod.POST)
+    public void deliveryAddressList(HttpServletRequest request, HttpServletResponse response) {
+        User currUser = UserUtils.getUser();
+        String customerCode = currUser.getId();
+        try {
+            MemberDeliveryAddress condition = new MemberDeliveryAddress();
+            condition.setCustomerCode(customerCode);
+            List<MemberDeliveryAddress> memberDeliveryAddresses = memberDeliveryAddressService.findList(condition);
+            renderString(response, ResultGenerator.genSuccessResult(memberDeliveryAddresses));
+        }catch (Exception e) {
+            renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
+        }
+    }
+
+    /**
+     * 删除收货地址 不能删除默认收货地址
+     *
+     * @param request 请求体
+     * @param response 响应体
+     */
+    @RequestMapping(value = "deleteDeliveryAddress", method = RequestMethod.POST)
+    public void deleteDeliveryAddress(HttpServletRequest request, HttpServletResponse response) {
+        String addressId = request.getParameter("id");
+        try {
+            if(StringUtils.isBlank(addressId)) {
+                throw new ServiceException("未选择要删除的收货地址");
+            }
+            if(null == memberDeliveryAddressService.get(addressId)) {
+                throw new ServiceException("收货地址不存在");
+            }
+            int row = memberDeliveryAddressService.deleteAddress(addressId);
+            if(row <= 0) {
+                throw new ServiceException("不能删除默认收货地址");
+            }
+            renderString(response, ResultGenerator.genSuccessResult());
+        }catch (Exception e) {
+            renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
+        }
+    }
+
+    /**
+     * 更新收货地址
+     *
+     * @param request 请求体
+     * @param response 响应体
+     */
+    @RequestMapping(value = "updateDeliveryAddress", method = RequestMethod.POST)
+    public void updateDeliveryAddress(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            MemberDeliveryAddress memberDeliveryAddress = memberDeliveryAddressService.genMemberDeliveryAddress(request);
+            if(null == memberDeliveryAddress) {
+                throw new ServiceException("手机号格式不正确");
+            }
+            if(StringUtils.isBlank(memberDeliveryAddress.getId())) {
+                throw new ServiceException("未选择要修改的收货地址");
+            }
+            beanValidator(memberDeliveryAddress);
+            memberDeliveryAddressService.save(memberDeliveryAddress);
+            renderString(response, ResultGenerator.genSuccessResult());
         } catch (Exception e) {
             renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
         }

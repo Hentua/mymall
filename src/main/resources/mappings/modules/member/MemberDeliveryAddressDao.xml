@@ -33,19 +33,47 @@
 	</select>
 	
 	<select id="findList" resultType="MemberDeliveryAddress">
-		SELECT 
-			<include refid="memberDeliveryAddressColumns"/>
+		SELECT
+			a.id AS "id",
+			a.customer_code AS "customerCode",
+			a.realname AS "realname",
+			a.telphone AS "telphone",
+			a.telphone_bak AS "telphoneBak",
+			a.country AS "country",
+			a.province AS "province",
+			a.city AS "city",
+			a.area AS "area",
+			a.detail_address AS "detailAddress",
+			a.zip AS "zip",
+			a.is_default_address AS "isDefaultAddress",
+			a.create_date AS "createDate",
+			a.create_by AS "createBy.id",
+			a.update_date AS "updateDate",
+			a.update_by AS "updateBy.id",
+		    c.name AS "countryName",
+		    city.name AS "cityName",
+		    province.name AS "provinceName",
+		    area.name AS "areaName"
 		FROM member_delivery_address a
+		     left join sys_area c on c.id=a.country
+		     left join sys_area city on city.id=a.city
+			 left join sys_area province on province.id=a.province
+			 left join sys_area area on area.id=a.area
 		<include refid="memberDeliveryAddressJoins"/>
 		<where>
-			
+			<if test="customerCode != null and customerCode != ''">
+				and a.customer_code = #{customerCode}
+			</if>
+			<if test="isDefaultAddress != null and isDefaultAddress != ''">
+				and a.is_default_address = #{isDefaultAddress}
+			</if>
 		</where>
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
 				ORDER BY ${page.orderBy}
 			</when>
 			<otherwise>
-				ORDER BY a.update_date DESC
+				ORDER BY a.is_default_address,a.update_date DESC
 			</otherwise>
 		</choose>
 	</select>
@@ -105,6 +133,16 @@
 			#{updateBy.id}
 		)
 	</insert>
+
+	<update id="restoreDefaultDeliveryAddress">
+		update member_delivery_address set
+		is_default_address = '0' where customer_code = #{customerCode}
+	</update>
+
+	<update id="setDefaultDeliveryAddress">
+		update member_delivery_address set
+		is_default_address = '1' where id = #{id}
+	</update>
 	
 	<update id="update">
 		UPDATE member_delivery_address SET 	
@@ -118,7 +156,6 @@
 			area = #{area},
 			detail_address = #{detailAddress},
 			zip = #{zip},
-			is_default_address = #{isDefaultAddress},
 			update_date = #{updateDate},
 			update_by = #{updateBy.id}
 		WHERE id = #{id}
@@ -126,7 +163,11 @@
 	
 	<update id="delete">
 		DELETE FROM member_delivery_address
-		WHERE id = #{id}
+		WHERE id = #{id} and is_default_address = '0'
 	</update>
-	
+
+	<delete id="deleteAddress">
+		DELETE FROM member_delivery_address
+		WHERE id = #{id} and is_default_address = '0'
+	</delete>
 </mapper>
