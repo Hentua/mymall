@@ -41,7 +41,15 @@
 		FROM order_info a
 		<include refid="orderInfoJoins"/>
 		<where>
-			
+			<if test="customerCode != null and customerCode != ''">
+				and a.customer_code = #{customerCode}
+			</if>
+			<if test="orderType != null and orderType != ''">
+				and a.order_type = #{orderType}
+			</if>
+			<if test="orderStatus != null and orderStatus != ''">
+				and a.order_status = #{orderStatus}
+			</if>
 		</where>
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">

@@ -14,16 +14,16 @@ import com.mall.modules.goods.entity.GoodsInfo;
 import com.mall.modules.goods.service.GoodsInfoService;
 import com.mall.modules.member.entity.MemberDeliveryAddress;
 import com.mall.modules.member.service.MemberDeliveryAddressService;
-import com.mall.modules.order.entity.OrderGoods;
-import com.mall.modules.order.entity.OrderInfo;
-import com.mall.modules.order.entity.OrderLogistics;
-import com.mall.modules.order.entity.OrderPaymentInfo;
+import com.mall.modules.order.entity.*;
 import com.mall.modules.order.service.OrderInfoService;
 import com.mall.modules.order.service.OrderPaymentInfoService;
+import com.mall.modules.order.service.OrderShoppingCartService;
 import com.mall.modules.sys.entity.User;
 import com.mall.modules.sys.utils.UserUtils;
 import com.sohu.idcenter.IdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -53,14 +53,25 @@ public class OrderInfoApi extends BaseController {
     private MemberDeliveryAddressService memberDeliveryAddressService;
     @Autowired
     private OrderPaymentInfoService orderPaymentInfoService;
+    @Autowired
+    private OrderShoppingCartService orderShoppingCartService;
 
+    /**
+     * 提交订单 订单30分钟内需要支付 否则关闭订单
+     *
+     * @param request 请求体
+     * @param response 响应体
+     */
     @RequestMapping(value = "submitOrder", method = RequestMethod.POST)
+    @Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public void submitOrder(HttpServletRequest request, HttpServletResponse response) {
         // 基础数据初始化及基本工具定义
         DecimalFormat df = new DecimalFormat("#.00");
         String orderType = request.getParameter("orderType");
         String orderStatus = "0";
         double amountTotal = 0.00;
+        // 初始化优惠数据
+        double discountAmountTotal = 0.00;
         // 开始获取表单数据
         String couponCode = request.getParameter("couponCode");
         String goodsList = request.getParameter("goodsList");
@@ -95,10 +106,9 @@ public class OrderInfoApi extends BaseController {
             List<OrderGoods> orderGoodsList;
             for (int i = 0; i < goodsArr.size(); i++) {
 
-                // todo 返佣金
-
                 JSONObject goodsInfoJson = goodsArr.getJSONObject(i);
                 String goodsId = goodsInfoJson.getString("goodsId");
+                String shoppingCartId = goodsInfoJson.getString("shoppingCartId");
                 double goodsCount = goodsInfoJson.getDouble("goodsCount");
                 // 验证数据正确性
                 if(StringUtils.isBlank(goodsId)) {
@@ -137,10 +147,14 @@ public class OrderInfoApi extends BaseController {
 
                     List<OrderLogistics> orderLogisticsList;
                     orderLogisticsList = Lists.newArrayList();
+
+                    // 初始化物流信息
                     OrderLogistics orderLogistics = orderInfoService.genOrderLogistics(orderNo, merchantCode, memberDeliveryAddress);
+                    orderLogistics.setId("");
                     orderLogisticsList.add(orderLogistics);
                     orderInfo.setOrderLogisticsList(orderLogisticsList);
 
+                    // 生成运费信息
                     orderInfo.setLogisticsFee(orderLogistics.getLogisticsFee());
                     orderAmountTotal += orderLogistics.getLogisticsFee();
                 }
@@ -159,19 +173,30 @@ public class OrderInfoApi extends BaseController {
                 orderGoods.setOrderNo(orderInfo);
                 orderGoods.setCount(goodsCount);
                 orderGoods.setSubtotal(goodsAmountTotal);
+                orderGoods.setId("");
                 orderGoodsList.add(orderGoods);
 
                 orderInfo.setOrderGoodsList(orderGoodsList);
                 orderInfoMap.put(merchantCode, orderInfo);
                 amountTotal += orderAmountTotal;
+
+                // 删除购物车数据
+                OrderShoppingCart deleteCondition = new OrderShoppingCart();
+                deleteCondition.setId(shoppingCartId);
+                orderShoppingCartService.delete(deleteCondition);
             }
 
             for (OrderInfo orderInfo : orderInfoMap.values()) {
+                double orderDiscountAmountTotal = 0.00;
+                orderInfo.setOrderAmountTotal(orderInfo.getOrderAmountTotal() - orderDiscountAmountTotal);
+                orderInfo.setDiscountAmountTotal(orderDiscountAmountTotal);
                 orderInfoService.save(orderInfo);
             }
+            // 扣减优惠
+            amountTotal -= discountAmountTotal;
             orderPaymentInfo.setAmountTotal(amountTotal);
             orderPaymentInfoService.save(orderPaymentInfo);
-            renderString(response, ResultGenerator.genSuccessResult(amountTotal));
+            renderString(response, ResultGenerator.genSuccessResult(orderPaymentInfo));
         } catch (Exception e) {
             renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
         }

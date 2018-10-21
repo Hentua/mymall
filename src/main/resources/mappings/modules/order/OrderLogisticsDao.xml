@@ -4,7 +4,7 @@
     
 	<sql id="orderLogisticsColumns">
 		a.id AS "id",
-		a.order_no AS "orderNo",
+		a.order_no AS "orderNo.orderNo",
 		a.express_no AS "expressNo",
 		a.consignee_realname AS "consigneeRealname",
 		a.consignee_telphone AS "consigneeTelphone",
@@ -48,8 +48,8 @@
 		<include refid="orderLogisticsJoins"/>
 		<where>
 			
-			<if test="orderNo != null and orderNo != ''">
-				AND a.order_no = #{orderNo}
+			<if test="orderNo.orderNo != null and orderNo.orderNo != ''">
+				AND a.order_no = #{orderNo.orderNo}
 			</if>
 		</where>
 		<choose>
@@ -106,7 +106,7 @@
 			reconciliation_time
 		) VALUES (
 			#{id},
-			#{orderNo},
+			#{orderNo.orderNo},
 			#{expressNo},
 			#{consigneeRealname},
 			#{consigneeTelphone},
@@ -134,7 +134,7 @@
 	
 	<update id="update">
 		UPDATE order_logistics SET 	
-			order_no = #{orderNo},
+			order_no = #{orderNo.orderNo},
 			express_no = #{expressNo},
 			consignee_realname = #{consigneeRealname},
 			consignee_telphone = #{consigneeTelphone},
@@ -167,7 +167,7 @@
 				WHERE id = #{id}
 			</when>
 			<otherwise>
-				WHERE order_no = #{orderNo}
+				WHERE order_no = #{orderNo.orderNo}
 			</otherwise>
 		</choose>
 	</update>

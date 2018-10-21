@@ -13,35 +13,35 @@
 		a.unit AS "unit",
 		a.image AS "image",
 		a.goods_desp AS "goodsDesp",
-		a.order_no AS "orderNo",
+		a.order_no AS "orderNo.orderNo",
 		a.goods_price AS "goodsPrice",
 		a.discount_rate AS "discountRate",
 		a.discount_amount AS "discountAmount",
 		a.count AS "count",
 		a.subtotal AS "subtotal"
 	</sql>
-	
+
 	<sql id="orderGoodsJoins">
 		LEFT JOIN order_info b ON b.id = a.order_no
 	</sql>
-    
+
 	<select id="get" resultType="OrderGoods">
-		SELECT 
+		SELECT
 			<include refid="orderGoodsColumns"/>
 		FROM order_goods a
 		<include refid="orderGoodsJoins"/>
 		WHERE a.id = #{id}
 	</select>
-	
+
 	<select id="findList" resultType="OrderGoods">
-		SELECT 
+		SELECT
 			<include refid="orderGoodsColumns"/>
 		FROM order_goods a
 		<include refid="orderGoodsJoins"/>
 		<where>
-			
-			<if test="orderNo != null and orderNo != ''">
-				AND a.order_no = #{orderNo}
+
+			<if test="orderNo.orderNo != null and orderNo.orderNo != ''">
+				AND a.order_no = #{orderNo.orderNo}
 			</if>
 		</where>
 		<choose>
@@ -52,15 +52,15 @@
 			</otherwise>
 		</choose>
 	</select>
-	
+
 	<select id="findAllList" resultType="OrderGoods">
-		SELECT 
+		SELECT
 			<include refid="orderGoodsColumns"/>
 		FROM order_goods a
 		<include refid="orderGoodsJoins"/>
 		<where>
-			
-		</where>		
+
+		</where>
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
 				ORDER BY ${page.orderBy}
@@ -69,7 +69,7 @@
 			</otherwise>
 		</choose>
 	</select>
-	
+
 	<insert id="insert">
 		INSERT INTO order_goods(
 			id,
@@ -99,7 +99,7 @@
 			#{unit},
 			#{image},
 			#{goodsDesp},
-			#{orderNo},
+			#{orderNo.orderNo},
 			#{goodsPrice},
 			#{discountRate},
 			#{discountAmount},
@@ -107,9 +107,9 @@
 			#{subtotal}
 		)
 	</insert>
-	
+
 	<update id="update">
-		UPDATE order_goods SET 	
+		UPDATE order_goods SET
 			goods_id = #{goodsId},
 			goods_category_id = #{goodsCategoryId},
 			goods_name = #{goodsName},
@@ -119,7 +119,7 @@
 			unit = #{unit},
 			image = #{image},
 			goods_desp = #{goodsDesp},
-			order_no = #{orderNo},
+			order_no = #{orderNo.orderNo},
 			goods_price = #{goodsPrice},
 			discount_rate = #{discountRate},
 			discount_amount = #{discountAmount},
@@ -127,7 +127,7 @@
 			subtotal = #{subtotal}
 		WHERE id = #{id}
 	</update>
-	
+
 	<update id="delete">
 		DELETE FROM order_goods
 		<choose>
@@ -135,7 +135,7 @@
 				WHERE id = #{id}
 			</when>
 			<otherwise>
-				WHERE order_no = #{orderNo}
+				WHERE order_no = #{orderNo.orderNo}
 			</otherwise>
 		</choose>
 	</update>
