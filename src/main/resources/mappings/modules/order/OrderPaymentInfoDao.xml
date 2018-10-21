@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.modules.order.dao.OrderPaymentInfoDao">
+    
+	<sql id="orderPaymentInfoColumns">
+		a.id AS "id",
+		a.payment_no AS "paymentNo",
+		a.pay_channel AS "payChannel",
+		a.amount_total AS "amountTotal",
+		a.device_info AS "deviceInfo",
+		a.return_code AS "returnCode",
+		a.return_msg AS "returnMsg",
+		a.result_code AS "resultCode",
+		a.err_code AS "errCode",
+		a.err_code_des AS "errCodeDes",
+		a.trade_type AS "tradeType",
+		a.prepay_id AS "prepayId",
+		a.code_url AS "codeUrl",
+		a.create_date AS "createDate",
+		a.create_by AS "createBy.id",
+		a.update_date AS "updateDate",
+		a.update_by AS "updateBy.id"
+	</sql>
+	
+	<sql id="orderPaymentInfoJoins">
+	</sql>
+    
+	<select id="get" resultType="OrderPaymentInfo">
+		SELECT 
+			<include refid="orderPaymentInfoColumns"/>
+		FROM order_payment_info a
+		<include refid="orderPaymentInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="OrderPaymentInfo">
+		SELECT 
+			<include refid="orderPaymentInfoColumns"/>
+		FROM order_payment_info a
+		<include refid="orderPaymentInfoJoins"/>
+		<where>
+			
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="paymentNo != null and paymentNo != ''">
+				AND a.payment_no = #{paymentNo}
+			</if>
+			<if test="payChannel != null and payChannel != ''">
+				AND a.pay_channel = #{payChannel}
+			</if>
+			<if test="returnCode != null and returnCode != ''">
+				AND a.return_code = #{returnCode}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="OrderPaymentInfo">
+		SELECT 
+			<include refid="orderPaymentInfoColumns"/>
+		FROM order_payment_info a
+		<include refid="orderPaymentInfoJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO order_payment_info(
+			id,
+			payment_no,
+			pay_channel,
+			amount_total,
+			device_info,
+			return_code,
+			return_msg,
+			result_code,
+			err_code,
+			err_code_des,
+			trade_type,
+			prepay_id,
+			code_url,
+			create_date,
+			create_by,
+			update_date,
+			update_by
+		) VALUES (
+			#{id},
+			#{paymentNo},
+			#{payChannel},
+			#{amountTotal},
+			#{deviceInfo},
+			#{returnCode},
+			#{returnMsg},
+			#{resultCode},
+			#{errCode},
+			#{errCodeDes},
+			#{tradeType},
+			#{prepayId},
+			#{codeUrl},
+			#{createDate},
+			#{createBy.id},
+			#{updateDate},
+			#{updateBy.id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE order_payment_info SET 	
+			payment_no = #{paymentNo},
+			pay_channel = #{payChannel},
+			amount_total = #{amountTotal},
+			device_info = #{deviceInfo},
+			return_code = #{returnCode},
+			return_msg = #{returnMsg},
+			result_code = #{resultCode},
+			err_code = #{errCode},
+			err_code_des = #{errCodeDes},
+			trade_type = #{tradeType},
+			prepay_id = #{prepayId},
+			code_url = #{codeUrl},
+			update_date = #{updateDate},
+			update_by = #{updateBy.id}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM order_payment_info
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

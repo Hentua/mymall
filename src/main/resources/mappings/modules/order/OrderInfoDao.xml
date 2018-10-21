@@ -20,7 +20,8 @@
 		a.pay_time AS "payTime",
 		a.pay_channel_time AS "payChannelTime",
 		a.coupon_code AS "couponCode",
-		a.discount_rate AS "discountRate"
+		a.discount_rate AS "discountRate",
+		a.payment_no AS "paymentNo"
 	</sql>
 	
 	<sql id="orderInfoJoins">
@@ -87,7 +88,8 @@
 			pay_time,
 			pay_channel_time,
 			coupon_code,
-			discount_rate
+			discount_rate,
+			payment_no
 		) VALUES (
 			#{id},
 			#{orderNo},
@@ -106,7 +108,8 @@
 			#{payTime},
 			#{payChannelTime},
 			#{couponCode},
-			#{discountRate}
+			#{discountRate},
+		    #{paymentNo}
 		)
 	</insert>
 	
@@ -126,7 +129,8 @@
 			pay_time = #{payTime},
 			pay_channel_time = #{payChannelTime},
 			coupon_code = #{couponCode},
-			discount_rate = #{discountRate}
+			discount_rate = #{discountRate},
+			payment_no = #{paymentNo}
 		WHERE id = #{id}
 	</update>
 	

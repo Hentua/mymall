@@ -25,9 +25,32 @@
 	</sql>
     
 	<select id="get" resultType="MemberDeliveryAddress">
-		SELECT 
-			<include refid="memberDeliveryAddressColumns"/>
-		FROM member_delivery_address a
+		SELECT
+			a.id AS "id",
+			a.customer_code AS "customerCode",
+			a.realname AS "realname",
+			a.telphone AS "telphone",
+			a.telphone_bak AS "telphoneBak",
+			a.country AS "country",
+			a.province AS "province",
+			a.city AS "city",
+			a.area AS "area",
+			a.detail_address AS "detailAddress",
+			a.zip AS "zip",
+			a.is_default_address AS "isDefaultAddress",
+			a.create_date AS "createDate",
+			a.create_by AS "createBy.id",
+			a.update_date AS "updateDate",
+			a.update_by AS "updateBy.id",
+			c.name AS "countryName",
+			city.name AS "cityName",
+			province.name AS "provinceName",
+			area.name AS "areaName"
+			FROM member_delivery_address a
+			left join sys_area c on c.id=a.country
+			left join sys_area city on city.id=a.city
+			left join sys_area province on province.id=a.province
+			left join sys_area area on area.id=a.area
 		<include refid="memberDeliveryAddressJoins"/>
 		WHERE a.id = #{id}
 	</select>

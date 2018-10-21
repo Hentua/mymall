@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.modules.member.dao.MemberLogisticsFeeDao">
+    
+	<sql id="memberLogisticsFeeColumns">
+		a.id AS "id",
+		a.merchant_code AS "merchantCode",
+		a.province AS "province",
+		a.logistics_fee AS "logisticsFee",
+		a.create_date AS "createDate",
+		a.create_by AS "createBy.id",
+		a.update_date AS "updateDate",
+		a.update_by AS "updateBy.id",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="memberLogisticsFeeJoins">
+		LEFT JOIN sys_area a3 ON a3.id = a.province
+	</sql>
+    
+	<select id="get" resultType="MemberLogisticsFee">
+		SELECT 
+			<include refid="memberLogisticsFeeColumns"/>
+		FROM member_logistics_fee a
+		<include refid="memberLogisticsFeeJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="MemberLogisticsFee">
+		SELECT 
+			<include refid="memberLogisticsFeeColumns"/>
+		FROM member_logistics_fee a
+		<include refid="memberLogisticsFeeJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="merchantCode != null and merchantCode != ''">
+				AND a.merchant_code = #{merchantCode}
+			</if>
+			<if test="province != null and province != ''">
+				AND a.province = #{province}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="MemberLogisticsFee">
+		SELECT 
+			<include refid="memberLogisticsFeeColumns"/>
+		FROM member_logistics_fee a
+		<include refid="memberLogisticsFeeJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO member_logistics_fee(
+			id,
+			merchant_code,
+			province,
+			logistics_fee,
+			create_date,
+			create_by,
+			update_date,
+			update_by,
+			del_flag
+		) VALUES (
+			#{id},
+			#{merchantCode},
+			#{province},
+			#{logisticsFee},
+			#{createDate},
+			#{createBy.id},
+			#{updateDate},
+			#{updateBy.id},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE member_logistics_fee SET 	
+			merchant_code = #{merchantCode},
+			province = #{province},
+			logistics_fee = #{logisticsFee},
+			update_date = #{updateDate},
+			update_by = #{updateBy.id}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE member_logistics_fee SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
