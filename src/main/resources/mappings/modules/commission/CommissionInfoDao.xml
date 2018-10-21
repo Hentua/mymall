@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.modules.commission.dao.CommissionInfoDao">
+    
+	<sql id="commissionInfoColumns">
+		a.id AS "id",
+		a.type AS "type",
+		a.user_id AS "userId",
+		a.produce_user_id AS "produceUserId",
+		a.origin_amount AS "originAmount",
+		a.amount AS "amount",
+		a.union_id AS "unionId",
+		a.settlement_id AS "settlementId",
+		a.create_date AS "createDate"
+	</sql>
+	
+	<sql id="commissionInfoJoins">
+	</sql>
+    
+	<select id="get" resultType="CommissionInfo">
+		SELECT 
+			<include refid="commissionInfoColumns"/>
+		FROM commission_info a
+		<include refid="commissionInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CommissionInfo">
+		SELECT 
+			<include refid="commissionInfoColumns"/>
+		FROM commission_info a
+		<include refid="commissionInfoJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CommissionInfo">
+		SELECT 
+			<include refid="commissionInfoColumns"/>
+		FROM commission_info a
+		<include refid="commissionInfoJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO commission_info(
+			id,
+			type,
+			user_id,
+			produce_user_id,
+			origin_amount,
+			amount,
+			union_id,
+			settlement_id,
+			create_date
+		) VALUES (
+			#{id},
+			#{type},
+			#{userId},
+			#{produceUserId},
+			#{originAmount},
+			#{amount},
+			#{unionId},
+			#{settlementId},
+			#{createDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE commission_info SET 	
+			type = #{type},
+			user_id = #{userId},
+			produce_user_id = #{produceUserId},
+			origin_amount = #{originAmount},
+			amount = #{amount},
+			union_id = #{unionId},
+			settlement_id = #{settlementId}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM commission_info
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

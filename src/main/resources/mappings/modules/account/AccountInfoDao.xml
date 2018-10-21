@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.modules.account.dao.AccountInfoDao">
+    
+	<sql id="accountInfoColumns">
+		a.id AS "id",
+		a.user_id AS "userId",
+		a.type AS "type",
+		a.way AS "way",
+		a.union_id AS "unionId",
+		a.amount AS "amount",
+		a.status AS "status",
+		a.create_date AS "createDate",
+		a.to_account_date AS "toAccountDate"
+	</sql>
+	
+	<sql id="accountInfoJoins">
+	</sql>
+    
+	<select id="get" resultType="AccountInfo">
+		SELECT 
+			<include refid="accountInfoColumns"/>
+		FROM account_info a
+		<include refid="accountInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="getByApi" resultType="AccountInfo">
+		SELECT
+		<include refid="accountInfoColumns"/>
+		FROM account_info a
+		<include refid="accountInfoJoins"/>
+		<where>
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="userId != null and userId != ''">
+				and a.user_id = #{userId}
+			</if>
+			<if test="startDate != null ">
+				and a.create_date &gt; #{startDate}
+			</if>
+			<if test="endDate != null ">
+				and a.create_date &lt; #{endDate}
+			</if>
+		</where>
+	</select>
+
+	<select id="getStsInfo" resultType="map">
+		SELECT
+			ifnull(sum(case WHEN a.type =1 THEN amount end ),0)	 as "income",
+			ifnull(sum(case WHEN a.type =2 THEN amount end ),0) as "expenditure",
+			ifnull(sum(case WHEN a.`status` =2 THEN amount end),0) as "outAccount"
+		FROM account_info a
+		<include refid="accountInfoJoins"/>
+		<where>
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="userId != null and userId != ''">
+				and a.user_id = #{userId}
+			</if>
+			<if test="type != null and type != ''">
+				AND a.type = #{type}
+			</if>
+			<if test="way != null and way != ''">
+				AND a.way = #{way}
+			</if>
+			<if test="startDate != null ">
+				and a.create_date &gt; #{startDate}
+			</if>
+			<if test="endDate != null ">
+				and a.create_date &lt; #{endDate}
+			</if>
+		</where>
+	</select>
+
+	
+	<select id="findList" resultType="AccountInfo">
+		SELECT 
+			<include refid="accountInfoColumns"/>
+		FROM account_info a
+		<include refid="accountInfoJoins"/>
+		<where>
+			<if test="type != null and type != ''">
+				AND a.type = #{type}
+			</if>
+			<if test="way != null and way != ''">
+				AND a.way = #{way}
+			</if>
+			<if test="unionId != null and unionId != ''">
+				AND a.union_id = #{unionId}
+			</if>
+			<if test="amount != null and amount != ''">
+				AND a.amount = #{amount}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="userId != null and userId != ''">
+				and a.user_id = #{userId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+
+	<select id="findListByApi" resultType="AccountInfo">
+		SELECT
+		<include refid="accountInfoColumns"/>
+		FROM account_info a
+		<include refid="accountInfoJoins"/>
+		<where>
+			<if test="type != null and type != ''">
+				AND a.type = #{type}
+			</if>
+			<if test="way != null and way != ''">
+				AND a.way = #{way}
+			</if>
+			<if test="unionId != null and unionId != ''">
+				AND a.union_id = #{unionId}
+			</if>
+			<if test="amount != null and amount != ''">
+				AND a.amount = #{amount}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="userId != null and userId != ''">
+				and a.user_id = #{userId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				order by create_date
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="AccountInfo">
+		SELECT 
+			<include refid="accountInfoColumns"/>
+		FROM account_info a
+		<include refid="accountInfoJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO account_info(
+			id,
+			user_id,
+			type,
+			way,
+			union_id,
+			amount,
+			status,
+			create_date,
+			to_account_date
+		) VALUES (
+			#{id},
+			#{userId},
+			#{type},
+			#{way},
+			#{unionId},
+			#{amount},
+			#{status},
+			#{createDate},
+			#{toAccountDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE account_info SET 	
+			user_id = #{userId},
+			type = #{type},
+			way = #{way},
+			union_id = #{unionId},
+			amount = #{amount},
+			status = #{status},
+			to_account_date = #{toAccountDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM account_info
+		WHERE id = #{id}
+	</update>
+
+	<update id="toAccount" parameterType="java.lang.String">
+		UPDATE account_info SET
+			status = 2
+		WHERE union_id = #{orderId}
+	</update>
+	
+</mapper>

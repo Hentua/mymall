@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.modules.commission.dao.CommissionConfigDao">
+    
+	<sql id="commissionConfigColumns">
+		a.id AS "id",
+		a.title AS "title",
+		a.type AS "type",
+		a.mode AS "mode",
+		a.number AS "number",
+		a.remarkes AS "remarkes"
+	</sql>
+	
+	<sql id="commissionConfigJoins">
+	</sql>
+    
+	<select id="get" resultType="CommissionConfig">
+		SELECT 
+			<include refid="commissionConfigColumns"/>
+		FROM commission_config a
+		<include refid="commissionConfigJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CommissionConfig">
+		SELECT 
+			<include refid="commissionConfigColumns"/>
+		FROM commission_config a
+		<include refid="commissionConfigJoins"/>
+		<where>
+			
+			<if test="title != null and title != ''">
+				AND a.title LIKE 
+					<if test="dbName == 'oracle'">'%'||#{title}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{title}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{title},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CommissionConfig">
+		SELECT 
+			<include refid="commissionConfigColumns"/>
+		FROM commission_config a
+		<include refid="commissionConfigJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO commission_config(
+			id,
+			title,
+			type,
+			mode,
+			number,
+			remarkes
+		) VALUES (
+			#{id},
+			#{title},
+			#{type},
+			#{mode},
+			#{number},
+			#{remarkes}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE commission_config SET 	
+			title = #{title},
+			type = #{type},
+			mode = #{mode},
+			number = #{number},
+			remarkes = #{remarkes}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM commission_config
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

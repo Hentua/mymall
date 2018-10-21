@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.modules.settlement.dao.SettlementInfoDao">
+    
+	<sql id="settlementInfoColumns">
+		a.id AS "id",
+		a.type AS "type",
+		a.union_id AS "unionId",
+		a.amount AS "amount",
+		a.status AS "status",
+		a.sub_user_id AS "subUserId",
+		a.sub_date AS "subDate",
+		a.audit_user_id AS "auditUserId",
+		a.audit_date AS "auditDate",
+		a.audit_remarks AS "auditRemarks",
+		a.settlement_user_id AS "settlementUserId",
+		a.settlement_date AS "settlementDate",
+		a.settlement_remarks AS "settlementRemarks"
+	</sql>
+	
+	<sql id="settlementInfoJoins">
+	</sql>
+    
+	<select id="get" resultType="SettlementInfo">
+		SELECT 
+			<include refid="settlementInfoColumns"/>
+		FROM settlement_info a
+		<include refid="settlementInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="SettlementInfo">
+		SELECT 
+			<include refid="settlementInfoColumns"/>
+		FROM settlement_info a
+		<include refid="settlementInfoJoins"/>
+		<where>
+			
+			<if test="type != null and type != ''">
+				AND a.type = #{type}
+			</if>
+			<if test="unionId != null and unionId != ''">
+				AND a.union_id = #{unionId}
+			</if>
+			<if test="amount != null and amount != ''">
+				AND a.amount = #{amount}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="subUserId != null and subUserId != ''">
+				AND a.sub_user_id = #{subUserId}
+			</if>
+			<if test="subDate != null and subDate != ''">
+				AND a.sub_date = #{subDate}
+			</if>
+			<if test="auditUserId != null and auditUserId != ''">
+				AND a.audit_user_id = #{auditUserId}
+			</if>
+			<if test="auditDate != null and auditDate != ''">
+				AND a.audit_date = #{auditDate}
+			</if>
+			<if test="settlementUserId != null and settlementUserId != ''">
+				AND a.settlement_user_id = #{settlementUserId}
+			</if>
+			<if test="settlementDate != null and settlementDate != ''">
+				AND a.settlement_date = #{settlementDate}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SettlementInfo">
+		SELECT 
+			<include refid="settlementInfoColumns"/>
+		FROM settlement_info a
+		<include refid="settlementInfoJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO settlement_info(
+			id,
+			type,
+			union_id,
+			amount,
+			status,
+			sub_user_id,
+			sub_date,
+			audit_user_id,
+			audit_date,
+			audit_remarks,
+			settlement_user_id,
+			settlement_date,
+			settlement_remarks
+		) VALUES (
+			#{id},
+			#{type},
+			#{unionId},
+			#{amount},
+			#{status},
+			#{subUserId},
+			#{subDate},
+			#{auditUserId},
+			#{auditDate},
+			#{auditRemarks},
+			#{settlementUserId},
+			#{settlementDate},
+			#{settlementRemarks}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE settlement_info SET 	
+			type = #{type},
+			union_id = #{unionId},
+			amount = #{amount},
+			status = #{status},
+			sub_user_id = #{subUserId},
+			sub_date = #{subDate},
+			audit_user_id = #{auditUserId},
+			audit_date = #{auditDate},
+			audit_remarks = #{auditRemarks},
+			settlement_user_id = #{settlementUserId},
+			settlement_date = #{settlementDate},
+			settlement_remarks = #{settlementRemarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM settlement_info
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
