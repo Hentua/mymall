@@ -178,7 +178,6 @@ public class OrderInfoApi extends BaseController {
 
                 orderInfo.setOrderGoodsList(orderGoodsList);
                 orderInfoMap.put(merchantCode, orderInfo);
-                amountTotal += orderAmountTotal;
 
                 // 删除购物车数据
                 OrderShoppingCart deleteCondition = new OrderShoppingCart();
@@ -188,7 +187,9 @@ public class OrderInfoApi extends BaseController {
 
             for (OrderInfo orderInfo : orderInfoMap.values()) {
                 double orderDiscountAmountTotal = 0.00;
-                orderInfo.setOrderAmountTotal(orderInfo.getOrderAmountTotal() - orderDiscountAmountTotal);
+                double orderAmountTotal = orderInfo.getOrderAmountTotal() - orderDiscountAmountTotal;
+                amountTotal += orderAmountTotal;
+                orderInfo.setOrderAmountTotal(orderAmountTotal);
                 orderInfo.setDiscountAmountTotal(orderDiscountAmountTotal);
                 orderInfoService.save(orderInfo);
             }
@@ -198,6 +199,44 @@ public class OrderInfoApi extends BaseController {
             orderPaymentInfoService.save(orderPaymentInfo);
             renderString(response, ResultGenerator.genSuccessResult(orderPaymentInfo));
         } catch (Exception e) {
+            renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
+        }
+    }
+
+    /**
+     * 订单状态统计
+     *
+     * @param request 请求体
+     * @param response 响应体
+     */
+    @RequestMapping(value = "orderCount", method = RequestMethod.POST)
+    public void orderCount(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            User currUser = UserUtils.getUser();
+            String customerCode = currUser.getId();
+            renderString(response, ResultGenerator.genSuccessResult(orderInfoService.orderCount(customerCode)));
+        }catch (Exception e) {
+            renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
+        }
+    }
+
+    /**
+     * 根据订单状态条件查询订单列表
+     *
+     * @param request 请求体
+     * @param response 响应体
+     */
+    @RequestMapping(value = "orderList", method = RequestMethod.POST)
+    public void orderList(HttpServletRequest request, HttpServletResponse response) {
+        String orderStatus = request.getParameter("orderStatus");
+        User currUser = UserUtils.getUser();
+        try {
+            String customerCode = currUser.getId();
+            OrderInfo queryCondition = new OrderInfo();
+            queryCondition.setOrderStatus(orderStatus);
+            queryCondition.setCustomerCode(customerCode);
+            renderString(response, ResultGenerator.genSuccessResult(orderInfoService.findList(queryCondition)));
+        }catch (Exception e) {
             renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
         }
     }

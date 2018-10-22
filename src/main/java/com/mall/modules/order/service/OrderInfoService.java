@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 订单信息Service
@@ -34,6 +35,8 @@ public class OrderInfoService extends CrudService<OrderInfoDao, OrderInfo> {
 	private OrderLogisticsDao orderLogisticsDao;
 	@Autowired
 	private MemberLogisticsFeeService memberLogisticsFeeService;
+	@Autowired
+	private OrderInfoDao orderInfoDao;
 	
 	public OrderInfo get(String id) {
 		OrderInfo orderInfo = super.get(id);
@@ -148,6 +151,16 @@ public class OrderInfoService extends CrudService<OrderInfoDao, OrderInfo> {
 		orderLogistics.setConsigneeRealname(memberDeliveryAddress.getRealname());
 		orderLogistics.setConsigneeZip(memberDeliveryAddress.getZip());
 		return orderLogistics;
+	}
+
+	/**
+	 * 统计订单状态数量
+	 *
+	 * @param customerCode 用户编号
+	 * @return 订单状态数量
+	 */
+	public Map<String, String> orderCount(String customerCode) {
+		return orderInfoDao.orderCount(customerCode);
 	}
 	
 }
