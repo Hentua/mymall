@@ -19,7 +19,8 @@
 		a.create_date AS "createDate",
 		a.create_by AS "createBy.id",
 		a.update_date AS "updateDate",
-		a.update_by AS "updateBy.id"
+		a.update_by AS "updateBy.id",
+		a.payment_status AS "paymentStatus"
 	</sql>
 	
 	<sql id="orderPaymentInfoJoins">
@@ -31,6 +32,21 @@
 		FROM order_payment_info a
 		<include refid="orderPaymentInfoJoins"/>
 		WHERE a.id = #{id}
+	</select>
+
+	<select id="getByCondition" resultType="OrderPaymentInfo">
+		SELECT
+		<include refid="orderPaymentInfoColumns"/>
+		FROM order_payment_info a
+		<include refid="orderPaymentInfoJoins"/>
+		<where>
+			<if test="id != null and id != ''">
+				and a.id = #{id}
+			</if>
+			<if test="paymentNo != null and paymentNo != ''">
+				and a.payment_no = #{paymentNo}
+			</if>
+		</where>
 	</select>
 	
 	<select id="findList" resultType="OrderPaymentInfo">
@@ -99,7 +115,8 @@
 			create_date,
 			create_by,
 			update_date,
-			update_by
+			update_by,
+		    payment_status
 		) VALUES (
 			#{id},
 			#{paymentNo},
@@ -117,7 +134,8 @@
 			#{createDate},
 			#{createBy.id},
 			#{updateDate},
-			#{updateBy.id}
+			#{updateBy.id},
+		    #{paymentStatus}
 		)
 	</insert>
 	
@@ -136,7 +154,8 @@
 			prepay_id = #{prepayId},
 			code_url = #{codeUrl},
 			update_date = #{updateDate},
-			update_by = #{updateBy.id}
+			update_by = #{updateBy.id},
+		  	payment_status = #{paymentStatus}
 		WHERE id = #{id}
 	</update>
 	

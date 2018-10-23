@@ -47,6 +47,10 @@ public class OrderInfoService extends CrudService<OrderInfoDao, OrderInfo> {
         return orderInfo;
     }
 
+    public OrderInfo getOrderBasicInfo(OrderInfo orderInfo) {
+        return orderInfoDao.getOrderBasicInfo(orderInfo);
+    }
+
     @Override
     public List<OrderInfo> findList(OrderInfo orderInfo) {
         return super.findList(orderInfo);

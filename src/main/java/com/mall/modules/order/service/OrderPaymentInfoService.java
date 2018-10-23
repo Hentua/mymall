@@ -4,6 +4,8 @@ import com.mall.common.persistence.Page;
 import com.mall.common.service.CrudService;
 import com.mall.modules.order.dao.OrderPaymentInfoDao;
 import com.mall.modules.order.entity.OrderPaymentInfo;
+import com.sohu.idcenter.IdWorker;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,8 +20,16 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class OrderPaymentInfoService extends CrudService<OrderPaymentInfoDao, OrderPaymentInfo> {
 
+	private static IdWorker idWorker = new IdWorker();
+	@Autowired
+	private OrderPaymentInfoDao orderPaymentInfoDao;
+
 	public OrderPaymentInfo get(String id) {
 		return super.get(id);
+	}
+
+	public OrderPaymentInfo getByCondition(OrderPaymentInfo orderPaymentInfo) {
+		return orderPaymentInfoDao.getByCondition(orderPaymentInfo);
 	}
 	
 	public List<OrderPaymentInfo> findList(OrderPaymentInfo orderPaymentInfo) {
@@ -38,6 +48,15 @@ public class OrderPaymentInfoService extends CrudService<OrderPaymentInfoDao, Or
 	@Transactional(readOnly = false)
 	public void delete(OrderPaymentInfo orderPaymentInfo) {
 		super.delete(orderPaymentInfo);
+	}
+
+	public static OrderPaymentInfo genDefaultPaymentInfo(String orderType) {
+		String paymentNo = String.valueOf(idWorker.getId());
+		OrderPaymentInfo orderPaymentInfo = new OrderPaymentInfo();
+		orderPaymentInfo.setPaymentNo(paymentNo);
+		orderPaymentInfo.setPayChannel(orderType);
+		orderPaymentInfo.setPaymentStatus("0");
+		return orderPaymentInfo;
 	}
 	
 }

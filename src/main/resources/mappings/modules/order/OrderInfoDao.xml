@@ -145,6 +145,13 @@
 		WHERE a.id = #{id}
 	</select>
 
+	<select id="getOrderBasicInfo" resultType="OrderInfo">
+		select <include refid="orderInfoColumns"/>
+		from order_info a
+		<include refid="orderInfoJoins"/>
+		where a.id = #{id} and a.customer_code = #{customerCode}
+	</select>
+
 	<select id="orderCount" resultType="Map">
 		select count(0)                   as total,
 			   sum(if(order_status = 0, 1, 0)) as pendingPay,

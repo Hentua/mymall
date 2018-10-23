@@ -38,5 +38,13 @@ public interface OrderInfoDao extends CrudDao<OrderInfo> {
      * @return 删除条目数
      */
     int deleteByUser(OrderInfo orderInfo);
+
+    /**
+     * 查询基础订单信息 查询当前用户的单个订单
+     *
+     * @param orderInfo 查询条件
+     * @return 基础订单信息
+     */
+    OrderInfo getOrderBasicInfo(OrderInfo orderInfo);
 	
 }

@@ -95,9 +95,7 @@ public class OrderInfoApi extends BaseController {
             // todo coupon discount
 
             // 组装合并订单支付信息
-            OrderPaymentInfo orderPaymentInfo = new OrderPaymentInfo();
-            orderPaymentInfo.setPaymentNo(paymentNo);
-            orderPaymentInfo.setPayChannel(orderType);
+            OrderPaymentInfo orderPaymentInfo = OrderPaymentInfoService.genDefaultPaymentInfo(orderType);
 
             // 订单Collection 根据店铺进行订单拆单
             Map<String, OrderInfo> orderInfoMap = Maps.newHashMap();
