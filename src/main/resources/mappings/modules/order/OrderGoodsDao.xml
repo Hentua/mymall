@@ -13,7 +13,7 @@
 		a.unit AS "unit",
 		a.image AS "image",
 		a.goods_desp AS "goodsDesp",
-		a.order_no AS "orderNo.orderNo",
+		a.order_no AS "orderNo",
 		a.goods_price AS "goodsPrice",
 		a.discount_rate AS "discountRate",
 		a.discount_amount AS "discountAmount",
@@ -40,8 +40,8 @@
 		<include refid="orderGoodsJoins"/>
 		<where>
 
-			<if test="orderNo.orderNo != null and orderNo.orderNo != ''">
-				AND a.order_no = #{orderNo.orderNo}
+			<if test="orderNo != null and orderNo != ''">
+				AND a.order_no = #{orderNo}
 			</if>
 		</where>
 		<choose>
@@ -99,7 +99,7 @@
 			#{unit},
 			#{image},
 			#{goodsDesp},
-			#{orderNo.orderNo},
+			#{orderNo},
 			#{goodsPrice},
 			#{discountRate},
 			#{discountAmount},
@@ -119,7 +119,7 @@
 			unit = #{unit},
 			image = #{image},
 			goods_desp = #{goodsDesp},
-			order_no = #{orderNo.orderNo},
+			order_no = #{orderNo},
 			goods_price = #{goodsPrice},
 			discount_rate = #{discountRate},
 			discount_amount = #{discountAmount},
@@ -135,7 +135,7 @@
 				WHERE id = #{id}
 			</when>
 			<otherwise>
-				WHERE order_no = #{orderNo.orderNo}
+				WHERE order_no = #{orderNo}
 			</otherwise>
 		</choose>
 	</update>

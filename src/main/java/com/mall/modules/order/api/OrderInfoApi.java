@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.mall.common.persistence.Page;
 import com.mall.common.service.ServiceException;
 import com.mall.common.utils.ApiExceptionHandleUtil;
 import com.mall.common.utils.ResultGenerator;
@@ -145,14 +146,9 @@ public class OrderInfoApi extends BaseController {
                     orderGoodsList = Lists.newArrayList();
                     orderAmountTotal = 0.00;
 
-                    List<OrderLogistics> orderLogisticsList;
-                    orderLogisticsList = Lists.newArrayList();
-
                     // 初始化物流信息
                     OrderLogistics orderLogistics = orderInfoService.genOrderLogistics(orderNo, merchantCode, memberDeliveryAddress);
-                    orderLogistics.setId("");
-                    orderLogisticsList.add(orderLogistics);
-                    orderInfo.setOrderLogisticsList(orderLogisticsList);
+                    orderInfo.setOrderLogistics(orderLogistics);
 
                     // 生成运费信息
                     orderInfo.setLogisticsFee(orderLogistics.getLogisticsFee());
@@ -170,7 +166,7 @@ public class OrderInfoApi extends BaseController {
                 orderInfo.setOrderAmountTotal(orderAmountTotal);
 
                 OrderGoods orderGoods = orderInfoService.genOrderGoods(goodsInfo);
-                orderGoods.setOrderNo(orderInfo);
+                orderGoods.setOrderNo(orderInfo.getOrderNo());
                 orderGoods.setCount(goodsCount);
                 orderGoods.setSubtotal(goodsAmountTotal);
                 orderGoods.setId("");
@@ -229,13 +225,50 @@ public class OrderInfoApi extends BaseController {
     @RequestMapping(value = "orderList", method = RequestMethod.POST)
     public void orderList(HttpServletRequest request, HttpServletResponse response) {
         String orderStatus = request.getParameter("orderStatus");
+        String pageNo = request.getParameter("pageNo");
+        String pageSize = request.getParameter("pageSize");
         User currUser = UserUtils.getUser();
         try {
+            if(StringUtils.isBlank(pageNo)) {
+                pageNo = "0";
+            }
+            if (StringUtils.isBlank(pageSize)) {
+                pageSize = "10";
+            }
+            Page<OrderInfo> page = new Page<OrderInfo>();
+            page.setPageNo(Integer.valueOf(pageNo));
+            page.setPageSize(Integer.valueOf(pageSize));
             String customerCode = currUser.getId();
             OrderInfo queryCondition = new OrderInfo();
             queryCondition.setOrderStatus(orderStatus);
             queryCondition.setCustomerCode(customerCode);
-            renderString(response, ResultGenerator.genSuccessResult(orderInfoService.findList(queryCondition)));
+            renderString(response, ResultGenerator.genSuccessResult(orderInfoService.findOrderDetailList(page, queryCondition).getList()));
+        }catch (Exception e) {
+            renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
+        }
+    }
+
+    /**
+     * 删除订单 逻辑删除 仅让用户前端查询不到
+     *
+     * @param request 请求体
+     * @param response 响应体
+     */
+    @RequestMapping(value = "deleteOrder", method = RequestMethod.POST)
+    public void deleteOrder(HttpServletRequest request, HttpServletResponse response) {
+        User currUser = UserUtils.getUser();
+        String customerCode = currUser.getId();
+        String orderId = request.getParameter("orderId");
+        try {
+            OrderInfo orderInfo = new OrderInfo();
+            orderInfo.setId(orderId);
+            orderInfo.setCustomerCode(customerCode);
+            int result = orderInfoService.deleteByUser(orderInfo);
+            if(result > 0) {
+                renderString(response, ResultGenerator.genSuccessResult());
+            }else {
+                renderString(response, ResultGenerator.genFailResult("删除失败，订单有误"));
+            }
         }catch (Exception e) {
             renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
         }

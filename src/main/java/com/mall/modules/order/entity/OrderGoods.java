@@ -21,7 +21,7 @@ public class OrderGoods extends DataEntity<OrderGoods> {
 	private String unit;		// 商品单位
 	private String image;		// 商品图片
 	private String goodsDesp;		// 商品描述
-	private OrderInfo orderNo;		// 对应订单编号 父类
+	private String orderNo;		// 对应订单编号 父类
 	private Double goodsPrice;		// 商品价格
 	private Double discountRate;		// 折扣比例
 	private Double discountAmount;		// 折扣金额
@@ -32,11 +32,7 @@ public class OrderGoods extends DataEntity<OrderGoods> {
 		super();
 	}
 
-	public OrderGoods(String id){
-		super(id);
-	}
-
-	public OrderGoods(OrderInfo orderNo){
+	public OrderGoods(String orderNo){
 		this.orderNo = orderNo;
 	}
 
@@ -124,11 +120,11 @@ public class OrderGoods extends DataEntity<OrderGoods> {
 	}
 	
 	@Length(min=1, max=32, message="对应订单编号长度必须介于 1 和 32 之间")
-	public OrderInfo getOrderNo() {
+	public String getOrderNo() {
 		return orderNo;
 	}
 
-	public void setOrderNo(OrderInfo orderNo) {
+	public void setOrderNo(String orderNo) {
 		this.orderNo = orderNo;
 	}
 	

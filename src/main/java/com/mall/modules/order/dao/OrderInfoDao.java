@@ -4,6 +4,7 @@ import com.mall.common.persistence.CrudDao;
 import com.mall.common.persistence.annotation.MyBatisDao;
 import com.mall.modules.order.entity.OrderInfo;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -21,5 +22,21 @@ public interface OrderInfoDao extends CrudDao<OrderInfo> {
      * @return 状态数量
      */
     Map<String, String> orderCount(String customerCode);
+
+    /**
+     * 根据条件查询订单列表
+     *
+     * @param orderInfo 查询条件
+     * @return 订单列表
+     */
+    List<OrderInfo> findOrderDetailList(OrderInfo orderInfo);
+
+    /**
+     * 删除用户订单数据
+     *
+     * @param orderInfo 条件
+     * @return 删除条目数
+     */
+    int deleteByUser(OrderInfo orderInfo);
 	
 }

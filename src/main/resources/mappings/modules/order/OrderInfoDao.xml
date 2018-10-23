@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mall.modules.order.dao.OrderInfoDao">
-    
+
 	<sql id="orderInfoColumns">
 		a.id AS "id",
 		a.order_no AS "orderNo",
@@ -21,14 +21,124 @@
 		a.pay_channel_time AS "payChannelTime",
 		a.coupon_code AS "couponCode",
 		a.discount_rate AS "discountRate",
-		a.payment_no AS "paymentNo"
+		a.payment_no AS "paymentNo",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.closed_time AS "closedTime",
+		a.auto_closed_time AS "autoClosedTime",
+		a.completed_time AS "completedTime"
 	</sql>
-	
+
+	<resultMap id="OrderInfoDetail" type="OrderInfo">
+		<id property="id" column="id"/>
+		<result property="orderNo" column="orderNo"/>
+		<result property="merchantCode" column="merchantCode"/>
+		<result property="orderStatus" column="orderStatus"/>
+		<result property="orderType" column="orderType"/>
+		<result property="goodsCount" column="goodsCount"/>
+		<result property="goodsAmountTotal" column="goodsAmountTotal"/>
+		<result property="logisticsFee" column="logisticsFee"/>
+		<result property="orderAmountTotal" column="orderAmountTotal"/>
+		<result property="discountAmountTotal" column="discountAmountTotal"/>
+		<result property="createDate" column="createDate"/>
+		<result property="createBy.id" column="createBy"/>
+		<result property="customerCode" column="customerCode"/>
+		<result property="remarks" column="remarks"/>
+		<result property="payTime" column="payTime"/>
+		<result property="payChannelTime" column="payChannelTime"/>
+		<result property="couponCode" column="couponCode"/>
+		<result property="discountRate" column="discountRate"/>
+		<result property="paymentNo" column="paymentNo"/>
+		<result property="updateBy.id" column="updateBy"/>
+		<result property="updateDate" column="updateDate"/>
+		<result property="closedTime" column="closedTime"/>
+		<result property="autoClosedTime" column="autoClosedTime"/>
+		<result property="completedTime" column="completedTime"/>
+		<result property="merchantName" column="merchantName"/>
+		<association property="orderLogistics" javaType="OrderLogistics">
+			<id property="id" column="logistics.id"/>
+			<result property="expressNo" column="logistics.expressNo"/>
+			<result property="consigneeRealname" column="logistics.consigneeRealname"/>
+			<result property="consigneeTelphone" column="logistics.consigneeTelphone"/>
+			<result property="consigneeTelphoneBackup" column="logistics.consigneeTelphoneBackup"/>
+			<result property="consigneeAddress" column="logistics.consigneeAddress"/>
+			<result property="consigneeZip" column="logistics.consigneeZip"/>
+			<result property="logisticsType" column="logistics.logisticsType"/>
+			<result property="logisticsId" column="logistics.logisticsId"/>
+			<result property="logisticsFee" column="logistics.logisticsFee"/>
+			<result property="orderlogisticsStatus" column="logistics.orderlogisticsStatus"/>
+			<result property="logisticsResultLast" column="logistics.logisticsResultLast"/>
+			<result property="logisticsResult" column="logistics.logisticsResult"/>
+			<result property="logisticsCreateTime" column="logistics.logisticsCreateTime"/>
+			<result property="logisticsUpdateTime" column="logistics.logisticsUpdateTime"/>
+		</association>
+		<collection property="orderGoodsList" ofType="OrderGoods">
+			<id property="id" column="orderGoodsList.id"/>
+			<result property="goodsId" column="orderGoodsList.goodsId"/>
+			<result property="goodsCategoryId" column="orderGoodsList.goodsCategoryId"/>
+			<result property="goodsName" column="orderGoodsList.goodsName"/>
+			<result property="goodsBarcode" column="orderGoodsList.goodsBarcode"/>
+			<result property="goodsTitle" column="orderGoodsList.goodsTitle"/>
+			<result property="goodsType" column="orderGoodsList.goodsType"/>
+			<result property="unit" column="orderGoodsList.unit"/>
+			<result property="image" column="orderGoodsList.image"/>
+			<result property="goodsDesp" column="orderGoodsList.goodsDesp"/>
+			<result property="goodsPrice" column="orderGoodsList.goodsPrice"/>
+			<result property="discountRate" column="orderGoodsList.discountRate"/>
+			<result property="discountAmount" column="orderGoodsList.discountAmount"/>
+			<result property="count" column="orderGoodsList.count"/>
+			<result property="subtotal" column="orderGoodsList.subtotal"/>
+		</collection>
+	</resultMap>
+
+	<sql id="orderInfoDetailColumns">
+		a.id AS "id",
+		a.order_no AS "orderNo",
+		a.merchant_code AS "merchantCode",
+		a.order_status AS "orderStatus",
+		a.order_type AS "orderType",
+		a.goods_count AS "goodsCount",
+		a.goods_amount_total AS "goodsAmountTotal",
+		a.logistics_fee AS "logisticsFee",
+		a.order_amount_total AS "orderAmountTotal",
+		a.discount_amount_total AS "discountAmountTotal",
+		a.create_date AS "createDate",
+		a.create_by AS "createBy.id",
+		a.customer_code AS "customerCode",
+		a.remarks AS "remarks",
+		a.pay_time AS "payTime",
+		a.pay_channel_time AS "payChannelTime",
+		a.coupon_code AS "couponCode",
+		a.discount_rate AS "discountRate",
+		a.payment_no AS "paymentNo",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.closed_time AS "closedTime",
+		a.auto_closed_time AS "autoClosedTime",
+		a.completed_time AS "completedTime",
+		m.nickname AS "merchantName",
+		l.id AS "logistics.id",
+		l.express_no AS "logistics.expressNo",
+		l.consignee_realname AS "logistics.consigneeRealname",
+		l.consignee_telphone AS "logistics.consigneeTelphone",
+		l.consignee_telphone_backup AS "logistics.consigneeTelphoneBackup",
+		l.consignee_address AS "logistics.consigneeAddress",
+		l.consignee_zip AS "logistics.consigneeZip",
+		l.logistics_type AS "logistics.logisticsType",
+		l.logistics_id AS "logistics.logisticsId",
+		l.logistics_fee AS "logistics.logisticsFee",
+		l.orderlogistics_status AS "logistics.orderlogisticsStatus",
+		l.logistics_result_last AS "logistics.logisticsResultLast",
+		l.logistics_result AS "logistics.logisticsResult",
+		l.logistics_create_time AS "logistics.logisticsCreateTime",
+		l.logistics_update_time AS "logistics.logisticsUpdateTime"
+	</sql>
+
 	<sql id="orderInfoJoins">
 	</sql>
-    
+
 	<select id="get" resultType="OrderInfo">
-		SELECT 
+		SELECT
 			<include refid="orderInfoColumns"/>
 		FROM order_info a
 		<include refid="orderInfoJoins"/>
@@ -46,9 +156,30 @@
 			   sum(if(order_status = 6, 1, 0)) as returned
 		from order_info where customer_code = #{customerCode}
 	</select>
-	
+
+    <select id="findOrderDetailList" resultMap="OrderInfoDetail">
+        select
+        <include refid="orderInfoDetailColumns"/>
+        from order_info a
+        left join member_info m on m.id=a.merchant_code
+        left join order_logistics l on l.order_no = a.order_no
+        <where>
+            <if test="customerCode != null and customerCode != ''">
+                and a.customer_code = #{customerCode}
+            </if>
+            <if test="orderStatus != null and orderStatus != ''">
+                and a.order_status = #{orderStatus}
+            </if>
+            <if test="orderType != null and orderType != ''">
+                and a.order_type = #{orderType}
+            </if>
+            and a.del_flag = '0'
+        </where>
+        order by a.create_date desc
+    </select>
+
 	<select id="findList" resultType="OrderInfo">
-		SELECT 
+		SELECT
 			<include refid="orderInfoColumns"/>
 		FROM order_info a
 		<include refid="orderInfoJoins"/>
@@ -71,15 +202,15 @@
 			</otherwise>
 		</choose>
 	</select>
-	
+
 	<select id="findAllList" resultType="OrderInfo">
-		SELECT 
+		SELECT
 			<include refid="orderInfoColumns"/>
 		FROM order_info a
 		<include refid="orderInfoJoins"/>
 		<where>
-			
-		</where>		
+
+		</where>
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
 				ORDER BY ${page.orderBy}
@@ -88,7 +219,7 @@
 			</otherwise>
 		</choose>
 	</select>
-	
+
 	<insert id="insert">
 		INSERT INTO order_info(
 			id,
@@ -109,7 +240,13 @@
 			pay_channel_time,
 			coupon_code,
 			discount_rate,
-			payment_no
+			payment_no,
+		    update_by,
+		    update_date,
+			closed_time,
+			auto_closed_time,
+			completed_time,
+		    del_flag
 		) VALUES (
 			#{id},
 			#{orderNo},
@@ -129,12 +266,18 @@
 			#{payChannelTime},
 			#{couponCode},
 			#{discountRate},
-		    #{paymentNo}
+			#{paymentNo},
+			#{updateBy.id},
+			#{updateDate},
+			#{closedTime},
+			#{autoClosedTime},
+			#{completedTime},
+		    #{delFlag}
 		)
 	</insert>
-	
+
 	<update id="update">
-		UPDATE order_info SET 	
+		UPDATE order_info SET
 			order_no = #{orderNo},
 			merchant_code = #{merchantCode},
 			order_status = #{orderStatus},
@@ -150,13 +293,18 @@
 			pay_channel_time = #{payChannelTime},
 			coupon_code = #{couponCode},
 			discount_rate = #{discountRate},
-			payment_no = #{paymentNo}
+			payment_no = #{paymentNo},
+			update_by = #{updateBy.id},
+		    update_date = #{updateDate},
+		    closed_time = #{closedTime},
+		  	auto_closed_time = #{autoClosedTime},
+		    completed_time = #{completedTime}
 		WHERE id = #{id}
 	</update>
-	
-	<update id="delete">
-		DELETE FROM order_info
-		WHERE id = #{id}
+
+	<update id="deleteByUser">
+		update order_info set del_flag = '1'
+		WHERE id = #{id} and customer_code = #{customerCode}
 	</update>
-	
+
 </mapper>

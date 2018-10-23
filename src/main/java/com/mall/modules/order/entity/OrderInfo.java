@@ -31,9 +31,14 @@ public class OrderInfo extends DataEntity<OrderInfo> {
 	private Date payChannelTime;		// 支付渠道记录的支付时间
 	private String couponCode; // 优惠券ID
 	private List<OrderGoods> orderGoodsList = Lists.newArrayList();		// 子表列表
-	private List<OrderLogistics> orderLogisticsList = Lists.newArrayList();		// 子表列表
+	private OrderLogistics orderLogistics;		// 子表列表
 	private Double discountRate; // 折扣比例
 	private String paymentNo;
+	private Date closedTime; // 交易关闭时间
+	private Date autoClosedTime; // 自动关闭交易时间
+	private Date completedTime; // 交易完成时间
+
+	private String merchantName;
 
 	public OrderInfo() {
 		super();
@@ -41,6 +46,38 @@ public class OrderInfo extends DataEntity<OrderInfo> {
 
 	public OrderInfo(String id){
 		super(id);
+	}
+
+	public String getMerchantName() {
+		return merchantName;
+	}
+
+	public void setMerchantName(String merchantName) {
+		this.merchantName = merchantName;
+	}
+
+	public Date getClosedTime() {
+		return closedTime;
+	}
+
+	public void setClosedTime(Date closedTime) {
+		this.closedTime = closedTime;
+	}
+
+	public Date getAutoClosedTime() {
+		return autoClosedTime;
+	}
+
+	public void setAutoClosedTime(Date autoClosedTime) {
+		this.autoClosedTime = autoClosedTime;
+	}
+
+	public Date getCompletedTime() {
+		return completedTime;
+	}
+
+	public void setCompletedTime(Date completedTime) {
+		this.completedTime = completedTime;
 	}
 
 	public String getCouponCode() {
@@ -174,12 +211,13 @@ public class OrderInfo extends DataEntity<OrderInfo> {
 	public void setOrderGoodsList(List<OrderGoods> orderGoodsList) {
 		this.orderGoodsList = orderGoodsList;
 	}
-	public List<OrderLogistics> getOrderLogisticsList() {
-		return orderLogisticsList;
+
+	public OrderLogistics getOrderLogistics() {
+		return orderLogistics;
 	}
 
-	public void setOrderLogisticsList(List<OrderLogistics> orderLogisticsList) {
-		this.orderLogisticsList = orderLogisticsList;
+	public void setOrderLogistics(OrderLogistics orderLogistics) {
+		this.orderLogistics = orderLogistics;
 	}
 
 	public String getPaymentNo() {

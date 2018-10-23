@@ -1,10 +1,10 @@
 package com.mall.modules.order.entity;
 
-import org.hibernate.validator.constraints.Length;
-import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
-
 import com.mall.common.persistence.DataEntity;
+import org.hibernate.validator.constraints.Length;
+
+import java.util.Date;
 
 /**
  * 订单信息Entity
@@ -14,7 +14,7 @@ import com.mall.common.persistence.DataEntity;
 public class OrderLogistics extends DataEntity<OrderLogistics> {
 	
 	private static final long serialVersionUID = 1L;
-	private OrderInfo orderNo;		// 订单号 父类
+	private String orderNo;		// 订单号 父类
 	private String expressNo;		// 物流编号
 	private String consigneeRealname;		// 收货人姓名
 	private String consigneeTelphone;		// 收货人联系电话
@@ -42,20 +42,16 @@ public class OrderLogistics extends DataEntity<OrderLogistics> {
 		super();
 	}
 
-	public OrderLogistics(String id){
-		super(id);
-	}
-
-	public OrderLogistics(OrderInfo orderNo){
+	public OrderLogistics(String orderNo){
 		this.orderNo = orderNo;
 	}
 
 	@Length(min=1, max=32, message="订单号长度必须介于 1 和 32 之间")
-	public OrderInfo getOrderNo() {
+	public String getOrderNo() {
 		return orderNo;
 	}
 
-	public void setOrderNo(OrderInfo orderNo) {
+	public void setOrderNo(String orderNo) {
 		this.orderNo = orderNo;
 	}
 	
