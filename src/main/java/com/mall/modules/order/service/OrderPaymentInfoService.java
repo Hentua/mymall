@@ -7,6 +7,7 @@ import com.mall.modules.order.entity.OrderPaymentInfo;
 import com.sohu.idcenter.IdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -58,5 +59,10 @@ public class OrderPaymentInfoService extends CrudService<OrderPaymentInfoDao, Or
 		orderPaymentInfo.setPaymentStatus("0");
 		return orderPaymentInfo;
 	}
-	
+
+	@Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+	public int modifyPaymentInfoStatus(OrderPaymentInfo orderPaymentInfo) {
+		return orderPaymentInfoDao.modifyPaymentInfoStatus(orderPaymentInfo);
+	}
+
 }

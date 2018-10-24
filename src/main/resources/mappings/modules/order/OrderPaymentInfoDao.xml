@@ -158,6 +158,10 @@
 		  	payment_status = #{paymentStatus}
 		WHERE id = #{id}
 	</update>
+
+	<update id="modifyPaymentInfoStatus">
+		update order_payment_info set payment_status = #{paymentStatus} where payment_no = #{paymentNo}
+	</update>
 	
 	<update id="delete">
 		DELETE FROM order_payment_info

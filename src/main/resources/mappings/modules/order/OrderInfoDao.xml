@@ -309,6 +309,11 @@
 		WHERE id = #{id}
 	</update>
 
+    <update id="paySuccessModifyOrderStatus">
+        update order_info set order_status = '1'
+        where payment_no = #{paymentNo}
+    </update>
+
 	<update id="deleteByUser">
 		update order_info set del_flag = '1'
 		WHERE id = #{id} and customer_code = #{customerCode}

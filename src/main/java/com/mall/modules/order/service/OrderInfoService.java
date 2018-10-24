@@ -15,6 +15,7 @@ import com.mall.modules.order.entity.OrderInfo;
 import com.mall.modules.order.entity.OrderLogistics;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -190,6 +191,17 @@ public class OrderInfoService extends CrudService<OrderInfoDao, OrderInfo> {
     @Transactional(readOnly = false, rollbackFor = Exception.class)
     public int deleteByUser(OrderInfo orderInfo) {
         return orderInfoDao.deleteByUser(orderInfo);
+    }
+
+    /**
+     * 支付成功后修改订单状态 条件为支付单号
+     *
+     * @param paymentNo 支付单号
+     * @return 修改条目数
+     */
+    @Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    public int paySuccessModifyOrderStatus(String paymentNo) {
+        return orderInfoDao.paySuccessModifyOrderStatus(paymentNo);
     }
 
 }

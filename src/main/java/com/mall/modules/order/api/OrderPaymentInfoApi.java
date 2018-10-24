@@ -44,8 +44,29 @@ public class OrderPaymentInfoApi extends BaseController {
      * @param response 响应体
      */
     @RequestMapping(value = "paySuccessCallback")
+    @Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public void successCallback(HttpServletRequest request, HttpServletResponse response) {
         // todo pay success callback function
+        String paymentNo = request.getParameter("paymentNo");
+        try {
+            if(StringUtils.isBlank(paymentNo)) {
+                throw new ServiceException("支付单号不能为空");
+            }
+            OrderPaymentInfo queryCondition = new OrderPaymentInfo();
+            queryCondition.setPaymentNo(paymentNo);
+            OrderPaymentInfo orderPaymentInfo = orderPaymentInfoService.getByCondition(queryCondition);
+            if(null == orderPaymentInfo) {
+                throw new ServiceException("获取支付信息失败");
+            }
+            // 修改订单状态
+            orderInfoService.paySuccessModifyOrderStatus(paymentNo);
+
+            // 修改支付单状态
+            orderPaymentInfo.setPaymentStatus("1");
+            orderPaymentInfoService.modifyPaymentInfoStatus(orderPaymentInfo);
+        }catch (Exception e) {
+            renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
+        }
     }
 
     /**
@@ -86,11 +107,11 @@ public class OrderPaymentInfoApi extends BaseController {
             // 生成新的支付信息并保存
             String orderType = orderInfo.getOrderType();
             OrderPaymentInfo orderPaymentInfo = OrderPaymentInfoService.genDefaultPaymentInfo(orderType);
-            orderPaymentInfo.setAmountTotal(orderInfo.getOrderAmountTotal());
+            orderInfo.setOrderAmountTotal(orderPaymentInfo.getAmountTotal());
             orderPaymentInfoService.save(orderPaymentInfo);
 
             // 修改订单支付信息
-            orderInfo.setPaymentNo(orderPaymentInfo.getPaymentNo());
+            orderPaymentInfo.setPaymentNo(orderInfo.getPaymentNo());
             orderInfoService.save(orderInfo);
 
             // 返回新的订单支付信息
