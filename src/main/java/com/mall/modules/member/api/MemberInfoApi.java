@@ -332,8 +332,12 @@ public class MemberInfoApi extends BaseController {
             Page<MemberInfo> page = ApiPageEntityHandleUtil.packagePage(new Page<MemberInfo>(), pageNo, pageSize);
             MemberInfo queryCondition = new MemberInfo();
             queryCondition.setRefereeId(refereeId);
-            Page<MemberInfo> memberInfos = memberInfoService.findPage(page, queryCondition);
-            renderString(response, ResultGenerator.genSuccessResult(memberInfos.getList()));
+            Page<MemberInfo> memberInfoPage = memberInfoService.findPage(page, queryCondition);
+            List<MemberInfo> memberInfos = memberInfoPage.getList();
+            for (MemberInfo m : memberInfos) {
+                m.setBalance(0.00);
+            }
+            renderString(response, ResultGenerator.genSuccessResult(memberInfos));
         }catch (Exception e) {
             renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
         }
