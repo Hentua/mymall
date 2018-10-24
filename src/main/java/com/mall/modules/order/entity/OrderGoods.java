@@ -1,6 +1,5 @@
 package com.mall.modules.order.entity;
 
-import com.mall.common.config.Global;
 import com.mall.common.persistence.DataEntity;
 import org.hibernate.validator.constraints.Length;
 
@@ -105,9 +104,6 @@ public class OrderGoods extends DataEntity<OrderGoods> {
 	}
 
 	public void setImage(String image) {
-		if(null != image){
-			image = Global.getConfig("userfiles.baseURL")+image;
-		}
 		this.image = image;
 	}
 	
