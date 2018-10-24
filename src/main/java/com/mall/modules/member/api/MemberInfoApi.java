@@ -353,6 +353,9 @@ public class MemberInfoApi extends BaseController {
                 throw new ServiceException("会员ID不能为空");
             }
             User user = UserUtils.get(memberId);
+            if(null == user) {
+                throw new ServiceException("会员不存在");
+            }
             renderString(response, ResultGenerator.genSuccessResult(new UserVo(user)));
         }catch (Exception e) {
             renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
