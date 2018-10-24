@@ -7,9 +7,10 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.mall.common.persistence.Page;
 import com.mall.common.service.ServiceException;
-import com.mall.common.utils.ApiExceptionHandleUtil;
+import com.mall.common.utils.api.ApiExceptionHandleUtil;
 import com.mall.common.utils.ResultGenerator;
 import com.mall.common.utils.StringUtils;
+import com.mall.common.utils.api.ApiPageEntityHandleUtil;
 import com.mall.common.web.BaseController;
 import com.mall.modules.goods.entity.GoodsInfo;
 import com.mall.modules.goods.service.GoodsInfoService;
@@ -227,15 +228,7 @@ public class OrderInfoApi extends BaseController {
         String pageSize = request.getParameter("pageSize");
         User currUser = UserUtils.getUser();
         try {
-            if(StringUtils.isBlank(pageNo)) {
-                pageNo = "0";
-            }
-            if (StringUtils.isBlank(pageSize)) {
-                pageSize = "10";
-            }
-            Page<OrderInfo> page = new Page<OrderInfo>();
-            page.setPageNo(Integer.valueOf(pageNo));
-            page.setPageSize(Integer.valueOf(pageSize));
+            Page<OrderInfo> page = ApiPageEntityHandleUtil.packagePage(new Page<OrderInfo>(), pageNo, pageSize);
             String customerCode = currUser.getId();
             OrderInfo queryCondition = new OrderInfo();
             queryCondition.setOrderStatus(orderStatus);

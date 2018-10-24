@@ -46,7 +46,10 @@
 		FROM member_info a
 		<include refid="memberInfoJoins"/>
 		<where>
-			a.del_flag = #{DEL_FLAG_NORMAL}
+		     <if test="refereeId != null and refereeId != ''">
+				 and referee_id = #{refereeId}
+			 </if>
+			and a.del_flag = #{DEL_FLAG_NORMAL}
 		</where>
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">

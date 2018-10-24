@@ -1,10 +1,12 @@
 package com.mall.modules.member.api;
 
 import com.google.common.collect.Lists;
+import com.mall.common.persistence.Page;
 import com.mall.common.service.ServiceException;
-import com.mall.common.utils.ApiExceptionHandleUtil;
+import com.mall.common.utils.api.ApiExceptionHandleUtil;
 import com.mall.common.utils.ResultGenerator;
 import com.mall.common.utils.StringUtils;
+import com.mall.common.utils.api.ApiPageEntityHandleUtil;
 import com.mall.common.web.BaseController;
 import com.mall.modules.member.entity.MemberDeliveryAddress;
 import com.mall.modules.member.entity.MemberInfo;
@@ -14,6 +16,7 @@ import com.mall.modules.member.service.MemberVerifyCodeService;
 import com.mall.modules.sys.entity.Office;
 import com.mall.modules.sys.entity.Role;
 import com.mall.modules.sys.entity.User;
+import com.mall.modules.sys.entity.UserVo;
 import com.mall.modules.sys.service.SystemService;
 import com.mall.modules.sys.utils.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -311,6 +314,49 @@ public class MemberInfoApi extends BaseController {
     @RequestMapping(value = "getAreaData", method = RequestMethod.POST)
     public void getAreaData(HttpServletRequest request, HttpServletResponse response) {
         renderString(response, ResultGenerator.genSuccessResult(UserUtils.getAreaList()));
+    }
+
+    /**
+     * 获取推荐成功人列表
+     *
+     * @param request 请求体
+     * @param response 响应体
+     */
+    @RequestMapping(value = "refereeList", method = RequestMethod.POST)
+    public void refereeList(HttpServletRequest request, HttpServletResponse response) {
+        String pageNo = request.getParameter("pageNo");
+        String pageSize = request.getParameter("pageSize");
+        User currUser = UserUtils.getUser();
+        String refereeId = currUser.getId();
+        try {
+            Page<MemberInfo> page = ApiPageEntityHandleUtil.packagePage(new Page<MemberInfo>(), pageNo, pageSize);
+            MemberInfo queryCondition = new MemberInfo();
+            queryCondition.setRefereeId(refereeId);
+            Page<MemberInfo> memberInfos = memberInfoService.findPage(page, queryCondition);
+            renderString(response, ResultGenerator.genSuccessResult(memberInfos.getList()));
+        }catch (Exception e) {
+            renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
+        }
+    }
+
+    /**
+     * 根据member id获取会员信息
+     *
+     * @param request 请求体
+     * @param response 响应体
+     */
+    @RequestMapping(value = "getMemberInfo", method = RequestMethod.POST)
+    public void getMemberInfo(HttpServletRequest request, HttpServletResponse response) {
+        String memberId = request.getParameter("memberId");
+        try {
+            if(StringUtils.isBlank(memberId)) {
+                throw new ServiceException("会员ID不能为空");
+            }
+            User user = UserUtils.get(memberId);
+            renderString(response, ResultGenerator.genSuccessResult(new UserVo(user)));
+        }catch (Exception e) {
+            renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
+        }
     }
 
 }

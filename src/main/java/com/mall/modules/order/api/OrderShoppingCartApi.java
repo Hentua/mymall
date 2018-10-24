@@ -1,7 +1,7 @@
 package com.mall.modules.order.api;
 
 import com.mall.common.service.ServiceException;
-import com.mall.common.utils.ApiExceptionHandleUtil;
+import com.mall.common.utils.api.ApiExceptionHandleUtil;
 import com.mall.common.utils.ResultGenerator;
 import com.mall.common.utils.StringUtils;
 import com.mall.common.web.BaseController;

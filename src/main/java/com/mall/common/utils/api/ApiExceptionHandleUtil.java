@@ -1,6 +1,10 @@
-package com.mall.common.utils;
+package com.mall.common.utils.api;
 
 import com.mall.common.service.ServiceException;
+import com.mall.common.utils.Result;
+import com.mall.common.utils.ResultGenerator;
+import com.mall.common.utils.ResultStatus;
+import com.mall.common.utils.StringUtils;
 
 import javax.validation.ConstraintViolationException;
 
