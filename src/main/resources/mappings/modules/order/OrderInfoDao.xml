@@ -310,9 +310,14 @@
 	</update>
 
     <update id="paySuccessModifyOrderStatus">
-        update order_info set order_status = '1'
+        update order_info set order_status = '1', pay_time = now()
         where payment_no = #{paymentNo}
     </update>
+
+	<update id="orderCancel">
+		update order_info set order_status = '4', closed_time = now()
+		where id = #{id} and customer_code = #{customerCode}
+	</update>
 
 	<update id="deleteByUser">
 		update order_info set del_flag = '1'

@@ -47,6 +47,7 @@
             <result property="goodsPrice" column="orderShoppingCarts.goodsPrice"/>
             <result property="goodsName" column="orderShoppingCarts.goodsName"/>
             <result property="image" column="orderShoppingCarts.image"/>
+            <result property="unit" column="orderShoppingCarts.unit"/>
         </collection>
     </resultMap>
 
@@ -86,7 +87,8 @@
                m.nickname     as "merchantName",
                g.goods_name   as "orderShoppingCarts.goodsName",
                g.goods_price  as "orderShoppingCarts.goodsPrice",
-               g.image        as "orderShoppingCarts.image"
+               g.image        as "orderShoppingCarts.image",
+               g.unit         as "orderShoppingCarts.unit"
         from order_shopping_cart a
                  left join member_info m on m.id = a.customer_code
                  left join goods_info g on g.id = a.goods_id

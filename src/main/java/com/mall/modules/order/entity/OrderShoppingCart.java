@@ -20,6 +20,7 @@ public class OrderShoppingCart extends DataEntity<OrderShoppingCart> {
 	private Double goodsPrice; // 商品价格
 	private String goodsName; // 商品名称
 	private String image; // 商品图片
+	private String unit; // 商品单位
 	
 	public OrderShoppingCart() {
 		super();
@@ -27,6 +28,14 @@ public class OrderShoppingCart extends DataEntity<OrderShoppingCart> {
 
 	public OrderShoppingCart(String id){
 		super(id);
+	}
+
+	public String getUnit() {
+		return unit;
+	}
+
+	public void setUnit(String unit) {
+		this.unit = unit;
 	}
 
 	public Double getGoodsPrice() {

@@ -54,5 +54,13 @@ public interface OrderInfoDao extends CrudDao<OrderInfo> {
      * @return 修改条目数
      */
     int paySuccessModifyOrderStatus(String paymentNo);
+
+    /**
+     * 用户主动取消订单
+     *
+     * @param orderInfo 条件
+     * @return 操作条目数
+     */
+    int orderCancel(OrderInfo orderInfo);
 	
 }

@@ -61,7 +61,7 @@ public class OrderInfoApi extends BaseController {
     /**
      * 提交订单 订单30分钟内需要支付 否则关闭订单
      *
-     * @param request 请求体
+     * @param request  请求体
      * @param response 响应体
      */
     @RequestMapping(value = "submitOrder", method = RequestMethod.POST)
@@ -84,13 +84,13 @@ public class OrderInfoApi extends BaseController {
             if (null == currUser) {
                 throw new ServiceException("用户未登录");
             }
-            if(StringUtils.isBlank(addressId)) {
+            if (StringUtils.isBlank(addressId)) {
                 throw new ServiceException("未选择收货地址");
             }
             String customerCode = currUser.getId();
 
             MemberDeliveryAddress memberDeliveryAddress = memberDeliveryAddressService.get(addressId);
-            if(null == memberDeliveryAddress) {
+            if (null == memberDeliveryAddress) {
                 throw new ServiceException("所选地址不合法");
             }
             // todo coupon discount
@@ -111,10 +111,10 @@ public class OrderInfoApi extends BaseController {
                 String shoppingCartId = goodsInfoJson.getString("shoppingCartId");
                 double goodsCount = goodsInfoJson.getDouble("goodsCount");
                 // 验证数据正确性
-                if(StringUtils.isBlank(goodsId)) {
+                if (StringUtils.isBlank(goodsId)) {
                     throw new ServiceException("所选商品无效");
                 }
-                if(goodsCount <= 0) {
+                if (goodsCount <= 0) {
                     throw new ServiceException("商品数量不合法");
                 }
                 GoodsInfo goodsInfo = goodsInfoService.get(goodsId);
@@ -124,13 +124,13 @@ public class OrderInfoApi extends BaseController {
                 double orderGoodsAmountTotal;
                 double orderGoodsCount;
                 double orderAmountTotal;
-                if(orderInfoMap.containsKey(merchantCode)) {
+                if (orderInfoMap.containsKey(merchantCode)) {
                     orderInfo = orderInfoMap.get(merchantCode);
                     orderGoodsAmountTotal = orderInfo.getGoodsAmountTotal();
                     orderGoodsCount = orderInfo.getGoodsCount();
                     orderGoodsList = orderInfo.getOrderGoodsList();
                     orderAmountTotal = orderInfo.getOrderAmountTotal();
-                }else {
+                } else {
                     orderNo = String.valueOf(idWorker.getId());
                     orderInfo = new OrderInfo();
                     orderInfo.setCouponCode(couponCode);
@@ -199,9 +199,65 @@ public class OrderInfoApi extends BaseController {
     }
 
     /**
+     * 用户取消订单
+     *
+     * @param request  请求体
+     * @param response 响应体
+     */
+    @RequestMapping(value = "orderCancel", method = RequestMethod.POST)
+    public void orderCancel(HttpServletRequest request, HttpServletResponse response) {
+        String orderId = request.getParameter("orderId");
+        User currUser = UserUtils.getUser();
+        String customerCode = currUser.getId();
+        try {
+            if (StringUtils.isBlank(orderId)) {
+                throw new ServiceException("未选择要取消的订单");
+            }
+            OrderInfo orderInfo = orderInfoService.get(orderId);
+            if (null == orderInfo) {
+                throw new ServiceException("订单不存在");
+            }
+            if (!"0".equals(orderInfo.getOrderStatus())) {
+                throw new ServiceException("操作不合法");
+            }
+            OrderInfo updateCondition = new OrderInfo();
+            updateCondition.setCustomerCode(customerCode);
+            updateCondition.setId(orderId);
+            int result = orderInfoService.orderCancel(updateCondition);
+            if (result > 0) {
+                renderString(response, ResultGenerator.genSuccessResult());
+            } else {
+                throw new ServiceException("订单不存在");
+            }
+        } catch (Exception e) {
+            renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
+        }
+    }
+
+    /**
+     * 用户确认收货 订单完成
+     *
+     * @param request  请求体
+     * @param response 响应体
+     */
+    @RequestMapping(value = "orderComplete", method = RequestMethod.POST)
+    public void orderComplete(HttpServletRequest request, HttpServletResponse response) {
+        String orderId = request.getParameter("orderId");
+        User currUser = UserUtils.getUser();
+        String customerCode = currUser.getId();
+        try {
+            if(StringUtils.isBlank(orderId)) {
+                throw new ServiceException("未选择订单");
+            }
+        }catch (Exception e) {
+            renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
+        }
+    }
+
+    /**
      * 订单状态统计
      *
-     * @param request 请求体
+     * @param request  请求体
      * @param response 响应体
      */
     @RequestMapping(value = "orderCount", method = RequestMethod.POST)
@@ -210,7 +266,7 @@ public class OrderInfoApi extends BaseController {
             User currUser = UserUtils.getUser();
             String customerCode = currUser.getId();
             renderString(response, ResultGenerator.genSuccessResult(orderInfoService.orderCount(customerCode)));
-        }catch (Exception e) {
+        } catch (Exception e) {
             renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
         }
     }
@@ -218,7 +274,7 @@ public class OrderInfoApi extends BaseController {
     /**
      * 根据订单状态条件查询订单列表
      *
-     * @param request 请求体
+     * @param request  请求体
      * @param response 响应体
      */
     @RequestMapping(value = "orderList", method = RequestMethod.POST)
@@ -234,7 +290,7 @@ public class OrderInfoApi extends BaseController {
             queryCondition.setOrderStatus(orderStatus);
             queryCondition.setCustomerCode(customerCode);
             renderString(response, ResultGenerator.genSuccessResult(orderInfoService.findOrderDetailList(page, queryCondition).getList()));
-        }catch (Exception e) {
+        } catch (Exception e) {
             renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
         }
     }
@@ -242,7 +298,7 @@ public class OrderInfoApi extends BaseController {
     /**
      * 删除订单 逻辑删除 仅让用户前端查询不到
      *
-     * @param request 请求体
+     * @param request  请求体
      * @param response 响应体
      */
     @RequestMapping(value = "deleteOrder", method = RequestMethod.POST)
@@ -255,12 +311,12 @@ public class OrderInfoApi extends BaseController {
             orderInfo.setId(orderId);
             orderInfo.setCustomerCode(customerCode);
             int result = orderInfoService.deleteByUser(orderInfo);
-            if(result > 0) {
+            if (result > 0) {
                 renderString(response, ResultGenerator.genSuccessResult());
-            }else {
+            } else {
                 renderString(response, ResultGenerator.genFailResult("删除失败，订单有误"));
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
         }
     }
