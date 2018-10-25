@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.modules.coupon.dao.CouponCustomerDao">
+    
+	<sql id="couponCustomerColumns">
+		a.id AS "id",
+		a.coupon_no AS "couponNo",
+		a.coupon_type AS "couponType",
+		a.coupon_name AS "couponName",
+		a.customer_code AS "customerCode",
+		a.start_date AS "startDate",
+		a.end_date AS "endDate",
+		a.merchant_code AS "merchantCode",
+		a.discount_rate AS "discountRate",
+		a.discount_amount AS "discountAmount",
+		a.create_date AS "createDate",
+		a.create_by AS "createBy.id",
+		a.update_date AS "updateDate",
+		a.update_by AS "updateBy.id",
+		a.remarks AS "remarks",
+		a.coupon_status AS "couponStatus",
+		a.used_time AS "usedTime"
+	</sql>
+	
+	<sql id="couponCustomerJoins">
+	</sql>
+    
+	<select id="get" resultType="CouponCustomer">
+		SELECT 
+			<include refid="couponCustomerColumns"/>
+		FROM coupon_customer a
+		<include refid="couponCustomerJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CouponCustomer">
+		SELECT 
+			<include refid="couponCustomerColumns"/>
+		FROM coupon_customer a
+		<include refid="couponCustomerJoins"/>
+		<where>
+			
+			<if test="couponNo != null and couponNo != ''">
+				AND a.coupon_no = #{couponNo}
+			</if>
+			<if test="couponType != null and couponType != ''">
+				AND a.coupon_type = #{couponType}
+			</if>
+			<if test="customerCode != null and customerCode != ''">
+				AND a.customer_code = #{customerCode}
+			</if>
+			<if test="startDate != null and startDate != ''">
+				AND a.start_date &gt;= #{startDate}
+			</if>
+			<if test="endDate != null and endDate != ''">
+				AND a.end_date &lt;= #{endDate}
+			</if>
+			<if test="merchantCode != null and merchantCode != ''">
+				AND a.merchant_code = #{merchantCode}
+			</if>
+			<if test="couponStatus != null and couponStatus != ''">
+				AND a.coupon_status = #{couponStatus}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CouponCustomer">
+		SELECT 
+			<include refid="couponCustomerColumns"/>
+		FROM coupon_customer a
+		<include refid="couponCustomerJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO coupon_customer(
+			id,
+			coupon_no,
+			coupon_type,
+			coupon_name,
+			customer_code,
+			start_date,
+			end_date,
+			merchant_code,
+			discount_rate,
+			discount_amount,
+			create_date,
+			create_by,
+			update_date,
+			update_by,
+			remarks,
+			coupon_status,
+			used_time
+		) VALUES (
+			#{id},
+			#{couponNo},
+			#{couponType},
+			#{couponName},
+			#{customerCode},
+			#{startDate},
+			#{endDate},
+			#{merchantCode},
+			#{discountRate},
+			#{discountAmount},
+			#{createDate},
+			#{createBy.id},
+			#{updateDate},
+			#{updateBy.id},
+			#{remarks},
+			#{couponStatus},
+			#{usedTime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE coupon_customer SET 	
+			coupon_no = #{couponNo},
+			coupon_type = #{couponType},
+			coupon_name = #{couponName},
+			customer_code = #{customerCode},
+			start_date = #{startDate},
+			end_date = #{endDate},
+			merchant_code = #{merchantCode},
+			discount_rate = #{discountRate},
+			discount_amount = #{discountAmount},
+			update_date = #{updateDate},
+			update_by = #{updateBy.id},
+			remarks = #{remarks},
+			coupon_status = #{couponStatus},
+			used_time = #{usedTime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM coupon_customer
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

@@ -69,7 +69,7 @@ public class OrderInfoApi extends BaseController {
     public void submitOrder(HttpServletRequest request, HttpServletResponse response) {
         // 基础数据初始化及基本工具定义
         DecimalFormat df = new DecimalFormat("#.00");
-        String orderType = request.getParameter("orderType");
+        String orderType = "0";
         String orderStatus = "0";
         double amountTotal = 0.00;
         // 初始化优惠数据
