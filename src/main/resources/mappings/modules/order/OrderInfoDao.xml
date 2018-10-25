@@ -26,7 +26,8 @@
 		a.update_date AS "updateDate",
 		a.closed_time AS "closedTime",
 		a.auto_closed_time AS "autoClosedTime",
-		a.completed_time AS "completedTime"
+		a.completed_time AS "completedTime",
+		a.auto_completed_time AS "autoCompletedTime"
 	</sql>
 
 	<resultMap id="OrderInfoDetail" type="OrderInfo">
@@ -55,6 +56,7 @@
 		<result property="autoClosedTime" column="autoClosedTime"/>
 		<result property="completedTime" column="completedTime"/>
 		<result property="merchantName" column="merchantName"/>
+		<result property="autoCompletedTime" column="autoCompletedTime"/>
 		<association property="orderLogistics" javaType="OrderLogistics">
 			<id property="id" column="logistics.id"/>
 			<result property="expressNo" column="logistics.expressNo"/>
@@ -116,6 +118,7 @@
 		a.closed_time AS "closedTime",
 		a.auto_closed_time AS "autoClosedTime",
 		a.completed_time AS "completedTime",
+		a.auto_completed_time AS "autoCompletedTime",
 		m.nickname AS "merchantName",
 		l.id AS "logistics.id",
 		l.express_no AS "logistics.expressNo",
@@ -316,6 +319,11 @@
 
 	<update id="orderCancel">
 		update order_info set order_status = '4', closed_time = now()
+		where id = #{id} and customer_code = #{customerCode}
+	</update>
+
+	<update id="orderComplete">
+		update order_info set order_status = '3', completed_time = now()
 		where id = #{id} and customer_code = #{customerCode}
 	</update>
 

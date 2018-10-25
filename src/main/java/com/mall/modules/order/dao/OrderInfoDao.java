@@ -62,5 +62,13 @@ public interface OrderInfoDao extends CrudDao<OrderInfo> {
      * @return 操作条目数
      */
     int orderCancel(OrderInfo orderInfo);
+
+    /**
+     * 用户点击确认收货完成交易
+     *
+     * @param orderInfo 条件
+     * @return 操作条目数
+     */
+    int orderComplete(OrderInfo orderInfo);
 	
 }

@@ -209,4 +209,9 @@ public class OrderInfoService extends CrudService<OrderInfoDao, OrderInfo> {
         return orderInfoDao.orderCancel(orderInfo);
     }
 
+    @Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    public int orderComplete(OrderInfo orderInfo) {
+        return orderInfoDao.orderComplete(orderInfo);
+    }
+
 }

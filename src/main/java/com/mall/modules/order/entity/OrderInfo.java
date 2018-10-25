@@ -37,6 +37,7 @@ public class OrderInfo extends DataEntity<OrderInfo> {
 	private Date closedTime; // 交易关闭时间
 	private Date autoClosedTime; // 自动关闭交易时间
 	private Date completedTime; // 交易完成时间
+	private Date autoCompletedTime; // 自动完成交易时间
 
 	private String merchantName;
 

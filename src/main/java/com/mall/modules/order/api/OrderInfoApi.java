@@ -249,6 +249,22 @@ public class OrderInfoApi extends BaseController {
             if(StringUtils.isBlank(orderId)) {
                 throw new ServiceException("未选择订单");
             }
+            OrderInfo updateCondition = new OrderInfo();
+            updateCondition.setCustomerCode(customerCode);
+            updateCondition.setId(orderId);
+            OrderInfo orderInfo = orderInfoService.getOrderBasicInfo(updateCondition);
+            if (null == orderInfo) {
+                throw new ServiceException("订单不存在");
+            }
+            if (!"2".equals(orderInfo.getOrderStatus())) {
+                throw new ServiceException("操作不合法");
+            }
+            int result = orderInfoService.orderComplete(updateCondition);
+            if (result > 0) {
+                renderString(response, ResultGenerator.genSuccessResult());
+            } else {
+                throw new ServiceException("确认收货失败");
+            }
         }catch (Exception e) {
             renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
         }
