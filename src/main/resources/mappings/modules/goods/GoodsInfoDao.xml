@@ -23,10 +23,12 @@
 		a.update_by AS "updateBy.id",
 		a.update_date AS "updateDate",
 		a.remarks AS "remarks",
-		a.merchant_id as "merchantId"
+		a.merchant_id as "merchantId",
+		gc.category_name as "goodsCategoryName"
 	</sql>
 	
 	<sql id="goodsInfoJoins">
+		left join goods_category gc on gc.id = a.goods_category_id
 	</sql>
     
 	<select id="get" resultType="GoodsInfo">
@@ -66,11 +68,29 @@
 	<!-- app商品列表 -->
 	<select id="findListByApi" resultType="GoodsInfo">
 		SELECT
-		<include refid="goodsInfoColumns"/>
+		a.id AS "id",
+		a.goods_category_id AS "goodsCategoryId",
+		a.goods_name AS "goodsName",
+		a.goods_barcode AS "goodsBarcode",
+		a.goods_title AS "goodsTitle",
+		a.goods_type AS "goodsType",
+		a.status AS "status",
+		a.unit AS "unit",
+		a.original_price AS "originalPrice",
+		a.goods_price AS "goodsPrice",
+		a.sales_total AS "salesTotal",
+		a.image AS "image",
+		a.goods_desp AS "goodsDesp",
+		a.is_deleted AS "isDeleted",
+		a.onlinetime AS "onlinetime",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.merchant_id as "merchantId"
 		FROM goods_info a
-		<include refid="goodsInfoJoins"/>
 		<where>
-
 			<if test="goodsCategoryId != null and goodsCategoryId != ''">
 				AND a.goods_category_id = #{goodsCategoryId}
 			</if>
@@ -184,7 +204,8 @@
 			create_date,
 			update_by,
 			update_date,
-			remarks
+			remarks,
+			merchant_id
 		) VALUES (
 			#{id},
 			#{goodsCategoryId},
@@ -205,7 +226,8 @@
 			#{createDate},
 			#{updateBy.id},
 			#{updateDate},
-			#{remarks}
+			#{remarks},
+			#{merchantId}
 		)
 	</insert>
 	

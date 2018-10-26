@@ -19,43 +19,47 @@
 <body>
 	<ul class="nav nav-tabs">
 		<li class="active"><a href="${ctx}/settlement/settlementInfo/">提现结算信息列表</a></li>
+		<shiro:hasPermission name="settlement:settlementInfo:edit"><li><a href="${ctx}/settlement/settlementInfo/form">提现结算信息添加</a></li></shiro:hasPermission>
 	</ul>
 	<form:form id="searchForm" modelAttribute="settlementInfo" action="${ctx}/settlement/settlementInfo/" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<ul class="ul-form">
-			<li><label>类型：</label>
-				<form:select path="type" cssStyle="width: 170px">
-					<form:option value="">全部</form:option>
-					<form:option value="1">佣金提现</form:option>
-					<form:option value="2">订单交易结算</form:option>
-				</form:select>
+			<li><label>提现结算类型 （1：佣金提现 2：订单交易结算）：</label>
+				<form:input path="type" htmlEscape="false" maxlength="10" class="input-medium"/>
 			</li>
-			<li><label>状态：</label>
-				<form:select path="status" cssStyle="width: 170px">
-					<form:option value="">全部</form:option>
-					<form:option value="1">待提交</form:option>
-					<form:option value="2">已结算</form:option>
-				</form:select>
+			<li><label>关联单号（佣金明细ID 订单ID）：</label>
+				<form:input path="unionId" htmlEscape="false" maxlength="64" class="input-medium"/>
 			</li>
-			<li><label>提交人账号：</label>
+			<li><label>结算金额：</label>
+				<form:input path="amount" htmlEscape="false" class="input-medium"/>
+			</li>
+			<li><label>结算审核状态 1：待提交 2:已审核 3：已结算：</label>
+				<form:input path="status" htmlEscape="false" maxlength="10" class="input-medium"/>
+			</li>
+			<li><label>提交人：</label>
 				<form:input path="subUserId" htmlEscape="false" maxlength="64" class="input-medium"/>
 			</li>
 			<li><label>提交时间：</label>
 				<input name="subDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
 					value="<fmt:formatDate value="${settlementInfo.subDate}" pattern="yyyy-MM-dd HH:mm:ss"/>"
-					onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});"/>-
-				<input name="subDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
-					   value="<fmt:formatDate value="${settlementInfo.subDate}" pattern="yyyy-MM-dd HH:mm:ss"/>"
-					   onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});"/>
+					onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});"/>
+			</li>
+			<li><label>审核人：</label>
+				<form:input path="auditUserId" htmlEscape="false" maxlength="64" class="input-medium"/>
+			</li>
+			<li><label>审核时间：</label>
+				<input name="auditDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
+					value="<fmt:formatDate value="${settlementInfo.auditDate}" pattern="yyyy-MM-dd HH:mm:ss"/>"
+					onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});"/>
+			</li>
+			<li><label>结算人：</label>
+				<form:input path="settlementUserId" htmlEscape="false" maxlength="64" class="input-medium"/>
 			</li>
 			<li><label>结算时间：</label>
 				<input name="settlementDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
 					value="<fmt:formatDate value="${settlementInfo.settlementDate}" pattern="yyyy-MM-dd HH:mm:ss"/>"
-					onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});"/>-
-				<input name="settlementDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
-					   value="<fmt:formatDate value="${settlementInfo.settlementDate}" pattern="yyyy-MM-dd HH:mm:ss"/>"
-					   onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});"/>
+					onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});"/>
 			</li>
 			<li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
 			<li class="clearfix"></li>
@@ -65,11 +69,15 @@
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
 		<thead>
 			<tr>
-				<th>提现结算类型</th>
-				<th>结算审核状态</th>
+				<th>提现结算类型 （1：佣金提现 2：订单交易结算）</th>
+				<th>关联单号（佣金明细ID 订单ID）</th>
 				<th>结算金额</th>
+				<th>结算审核状态 1：待提交 2:已审核 3：已结算</th>
 				<th>提交人</th>
 				<th>提交时间</th>
+				<th>审核人</th>
+				<th>审核时间</th>
+				<th>审核备注</th>
 				<th>结算人</th>
 				<th>结算时间</th>
 				<th>结束备注</th>
@@ -79,33 +87,32 @@
 		<tbody>
 		<c:forEach items="${page.list}" var="settlementInfo">
 			<tr>
+				<td><a href="${ctx}/settlement/settlementInfo/form?id=${settlementInfo.id}">
+					${settlementInfo.type}
+				</a></td>
 				<td>
-					<c:if test="${settlementInfo.type == 1}">
-						佣金提现
-					</c:if>
-					<c:if test="${settlementInfo.type == 2}">
-						订单交易结算
-					</c:if>
-				</td>
-				<td>
-					<c:if test="${settlementInfo.status == 1}">
-						待提交
-					</c:if>
-					<c:if test="${settlementInfo.status == 2}">
-						待审核
-					</c:if>
-					<c:if test="${settlementInfo.status == 3}">
-						已结算
-					</c:if>
+					${settlementInfo.unionId}
 				</td>
 				<td>
 					${settlementInfo.amount}
+				</td>
+				<td>
+					${settlementInfo.status}
 				</td>
 				<td>
 					${settlementInfo.subUserId}
 				</td>
 				<td>
 					<fmt:formatDate value="${settlementInfo.subDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
+				</td>
+				<td>
+					${settlementInfo.auditUserId}
+				</td>
+				<td>
+					<fmt:formatDate value="${settlementInfo.auditDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
+				</td>
+				<td>
+					${settlementInfo.auditRemarks}
 				</td>
 				<td>
 					${settlementInfo.settlementUserId}
@@ -117,13 +124,8 @@
 					${settlementInfo.settlementRemarks}
 				</td>
 				<shiro:hasPermission name="settlement:settlementInfo:edit"><td>
-					<c:if test="${settlementInfo.status == 1}">
-						<a href="${ctx}/settlement/settlementInfo/form?id=${settlementInfo.id}" onclick="return confirmx('确认要提交该笔信息吗？', this.href)">提交</a>
-					</c:if>
-					<c:if test="${settlementInfo.status == 2}">
-						<a href="${ctx}/settlement/settlementInfo/form?id=${settlementInfo.id}" onclick="return confirmx('确认要结算该笔信息吗？', this.href)">结算</a>
-					</c:if>
-					<a href="${ctx}/settlement/settlementInfo/form?id=${settlementInfo.id}"  >查看详情</a>
+    				<a href="${ctx}/settlement/settlementInfo/form?id=${settlementInfo.id}">修改</a>
+					<a href="${ctx}/settlement/settlementInfo/delete?id=${settlementInfo.id}" onclick="return confirmx('确认要删除该提现结算信息吗？', this.href)">删除</a>
 				</td></shiro:hasPermission>
 			</tr>
 		</c:forEach>

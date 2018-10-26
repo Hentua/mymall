@@ -7,12 +7,12 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.mall.common.persistence.Page;
 import com.mall.common.service.ServiceException;
-import com.mall.common.utils.api.ApiExceptionHandleUtil;
 import com.mall.common.utils.ResultGenerator;
 import com.mall.common.utils.StringUtils;
+import com.mall.common.utils.api.ApiExceptionHandleUtil;
 import com.mall.common.utils.api.ApiPageEntityHandleUtil;
 import com.mall.common.web.BaseController;
-import com.mall.modules.coupon.entity.CouponCustomer;
+import com.mall.modules.account.service.AccountInfoService;
 import com.mall.modules.coupon.service.CouponCustomerService;
 import com.mall.modules.goods.entity.GoodsInfo;
 import com.mall.modules.goods.service.GoodsInfoService;
@@ -61,6 +61,9 @@ public class OrderInfoApi extends BaseController {
     private OrderShoppingCartService orderShoppingCartService;
     @Autowired
     private CouponCustomerService couponCustomerService;
+
+    @Autowired
+    private AccountInfoService accountInfoService;
 
     /**
      * 提交订单 订单30分钟内需要支付 否则关闭订单
@@ -282,6 +285,8 @@ public class OrderInfoApi extends BaseController {
             } else {
                 throw new ServiceException("确认收货失败");
             }
+            //订单完成生成佣金信息 根据订单信息创建账单流水
+            accountInfoService.createAccountFlow(orderInfo);
         }catch (Exception e) {
             renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
         }

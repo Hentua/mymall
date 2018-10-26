@@ -11,5 +11,6 @@ import com.mall.modules.goods.entity.GoodsImage;
  */
 @MyBatisDao
 public interface GoodsImageDao extends CrudDao<GoodsImage> {
-	
+
+    public void deleteByGoodsId(GoodsImage goodsImage);
 }

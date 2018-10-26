@@ -81,4 +81,5 @@ public class MemberInfoService extends CrudService<MemberInfoDao, MemberInfo> {
         return couponPwd;
     }
 
+
 }

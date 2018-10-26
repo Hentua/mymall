@@ -98,5 +98,9 @@
 		DELETE FROM goods_image
 		WHERE id = #{id}
 	</update>
+	<update id="deleteByGoodsId">
+		DELETE FROM goods_image
+		WHERE id = #{goodsId}
+	</update>
 	
 </mapper>

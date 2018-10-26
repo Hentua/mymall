@@ -18,10 +18,9 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li class="active"><a href="${ctx}/goods/goodsInfo/list">商品信息列表</a></li>
-		<shiro:hasPermission name="goods:goodsInfo:edit"><li><a href="${ctx}/goods/goodsInfo/form">商品信息添加</a></li></shiro:hasPermission>
+		<li class="active"><a href="${ctx}/goods/goodsInfo/checkList">商品信息列表</a></li>
 	</ul>
-	<form:form id="searchForm" modelAttribute="goodsInfo" action="${ctx}/goods/goodsInfo/list" method="post" class="breadcrumb form-search">
+	<form:form id="searchForm" modelAttribute="goodsInfo" action="${ctx}/goods/goodsInfo/checkList" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<ul class="ul-form">
@@ -120,15 +119,12 @@
 					<fmt:formatDate value="${goodsInfo.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
 				</td>
 				<shiro:hasPermission name="goods:goodsInfo:edit"><td>
-					<c:if test="${goodsInfo.status == '1'}">
-						<a href="${ctx}/goods/goodsInfo/updateStatus?id=${goodsInfo.id}&status=2">提交上架</a>
-						<a href="${ctx}/goods/goodsInfo/form?id=${goodsInfo.id}">修改</a>
-						<a href="${ctx}/goods/goodsInfo/delete?id=${goodsInfo.id}" onclick="return confirmx('确认要删除该商品信息吗？', this.href)">删除</a>
+					<c:if test="${goodsInfo.status == '2'}">
+						<a href="${ctx}/goods/goodsInfo/updateStatusCheck?id=${goodsInfo.id}&status=3" onclick="return confirmx('确认要上架该商品信息吗？', this.href)">上架</a>
 					</c:if>
 					<c:if test="${goodsInfo.status == '3'}">
-						<a href="${ctx}/goods/goodsInfo/updateStatus?id=${goodsInfo.id}&status=1" onclick="return confirmx('确认要下架该商品信息吗？', this.href)">下架</a>
+						<a href="${ctx}/goods/goodsInfo/updateStatusCheck?id=${goodsInfo.id}&status=1" onclick="return confirmx('确认要下架该商品信息吗？', this.href)">下架</a>
 					</c:if>
-
 				</td></shiro:hasPermission>
 			</tr>
 		</c:forEach>

@@ -22,7 +22,7 @@ public class GoodsInfo extends DataEntity<GoodsInfo> {
 	private String goodsBarcode;		// 商品条码
 	private String goodsTitle;		// 商品标题
 	private Integer goodsType;		// 商品类型
-	private Integer status;		// 商品状态
+	private Integer status;		// 商品状态 0待提交 1待审核 2已上架
 	private String unit;		// 单位
 	private Double originalPrice;		// 商品原价
 	private Double goodsPrice;		// 商品现价
@@ -41,6 +41,9 @@ public class GoodsInfo extends DataEntity<GoodsInfo> {
 	private String colour; //商品颜色
 	private String billboardType;
 	private List<GoodsImage> goodsImages;
+	private List<String>  despImages;
+
+	private String goodsCategoryName;
 
 	public GoodsInfo() {
 		super();
@@ -51,12 +54,28 @@ public class GoodsInfo extends DataEntity<GoodsInfo> {
 	}
 
 
+	public String getGoodsCategoryName() {
+		return goodsCategoryName;
+	}
+
+	public void setGoodsCategoryName(String goodsCategoryName) {
+		this.goodsCategoryName = goodsCategoryName;
+	}
+
 	public List<GoodsImage> getGoodsImages() {
 		return goodsImages;
 	}
 
 	public void setGoodsImages(List<GoodsImage> goodsImages) {
 		this.goodsImages = goodsImages;
+	}
+
+	public List<String> getDespImages() {
+		return despImages;
+	}
+
+	public void setDespImages(List<String> despImages) {
+		this.despImages = despImages;
 	}
 
 	@Length(min=0, max=64, message="商品分类长度必须介于 0 和 64 之间")
@@ -150,9 +169,9 @@ public class GoodsInfo extends DataEntity<GoodsInfo> {
 	}
 
 	public void setImage(String image) {
-		if(null != image){
-			image = Global.getConfig("userfiles.baseURL")+image;
-		}
+//		if(null != image){
+//			image = Global.getConfig("userfiles.baseURL")+image;
+//		}
 		this.image = image;
 	}
 	
