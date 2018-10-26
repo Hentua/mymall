@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/views/include/taglib.jsp"%>
 <html>
 <head>
-	<title>账户明细</title>
+	<title>提现结算审核</title>
 	<meta name="decorator" content="default"/>
 	<script type="text/javascript">
 		$(document).ready(function() {
@@ -18,7 +18,7 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li class="active"><a href="${ctx}/account/accountInfo/">账户明细列表</a></li>
+		<li class="active"><a href="${ctx}/account/accountInfo/">提现结算审核</a></li>
 	</ul>
 	<form:form id="searchForm" modelAttribute="accountInfo" action="${ctx}/account/accountInfo/" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>

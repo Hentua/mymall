@@ -7,12 +7,15 @@ import com.google.common.collect.Lists;
 import com.mall.modules.commission.entity.CommissionInfo;
 import com.mall.modules.commission.service.CommissionConfigService;
 import com.mall.modules.commission.service.CommissionInfoService;
+import com.mall.modules.member.entity.MemberInfo;
+import com.mall.modules.member.service.MemberInfoService;
 import com.mall.modules.order.entity.OrderInfo;
 import com.mall.modules.sys.entity.User;
 import com.mall.modules.sys.utils.UserUtils;
 import groovy.util.logging.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +34,10 @@ import com.mall.modules.account.dao.AccountInfoDao;
 @Transactional(readOnly = true)
 public class AccountInfoService extends CrudService<AccountInfoDao, AccountInfo> {
 
+	@Autowired
+	private MemberInfoService memberInfoService;
+
+
 	public AccountInfo get(String id) {
 		return super.get(id);
 	}
@@ -45,6 +52,21 @@ public class AccountInfoService extends CrudService<AccountInfoDao, AccountInfo>
 
 	@Transactional(readOnly = false)
 	public void save(AccountInfo accountInfo) {
+		//修改用户金额
+		MemberInfo m = new MemberInfo();
+		m.setId(accountInfo.getUserId());
+		m = memberInfoService.get(m);
+		if(null == m) {
+			logger.info("新增交易流水失败：memberInfo信息不存在");
+			return;
+		}
+		// 1：收入 2：支出长
+		if("1".equals(accountInfo.getType())){
+			m.setBalance(m.getBalance() + accountInfo.getAmount());
+		}else{
+			m.setBalance(m.getBalance() - accountInfo.getAmount());
+		}
+		memberInfoService.save(m);
 		super.save(accountInfo);
 	}
 
@@ -72,7 +94,39 @@ public class AccountInfoService extends CrudService<AccountInfoDao, AccountInfo>
 		User merchantRefereeUser = null ;
 		User customerRefereeUser = null;
 		User merchant = null;
-		getRefereeUsers(orderInfo,merchantRefereeUser,customerRefereeUser,merchant);
+
+		if(null == orderInfo){
+			logger.error("创建账单流水失败：订单信息为空");
+			return ;
+		}
+//		if(!"2".equals(orderInfo.getOrderStatus())){
+//			logger.error("创建账单流水失败：订单状态无效");
+//			return ;
+//		}
+		//卖家信息
+		merchant = UserUtils.get(orderInfo.getMerchantCode());
+		//买家信息
+		User customer = UserUtils.get(orderInfo.getCustomerCode());
+		if(null == merchant){
+			logger.error("创建账单流水失败：卖家信息为空");
+			return ;
+		}
+		if(null == customer){
+			logger.error("创建账单流水失败：买家信息为空");
+			return ;
+		}
+		//卖家推荐人
+		merchantRefereeUser = UserUtils.get(merchant.getRefereeId());
+		//买家推荐人
+		customerRefereeUser = UserUtils.get(customer.getRefereeId());
+		if(null == merchantRefereeUser){
+			logger.error("创建账单流水失败：卖家推荐人为空");
+			return ;
+		}
+		if(null == customerRefereeUser){
+			logger.error("创建账单流水失败：买家推荐人为空");
+			return ;
+		}
 		if(null == merchantRefereeUser || null == customerRefereeUser
 				|| null == merchant){
 			return;
@@ -182,50 +236,6 @@ public class AccountInfoService extends CrudService<AccountInfoDao, AccountInfo>
 	}
 
 
-	/**
-	 * 按订单信息获取相关人员信息
-	 * @param orderInfo 订单信息
-	 * @param merchantRefereeUser 卖家推荐人
-	 * @param customerRefereeUser 买家推荐人
-	 * @param merchant 卖家
-	 */
-	private void getRefereeUsers(OrderInfo orderInfo,
-								 User merchantRefereeUser,
-								 User customerRefereeUser,
-								 User merchant){
-		if(null == orderInfo){
-			logger.error("创建账单流水失败：订单信息为空");
-			return ;
-		}
-		if(!"1".equals(orderInfo.getOrderStatus())){
-			logger.error("创建账单流水失败：订单状态无效");
-			return ;
-		}
-		//卖家信息
-		merchant = UserUtils.get(orderInfo.getMerchantCode());
-		//买家信息
-		User customer = UserUtils.get(orderInfo.getCustomerCode());
-		if(null == merchant){
-			logger.error("创建账单流水失败：卖家信息为空");
-			return ;
-		}
-		if(null == customer){
-			logger.error("创建账单流水失败：买家信息为空");
-			return ;
-		}
-		//卖家推荐人
-		merchantRefereeUser = UserUtils.get(merchant.getRefereeId());
-		//买家推荐人
-		customerRefereeUser = UserUtils.get(customer.getRefereeId());
-		if(null == merchantRefereeUser){
-			logger.error("创建账单流水失败：卖家推荐人为空");
-			return ;
-		}
-		if(null == customerRefereeUser){
-			logger.error("创建账单流水失败：买家推荐人为空");
-			return ;
-		}
-	}
 
 	public Page<AccountInfo> getAccountInfos(AccountInfo accountInfo, Page<AccountInfo> page){
 		accountInfo.setPage(page);

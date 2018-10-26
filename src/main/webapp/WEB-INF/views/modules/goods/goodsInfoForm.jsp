@@ -32,10 +32,13 @@
 	</ul><br/>
 	<form:form id="inputForm" modelAttribute="goodsInfo" action="${ctx}/goods/goodsInfo/save" method="post" class="form-horizontal">
 		<form:hidden path="id"/>
-		<sys:message content="${message}"/>		
+		<form:hidden path="status"  />
+		<sys:message content="${message}"/>
 		<div class="control-group">
 			<label class="control-label">商品分类：</label>
 			<div class="controls">
+				<sys:treeselect notAllowSelectParent="true" id="goodsCategoryId" name="goodsCategoryId" value="${goodsInfo.goodsCategoryId}" labelName="goodsCategoryName" labelValue="${goodsInfo.goodsCategoryName}"
+								title="商品分类" url="/goods/goodsCategory/treeData" extId="${goodsInfo.goodsCategoryId}" cssClass=""  />
 			</div>
 		</div>
 		<div class="control-group">
@@ -45,33 +48,9 @@
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">商品条码：</label>
-			<div class="controls">
-				<form:input path="goodsBarcode" htmlEscape="false" maxlength="20" class="input-xlarge "/>
-			</div>
-		</div>
-		<div class="control-group">
 			<label class="control-label">商品标题：</label>
 			<div class="controls">
 				<form:input path="goodsTitle" htmlEscape="false" maxlength="200" class="input-xlarge "/>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">商品类型：</label>
-			<div class="controls">
-				<form:select path="goodsType" class="input-xlarge ">
-					<form:option value="" label=""/>
-					<form:options items="${fns:getDictList('')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
-				</form:select>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">商品状态：</label>
-			<div class="controls">
-				<form:select path="status" class="input-xlarge ">
-					<form:option value="" label=""/>
-					<form:options items="${fns:getDictList('')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
-				</form:select>
 			</div>
 		</div>
 		<div class="control-group">
@@ -81,50 +60,32 @@
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">商品原价：</label>
-			<div class="controls">
-				<form:input path="originalPrice" htmlEscape="false" class="input-xlarge  number"/>
-			</div>
-		</div>
-		<div class="control-group">
 			<label class="control-label">商品现价：</label>
 			<div class="controls">
 				<form:input path="goodsPrice" htmlEscape="false" class="input-xlarge  number"/>
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">销量：</label>
+			<label class="control-label">商品图片：</label>
 			<div class="controls">
-				<form:input path="salesTotal" htmlEscape="false" maxlength="11" class="input-xlarge  digits"/>
+				<form:hidden id="nameImage" path="image" htmlEscape="false" maxlength="255" class="input-xlarge"/>
+				<sys:ckfinder input="nameImage" type="images" uploadPath="/goods" selectMultiple="false" maxWidth="100" maxHeight="100"/>
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">商品图片：</label>
+			<label class="control-label">商品描述图片：</label>
 			<div class="controls">
-				<form:input path="image" htmlEscape="false" maxlength="200" class="input-xlarge "/>
+				<form:hidden id="nameImage1" path="despImages" htmlEscape="false" maxlength="255" class="input-xlarge"/>
+					<%--<form:hidden id="files" path="despImages" htmlEscape="false" maxlength="255" class="input-xlarge"/>--%>
+					<%--<sys:ckfinder input="files" type="files" uploadPath="/goods" selectMultiple="false"/>--%>
+				<sys:ckfinder input="nameImage1" type="images" uploadPath="/goods" selectMultiple="true" maxWidth="100" maxHeight="100"/>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">商品描述：</label>
 			<div class="controls">
-				<form:input path="goodsDesp" htmlEscape="false" class="input-xlarge "/>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">是否已经删除：</label>
-			<div class="controls">
-				<form:select path="isDeleted" class="input-xlarge ">
-					<form:option value="" label=""/>
-					<form:options items="${fns:getDictList('')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
-				</form:select>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">上架时间：</label>
-			<div class="controls">
-				<input name="onlinetime" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate "
-					value="<fmt:formatDate value="${goodsInfo.onlinetime}" pattern="yyyy-MM-dd HH:mm:ss"/>"
-					onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});"/>
+				<form:textarea id="goodsDesp" htmlEscape="false" path="goodsDesp" rows="4" maxlength="200" class="input-xxlarge"/>
+				<sys:ckeditor replace="goodsDesp" uploadPath="/goods/goodsDesp" />
 			</div>
 		</div>
 		<div class="control-group">

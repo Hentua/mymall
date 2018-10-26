@@ -38,9 +38,9 @@ public class GoodsImage extends DataEntity<GoodsImage> {
 	}
 
 	public void setImageUrl(String imageUrl) {
-		if(null != imageUrl){
-			imageUrl = Global.getConfig("userfiles.baseURL")+imageUrl;
-		}
+//		if(null != imageUrl){
+//			imageUrl = Global.getConfig("userfiles.baseURL")+imageUrl;
+//		}
 		this.imageUrl = imageUrl;
 	}
 }

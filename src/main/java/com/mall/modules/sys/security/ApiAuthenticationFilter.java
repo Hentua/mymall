@@ -164,7 +164,7 @@ public class ApiAuthenticationFilter extends org.apache.shiro.web.filter.authc.F
     private String getToken(Subject subject){
         SystemAuthorizingRealm.Principal principal = (SystemAuthorizingRealm.Principal)subject.getPrincipal();
         String secretKey = Global.getConfig("shiro.app.secretKey");
-        String token= DigestUtils.md5Hex(secretKey + principal.getLoginName() + DateUtils.getDate("yyyyMMdd"));
+        String token= DigestUtils.md5Hex(secretKey + principal.getLoginName() + DateUtils.getDate("yyyyMM"));
 //        String token = new String(Digests.md5((secretKey + principal.getLoginName() + DateUtils.getDate("yyyyMMdd")).getBytes()));
         return token;
     }

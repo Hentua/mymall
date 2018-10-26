@@ -34,10 +34,10 @@
 		<form:hidden path="id"/>
 		<sys:message content="${message}"/>		
 		<div class="control-group">
-			<label class="control-label">父分类id：${message}</label>
+			<label class="control-label">上级分类：${message}</label>
 			<div class="controls">
 				<sys:treeselect id="parentCategoryId" name="parentCategoryId" value="${goodsCategory.parentCategoryId}" labelName="parentCategoryName" labelValue="${goodsCategory.parentCategoryName}"
-								title="机构" url="/goods/goodsCategory/treeData" extId="${goodsCategory.id}" cssClass=""  />
+								title="上级分类" url="/goods/goodsCategory/treeData" extId="${goodsCategory.id}" cssClass=""  />
 			</div>
 		</div>
 		<div class="control-group">

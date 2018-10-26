@@ -88,6 +88,14 @@ public class AccountInfo extends DataEntity<AccountInfo> {
 		return type;
 	}
 
+	public String getTypeText(){
+		if("1".equals(this.getType())){
+			return "收入";
+		}else{
+			return "支出";
+		}
+	}
+
 	public void setType(String type) {
 		this.type = type;
 	}
@@ -95,6 +103,22 @@ public class AccountInfo extends DataEntity<AccountInfo> {
 	@Length(min=0, max=10, message="收入（1：佣金收益 2：销售收益） 支出（3：提现 4：结算）长度必须介于 0 和 10 之间")
 	public String getWay() {
 		return way;
+	}
+
+	public String getWayText() {
+		if("1".equals(this.getWay())){
+			return "佣金收益";
+		}
+		if("2".equals(this.getWay())){
+			return "销售收益";
+		}
+		if("3".equals(this.getWay())){
+			return "提现";
+		}
+		if("4".equals(this.getWay())){
+			return "结算";
+		}
+		return "--";
 	}
 
 	public void setWay(String way) {
@@ -123,6 +147,22 @@ public class AccountInfo extends DataEntity<AccountInfo> {
 		return status;
 	}
 
+	public String getStatusText() {
+		if("1".equals(this.getStatus())){
+			return "已到账";
+		}
+		if("2".equals(this.getStatus())){
+			return "未到账";
+		}
+		if("3".equals(this.getStatus())){
+			return "未提现结算";
+		}
+		if("4".equals(this.getStatus())){
+			return "已提现结算";
+		}
+		return "--";
+	}
+
 	public void setStatus(String status) {
 		this.status = status;
 	}
@@ -135,5 +175,8 @@ public class AccountInfo extends DataEntity<AccountInfo> {
 	public void setToAccountDate(Date toAccountDate) {
 		this.toAccountDate = toAccountDate;
 	}
+
+
+
 	
 }

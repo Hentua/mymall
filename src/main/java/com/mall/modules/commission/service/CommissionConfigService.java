@@ -61,7 +61,7 @@ public class CommissionConfigService extends CrudService<CommissionConfigDao, Co
 			this.setConfigs(this.findList(new CommissionConfig()));
 		}
 		for (CommissionConfig config: this.getConfigs()) {
-			if(type.equals(config)){
+			if(type.equals(config.getType())){
 				//按固定金额计算
 				if("1".equals(config.getMode())){
 					return config.getNumber();
@@ -71,7 +71,7 @@ public class CommissionConfigService extends CrudService<CommissionConfigDao, Co
 					if(null == amountTotal || amountTotal <= 0.0){
 						return 0.0;
 					}
-					//按交易金额 计算百分比
+					//按交易金额 计算百分比+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 					return config.getNumber()/amountTotal*100;
 				}
 			}

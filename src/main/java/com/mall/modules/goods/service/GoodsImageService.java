@@ -45,5 +45,11 @@ public class GoodsImageService extends CrudService<GoodsImageDao, GoodsImage> {
 	public void delete(GoodsImage goodsImage) {
 		super.delete(goodsImage);
 	}
-	
+
+	@Transactional(readOnly = false)
+	public void deleteByGoodsId(GoodsImage goodsImage) {
+		dao.deleteByGoodsId(goodsImage);
+	}
+
+
 }
