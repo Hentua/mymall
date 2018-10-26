@@ -32,7 +32,18 @@
 		<include refid="couponCustomerJoins"/>
 		WHERE a.id = #{id}
 	</select>
-	
+
+	<select id="orderEnabledCoupons" resultType="CouponCustomer">
+		select
+		<include refid="couponCustomerColumns"/>
+		from coupon_customer a
+		where a.merchant_code in
+		<foreach collection="merchantCodes" open="(" close=")" index="index" item="merchantCode" separator=",">
+			#{merchantCode}
+		</foreach>
+		and a.customer_code = #{customerCode} and a.start_date &lt;= now() and a.end_date &gt;= now() and a.coupon_status = '0'
+	</select>
+
 	<select id="findList" resultType="CouponCustomer">
 		SELECT 
 			<include refid="couponCustomerColumns"/>

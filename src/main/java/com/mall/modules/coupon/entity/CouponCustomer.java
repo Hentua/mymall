@@ -1,11 +1,13 @@
 package com.mall.modules.coupon.entity;
 
-import org.hibernate.validator.constraints.Length;
-import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import javax.validation.constraints.NotNull;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mall.common.persistence.DataEntity;
+import org.hibernate.validator.constraints.Length;
+
+import javax.validation.constraints.NotNull;
+import java.util.Date;
+import java.util.Set;
 
 /**
  * 用户优惠券Entity
@@ -22,10 +24,13 @@ public class CouponCustomer extends DataEntity<CouponCustomer> {
 	private Date startDate;		// 开始时间
 	private Date endDate;		// 结束时间
 	private String merchantCode;		// 发放商家ID，仅可在该商家使用
-	private String discountRate;		// 扣减比例
-	private String discountAmount;		// 扣减金额
+	private Double discountRate;		// 扣减比例
+	private Double discountAmount;		// 扣减金额
 	private String couponStatus;		// 优惠券状态（0-未使用，1-已使用，2-已过期）
 	private Date usedTime;		// 使用时间
+
+	@JsonIgnore
+	private Set<String> merchantCodes; // 查询条件使用 商家ID
 	
 	public CouponCustomer() {
 		super();
@@ -33,6 +38,14 @@ public class CouponCustomer extends DataEntity<CouponCustomer> {
 
 	public CouponCustomer(String id){
 		super(id);
+	}
+
+	public Set<String> getMerchantCodes() {
+		return merchantCodes;
+	}
+
+	public void setMerchantCodes(Set<String> merchantCodes) {
+		this.merchantCodes = merchantCodes;
 	}
 
 	@Length(min=1, max=32, message="优惠券编号长度必须介于 1 和 32 之间")
@@ -100,19 +113,19 @@ public class CouponCustomer extends DataEntity<CouponCustomer> {
 		this.merchantCode = merchantCode;
 	}
 	
-	public String getDiscountRate() {
+	public Double getDiscountRate() {
 		return discountRate;
 	}
 
-	public void setDiscountRate(String discountRate) {
+	public void setDiscountRate(Double discountRate) {
 		this.discountRate = discountRate;
 	}
 	
-	public String getDiscountAmount() {
+	public Double getDiscountAmount() {
 		return discountAmount;
 	}
 
-	public void setDiscountAmount(String discountAmount) {
+	public void setDiscountAmount(Double discountAmount) {
 		this.discountAmount = discountAmount;
 	}
 	

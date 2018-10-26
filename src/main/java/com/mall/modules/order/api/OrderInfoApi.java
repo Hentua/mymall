@@ -12,6 +12,8 @@ import com.mall.common.utils.ResultGenerator;
 import com.mall.common.utils.StringUtils;
 import com.mall.common.utils.api.ApiPageEntityHandleUtil;
 import com.mall.common.web.BaseController;
+import com.mall.modules.coupon.entity.CouponCustomer;
+import com.mall.modules.coupon.service.CouponCustomerService;
 import com.mall.modules.goods.entity.GoodsInfo;
 import com.mall.modules.goods.service.GoodsInfoService;
 import com.mall.modules.member.entity.MemberDeliveryAddress;
@@ -57,6 +59,8 @@ public class OrderInfoApi extends BaseController {
     private OrderPaymentInfoService orderPaymentInfoService;
     @Autowired
     private OrderShoppingCartService orderShoppingCartService;
+    @Autowired
+    private CouponCustomerService couponCustomerService;
 
     /**
      * 提交订单 订单30分钟内需要支付 否则关闭订单
@@ -93,7 +97,11 @@ public class OrderInfoApi extends BaseController {
             if (null == memberDeliveryAddress) {
                 throw new ServiceException("所选地址不合法");
             }
-            // todo coupon discount
+
+            CouponCustomer couponCustomer = null;
+            if(StringUtils.isNotBlank(couponCode)) {
+                couponCustomer = couponCustomerService.get(couponCode);
+            }
 
             // 组装合并订单支付信息
             OrderPaymentInfo orderPaymentInfo = OrderPaymentInfoService.genDefaultPaymentInfo(orderType);
@@ -182,6 +190,15 @@ public class OrderInfoApi extends BaseController {
 
             for (OrderInfo orderInfo : orderInfoMap.values()) {
                 double orderDiscountAmountTotal = 0.00;
+                String merchantCode = orderInfo.getMerchantCode();
+                if(null != couponCustomer && merchantCode.equals(couponCustomer.getMerchantCode())) {
+                    String couponType = couponCustomer.getCouponType();
+                    if("1".equals(couponType)) {
+                        orderDiscountAmountTotal = couponCustomer.getDiscountAmount();
+                    }else if("0".equals(couponType)) {
+                        orderDiscountAmountTotal = Double.valueOf(df.format(couponCustomer.getDiscountRate() * orderInfo.getOrderAmountTotal()));
+                    }
+                }
                 double orderAmountTotal = orderInfo.getOrderAmountTotal() - orderDiscountAmountTotal;
                 amountTotal += orderAmountTotal;
                 orderInfo.setOrderAmountTotal(orderAmountTotal);
