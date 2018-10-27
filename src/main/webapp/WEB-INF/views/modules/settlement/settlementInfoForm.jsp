@@ -34,79 +34,53 @@
 		<form:hidden path="id"/>
 		<sys:message content="${message}"/>		
 		<div class="control-group">
-			<label class="control-label">提现结算类型 （1：佣金提现 2：订单交易结算）：</label>
+			<label class="control-label">提现结算类型  ：</label>
 			<div class="controls">
-				<form:input path="type" htmlEscape="false" maxlength="10" class="input-xlarge "/>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">关联单号（佣金明细ID 订单ID）：</label>
-			<div class="controls">
-				<form:input path="unionId" htmlEscape="false" maxlength="64" class="input-xlarge "/>
+				<c:if test="${settlementInfo.type == 1}">
+					佣金提现
+				</c:if>
+				<c:if test="${settlementInfo.type == 2}">
+					订单交易结算
+				</c:if>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">结算金额：</label>
 			<div class="controls">
-				<form:input path="amount" htmlEscape="false" class="input-xlarge  number"/>
+				${settlementInfo.amount}
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">结算审核状态 1：待提交 2:已审核 3：已结算：</label>
+			<label class="control-label">结算审核状态 ：</label>
 			<div class="controls">
-				<form:input path="status" htmlEscape="false" maxlength="10" class="input-xlarge "/>
+				<c:if test="${settlementInfo.status == 1}">
+					待提交
+				</c:if>
+				<c:if test="${settlementInfo.status == 2}">
+					待结算
+				</c:if>
+				<c:if test="${settlementInfo.status == 3}">
+					已结算
+				</c:if>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">提交人：</label>
 			<div class="controls">
-				<form:input path="subUserId" htmlEscape="false" maxlength="64" class="input-xlarge "/>
+				<c:if test="${empty settlementInfo.subUserId}">
+					系统生成
+				</c:if>
+					${settlementInfo.subUserName}
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">提交时间：</label>
 			<div class="controls">
-				<input name="subDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate "
-					value="<fmt:formatDate value="${settlementInfo.subDate}" pattern="yyyy-MM-dd HH:mm:ss"/>"
-					onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});"/>
+				<fmt:formatDate value="${settlementInfo.subDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">审核人：</label>
-			<div class="controls">
-				<form:input path="auditUserId" htmlEscape="false" maxlength="64" class="input-xlarge "/>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">审核时间：</label>
-			<div class="controls">
-				<input name="auditDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate "
-					value="<fmt:formatDate value="${settlementInfo.auditDate}" pattern="yyyy-MM-dd HH:mm:ss"/>"
-					onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});"/>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">审核备注：</label>
-			<div class="controls">
-				<form:input path="auditRemarks" htmlEscape="false" maxlength="500" class="input-xlarge "/>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">结算人：</label>
-			<div class="controls">
-				<form:input path="settlementUserId" htmlEscape="false" maxlength="64" class="input-xlarge "/>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">结算时间：</label>
-			<div class="controls">
-				<input name="settlementDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate "
-					value="<fmt:formatDate value="${settlementInfo.settlementDate}" pattern="yyyy-MM-dd HH:mm:ss"/>"
-					onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});"/>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">结束备注：</label>
+			<label class="control-label">结算备注：</label>
 			<div class="controls">
 				<form:input path="settlementRemarks" htmlEscape="false" maxlength="500" class="input-xlarge "/>
 			</div>

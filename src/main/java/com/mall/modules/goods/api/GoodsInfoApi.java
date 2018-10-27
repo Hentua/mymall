@@ -86,6 +86,9 @@ public class GoodsInfoApi extends BaseController {
     @RequestMapping(value = "goodsDetails", method = RequestMethod.POST)
     public Result goodsDetails(HttpServletRequest request, HttpServletResponse response) {
         GoodsInfo goodsInfo = goodsInfoService.get(request.getParameter("goodsId"));
+        if(null == goodsInfo){
+            return  ResultGenerator.genFailResult("商品信息未找到");
+        }
         User merchant = UserUtils.get(goodsInfo.getMerchantId());
         List<GoodsImage> goodsImages = goodsImageService.findListByGoodsId(goodsInfo.getId());
         goodsInfo.setGoodsImages(goodsImages);

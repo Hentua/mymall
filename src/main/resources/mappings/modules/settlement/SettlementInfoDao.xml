@@ -15,10 +15,14 @@
 		a.audit_remarks AS "auditRemarks",
 		a.settlement_user_id AS "settlementUserId",
 		a.settlement_date AS "settlementDate",
-		a.settlement_remarks AS "settlementRemarks"
+		a.settlement_remarks AS "settlementRemarks",
+		sub_u.name as "subUserName",
+		sett_u.name as "settlementUserName"
 	</sql>
 	
 	<sql id="settlementInfoJoins">
+		left join sys_user sub_u on sub_u.id = a.sub_user_id
+		left join sys_user sett_u on sett_u.id = a.settlement_user_id
 	</sql>
     
 	<select id="get" resultType="SettlementInfo">

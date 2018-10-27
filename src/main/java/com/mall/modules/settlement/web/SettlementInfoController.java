@@ -3,6 +3,7 @@ package com.mall.modules.settlement.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.mall.modules.sys.utils.UserUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,6 +19,8 @@ import com.mall.common.web.BaseController;
 import com.mall.common.utils.StringUtils;
 import com.mall.modules.settlement.entity.SettlementInfo;
 import com.mall.modules.settlement.service.SettlementInfoService;
+
+import java.util.Date;
 
 /**
  * 提现结算信息Controller
@@ -61,12 +64,16 @@ public class SettlementInfoController extends BaseController {
 	@RequiresPermissions("settlement:settlementInfo:edit")
 	@RequestMapping(value = "save")
 	public String save(SettlementInfo settlementInfo, Model model, RedirectAttributes redirectAttributes) {
-		if (!beanValidator(model, settlementInfo)){
-			return form(settlementInfo, model);
-		}
-		settlementInfoService.save(settlementInfo);
-		addMessage(redirectAttributes, "保存提现结算信息成功");
-		return "redirect:"+Global.getAdminPath()+"/settlement/settlementInfo/?repage";
+//		if (!beanValidator(model, settlementInfo)){
+//			return form(settlementInfo, model);
+//		}
+		SettlementInfo s = settlementInfoService.get(settlementInfo.getId()) ;
+		s.setSettlementUserId(UserUtils.getUser().getId());
+		s.setSettlementDate(new Date());
+		s.setSettlementRemarks(settlementInfo.getSettlementRemarks());
+		settlementInfoService.save(s);
+		addMessage(redirectAttributes, "结算成功");
+		return "redirect:"+Global.getAdminPath()+"/settlement/settlementInfo/list?repage";
 	}
 	
 	@RequiresPermissions("settlement:settlementInfo:edit")

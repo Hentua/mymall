@@ -24,7 +24,7 @@
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<ul class="ul-form">
-			<li><label>收支类型：</label>
+			<li><label>收支类型11：</label>
 				<form:select path="type" cssStyle="width: 170px">
 					<form:option value="">全部</form:option>
 					<form:option value="1">收入</form:option>
@@ -105,12 +105,15 @@
 					<c:if test="${accountInfo.status == 4}">
 						已提现结算
 					</c:if>
+					<c:if test="${accountInfo.status == 5}">
+						已结算
+					</c:if>
 				</td>
 				<td><fmt:formatDate value="${accountInfo.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
 				<td><fmt:formatDate value="${accountInfo.toAccountDate}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
 				<shiro:hasPermission name="account:accountInfo:edit"><td>
 					<c:if test="${accountInfo.way == 1 && accountInfo.status == 1}">
-						<a href="${ctx}/account/accountInfo/form?id=${accountInfo.id}" onclick="return confirmx('确认要提现该笔收益吗？', this.href)">提现</a>
+						<a href="${ctx}/account/accountInfo/updateStatus?id=${accountInfo.id}&status=11" onclick="return confirmx('确认要提现该笔收益吗？', this.href)">提现</a>
 					</c:if>
 				</td></shiro:hasPermission>
 			</tr>

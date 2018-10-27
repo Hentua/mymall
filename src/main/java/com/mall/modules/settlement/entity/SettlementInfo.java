@@ -19,14 +19,33 @@ public class SettlementInfo extends DataEntity<SettlementInfo> {
 	private Double amount;		// 结算金额
 	private String status;		// 结算审核状态 1：待提交 2:待结算 3：已结算
 	private String subUserId;		// 提交人
+	private String subUserName;		// 提交人
 	private Date subDate;		// 提交时间
 	private String auditUserId;		// 审核人
 	private Date auditDate;		// 审核时间
 	private String auditRemarks;		// 审核备注
 	private String settlementUserId;		// 结算人
+	private String settlementUserName;		// 结算人
 	private Date settlementDate;		// 结算时间
 	private String settlementRemarks;		// 结束备注
-	
+
+
+	public String getSubUserName() {
+		return subUserName;
+	}
+
+	public void setSubUserName(String subUserName) {
+		this.subUserName = subUserName;
+	}
+
+	public String getSettlementUserName() {
+		return settlementUserName;
+	}
+
+	public void setSettlementUserName(String settlementUserName) {
+		this.settlementUserName = settlementUserName;
+	}
+
 	public SettlementInfo() {
 		super();
 	}

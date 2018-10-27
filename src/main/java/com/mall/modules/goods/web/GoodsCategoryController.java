@@ -79,11 +79,11 @@ public class GoodsCategoryController extends BaseController {
 		}
 		GoodsCategory pg = goodsCategoryService.get(goodsCategory.getParentCategoryId());
 		if(null == pg){
-			addMessage(model,"保存商品分类失败\n父分类不能为空");
-			return form(goodsCategory, model);
+			goodsCategory.setParentCategoryId("0");
+			goodsCategory.setDepth(0);
 		}
 		goodsCategory.setStatus(1);
-		goodsCategory.setDepth(pg.getDepth()+1);
+
 		goodsCategoryService.save(goodsCategory);
 		addMessage(redirectAttributes, "保存商品分类成功");
 		return "redirect:"+Global.getAdminPath()+"/goods/goodsCategory/list?repage";

@@ -106,6 +106,7 @@
 					<c:if test="${empty settlementInfo.subUserId}">
 						系统生成
 					</c:if>
+					${settlementInfo.subUserName}
 				</td>
 				<td>
 					<c:if test="${empty settlementInfo.subDate}">
@@ -124,9 +125,9 @@
 					${settlementInfo.settlementRemarks}
 				</td>
 				<shiro:hasPermission name="settlement:settlementInfo:edit"><td>
-					<c:if test="${settlementInfo.status == 1}">
-						<a href="${ctx}/settlement/settlementInfo/form?id=${settlementInfo.id}" onclick="return confirmx('确认要提交该笔信息吗？', this.href)">提交</a>
-					</c:if>
+					<%--<c:if test="${settlementInfo.status == 1}">--%>
+						<%--<a href="${ctx}/settlement/settlementInfo/form?id=${settlementInfo.id}" onclick="return confirmx('确认要提交该笔信息吗？', this.href)">提交</a>--%>
+					<%--</c:if>--%>
 					<c:if test="${settlementInfo.status == 2}">
 						<a href="${ctx}/settlement/settlementInfo/form?id=${settlementInfo.id}" onclick="return confirmx('确认要结算该笔信息吗？', this.href)">结算</a>
 					</c:if>
