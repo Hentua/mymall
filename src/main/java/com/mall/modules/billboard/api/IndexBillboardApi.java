@@ -67,8 +67,8 @@ public class IndexBillboardApi extends BaseController {
 				b.setGoodsList(goodsInfos);
 		}
 		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("recommendData",list);
-		map.put("adListData",list2);
+		map.put("adListData",list);
+		map.put("recommendData",list2);
 		return ResultGenerator.genSuccessResult(map);
 	}
 
