@@ -7,40 +7,49 @@ import com.mall.common.persistence.DataEntity;
 
 /**
  * 商品图片Entity
+ *
  * @author hub
  * @version 2018-10-15
  */
 public class GoodsImage extends DataEntity<GoodsImage> {
-	
-	private static final long serialVersionUID = 1L;
-	private String goodsId;		// goods_id
-	private String imageUrl;		// image
-	
-	public GoodsImage() {
-		super();
-	}
 
-	public GoodsImage(String id){
-		super(id);
-	}
+    private static final long serialVersionUID = 1L;
+    private String goodsId;        // goods_id
+    private String imageUrl;        // image
 
-	@Length(min=0, max=64, message="goods_id长度必须介于 0 和 64 之间")
-	public String getGoodsId() {
-		return goodsId;
-	}
+    public GoodsImage() {
+        super();
+    }
 
-	public void setGoodsId(String goodsId) {
-		this.goodsId = goodsId;
-	}
+    public GoodsImage(String id) {
+        super(id);
+    }
 
-	public String getImageUrl() {
-		return imageUrl;
-	}
+    @Length(min = 0, max = 64, message = "goods_id长度必须介于 0 和 64 之间")
+    public String getGoodsId() {
+        return goodsId;
+    }
 
-	public void setImageUrl(String imageUrl) {
+    public void setGoodsId(String goodsId) {
+        this.goodsId = goodsId;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
 //		if(null != imageUrl){
 //			imageUrl = Global.getConfig("userfiles.baseURL")+imageUrl;
 //		}
-		this.imageUrl = imageUrl;
-	}
+        this.imageUrl = imageUrl;
+    }
+
+    public String getFullImageUrl() {
+        String fullImageUrl = "";
+        if (null != imageUrl) {
+            fullImageUrl = Global.getConfig("userfiles.baseURL") + imageUrl;
+        }
+        return fullImageUrl;
+    }
 }

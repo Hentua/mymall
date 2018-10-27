@@ -46,6 +46,7 @@
 		<include refid="goodsInfoColumns"/>
 		FROM goods_info a
 		left join index_billboard_goods ibg on a.id = ibg.goods_id
+		<include refid="goodsInfoJoins"/>
 		<where>
 			ibg.billboard_id = #{billboard.id}
 			<if test="goods != null and goods.goodsCategoryId != null and goods.goodsCategoryId != ''">

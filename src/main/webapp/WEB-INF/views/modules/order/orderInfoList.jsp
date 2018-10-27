@@ -37,13 +37,11 @@
 				<th>卖家店铺ID</th>
 				<th>订单状态（0-待付款，1-已付款，2-已取消，3-退款申请，4-已退款）</th>
 				<th>订单类型（0-平台自主下单，1-礼包兑换）</th>
-				<th>支付渠道（0-微信支付，1-礼包）</th>
 				<th>商品总数量</th>
 				<th>订单商品总金额</th>
 				<th>运费</th>
 				<th>订单应付总金额</th>
 				<th>订单优惠扣减金额</th>
-				<th>支付渠道返回的订单号</th>
 				<th>创建时间</th>
 				<th>创建人</th>
 				<th>买家ID</th>
@@ -69,9 +67,6 @@
 					${orderInfo.orderType}
 				</td>
 				<td>
-					${orderInfo.payChannel}
-				</td>
-				<td>
 					${orderInfo.goodsCount}
 				</td>
 				<td>
@@ -85,9 +80,6 @@
 				</td>
 				<td>
 					${orderInfo.discountAmountTotal}
-				</td>
-				<td>
-					${orderInfo.payChannelNo}
 				</td>
 				<td>
 					<fmt:formatDate value="${orderInfo.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/>

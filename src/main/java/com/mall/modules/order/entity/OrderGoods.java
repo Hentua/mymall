@@ -1,5 +1,6 @@
 package com.mall.modules.order.entity;
 
+import com.mall.common.config.Global;
 import com.mall.common.persistence.DataEntity;
 import org.hibernate.validator.constraints.Length;
 
@@ -162,6 +163,14 @@ public class OrderGoods extends DataEntity<OrderGoods> {
 
 	public void setSubtotal(Double subtotal) {
 		this.subtotal = subtotal;
+	}
+
+	public String getFullImageUrl() {
+		String fullImageUrl = "";
+		if (null != image) {
+			fullImageUrl = Global.getConfig("userfiles.baseURL") + image;
+		}
+		return fullImageUrl;
 	}
 	
 }
