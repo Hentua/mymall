@@ -373,7 +373,7 @@
 					<script type="text/javascript">
 						var orderLogisticsRowIdx = 0, orderLogisticsTpl = $("#orderLogisticsTpl").html().replace(/(\/\/\<!\-\-)|(\/\/\-\->)/g,"");
 						$(document).ready(function() {
-							var data = ${fns:toJson(orderInfo.orderLogisticsList)};
+							var data = ${fns:toJson(orderInfo.orderLogistics)};
 							for (var i=0; i<data.length; i++){
 								addRow('#orderLogisticsList', orderLogisticsRowIdx, orderLogisticsTpl, data[i]);
 								orderLogisticsRowIdx = orderLogisticsRowIdx + 1;
