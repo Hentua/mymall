@@ -206,8 +206,15 @@
 
 	<update id="toAccount" parameterType="java.lang.String">
 		UPDATE account_info SET
-			status = 2
-		WHERE union_id = #{orderId}
+			status = 1,
+			to_account_date =  NOW()
+		WHERE (union_id = #{orderId} or union_id in (select id from commission_info where union_id = #{orderId}))
+		and to_account_date is null
+	</update>
+
+	<update id="createSettlementInfo" parameterType="java.lang.String">
+		insert into settlement_info (id,type,union_id,amount,status,sub_date)
+		select REPLACE(UUID(),"-",""),'2',user_id,amount,'2',now() from account_info where union_id =  #{orderId} and to_account_date is null
 	</update>
 	
 </mapper>

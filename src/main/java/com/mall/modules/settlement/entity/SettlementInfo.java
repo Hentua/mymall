@@ -17,7 +17,7 @@ public class SettlementInfo extends DataEntity<SettlementInfo> {
 	private String type;		// 提现结算类型 （1：佣金提现 2：订单交易结算）
 	private String unionId;		// 关联单号（佣金明细ID 订单ID）
 	private Double amount;		// 结算金额
-	private String status;		// 结算审核状态 1：待提交 2:已审核 3：已结算
+	private String status;		// 结算审核状态 1：待提交 2:待结算 3：已结算
 	private String subUserId;		// 提交人
 	private Date subDate;		// 提交时间
 	private String auditUserId;		// 审核人

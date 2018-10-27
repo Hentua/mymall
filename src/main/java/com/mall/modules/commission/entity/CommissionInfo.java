@@ -43,6 +43,25 @@ public class CommissionInfo extends DataEntity<CommissionInfo> {
 		return type;
 	}
 
+	public String getTypeText(){
+		if("1".equals(this.getType())){
+			return "推荐用户消费返佣";
+		}
+		if("2".equals(this.getType())){
+			return "推荐商家销售返佣";
+		}
+		if("3".equals(this.getType())){
+			return "推荐商家入驻返佣";
+		}
+		if("4".equals(this.getType())){
+			return "推荐商家送出礼包返佣";
+		}
+		if("5".equals(this.getType())){
+			return "商家送出礼包返佣";
+		}
+		return this.getType();
+	}
+
 	public void setType(String type) {
 		this.type = type;
 	}

@@ -46,22 +46,23 @@ public class IndexBillboardApi extends BaseController {
 	@RequestMapping(value = "getBillboards", method = RequestMethod.POST)
 	public Result getBillboards(HttpServletRequest request, HttpServletResponse response) {
 		//类型：1轮播图广告位 2独立广告位
-		String type = request.getParameter("type");
-		if(StringUtils.isEmpty(type)){
-			return ResultGenerator.genFailResult("参数[type]不能为空");
-		}
+//		String type = request.getParameter("type");
+//		if(StringUtils.isEmpty(type)){
+//			return ResultGenerator.genFailResult("参数[type]不能为空");
+//		}
 		IndexBillboard billboard = new IndexBillboard();
-		billboard.setType(type);
+//		billboard.setType(type);
 		List<IndexBillboard> list = indexBillboardService.findList(billboard);
 		//独立广告位带商品集合
-		if("2".equals(type)){
-			for (IndexBillboard b: list) {
+		for (IndexBillboard b: list) {
+			if("2".equals(b.getType())){
 				BillboardGoods billboardGoods = new BillboardGoods();
 				billboardGoods.setBillboard(b);
 				List<GoodsInfo> goodsInfos = goodsInfoService.findListByBillboard(billboardGoods);
 				b.setGoodsList(goodsInfos);
 			}
 		}
+
 		return ResultGenerator.genSuccessResult(list);
 	}
 

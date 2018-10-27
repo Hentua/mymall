@@ -35,7 +35,8 @@
 				<form:select path="status" cssStyle="width: 170px">
 					<form:option value="">全部</form:option>
 					<form:option value="1">待提交</form:option>
-					<form:option value="2">已结算</form:option>
+					<form:option value="2">待结算</form:option>
+					<form:option value="3">已结算</form:option>
 				</form:select>
 			</li>
 			<li><label>提交人账号：</label>
@@ -92,7 +93,7 @@
 						待提交
 					</c:if>
 					<c:if test="${settlementInfo.status == 2}">
-						待审核
+						待结算
 					</c:if>
 					<c:if test="${settlementInfo.status == 3}">
 						已结算
@@ -102,13 +103,19 @@
 					${settlementInfo.amount}
 				</td>
 				<td>
-					${settlementInfo.subUserId}
+					<c:if test="${empty settlementInfo.subUserId}">
+						系统生成
+					</c:if>
 				</td>
 				<td>
+					<c:if test="${empty settlementInfo.subDate}">
+						系统生成
+					</c:if>
 					<fmt:formatDate value="${settlementInfo.subDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
 				</td>
 				<td>
 					${settlementInfo.settlementUserId}
+
 				</td>
 				<td>
 					<fmt:formatDate value="${settlementInfo.settlementDate}" pattern="yyyy-MM-dd HH:mm:ss"/>

@@ -23,5 +23,8 @@ public interface AccountInfoDao extends CrudDao<AccountInfo> {
     public Map<String,Object> getStsInfo(AccountInfo accountInfo);
 
     public void toAccount(@Param("orderId") String orderId);
+
+    public void createSettlementInfo(@Param("orderId") String orderId);
+
 	
 }

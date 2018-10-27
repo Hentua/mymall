@@ -100,7 +100,7 @@ public class AccountInfoApi extends BaseController {
 		accountInfo.setId(request.getParameter("id"));
 		accountInfo = accountInfoService.getByApi(accountInfo);
 		// 收支方式（1：佣金收益 2：销售收益） 支出（3：提现 4：结算）
-		if("1".equals(accountInfo.getType()) || "3".equals(accountInfo.getType())){
+		if("1".equals(accountInfo.getWay()) || "3".equals(accountInfo.getWay())){
 			CommissionInfo commissionInfo = commissionInfoService.get(accountInfo.getUnionId());
 			User produceUser = UserUtils.get(commissionInfo.getProduceUserId());
 			if(null != produceUser){
@@ -108,7 +108,7 @@ public class AccountInfoApi extends BaseController {
 			}
 			accountInfo.setCommissionInfo(commissionInfo);
 		}
-		if("2".equals(accountInfo.getType()) || "4".equals(accountInfo.getType())){
+		if("2".equals(accountInfo.getWay()) || "4".equals(accountInfo.getWay())){
 			OrderInfo orderInfo =orderInfoService.get(accountInfo.getUnionId());
 			accountInfo.setOrderInfo(orderInfo);
 		}

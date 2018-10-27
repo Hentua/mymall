@@ -135,6 +135,7 @@ public class GoodsInfoController extends BaseController {
 			goodsImageService.deleteByGoodsId(gm);
 		}
 		goodsInfo.setMerchantId(UserUtils.getUser().getId());
+		goodsInfo.setStatus(1);
 		goodsInfoService.save(goodsInfo);
 		if(null != goodsInfo.getDespImages() && goodsInfo.getDespImages().size()>0){
 			for (String image : goodsInfo.getDespImages() ) {
