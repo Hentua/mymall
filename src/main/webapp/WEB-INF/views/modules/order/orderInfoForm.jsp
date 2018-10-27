@@ -93,13 +93,6 @@
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">支付渠道（0-微信支付，1-礼包）：</label>
-			<div class="controls">
-				<form:input path="payChannel" htmlEscape="false" maxlength="2" class="input-xlarge required"/>
-				<span class="help-inline"><font color="red">*</font> </span>
-			</div>
-		</div>
-		<div class="control-group">
 			<label class="control-label">商品总数量：</label>
 			<div class="controls">
 				<form:input path="goodsCount" htmlEscape="false" class="input-xlarge required number"/>
@@ -132,12 +125,6 @@
 			<div class="controls">
 				<form:input path="discountAmountTotal" htmlEscape="false" class="input-xlarge required number"/>
 				<span class="help-inline"><font color="red">*</font> </span>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">支付渠道返回的订单号：</label>
-			<div class="controls">
-				<form:input path="payChannelNo" htmlEscape="false" maxlength="100" class="input-xlarge "/>
 			</div>
 		</div>
 		<div class="control-group">
