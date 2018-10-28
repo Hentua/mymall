@@ -61,6 +61,8 @@ public class User extends DataEntity<User> {
 	private String refereeId;
 	//注册途径（0-注册页面自主注册，1-商户管理后台直接添加）
 	private String registerWay;
+	//会员状态
+	private String status;
 
 	public User() {
 		super();
@@ -91,6 +93,14 @@ public class User extends DataEntity<User> {
 	public User(Role role){
 		super();
 		this.role = role;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 	public String getRegisterWay() {

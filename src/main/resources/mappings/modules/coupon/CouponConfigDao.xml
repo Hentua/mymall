@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.modules.coupon.dao.CouponConfigDao">
+    
+	<sql id="couponConfigColumns">
+		a.id AS "id",
+		a.coupon_type AS "couponType",
+		a.coupon_name AS "couponName",
+		a.eapiry_time AS "eapiryTime",
+		a.discount_rate AS "discountRate",
+		a.discount_amount AS "discountAmount",
+		a.status AS "status",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.limit_amount AS "limitAmount"
+	</sql>
+	
+	<sql id="couponConfigJoins">
+	</sql>
+    
+	<select id="get" resultType="CouponConfig">
+		SELECT 
+			<include refid="couponConfigColumns"/>
+		FROM coupon_config a
+		<include refid="couponConfigJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CouponConfig">
+		SELECT 
+			<include refid="couponConfigColumns"/>
+		FROM coupon_config a
+		<include refid="couponConfigJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="couponType != null and couponType != ''">
+				AND a.coupon_type = #{couponType}
+			</if>
+			<if test="couponName != null and couponName != ''">
+				AND a.coupon_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{couponName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{couponName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{couponName},'%')</if>
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CouponConfig">
+		SELECT 
+			<include refid="couponConfigColumns"/>
+		FROM coupon_config a
+		<include refid="couponConfigJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO coupon_config(
+			id,
+			coupon_type,
+			coupon_name,
+			eapiry_time,
+			discount_rate,
+			discount_amount,
+			status,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			limit_amount
+		) VALUES (
+			#{id},
+			#{couponType},
+			#{couponName},
+			#{eapiryTime},
+			#{discountRate},
+			#{discountAmount},
+			#{status},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+		    #{limitAmount}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE coupon_config SET 	
+			coupon_type = #{couponType},
+			coupon_name = #{couponName},
+			eapiry_time = #{eapiryTime},
+			discount_rate = #{discountRate},
+			discount_amount = #{discountAmount},
+			status = #{status},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			limit_amount = #{limitAmount}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE coupon_config SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

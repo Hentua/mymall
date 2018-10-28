@@ -111,7 +111,8 @@
 		mi.referee as "referee",
 		mi.referee_id as "refereeId",
 		mi.nickname as "nickname",
-		mi.register_way as "registerWay"
+		mi.register_way as "registerWay",
+		mi.status AS "status"
     </sql>
     
     <sql id="userJoins">

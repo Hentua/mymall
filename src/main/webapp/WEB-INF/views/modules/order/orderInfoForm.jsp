@@ -375,7 +375,7 @@
 						$(document).ready(function() {
 							var data = ${fns:toJson(orderInfo.orderLogistics)};
 							for (var i=0; i<data.length; i++){
-								addRow('#orderLogisticsList', orderLogisticsRowIdx, orderLogisticsTpl, data[i]);
+								addRow('#orderLogisticsList', orderLogisticsRowIdx, orderLogisticsTpl, data);
 								orderLogisticsRowIdx = orderLogisticsRowIdx + 1;
 							}
 						});

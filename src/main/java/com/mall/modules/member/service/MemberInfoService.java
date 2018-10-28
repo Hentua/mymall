@@ -8,6 +8,7 @@ import com.mall.modules.member.entity.MemberInfo;
 import com.mall.modules.member.utils.Base32;
 import com.sohu.idcenter.IdWorker;
 import org.apache.fop.util.LogUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +26,9 @@ import java.util.regex.Pattern;
 @Service
 @Transactional(readOnly = true)
 public class MemberInfoService extends CrudService<MemberInfoDao, MemberInfo> {
+
+    @Autowired
+    private MemberInfoDao memberInfoDao;
 
     public MemberInfo get(String id) {
         return super.get(id);
@@ -48,8 +52,9 @@ public class MemberInfoService extends CrudService<MemberInfoDao, MemberInfo> {
         super.delete(memberInfo);
     }
 
-    public String genRefereeCode() {
-        return "";
+    @Transactional(readOnly = false, rollbackFor = Exception.class)
+    public void memberCheck(MemberInfo memberInfo) {
+        memberInfoDao.memberCheck(memberInfo);
     }
 
     public static boolean isPhone(String phone) throws ServiceException {

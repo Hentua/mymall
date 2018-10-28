@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.modules.gift.dao.GiftConfigGoodsDao">
+    
+	<sql id="giftConfigGoodsColumns">
+		a.id AS "id",
+		a.gift_config_id AS "giftConfigId",
+		a.goods_id AS "goodsId",
+		a.goods_count AS "goodsCount",
+		a.merchant_code AS "merchantCode",
+		a.del_flag AS "delFlag",
+		g.goods_name AS "goodsName"
+	</sql>
+	
+	<sql id="giftConfigGoodsJoins">
+		LEFT JOIN gift_config b ON b.id = a.gift_config_id
+		left join goods_info g on g.id = a.goods_id
+	</sql>
+    
+	<select id="get" resultType="GiftConfigGoods">
+		SELECT 
+			<include refid="giftConfigGoodsColumns"/>
+		FROM gift_config_goods a
+		<include refid="giftConfigGoodsJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="GiftConfigGoods">
+		SELECT 
+			<include refid="giftConfigGoodsColumns"/>
+		FROM gift_config_goods a
+		<include refid="giftConfigGoodsJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="giftConfigId != null and giftConfigId != ''">
+				AND a.gift_config_id = #{giftConfigId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="GiftConfigGoods">
+		SELECT 
+			<include refid="giftConfigGoodsColumns"/>
+		FROM gift_config_goods a
+		<include refid="giftConfigGoodsJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO gift_config_goods(
+			id,
+			gift_config_id,
+			goods_id,
+			goods_count,
+			merchant_code,
+			del_flag
+		) VALUES (
+			#{id},
+			#{giftConfigId},
+			#{goodsId},
+			#{goodsCount},
+			#{merchantCode},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE gift_config_goods SET 	
+			gift_config_id = #{giftConfigId},
+			goods_id = #{goodsId},
+			goods_count = #{goodsCount},
+			merchant_code = #{merchantCode}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE gift_config_goods SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		<choose>
+			<when test="id !=null and id != ''">
+				WHERE id = #{id}
+			</when>
+			<otherwise>
+				WHERE gift_config_id = #{giftConfigId}
+			</otherwise>
+		</choose>
+	</update>
+	
+</mapper>

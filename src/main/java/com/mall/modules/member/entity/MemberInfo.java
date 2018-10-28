@@ -1,8 +1,10 @@
 package com.mall.modules.member.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.Length;
 
 import com.mall.common.persistence.DataEntity;
+import org.hibernate.validator.constraints.NotEmpty;
 
 /**
  * 用户信息Entity
@@ -22,12 +24,65 @@ public class MemberInfo extends DataEntity<MemberInfo> {
 
 	private String mobile; // 手机号码
 
+	private String status; // 会员当前状态 0-审核中， 1-已生效， 2-审核未通过
+	private String remarks; // 备注
+	private String refereeName; // 推荐人名称
+
+	@JsonIgnore
+	private String password;
+	@JsonIgnore
+	private String repeatPassword;
+
 	public MemberInfo() {
 		super();
 	}
 
 	public MemberInfo(String id){
 		super(id);
+	}
+
+	public String getRefereeName() {
+		return refereeName;
+	}
+
+	public void setRefereeName(String refereeName) {
+		this.refereeName = refereeName;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	@Override
+	public String getRemarks() {
+		return remarks;
+	}
+
+	@Override
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
+	}
+
+	@NotEmpty(message = "密码不能为空")
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	@NotEmpty(message = "密码不能为空")
+	public String getRepeatPassword() {
+		return repeatPassword;
+	}
+
+	public void setRepeatPassword(String repeatPassword) {
+		this.repeatPassword = repeatPassword;
 	}
 
 	public String getSex() {

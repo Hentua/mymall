@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/views/include/taglib.jsp"%>
 <html>
 <head>
-	<title>用户信息管理</title>
+	<title>会员管理</title>
 	<meta name="decorator" content="default"/>
 	<script type="text/javascript">
 		$(document).ready(function() {
@@ -18,13 +18,31 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li class="active"><a href="${ctx}/member/memberInfo/">用户信息列表</a></li>
-		<shiro:hasPermission name="member:memberInfo:edit"><li><a href="${ctx}/member/memberInfo/form">用户信息添加</a></li></shiro:hasPermission>
+		<li class="active"><a href="${ctx}/member/memberInfo/">会员列表</a></li>
+		<shiro:hasPermission name="member:memberInfo:edit"><li><a href="${ctx}/member/memberInfo/form">会员添加</a></li></shiro:hasPermission>
 	</ul>
 	<form:form id="searchForm" modelAttribute="memberInfo" action="${ctx}/member/memberInfo/" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<ul class="ul-form">
+			<li><label>昵称：</label>
+				<form:input path="nickname" htmlEscape="false" maxlength="20" class="input-medium"/>
+			</li>
+			<li><label>注册途径：</label>
+				<form:select path="registerWay" class="input-medium">
+					<form:option value="" label="全部"/>
+					<form:option value="0" label="自主注册"/>
+					<form:option value="1" label="后台添加"/>
+				</form:select>
+			</li>
+			<li><label>会员状态：</label>
+				<form:select path="status" class="input-medium">
+					<form:option value="" label="全部"/>
+					<form:option value="0" label="审核中"/>
+					<form:option value="1" label="已生效"/>
+					<form:option value="2" label="审核未通过"/>
+				</form:select>
+			</li>
 			<li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
 			<li class="clearfix"></li>
 		</ul>
@@ -33,59 +51,47 @@
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
 		<thead>
 			<tr>
-				<th>主键，与sys_user主键保持一致</th>
-				<th>自己的推荐码</th>
-				<th>推荐人ID</th>
-				<th>账户余额</th>
-				<th>头像地址</th>
-				<th>create_date</th>
-				<th>update_date</th>
-				<th>注册途径（0-注册页面自主注册，1-商户管理后台直接添加）</th>
-				<th>update_by</th>
-				<th>create_by</th>
-				<th>del_flag</th>
+				<th>昵称</th>
+				<th>注册途径</th>
+				<th>注册时间</th>
+				<th>会员状态</th>
+				<th>备注</th>
 				<shiro:hasPermission name="member:memberInfo:edit"><th>操作</th></shiro:hasPermission>
 			</tr>
 		</thead>
 		<tbody>
 		<c:forEach items="${page.list}" var="memberInfo">
 			<tr>
-				<td><a href="${ctx}/member/memberInfo/form?id=${memberInfo.id}">
-					${memberInfo.id}
-				</a></td>
 				<td>
-					${memberInfo.referee}
+					${memberInfo.nickname}
 				</td>
 				<td>
-					${memberInfo.refereeId}
-				</td>
-				<td>
-					${memberInfo.balance}
-				</td>
-				<td>
-					${memberInfo.avatar}
+					${memberInfo.registerWay eq '0' ? '自主注册' : '后台添加'}
 				</td>
 				<td>
 					<fmt:formatDate value="${memberInfo.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
 				</td>
 				<td>
-					<fmt:formatDate value="${memberInfo.updateDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
+					<c:choose>
+						<c:when test="${memberInfo.status == '0'}">
+							审核中
+						</c:when>
+						<c:when test="${memberInfo.status == '1'}">
+							已生效
+						</c:when>
+						<c:when test="${memberInfo.status == '2'}">
+							审核未通过
+						</c:when>
+					</c:choose>
 				</td>
 				<td>
-					${memberInfo.registerWay}
-				</td>
-				<td>
-					${memberInfo.updateBy.id}
-				</td>
-				<td>
-					${memberInfo.createBy.id}
-				</td>
-				<td>
-					${fns:getDictLabel(memberInfo.delFlag, 'del_flag', '')}
+					${memberInfo.remarks}
 				</td>
 				<shiro:hasPermission name="member:memberInfo:edit"><td>
-    				<a href="${ctx}/member/memberInfo/form?id=${memberInfo.id}">修改</a>
-					<a href="${ctx}/member/memberInfo/delete?id=${memberInfo.id}" onclick="return confirmx('确认要删除该用户信息吗？', this.href)">删除</a>
+    				<c:if test="${memberInfo.status == '1'}">
+						<a href="${ctx}/member/memberInfo/couponDistribution?id=${memberInfo.id}">分配优惠券</a>
+						<a href="${ctx}/member/memberInfo/giveGift?id=${memberInfo.id}">赠送礼包</a>
+					</c:if>
 				</td></shiro:hasPermission>
 			</tr>
 		</c:forEach>

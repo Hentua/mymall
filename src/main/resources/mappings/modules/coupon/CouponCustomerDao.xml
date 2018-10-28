@@ -19,7 +19,8 @@
 		a.update_by AS "updateBy.id",
 		a.remarks AS "remarks",
 		a.coupon_status AS "couponStatus",
-		a.used_time AS "usedTime"
+		a.used_time AS "usedTime",
+		a.limit_amount AS "limitAmount"
 	</sql>
 	
 	<sql id="couponCustomerJoins">
@@ -41,7 +42,20 @@
 		<foreach collection="merchantCodes" open="(" close=")" index="index" item="merchantCode" separator=",">
 			#{merchantCode}
 		</foreach>
-		and a.customer_code = #{customerCode} and a.start_date &lt;= now() and a.end_date &gt;= now() and a.coupon_status = '0'
+		and a.customer_code = #{customerCode} and a.start_date &lt;= now() and a.end_date &gt;= now() and a.coupon_status = '0' and a.coupon_type in ('0', '1')
+	</select>
+
+	<select id="enabledMerchantLimitCoupons" resultType="CouponCustomer">
+		select
+		<include refid="couponCustomerColumns"/>
+		from coupon_customer a
+		where a.merchant_code = #{merchantCodes}
+		and a.customer_code = #{customerCode} and a.start_date &lt;= now() and a.end_date &gt;= now() and a.coupon_status = '0' and a.coupon_type in ('0', '1') and a.limit_amount &lt;= #{limitAmount}
+	</select>
+
+	<select id="enabledCouponsCount" resultType="Map">
+		select count(0) as "enabledCouponsCount" from coupon_customer a where
+			a.customer_code = #{customerCode} and a.start_date &lt;= now() and a.end_date &gt;= now() and a.coupon_status = '0'
 	</select>
 
 	<select id="findList" resultType="CouponCustomer">
@@ -119,7 +133,8 @@
 			update_by,
 			remarks,
 			coupon_status,
-			used_time
+			used_time,
+			limit_amount
 		) VALUES (
 			#{id},
 			#{couponNo},
@@ -137,7 +152,8 @@
 			#{updateBy.id},
 			#{remarks},
 			#{couponStatus},
-			#{usedTime}
+			#{usedTime},
+			#{limitAmount}
 		)
 	</insert>
 	
@@ -156,7 +172,8 @@
 			update_by = #{updateBy.id},
 			remarks = #{remarks},
 			coupon_status = #{couponStatus},
-			used_time = #{usedTime}
+			used_time = #{usedTime},
+		  	limit_amount = #{limitAmount}
 		WHERE id = #{id}
 	</update>
 	

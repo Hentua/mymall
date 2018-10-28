@@ -18,7 +18,7 @@ public class CouponCustomer extends DataEntity<CouponCustomer> {
 	
 	private static final long serialVersionUID = 1L;
 	private String couponNo;		// 优惠券编号
-	private String couponType;		// 优惠券类型（0-折扣减免，1-金额减免）
+	private String couponType;		// 优惠券类型（0-折扣减免，1-金额减免，2-满减）
 	private String couponName;		// 优惠券名称
 	private String customerCode;		// 用户ID（可使用人）
 	private Date startDate;		// 开始时间
@@ -28,6 +28,7 @@ public class CouponCustomer extends DataEntity<CouponCustomer> {
 	private Double discountAmount;		// 扣减金额
 	private String couponStatus;		// 优惠券状态（0-未使用，1-已使用，2-已过期）
 	private Date usedTime;		// 使用时间
+	private Double limitAmount; // 满减金额限制
 
 	@JsonIgnore
 	private Set<String> merchantCodes; // 查询条件使用 商家ID
@@ -38,6 +39,14 @@ public class CouponCustomer extends DataEntity<CouponCustomer> {
 
 	public CouponCustomer(String id){
 		super(id);
+	}
+
+	public Double getLimitAmount() {
+		return limitAmount;
+	}
+
+	public void setLimitAmount(Double limitAmount) {
+		this.limitAmount = limitAmount;
 	}
 
 	public Set<String> getMerchantCodes() {

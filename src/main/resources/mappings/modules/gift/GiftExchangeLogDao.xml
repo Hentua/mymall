@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.modules.gift.dao.GiftExchangeLogDao">
+    
+	<sql id="giftExchangeLogColumns">
+		a.id AS "id",
+		a.gift_customer_id AS "giftCustomerId",
+		a.customer_code AS "customerCode",
+		a.create_date AS "createDate",
+		a.create_by AS "createBy.id",
+		a.update_date AS "updateDate",
+		a.update_by AS "updateBy.id"
+	</sql>
+	
+	<sql id="giftExchangeLogJoins">
+	</sql>
+    
+	<select id="get" resultType="GiftExchangeLog">
+		SELECT 
+			<include refid="giftExchangeLogColumns"/>
+		FROM gift_exchange_log a
+		<include refid="giftExchangeLogJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="GiftExchangeLog">
+		SELECT 
+			<include refid="giftExchangeLogColumns"/>
+		FROM gift_exchange_log a
+		<include refid="giftExchangeLogJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="GiftExchangeLog">
+		SELECT 
+			<include refid="giftExchangeLogColumns"/>
+		FROM gift_exchange_log a
+		<include refid="giftExchangeLogJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO gift_exchange_log(
+			id,
+			gift_customer_id,
+			customer_code,
+			create_date,
+			create_by,
+			update_date,
+			update_by
+		) VALUES (
+			#{id},
+			#{giftCustomerId},
+			#{customerCode},
+			#{createDate},
+			#{createBy.id},
+			#{updateDate},
+			#{updateBy.id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE gift_exchange_log SET 	
+			gift_customer_id = #{giftCustomerId},
+			customer_code = #{customerCode},
+			update_date = #{updateDate},
+			update_by = #{updateBy.id}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM gift_exchange_log
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

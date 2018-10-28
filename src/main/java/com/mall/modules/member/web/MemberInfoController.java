@@ -3,6 +3,19 @@ package com.mall.modules.member.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.common.collect.Lists;
+import com.mall.common.service.ServiceException;
+import com.mall.common.utils.ResultGenerator;
+import com.mall.modules.coupon.entity.CouponConfig;
+import com.mall.modules.coupon.service.CouponConfigService;
+import com.mall.modules.coupon.service.CouponCustomerService;
+import com.mall.modules.gift.entity.GiftMerchant;
+import com.mall.modules.gift.service.GiftMerchantService;
+import com.mall.modules.sys.entity.Office;
+import com.mall.modules.sys.entity.Role;
+import com.mall.modules.sys.entity.User;
+import com.mall.modules.sys.service.SystemService;
+import com.mall.modules.sys.utils.UserUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,6 +32,8 @@ import com.mall.common.utils.StringUtils;
 import com.mall.modules.member.entity.MemberInfo;
 import com.mall.modules.member.service.MemberInfoService;
 
+import java.util.List;
+
 /**
  * 用户信息Controller
  * @author wankang
@@ -30,12 +45,22 @@ public class MemberInfoController extends BaseController {
 
 	@Autowired
 	private MemberInfoService memberInfoService;
+	@Autowired
+	private SystemService systemService;
+	@Autowired
+	private CouponConfigService couponConfigService;
+	@Autowired
+	private CouponCustomerService couponCustomerService;
+	@Autowired
+	private GiftMerchantService giftMerchantService;
 	
 	@ModelAttribute
 	public MemberInfo get(@RequestParam(required=false) String id) {
 		MemberInfo entity = null;
 		if (StringUtils.isNotBlank(id)){
-			entity = memberInfoService.get(id);
+			MemberInfo queryCondition = new MemberInfo();
+			queryCondition.setId(id);
+			entity = memberInfoService.get(queryCondition);
 		}
 		if (entity == null){
 			entity = new MemberInfo();
@@ -46,9 +71,45 @@ public class MemberInfoController extends BaseController {
 	@RequiresPermissions("member:memberInfo:view")
 	@RequestMapping(value = {"list", ""})
 	public String list(MemberInfo memberInfo, HttpServletRequest request, HttpServletResponse response, Model model) {
+		User currUser = UserUtils.getUser();
+		String refereeId = currUser.getId();
+		memberInfo.setRefereeId(refereeId);
 		Page<MemberInfo> page = memberInfoService.findPage(new Page<MemberInfo>(request, response), memberInfo); 
 		model.addAttribute("page", page);
 		return "modules/member/memberInfoList";
+	}
+
+	@RequiresPermissions("member:memberInfo:view")
+	@RequestMapping(value = {"memberInfoCheckList"})
+	public String memberInfoCheckList(MemberInfo memberInfo, HttpServletRequest request, HttpServletResponse response, Model model) {
+		Page<MemberInfo> page = memberInfoService.findPage(new Page<MemberInfo>(request, response), memberInfo);
+		model.addAttribute("page", page);
+		return "modules/member/memberInfoCheckList";
+	}
+
+	@RequiresPermissions("member:memberInfo:edit")
+	@RequestMapping(value = "checkPass")
+	public String checkPass(MemberInfo memberInfo, Model model, RedirectAttributes redirectAttributes) {
+		memberInfo.setStatus("1");
+		memberInfoService.memberCheck(memberInfo);
+		UserUtils.clearCache();
+
+		// todo 用户注册返佣金
+
+		addMessage(redirectAttributes, "审核成功");
+		return "redirect:"+Global.getAdminPath()+"/member/memberInfo/memberInfoCheckList/?repage";
+	}
+
+	@RequiresPermissions("member:memberInfo:edit")
+	@RequestMapping(value = "checkReject")
+	public String checkReject(MemberInfo memberInfo, Model model, RedirectAttributes redirectAttributes) {
+		memberInfo.setStatus("2");
+		memberInfoService.memberCheck(memberInfo);
+		User user = UserUtils.get(memberInfo.getId());
+		systemService.deleteUser(user);
+		UserUtils.clearCache();
+		addMessage(redirectAttributes, "审核成功");
+		return "redirect:"+Global.getAdminPath()+"/member/memberInfo/memberInfoCheckList/?repage";
 	}
 
 	@RequiresPermissions("member:memberInfo:view")
@@ -59,21 +120,132 @@ public class MemberInfoController extends BaseController {
 	}
 
 	@RequiresPermissions("member:memberInfo:edit")
+	@RequestMapping(value = "couponDistribution")
+	public String couponDistribution(MemberInfo memberInfo, HttpServletRequest request, HttpServletResponse response, Model model) {
+		CouponConfig queryCondition = new CouponConfig();
+		queryCondition.setStatus("0");
+		Page<CouponConfig> page = couponConfigService.findPage(new Page<CouponConfig>(request, response), queryCondition);
+		model.addAttribute("memberInfo", memberInfo);
+		model.addAttribute("couponConfigs", page);
+		return "modules/member/memberCoupon";
+	}
+
+	@RequiresPermissions("member:memberInfo:edit")
+	@RequestMapping(value = "giveGift")
+	public String giveGift(MemberInfo memberInfo, HttpServletRequest request, HttpServletResponse response, Model model) {
+		GiftMerchant queryCondition = new GiftMerchant();
+		queryCondition.setMerchantCode(UserUtils.getUser().getId());
+		Page<GiftMerchant> page = giftMerchantService.findPage(new Page<GiftMerchant>(request, response), queryCondition);
+		model.addAttribute("memberInfo", memberInfo);
+		model.addAttribute("gifts", page);
+		return "modules/member/memberGift";
+	}
+
+	@RequiresPermissions("member:memberInfo:edit")
+	@RequestMapping(value = "memberGiveGift")
+	public String memberGiveGift(Model model, HttpServletRequest request, HttpServletResponse response) {
+		String id = request.getParameter("id");
+		String giftMerchantId = request.getParameter("giftMerchantId");
+		MemberInfo memberInfo = this.get(id);
+		try {
+			giftMerchantService.memberGiftGive(id, giftMerchantId);
+		}catch (Exception e) {
+			if(e instanceof ServiceException) {
+				model.addAttribute("message", e.getMessage());
+				return giveGift(memberInfo, request, response, model);
+			}else {
+				e.printStackTrace();
+				model.addAttribute("message", "赠送失败");
+				return giveGift(memberInfo, request, response, model);
+			}
+		}
+		model.addAttribute("message", "礼包赠送成功");
+		return giveGift(memberInfo, request, response, model);
+	}
+
+	@RequiresPermissions("member:memberInfo:edit")
+	@RequestMapping(value = "memberCouponDistribution")
+	public String memberCouponDistribution(Model model, HttpServletRequest request, HttpServletResponse response) {
+		String id = request.getParameter("id");
+		String couponId = request.getParameter("couponId");
+		MemberInfo memberInfo = this.get(id);
+		try {
+			couponCustomerService.customerCouponDistribution(id, couponId);
+		}catch (Exception e) {
+			if(e instanceof ServiceException) {
+				model.addAttribute("message", e.getMessage());
+				return couponDistribution(memberInfo, request, response, model);
+			}else {
+				e.printStackTrace();
+				model.addAttribute("message", "分配失败");
+				return couponDistribution(memberInfo, request, response, model);
+			}
+		}
+		model.addAttribute("message", "优惠券分配成功");
+		return couponDistribution(memberInfo, request, response, model);
+	}
+
+	@RequiresPermissions("member:memberInfo:edit")
 	@RequestMapping(value = "save")
 	public String save(MemberInfo memberInfo, Model model, RedirectAttributes redirectAttributes) {
 		if (!beanValidator(model, memberInfo)){
 			return form(memberInfo, model);
 		}
+		String mobile = memberInfo.getMobile();
+		String password = memberInfo.getPassword();
+		String repeatPassword = memberInfo.getRepeatPassword();
+		String nickname = memberInfo.getNickname();
+		String message = "";
+		boolean flag = true;
+		if(!MemberInfoService.isPhone(mobile)) {
+			flag = false;
+			message = "手机号码格式不正确";
+		}else if (UserUtils.getByLoginName(mobile) != null) {
+			flag = false;
+			message = "用户已存在";
+		}
+		if(!password.equals(repeatPassword)) {
+			flag = false;
+			message = "两次输入密码不一致";
+		}
+		if(!flag) {
+			model.addAttribute("message", message);
+			return form(memberInfo, model);
+		}
+		User currUser = UserUtils.getUser();
+		String refereeId = currUser.getId();
+
+		// 初始化SysUser实体数据
+		User user = new User();
+		user.setLoginName(mobile);
+		user.setMobile(mobile);
+		// 普通会员固定归属公司 ID为1000
+		user.setCompany(new Office("1000"));
+		user.setOffice(new Office("1000"));
+		user.setPassword(SystemService.entryptPassword(password));
+		user.setName(nickname);
+		// 赋予角色
+		List<Role> roleList = Lists.newArrayList();
+		roleList.add(new Role("1000"));
+		user.setRoleList(roleList);
+		// 保存用户信息
+		systemService.saveUser(user);
+		// 清除当前用户缓存
+		if (user.getLoginName().equals(UserUtils.getUser().getLoginName())) {
+			UserUtils.clearCache();
+		}
+
+		// 初始化会员信息
+		memberInfo.setRefereeId(refereeId);
+		memberInfo.setRegisterWay("1");
+		memberInfo.setBalance(0.00);
+		memberInfo.preInsert();
+		memberInfo.setId(user.getId());
+		memberInfo.setReferee(MemberInfoService.genRefereeId());
+		memberInfo.setStatus("0");
+		memberInfo.setIsNewRecord(true);
 		memberInfoService.save(memberInfo);
-		addMessage(redirectAttributes, "保存用户信息成功");
-		return "redirect:"+Global.getAdminPath()+"/member/memberInfo/?repage";
-	}
-	
-	@RequiresPermissions("member:memberInfo:edit")
-	@RequestMapping(value = "delete")
-	public String delete(MemberInfo memberInfo, RedirectAttributes redirectAttributes) {
-		memberInfoService.delete(memberInfo);
-		addMessage(redirectAttributes, "删除用户信息成功");
+		addMessage(redirectAttributes, "保存会员信息成功");
 		return "redirect:"+Global.getAdminPath()+"/member/memberInfo/?repage";
 	}
 

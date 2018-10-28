@@ -1,6 +1,7 @@
 package com.mall.modules.member.api;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.mall.common.persistence.Page;
 import com.mall.common.service.ServiceException;
 import com.mall.common.utils.api.ApiExceptionHandleUtil;
@@ -8,11 +9,15 @@ import com.mall.common.utils.ResultGenerator;
 import com.mall.common.utils.StringUtils;
 import com.mall.common.utils.api.ApiPageEntityHandleUtil;
 import com.mall.common.web.BaseController;
+import com.mall.modules.coupon.service.CouponConfigService;
+import com.mall.modules.coupon.service.CouponCustomerService;
+import com.mall.modules.gift.service.GiftCustomerService;
 import com.mall.modules.member.entity.MemberDeliveryAddress;
 import com.mall.modules.member.entity.MemberInfo;
 import com.mall.modules.member.service.MemberDeliveryAddressService;
 import com.mall.modules.member.service.MemberInfoService;
 import com.mall.modules.member.service.MemberVerifyCodeService;
+import com.mall.modules.order.service.OrderInfoService;
 import com.mall.modules.sys.entity.Office;
 import com.mall.modules.sys.entity.Role;
 import com.mall.modules.sys.entity.User;
@@ -29,6 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 会员接口
@@ -51,6 +57,15 @@ public class MemberInfoApi extends BaseController {
 
     @Autowired
     private MemberDeliveryAddressService memberDeliveryAddressService;
+
+    @Autowired
+    private OrderInfoService orderInfoService;
+
+    @Autowired
+    private GiftCustomerService giftCustomerService;
+
+    @Autowired
+    private CouponCustomerService couponCustomerService;
 
     @RequestMapping(value = "register", method = RequestMethod.POST)
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
@@ -121,21 +136,17 @@ public class MemberInfoApi extends BaseController {
             // 初始化会员信息
             MemberInfo memberInfo = new MemberInfo();
             memberInfo.setNickname(nickname);
-            memberInfo.setRefereeId(memberInfoService.genRefereeCode());
             memberInfo.setRefereeId(refereeId);
             memberInfo.setRegisterWay("0");
             memberInfo.setSex(sex);
             memberInfo.setBalance(0.00);
+            memberInfo.setStatus("0");
             memberInfo.preInsert();
             memberInfo.setId(user.getId());
             memberInfo.setReferee(MemberInfoService.genRefereeId());
             memberInfo.setIsNewRecord(true);
             memberInfoService.save(memberInfo);
             renderString(response, ResultGenerator.genSuccessResult("注册成功"));
-
-            // todo 用户注册返佣金
-
-
         } catch (Exception e) {
             renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
         }
@@ -361,6 +372,34 @@ public class MemberInfoApi extends BaseController {
                 throw new ServiceException("会员不存在");
             }
             renderString(response, ResultGenerator.genSuccessResult(new UserVo(user)));
+        }catch (Exception e) {
+            renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
+        }
+    }
+
+    /**
+     * 获取当前登录用户 订单、卡券、礼包统计数据
+     *
+     * @param request 请求体
+     * @param response 响应体
+     */
+    @RequestMapping(value = "currMemberDataCount", method = RequestMethod.POST)
+    public void currMemberDataCount(HttpServletRequest request, HttpServletResponse response) {
+        User currUser = UserUtils.getUser();
+        String customerCode = currUser.getId();
+        try {
+            Map<String, String> memberDataCount = Maps.newHashMap();
+            // 获取订单统计
+            Map<String, String> orderCount = orderInfoService.orderCount(customerCode);
+            // 获取优惠券统计
+            Map<String, String> enabledCouponsCount = couponCustomerService.enabledCouponsCount(customerCode);
+            // 获取礼包统计
+            Map<String, String> enabledGiftCount = giftCustomerService.enabledGiftCount(customerCode);
+
+            memberDataCount.putAll(orderCount);
+            memberDataCount.putAll(enabledCouponsCount);
+            memberDataCount.putAll(enabledGiftCount);
+            renderString(response, ResultGenerator.genSuccessResult(memberDataCount));
         }catch (Exception e) {
             renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
         }

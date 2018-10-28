@@ -11,5 +11,12 @@ import com.mall.modules.member.entity.MemberInfo;
  */
 @MyBatisDao
 public interface MemberInfoDao extends CrudDao<MemberInfo> {
+
+    /**
+     * 会员审核
+     *
+     * @param memberInfo 会员实体
+     */
+    void memberCheck(MemberInfo memberInfo);
 	
 }

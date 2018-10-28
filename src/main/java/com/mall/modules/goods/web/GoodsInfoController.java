@@ -61,6 +61,14 @@ public class GoodsInfoController extends BaseController {
 		return "modules/goods/goodsInfoList";
 	}
 
+	@RequiresPermissions("goods:goodsInfo:view")
+	@RequestMapping(value = {"selectList"})
+	public String selectList(GoodsInfo goodsInfo, HttpServletRequest request, HttpServletResponse response, Model model) {
+		goodsInfo.setStatus(3);
+		Page<GoodsInfo> page = goodsInfoService.findPage(new Page<GoodsInfo>(request, response), goodsInfo);
+		model.addAttribute("page", page);
+		return "modules/goods/goodsSelectList";
+	}
 
 	@RequiresPermissions("goods:goodsInfo:view")
 	@RequestMapping(value = {"checkList", ""})

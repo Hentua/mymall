@@ -1,5 +1,9 @@
 package com.mall.modules.coupon.api;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.mall.common.service.ServiceException;
 import com.mall.common.utils.ResultGenerator;
@@ -43,17 +47,35 @@ public class CouponCustomerApi extends BaseController {
     public void orderEnabledCoupons(HttpServletRequest request, HttpServletResponse response) {
         User currUser = UserUtils.getUser();
         String customerCode = currUser.getId();
-        String [] merchantCodes = request.getParameterValues("merchantCodes");
+        String orderAmountData = request.getParameter("orderAmountData");
         try {
-            if(merchantCodes.length <= 0) {
+            JSONArray orderAmountArr = JSONArray.parseArray(orderAmountData);
+            if(orderAmountArr.size() <= 0) {
                 throw new ServiceException("未选择商品");
             }
             Set<String> merchantCodeSet = Sets.newHashSet();
-            Collections.addAll(merchantCodeSet, merchantCodes);
+            List<CouponCustomer> couponCustomers = Lists.newArrayList();
             CouponCustomer queryCondition = new CouponCustomer();
+            for (Object o : orderAmountArr) {
+                JSONObject orderAmount = (JSONObject) JSON.toJSON(o);
+                String merchantCode = orderAmount.getString("merchantCode");
+                Double amount = orderAmount.getDouble("amount");
+                queryCondition.setMerchantCode(merchantCode);
+                queryCondition.setLimitAmount(amount);
+                queryCondition.setCustomerCode(customerCode);
+                List<CouponCustomer> couponCustomerList = couponCustomerService.enabledMerchantLimitCoupons(queryCondition);
+                if(couponCustomerList.size() > 0) {
+                    couponCustomers.addAll(couponCustomerList);
+                }
+                merchantCodeSet.add(merchantCode);
+
+            }
             queryCondition.setCustomerCode(customerCode);
             queryCondition.setMerchantCodes(merchantCodeSet);
-            List<CouponCustomer> couponCustomers = couponCustomerService.orderEnabledCoupons(queryCondition);
+            List<CouponCustomer> couponCustomerList = couponCustomerService.orderEnabledCoupons(queryCondition);
+            if(couponCustomerList.size() > 0) {
+                couponCustomers.addAll(couponCustomerList);
+            }
             renderString(response, ResultGenerator.genSuccessResult(couponCustomers));
         }catch (Exception e) {
             renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));

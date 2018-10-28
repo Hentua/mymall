@@ -15,6 +15,11 @@ import com.mall.common.web.BaseController;
 import com.mall.modules.account.service.AccountInfoService;
 import com.mall.modules.coupon.entity.CouponCustomer;
 import com.mall.modules.coupon.service.CouponCustomerService;
+import com.mall.modules.gift.entity.GiftCustomer;
+import com.mall.modules.gift.entity.GiftCustomerGoods;
+import com.mall.modules.gift.entity.GiftExchangeLog;
+import com.mall.modules.gift.service.GiftCustomerService;
+import com.mall.modules.gift.service.GiftExchangeLogService;
 import com.mall.modules.goods.entity.GoodsInfo;
 import com.mall.modules.goods.service.GoodsInfoService;
 import com.mall.modules.member.entity.MemberDeliveryAddress;
@@ -32,10 +37,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import sun.net.www.content.image.gif;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -65,6 +72,10 @@ public class OrderInfoApi extends BaseController {
 
     @Autowired
     private AccountInfoService accountInfoService;
+    @Autowired
+    private GiftCustomerService giftCustomerService;
+    @Autowired
+    private GiftExchangeLogService giftExchangeLogService;
 
     /**
      * 提交订单 订单30分钟内需要支付 否则关闭订单
@@ -77,7 +88,7 @@ public class OrderInfoApi extends BaseController {
     public void submitOrder(HttpServletRequest request, HttpServletResponse response) {
         // 基础数据初始化及基本工具定义
         DecimalFormat df = new DecimalFormat("#.00");
-        String orderType = "0";
+        String orderType = request.getParameter("orderType");
         String orderStatus = "0";
         double amountTotal = 0.00;
         // 初始化优惠数据
@@ -86,11 +97,19 @@ public class OrderInfoApi extends BaseController {
         String couponCode = request.getParameter("couponCode");
         String goodsList = request.getParameter("goodsList");
         String addressId = request.getParameter("addressId");
+        String giftCustomerId = request.getParameter("giftCustomerId");
         String paymentNo = String.valueOf(idWorker.getId());
+        GiftCustomer giftCustomer;
         try {
             User currUser = UserUtils.getUser();
             if (null == currUser) {
                 throw new ServiceException("用户未登录");
+            }
+            if (StringUtils.isBlank(orderType) || (!"0".equals(orderType) && !"1".equals(orderType))) {
+                throw new ServiceException("订单类型不合法");
+            }
+            if("1".equals(orderType) && StringUtils.isBlank(giftCustomerId)) {
+                throw new ServiceException("未选择要兑换的礼包");
             }
             if (StringUtils.isBlank(addressId)) {
                 throw new ServiceException("未选择收货地址");
@@ -113,7 +132,28 @@ public class OrderInfoApi extends BaseController {
             // 订单Collection 根据店铺进行订单拆单
             Map<String, OrderInfo> orderInfoMap = Maps.newHashMap();
             // 获取前端传来的商品列表
-            JSONArray goodsArr = JSON.parseArray(goodsList);
+            JSONArray goodsArr;
+            if("0".equals(orderType)) {
+                goodsArr = JSON.parseArray(goodsList);
+            }else {
+                orderStatus = "1";
+                giftCustomer = giftCustomerService.get(giftCustomerId);
+                int giftCount = giftCustomer.getGiftCount();
+                if(giftCount <= 0) {
+                    throw new ServiceException("礼包数量不合法");
+                }
+                if(!customerCode.equals(giftCustomer.getCustomerCode())) {
+                    throw new ServiceException("礼包不可兑换");
+                }
+                giftCustomer.setGiftCount(giftCount - 1);
+                giftCustomerService.save(giftCustomer);
+                // 保存礼包兑换记录
+                GiftExchangeLog giftExchangeLog = new GiftExchangeLog();
+                giftExchangeLog.setCustomerCode(customerCode);
+                giftExchangeLog.setGiftCustomerId(giftCustomer.getId());
+                giftExchangeLogService.save(giftExchangeLog);
+                goodsArr = new JSONArray((ArrayList) giftCustomer.getGiftCustomerGoodsList());
+            }
             // 获取商品信息
             List<OrderGoods> orderGoodsList;
             for (int i = 0; i < goodsArr.size(); i++) {
@@ -195,12 +235,21 @@ public class OrderInfoApi extends BaseController {
             for (OrderInfo orderInfo : orderInfoMap.values()) {
                 double orderDiscountAmountTotal = 0.00;
                 String merchantCode = orderInfo.getMerchantCode();
-                if(null != couponCustomer && merchantCode.equals(couponCustomer.getMerchantCode())) {
+                if(null != couponCustomer && merchantCode.equals(couponCustomer.getMerchantCode()) && "0".equals(orderType)) {
                     String couponType = couponCustomer.getCouponType();
                     if("1".equals(couponType)) {
                         orderDiscountAmountTotal = couponCustomer.getDiscountAmount();
                     }else if("0".equals(couponType)) {
                         orderDiscountAmountTotal = Double.valueOf(df.format(couponCustomer.getDiscountRate() * orderInfo.getOrderAmountTotal()));
+                    }else if("2".equals(couponType)) {
+                        Double limitAmount = couponCustomer.getLimitAmount();
+                        if(orderInfo.getOrderAmountTotal() >= limitAmount) {
+                            orderDiscountAmountTotal = couponCustomer.getDiscountAmount();
+                        }else {
+                            throw new ServiceException("优惠券不可用");
+                        }
+                    }else {
+                        throw new ServiceException("优惠券不可用");
                     }
                 }
                 double orderAmountTotal = orderInfo.getOrderAmountTotal() - orderDiscountAmountTotal;
@@ -211,7 +260,11 @@ public class OrderInfoApi extends BaseController {
             }
             // 扣减优惠
             amountTotal -= discountAmountTotal;
-            orderPaymentInfo.setAmountTotal(amountTotal);
+            if("0".equals(orderType)) {
+                orderPaymentInfo.setAmountTotal(amountTotal);
+            }else {
+                orderPaymentInfo.setAmountTotal(0.00);
+            }
             orderPaymentInfoService.save(orderPaymentInfo);
             renderString(response, ResultGenerator.genSuccessResult(orderPaymentInfo));
         } catch (Exception e) {

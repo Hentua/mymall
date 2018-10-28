@@ -157,13 +157,13 @@
 
 	<select id="orderCount" resultType="Map">
 		select count(0)                   as total,
-			   sum(if(order_status = 0, 1, 0)) as pendingPay,
-			   sum(if(order_status = 1, 1, 0)) as pendingDeliver,
-			   sum(if(order_status = 2, 1, 0)) as pendingTake,
-			   sum(if(order_status = 3, 1, 0)) as completed,
-			   sum(if(order_status = 4, 1, 0)) as closed,
-			   sum(if(order_status = 5, 1, 0)) as pendingReturn,
-			   sum(if(order_status = 6, 1, 0)) as returned
+			   IFNULL(sum(if(order_status = 0, 1, 0)),0) as pendingPay,
+			   IFNULL(sum(if(order_status = 1, 1, 0)),0) as pendingDeliver,
+			   IFNULL(sum(if(order_status = 2, 1, 0)),0) as pendingTake,
+			   IFNULL(sum(if(order_status = 3, 1, 0)),0) as completed,
+			   IFNULL(sum(if(order_status = 4, 1, 0)),0) as closed,
+			   IFNULL(sum(if(order_status = 5, 1, 0)),0) as pendingReturn,
+			   IFNULL(sum(if(order_status = 6, 1, 0)),0) as returned
 		from order_info where customer_code = #{customerCode}
 	</select>
 

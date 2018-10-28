@@ -15,7 +15,9 @@
 		a.create_by AS "createBy.id",
 		a.del_flag AS "delFlag",
 		a.nickname AS "nickname",
-		a.sex AS "sex"
+		a.sex AS "sex",
+		a.status AS "status",
+		a.remarks AS "remarks"
 	</sql>
 	
 	<sql id="memberInfoJoins">
@@ -42,12 +44,23 @@
 	
 	<select id="findList" resultType="MemberInfo">
 		SELECT 
-			<include refid="memberInfoColumns"/>
+			<include refid="memberInfoColumns"/>,
+		    m.nickname AS "refereeName"
 		FROM member_info a
 		<include refid="memberInfoJoins"/>
+		left join member_info m on m.id = a.referee_id
 		<where>
 		     <if test="refereeId != null and refereeId != ''">
-				 and referee_id = #{refereeId}
+				 and a.referee_id = #{refereeId}
+			 </if>
+		     <if test="nickname != null and nickname != ''">
+				 and a.nickname like '%'+#{nickname}+'%'
+			 </if>
+			 <if test="status != null and status != ''">
+				 and a.status = #{status}
+			 </if>
+		     <if test="registerWay != null and registerWay != ''">
+				 and a.register_way = #{registerWay}
 			 </if>
 			and a.del_flag = #{DEL_FLAG_NORMAL}
 		</where>
@@ -93,7 +106,9 @@
 			create_by,
 			del_flag,
 			nickname,
-			sex
+			sex,
+		    status,
+		    remarks
 		) VALUES (
 			#{id},
 			#{referee},
@@ -107,7 +122,9 @@
 			#{createBy.id},
 			#{delFlag},
 			#{nickname},
-			#{sex}
+			#{sex},
+		    #{status},
+		    #{remarks}
 		)
 	</insert>
 	
@@ -123,6 +140,10 @@
 			nickname = #{nickname},
 			sex = #{sex}
 		WHERE id = #{id}
+	</update>
+
+	<update id="memberCheck">
+		update member_info set status = #{status} where id = #{id}
 	</update>
 	
 	<update id="delete">

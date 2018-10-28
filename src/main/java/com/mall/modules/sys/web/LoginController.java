@@ -64,6 +64,15 @@ public class LoginController extends BaseController {
 	public String apiLogin(HttpServletRequest request, HttpServletResponse response, Model model) {
 		JSONObject ret = new JSONObject();
 		User user = UserUtils.getUser();
+		if(!"1".equals(user.getStatus())) {
+			if("0".equals(user.getStatus())) {
+				return renderString(response, ResultGenerator.genFailResult("用户未审核，请耐心等待审核"));
+			}else if("2".equals(user.getStatus())) {
+				return renderString(response, ResultGenerator.genFailResult("用户审核未通过"));
+			}else {
+				return renderString(response, ResultGenerator.genFailResult("用户不存在"));
+			}
+		}
 		ret.put("userInfo",new UserVo(user));
 		ret.put("token",request.getAttribute("token"));
 		return renderString(response,ResultGenerator.genSuccessResult(ret));
