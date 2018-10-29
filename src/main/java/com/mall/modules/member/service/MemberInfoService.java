@@ -6,6 +6,7 @@ import com.mall.common.service.ServiceException;
 import com.mall.modules.member.dao.MemberFavoriteDao;
 import com.mall.modules.member.dao.MemberInfoDao;
 import com.mall.modules.member.entity.MemberFavorite;
+import com.mall.modules.member.entity.MemberFeedback;
 import com.mall.modules.member.entity.MemberInfo;
 import com.mall.modules.member.utils.Base32;
 import com.sohu.idcenter.IdWorker;
@@ -32,6 +33,8 @@ public class MemberInfoService extends CrudService<MemberInfoDao, MemberInfo> {
     private MemberInfoDao memberInfoDao;
     @Autowired
     private MemberFavoriteDao memberFavoriteDao;
+    @Autowired
+    private MemberFeedbackService memberFeedbackService;
 
     public MemberInfo get(String id) {
         return super.get(id);
@@ -103,5 +106,13 @@ public class MemberInfoService extends CrudService<MemberInfoDao, MemberInfo> {
         memberFavoriteDao.delete(memberFavorite);
     }
 
+    @Transactional(readOnly = false, rollbackFor = Exception.class)
+    public void submitFeedback(MemberFeedback memberFeedback) {
+        memberFeedbackService.save(memberFeedback);
+    }
+
+    public List<MemberFeedback> findList(MemberFeedback memberFeedback) {
+        return memberFeedbackService.findList(memberFeedback);
+    }
 
 }

@@ -15,6 +15,7 @@ import com.mall.modules.goods.entity.GoodsInfo;
 import com.mall.modules.goods.service.GoodsInfoService;
 import com.mall.modules.member.entity.MemberDeliveryAddress;
 import com.mall.modules.member.entity.MemberFavorite;
+import com.mall.modules.member.entity.MemberFeedback;
 import com.mall.modules.member.entity.MemberInfo;
 import com.mall.modules.member.service.MemberDeliveryAddressService;
 import com.mall.modules.member.service.MemberInfoService;
@@ -477,6 +478,54 @@ public class MemberInfoApi extends BaseController {
             deleteCondition.setId(id);
             memberInfoService.deleteFavorite(deleteCondition);
             renderString(response, ResultGenerator.genSuccessResult());
+        } catch (Exception e) {
+            renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
+        }
+    }
+
+    /**
+     * 会员提交反馈信息
+     *
+     * @param request  请求体
+     * @param response 响应体
+     */
+    @RequestMapping(value = "submitFeedback", method = RequestMethod.POST)
+    public void submitFeedback(HttpServletRequest request, HttpServletResponse response) {
+        String feedback = request.getParameter("feedback");
+        User currUser = UserUtils.getUser();
+        String customerCode = currUser.getId();
+        try {
+            if (StringUtils.isBlank(feedback)) {
+                throw new ServiceException("您还没输入反馈信息");
+            }
+            if (feedback.length() > 500) {
+                throw new ServiceException("您最多只能输入500字");
+            }
+            MemberFeedback memberFeedback = new MemberFeedback();
+            memberFeedback.setCustomerCode(customerCode);
+            memberFeedback.setFeedbackDetail(feedback);
+            memberInfoService.submitFeedback(memberFeedback);
+            renderString(response, ResultGenerator.genSuccessResult());
+        } catch (Exception e) {
+            renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
+        }
+    }
+
+    /**
+     * 查询会员反馈历史纪录列表
+     *
+     * @param request  请求体
+     * @param response 响应体
+     */
+    @RequestMapping(value = "feedbackList", method = RequestMethod.POST)
+    public void feedbackList(HttpServletRequest request, HttpServletResponse response) {
+        User currUser = UserUtils.getUser();
+        String customerCode = currUser.getId();
+        try {
+            MemberFeedback queryCondition = new MemberFeedback();
+            queryCondition.setCustomerCode(customerCode);
+            List<MemberFeedback> memberFeedbackList = memberInfoService.findList(queryCondition);
+            renderString(response, ResultGenerator.genSuccessResult(memberFeedbackList));
         } catch (Exception e) {
             renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
         }

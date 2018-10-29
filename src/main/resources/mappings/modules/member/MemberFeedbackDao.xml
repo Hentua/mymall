@@ -35,6 +35,9 @@
 			<if test="customerName != null and customerName != ''">
 				AND m.customer_name like concat('%',#{shopid},'%')
 			</if>
+			<if test="customerCode != null and customerCode != ''">
+				and a.customer_code = #{customerCode}
+			</if>
 		</where>
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
