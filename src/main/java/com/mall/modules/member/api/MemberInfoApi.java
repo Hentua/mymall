@@ -4,15 +4,17 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.mall.common.persistence.Page;
 import com.mall.common.service.ServiceException;
-import com.mall.common.utils.api.ApiExceptionHandleUtil;
 import com.mall.common.utils.ResultGenerator;
 import com.mall.common.utils.StringUtils;
+import com.mall.common.utils.api.ApiExceptionHandleUtil;
 import com.mall.common.utils.api.ApiPageEntityHandleUtil;
 import com.mall.common.web.BaseController;
-import com.mall.modules.coupon.service.CouponConfigService;
 import com.mall.modules.coupon.service.CouponCustomerService;
 import com.mall.modules.gift.service.GiftCustomerService;
+import com.mall.modules.goods.entity.GoodsInfo;
+import com.mall.modules.goods.service.GoodsInfoService;
 import com.mall.modules.member.entity.MemberDeliveryAddress;
+import com.mall.modules.member.entity.MemberFavorite;
 import com.mall.modules.member.entity.MemberInfo;
 import com.mall.modules.member.service.MemberDeliveryAddressService;
 import com.mall.modules.member.service.MemberInfoService;
@@ -67,6 +69,9 @@ public class MemberInfoApi extends BaseController {
     @Autowired
     private CouponCustomerService couponCustomerService;
 
+    @Autowired
+    private GoodsInfoService goodsInfoService;
+
     @RequestMapping(value = "register", method = RequestMethod.POST)
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public void memberRegister(HttpServletRequest request, HttpServletResponse response) {
@@ -91,7 +96,7 @@ public class MemberInfoApi extends BaseController {
             } else if (StringUtils.isBlank(refereeCode)) {
                 throw new ServiceException("邀请人不能为空");
             } else {
-                if(!MemberInfoService.isPhone(mobile)) {
+                if (!MemberInfoService.isPhone(mobile)) {
                     throw new ServiceException("手机号码格式不正确");
                 }
             }
@@ -158,8 +163,8 @@ public class MemberInfoApi extends BaseController {
         try {
             if (StringUtils.isBlank(mobile)) {
                 throw new ServiceException("手机号不能为空");
-            }else {
-                if(!MemberInfoService.isPhone(mobile)) {
+            } else {
+                if (!MemberInfoService.isPhone(mobile)) {
                     throw new ServiceException("手机号码格式不正确");
                 }
             }
@@ -173,7 +178,7 @@ public class MemberInfoApi extends BaseController {
     /**
      * 个人收获地址添加
      *
-     * @param request 请求体
+     * @param request  请求体
      * @param response 响应体
      */
     @RequestMapping(value = "addDeliveryAddress", method = RequestMethod.POST)
@@ -181,7 +186,7 @@ public class MemberInfoApi extends BaseController {
     public void addDeliveryAddress(HttpServletRequest request, HttpServletResponse response) {
         try {
             MemberDeliveryAddress memberDeliveryAddress = memberDeliveryAddressService.genMemberDeliveryAddress(request);
-            if(null == memberDeliveryAddress) {
+            if (null == memberDeliveryAddress) {
                 throw new ServiceException("手机号格式不正确");
             }
             beanValidator(memberDeliveryAddress);
@@ -189,13 +194,13 @@ public class MemberInfoApi extends BaseController {
             condition.setCustomerCode(memberDeliveryAddress.getCustomerCode());
             List<MemberDeliveryAddress> memberDeliveryAddresses = memberDeliveryAddressService.findList(condition);
             memberDeliveryAddressService.save(memberDeliveryAddress);
-            if(memberDeliveryAddresses.size() > 0 && "1".equalsIgnoreCase(memberDeliveryAddress.getIsDefaultAddress())) {
+            if (memberDeliveryAddresses.size() > 0 && "1".equalsIgnoreCase(memberDeliveryAddress.getIsDefaultAddress())) {
                 memberDeliveryAddressService.modifyDefaultDeliveryAddress(memberDeliveryAddress.getCustomerCode(), memberDeliveryAddress.getId());
-            }else if(memberDeliveryAddresses.size() <= 0){
+            } else if (memberDeliveryAddresses.size() <= 0) {
                 memberDeliveryAddressService.modifyDefaultDeliveryAddress(memberDeliveryAddress.getCustomerCode(), memberDeliveryAddress.getId());
             }
             renderString(response, ResultGenerator.genSuccessResult());
-        }catch (Exception e) {
+        } catch (Exception e) {
             renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
         }
     }
@@ -203,7 +208,7 @@ public class MemberInfoApi extends BaseController {
     /**
      * 获取默认收货地址
      *
-     * @param request 请求体
+     * @param request  请求体
      * @param response 响应体
      */
     @RequestMapping(value = "getDefaultDeliveryAddress", method = RequestMethod.POST)
@@ -215,12 +220,12 @@ public class MemberInfoApi extends BaseController {
             condition.setCustomerCode(customerCode);
             condition.setIsDefaultAddress("1");
             List<MemberDeliveryAddress> memberDeliveryAddresses = memberDeliveryAddressService.findList(condition);
-            if(memberDeliveryAddresses.size() > 0) {
+            if (memberDeliveryAddresses.size() > 0) {
                 renderString(response, ResultGenerator.genSuccessResult(memberDeliveryAddresses.get(0)));
-            }else {
+            } else {
                 renderString(response, ResultGenerator.genFailResult("收货地址为空"));
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
         }
     }
@@ -228,7 +233,7 @@ public class MemberInfoApi extends BaseController {
     /**
      * 设置默认收货地址
      *
-     * @param request 请求体
+     * @param request  请求体
      * @param response 响应体
      */
     @RequestMapping(value = "modifyDefaultDeliveryAddress", method = RequestMethod.POST)
@@ -237,12 +242,12 @@ public class MemberInfoApi extends BaseController {
         String customerCode = currUser.getId();
         String addressId = request.getParameter("id");
         try {
-            if(StringUtils.isBlank(addressId)) {
+            if (StringUtils.isBlank(addressId)) {
                 throw new ServiceException("未选择默认收货地址");
             }
             memberDeliveryAddressService.modifyDefaultDeliveryAddress(customerCode, addressId);
             renderString(response, ResultGenerator.genSuccessResult());
-        }catch (Exception e) {
+        } catch (Exception e) {
             renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
         }
     }
@@ -250,7 +255,7 @@ public class MemberInfoApi extends BaseController {
     /**
      * 获取收货地址列表
      *
-     * @param request 请求体
+     * @param request  请求体
      * @param response 响应体
      */
     @RequestMapping(value = "deliveryAddressList", method = RequestMethod.POST)
@@ -262,7 +267,7 @@ public class MemberInfoApi extends BaseController {
             condition.setCustomerCode(customerCode);
             List<MemberDeliveryAddress> memberDeliveryAddresses = memberDeliveryAddressService.findList(condition);
             renderString(response, ResultGenerator.genSuccessResult(memberDeliveryAddresses));
-        }catch (Exception e) {
+        } catch (Exception e) {
             renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
         }
     }
@@ -270,25 +275,25 @@ public class MemberInfoApi extends BaseController {
     /**
      * 删除收货地址 不能删除默认收货地址
      *
-     * @param request 请求体
+     * @param request  请求体
      * @param response 响应体
      */
     @RequestMapping(value = "deleteDeliveryAddress", method = RequestMethod.POST)
     public void deleteDeliveryAddress(HttpServletRequest request, HttpServletResponse response) {
         String addressId = request.getParameter("id");
         try {
-            if(StringUtils.isBlank(addressId)) {
+            if (StringUtils.isBlank(addressId)) {
                 throw new ServiceException("未选择要删除的收货地址");
             }
-            if(null == memberDeliveryAddressService.get(addressId)) {
+            if (null == memberDeliveryAddressService.get(addressId)) {
                 throw new ServiceException("收货地址不存在");
             }
             int row = memberDeliveryAddressService.deleteAddress(addressId);
-            if(row <= 0) {
+            if (row <= 0) {
                 throw new ServiceException("不能删除默认收货地址");
             }
             renderString(response, ResultGenerator.genSuccessResult());
-        }catch (Exception e) {
+        } catch (Exception e) {
             renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
         }
     }
@@ -296,17 +301,17 @@ public class MemberInfoApi extends BaseController {
     /**
      * 更新收货地址
      *
-     * @param request 请求体
+     * @param request  请求体
      * @param response 响应体
      */
     @RequestMapping(value = "updateDeliveryAddress", method = RequestMethod.POST)
     public void updateDeliveryAddress(HttpServletRequest request, HttpServletResponse response) {
         try {
             MemberDeliveryAddress memberDeliveryAddress = memberDeliveryAddressService.genMemberDeliveryAddress(request);
-            if(null == memberDeliveryAddress) {
+            if (null == memberDeliveryAddress) {
                 throw new ServiceException("手机号格式不正确");
             }
-            if(StringUtils.isBlank(memberDeliveryAddress.getId())) {
+            if (StringUtils.isBlank(memberDeliveryAddress.getId())) {
                 throw new ServiceException("未选择要修改的收货地址");
             }
             beanValidator(memberDeliveryAddress);
@@ -319,7 +324,8 @@ public class MemberInfoApi extends BaseController {
 
     /**
      * 获取省市区JSON数据
-     * @param request 请求体
+     *
+     * @param request  请求体
      * @param response 响应体
      */
     @RequestMapping(value = "getAreaData", method = RequestMethod.POST)
@@ -330,7 +336,7 @@ public class MemberInfoApi extends BaseController {
     /**
      * 获取推荐成功人列表
      *
-     * @param request 请求体
+     * @param request  请求体
      * @param response 响应体
      */
     @RequestMapping(value = "refereeList", method = RequestMethod.POST)
@@ -349,7 +355,7 @@ public class MemberInfoApi extends BaseController {
                 m.setBalance(0.00);
             }
             renderString(response, ResultGenerator.genSuccessResult(memberInfos));
-        }catch (Exception e) {
+        } catch (Exception e) {
             renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
         }
     }
@@ -357,22 +363,22 @@ public class MemberInfoApi extends BaseController {
     /**
      * 根据member id获取会员信息
      *
-     * @param request 请求体
+     * @param request  请求体
      * @param response 响应体
      */
     @RequestMapping(value = "getMemberInfo", method = RequestMethod.POST)
     public void getMemberInfo(HttpServletRequest request, HttpServletResponse response) {
         String memberId = request.getParameter("memberId");
         try {
-            if(StringUtils.isBlank(memberId)) {
+            if (StringUtils.isBlank(memberId)) {
                 throw new ServiceException("会员ID不能为空");
             }
             User user = UserUtils.get(memberId);
-            if(null == user) {
+            if (null == user) {
                 throw new ServiceException("会员不存在");
             }
             renderString(response, ResultGenerator.genSuccessResult(new UserVo(user)));
-        }catch (Exception e) {
+        } catch (Exception e) {
             renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
         }
     }
@@ -380,7 +386,7 @@ public class MemberInfoApi extends BaseController {
     /**
      * 获取当前登录用户 订单、卡券、礼包统计数据
      *
-     * @param request 请求体
+     * @param request  请求体
      * @param response 响应体
      */
     @RequestMapping(value = "currMemberDataCount", method = RequestMethod.POST)
@@ -400,7 +406,78 @@ public class MemberInfoApi extends BaseController {
             memberDataCount.putAll(enabledCouponsCount);
             memberDataCount.putAll(enabledGiftCount);
             renderString(response, ResultGenerator.genSuccessResult(memberDataCount));
-        }catch (Exception e) {
+        } catch (Exception e) {
+            renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
+        }
+    }
+
+    /**
+     * 获取当前登录用户收藏商品列表
+     *
+     * @param request  请求体
+     * @param response 响应体
+     */
+    @RequestMapping(value = "memberFavoriteList", method = RequestMethod.POST)
+    public void memberFavoriteList(HttpServletRequest request, HttpServletResponse response) {
+        User currUser = UserUtils.getUser();
+        String customerCode = currUser.getId();
+        try {
+            MemberFavorite queryCondition = new MemberFavorite();
+            queryCondition.setCustomerCode(customerCode);
+            List<MemberFavorite> memberFavorites = memberInfoService.findList(queryCondition);
+            renderString(response, ResultGenerator.genSuccessResult(memberFavorites));
+        } catch (Exception e) {
+            renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
+        }
+    }
+
+    /**
+     * 用户添加收藏
+     *
+     * @param request  请求体
+     * @param response 响应体
+     */
+    @RequestMapping(value = "addFavorite", method = RequestMethod.POST)
+    public void addFavorite(HttpServletRequest request, HttpServletResponse response) {
+        String goodsId = request.getParameter("goodsId");
+        User currUser = UserUtils.getUser();
+        String customerCode = currUser.getId();
+        try {
+            if (StringUtils.isBlank(goodsId)) {
+                throw new ServiceException("未选择要收藏的商品");
+            }
+            GoodsInfo goodsInfo = goodsInfoService.get(goodsId);
+            if (null == goodsInfo) {
+                throw new ServiceException("商品不存在");
+            }
+            MemberFavorite memberFavorite = new MemberFavorite();
+            memberFavorite.setCustomerCode(customerCode);
+            memberFavorite.setGoodsId(goodsId);
+            memberInfoService.addFavorite(memberFavorite);
+            renderString(response, ResultGenerator.genSuccessResult());
+        } catch (Exception e) {
+            renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
+        }
+    }
+
+    /**
+     * 删除收藏
+     *
+     * @param request  请求体
+     * @param response 响应体
+     */
+    @RequestMapping(value = "deleteFavorite", method = RequestMethod.POST)
+    public void deleteFavorite(HttpServletRequest request, HttpServletResponse response) {
+        String id = request.getParameter("id");
+        try {
+            if (StringUtils.isBlank(id)) {
+                throw new ServiceException("未选择要删除的收藏");
+            }
+            MemberFavorite deleteCondition = new MemberFavorite();
+            deleteCondition.setId(id);
+            memberInfoService.deleteFavorite(deleteCondition);
+            renderString(response, ResultGenerator.genSuccessResult());
+        } catch (Exception e) {
             renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
         }
     }

@@ -64,6 +64,7 @@ public class OrderPaymentInfoApi extends BaseController {
             // 修改支付单状态
             orderPaymentInfo.setPaymentStatus("1");
             orderPaymentInfoService.modifyPaymentInfoStatus(orderPaymentInfo);
+            renderString(response, ResultGenerator.genSuccessResult());
         }catch (Exception e) {
             renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
         }
@@ -107,11 +108,15 @@ public class OrderPaymentInfoApi extends BaseController {
             // 生成新的支付信息并保存
             String orderType = orderInfo.getOrderType();
             OrderPaymentInfo orderPaymentInfo = OrderPaymentInfoService.genDefaultPaymentInfo(orderType);
-            orderInfo.setOrderAmountTotal(orderPaymentInfo.getAmountTotal());
+            if("0".equals(orderType)) {
+                orderPaymentInfo.setAmountTotal(orderInfo.getOrderAmountTotal());
+            }else if("1".equals(orderType)) {
+                orderPaymentInfo.setAmountTotal(0.00);
+            }
             orderPaymentInfoService.save(orderPaymentInfo);
 
             // 修改订单支付信息
-            orderPaymentInfo.setPaymentNo(orderInfo.getPaymentNo());
+            orderInfo.setPaymentNo(orderPaymentInfo.getPaymentNo());
             orderInfoService.save(orderInfo);
 
             // 返回新的订单支付信息

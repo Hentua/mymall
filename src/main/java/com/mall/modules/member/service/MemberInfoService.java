@@ -3,11 +3,12 @@ package com.mall.modules.member.service;
 import com.mall.common.persistence.Page;
 import com.mall.common.service.CrudService;
 import com.mall.common.service.ServiceException;
+import com.mall.modules.member.dao.MemberFavoriteDao;
 import com.mall.modules.member.dao.MemberInfoDao;
+import com.mall.modules.member.entity.MemberFavorite;
 import com.mall.modules.member.entity.MemberInfo;
 import com.mall.modules.member.utils.Base32;
 import com.sohu.idcenter.IdWorker;
-import org.apache.fop.util.LogUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +30,8 @@ public class MemberInfoService extends CrudService<MemberInfoDao, MemberInfo> {
 
     @Autowired
     private MemberInfoDao memberInfoDao;
+    @Autowired
+    private MemberFavoriteDao memberFavoriteDao;
 
     public MemberInfo get(String id) {
         return super.get(id);
@@ -68,7 +71,6 @@ public class MemberInfoService extends CrudService<MemberInfoDao, MemberInfo> {
         }
     }
 
-
     public static String genRefereeId() {
         IdWorker idWorker = new IdWorker();
 
@@ -84,6 +86,21 @@ public class MemberInfoService extends CrudService<MemberInfoDao, MemberInfo> {
             couponPwd = genRefereeId();
         }
         return couponPwd;
+    }
+
+    public List<MemberFavorite> findList(MemberFavorite memberFavorite) {
+        return memberFavoriteDao.findList(memberFavorite);
+    }
+
+    @Transactional(readOnly = false, rollbackFor = Exception.class)
+    public void addFavorite(MemberFavorite memberFavorite) {
+        memberFavorite.preInsert();
+        memberFavoriteDao.insert(memberFavorite);
+    }
+
+    @Transactional(readOnly = false, rollbackFor = Exception.class)
+    public void deleteFavorite(MemberFavorite memberFavorite) {
+        memberFavoriteDao.delete(memberFavorite);
     }
 
 

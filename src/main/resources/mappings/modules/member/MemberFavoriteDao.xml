@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.modules.member.dao.MemberFavoriteDao">
+    
+	<sql id="memberFavoriteColumns">
+		a.id AS "id",
+		a.customer_code AS "customerCode",
+		a.goods_id AS "goodsId",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		g.goods_price AS "goodsPrice",
+		g.goods_name AS "goodsName",
+		g.image AS "image",
+		g.unit AS "unit"
+	</sql>
+	
+	<sql id="memberFavoriteJoins">
+		left join goods_info g on g.id = a.goods_id
+	</sql>
+    
+	<select id="get" resultType="MemberFavorite">
+		SELECT 
+			<include refid="memberFavoriteColumns"/>
+		FROM member_favorite a
+		<include refid="memberFavoriteJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="MemberFavorite">
+		SELECT 
+			<include refid="memberFavoriteColumns"/>
+		FROM member_favorite a
+		<include refid="memberFavoriteJoins"/>
+		<where>
+			
+			<if test="customerCode != null and customerCode != ''">
+				AND a.customer_code = #{customerCode}
+			</if>
+			<if test="goodsId != null and goodsId != ''">
+				AND a.goods_id = #{goodsId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="MemberFavorite">
+		SELECT 
+			<include refid="memberFavoriteColumns"/>
+		FROM member_favorite a
+		<include refid="memberFavoriteJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO member_favorite(
+			id,
+			customer_code,
+			goods_id,
+			create_by,
+			create_date,
+			update_by,
+			update_date
+		) VALUES (
+			#{id},
+			#{customerCode},
+			#{goodsId},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE member_favorite SET 	
+			customer_code = #{customerCode},
+			goods_id = #{goodsId},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM member_favorite
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
