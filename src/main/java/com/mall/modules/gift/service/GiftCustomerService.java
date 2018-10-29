@@ -7,6 +7,7 @@ import com.mall.modules.gift.dao.GiftCustomerDao;
 import com.mall.modules.gift.dao.GiftCustomerGoodsDao;
 import com.mall.modules.gift.entity.GiftCustomer;
 import com.mall.modules.gift.entity.GiftCustomerGoods;
+import com.mall.modules.gift.entity.GiftCustomerGoodsVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -73,6 +74,10 @@ public class GiftCustomerService extends CrudService<GiftCustomerDao, GiftCustom
 
 	public Map<String, String> enabledGiftCount(String customerCode) {
 		return giftCustomerDao.enabledGiftCount(customerCode);
+	}
+
+	public List<GiftCustomerGoodsVo> findGiftCustomerGoodsDetail(String giftCustomerId) {
+		return giftCustomerGoodsDao.findGiftCustomerGoodsDetail(giftCustomerId);
 	}
 	
 }

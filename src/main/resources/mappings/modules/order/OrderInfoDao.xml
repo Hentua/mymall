@@ -142,9 +142,13 @@
 
 	<select id="get" resultType="OrderInfo">
 		SELECT
-			<include refid="orderInfoColumns"/>
+			<include refid="orderInfoColumns"/>,
+			m.nickname as "merchantName",
+			c.nickname as "customerName"
 		FROM order_info a
 		<include refid="orderInfoJoins"/>
+			left join member_info m on m.id = a.merchant_code
+			left join member_info c on c.id = a.customer_code
 		WHERE a.id = #{id}
 	</select>
 
@@ -190,9 +194,13 @@
 
 	<select id="findList" resultType="OrderInfo">
 		SELECT
-			<include refid="orderInfoColumns"/>
+			<include refid="orderInfoColumns"/>,
+			m.nickname as "merchantName",
+		    c.nickname as "customerName"
 		FROM order_info a
 		<include refid="orderInfoJoins"/>
+		     left join member_info m on m.id = a.merchant_code
+		     left join member_info c on c.id = a.customer_code
 		<where>
 			<if test="customerCode != null and customerCode != ''">
 				and a.customer_code = #{customerCode}
@@ -202,6 +210,9 @@
 			</if>
 			<if test="orderStatus != null and orderStatus != ''">
 				and a.order_status = #{orderStatus}
+			</if>
+			<if test="merchantCode != null and merchantCode != ''">
+				and a.merchant_code = #{merchantCode}
 			</if>
 		</where>
 		<choose>
@@ -325,6 +336,11 @@
 	<update id="orderComplete">
 		update order_info set order_status = '3', completed_time = now()
 		where id = #{id} and customer_code = #{customerCode}
+	</update>
+
+	<update id="orderDelivery">
+		update order_info set order_status = '2'
+		where id = #{id}
 	</update>
 
 	<update id="deleteByUser">

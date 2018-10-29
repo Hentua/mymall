@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -50,7 +49,7 @@ public class CouponCustomerApi extends BaseController {
         String orderAmountData = request.getParameter("orderAmountData");
         try {
             JSONArray orderAmountArr = JSONArray.parseArray(orderAmountData);
-            if(orderAmountArr.size() <= 0) {
+            if(null == orderAmountArr || orderAmountArr.size() <= 0) {
                 throw new ServiceException("未选择商品");
             }
             Set<String> merchantCodeSet = Sets.newHashSet();

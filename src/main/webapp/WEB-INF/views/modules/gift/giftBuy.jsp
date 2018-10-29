@@ -58,9 +58,9 @@
 		<tbody>
 		<c:forEach items="${page.list}" var="giftConfig">
 			<tr>
-				<td><a href="${ctx}/gift/giftConfig/form?id=${giftConfig.id}">
+				<td>
 					${giftConfig.giftName}
-				</a></td>
+				</td>
 				<td>
 					${giftConfig.originalPrice}
 				</td>

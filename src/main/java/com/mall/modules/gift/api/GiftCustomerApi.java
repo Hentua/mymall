@@ -32,7 +32,7 @@ public class GiftCustomerApi extends BaseController {
     /**
      * 获取当前登录用户所有可用礼包列表
      *
-     * @param request 请求体
+     * @param request  请求体
      * @param response 响应体
      */
     @RequestMapping(value = "enabledGiftList", method = RequestMethod.POST)
@@ -44,6 +44,22 @@ public class GiftCustomerApi extends BaseController {
             queryCondition.setCustomerCode(customerCode);
             List<GiftCustomer> giftCustomerList = giftCustomerService.findList(queryCondition);
             renderString(response, ResultGenerator.genSuccessResult(giftCustomerList));
+        } catch (Exception e) {
+            renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
+        }
+    }
+
+    /**
+     * 获取礼包详情
+     *
+     * @param request  请求体
+     * @param response 响应体
+     */
+    @RequestMapping(value = "giftDetail", method = RequestMethod.POST)
+    public void giftDetail(HttpServletRequest request, HttpServletResponse response) {
+        String giftCustomerId = request.getParameter("giftCustomerId");
+        try {
+            renderString(response, ResultGenerator.genSuccessResult(giftCustomerService.findGiftCustomerGoodsDetail(giftCustomerId)));
         }catch (Exception e) {
             renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
         }

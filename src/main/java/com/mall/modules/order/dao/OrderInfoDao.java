@@ -9,6 +9,7 @@ import java.util.Map;
 
 /**
  * 订单信息DAO接口
+ *
  * @author wankang
  * @version 2018-10-12
  */
@@ -70,5 +71,13 @@ public interface OrderInfoDao extends CrudDao<OrderInfo> {
      * @return 操作条目数
      */
     int orderComplete(OrderInfo orderInfo);
-	
+
+    /**
+     * 订单发货修改状态
+     *
+     * @param orderInfo 条件
+     * @return 操作条目数
+     */
+    int orderDelivery(OrderInfo orderInfo);
+
 }

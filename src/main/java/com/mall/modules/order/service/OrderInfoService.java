@@ -125,6 +125,7 @@ public class OrderInfoService extends CrudService<OrderInfoDao, OrderInfo> {
      */
     public OrderGoods genOrderGoods(GoodsInfo goodsInfo) {
         OrderGoods orderGoods = new OrderGoods();
+        orderGoods.setId("");
         orderGoods.setGoodsBarcode(goodsInfo.getGoodsBarcode());
         orderGoods.setGoodsId(goodsInfo.getId());
         orderGoods.setGoodsCategoryId(goodsInfo.getGoodsCategoryId());
@@ -151,6 +152,7 @@ public class OrderInfoService extends CrudService<OrderInfoDao, OrderInfo> {
         OrderLogistics orderLogistics = new OrderLogistics();
         OrderInfo orderInfo = new OrderInfo();
         orderInfo.setOrderNo(orderNo);
+        orderLogistics.setId("");
         orderLogistics.setOrderNo(orderNo);
         MemberLogisticsFee condition = new MemberLogisticsFee();
         condition.setMerchantCode(merchantCode);
@@ -212,6 +214,20 @@ public class OrderInfoService extends CrudService<OrderInfoDao, OrderInfo> {
     @Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public int orderComplete(OrderInfo orderInfo) {
         return orderInfoDao.orderComplete(orderInfo);
+    }
+
+    @Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    public boolean orderDeliverySave(OrderInfo orderInfo) {
+        OrderLogistics orderLogistics = orderInfo.getOrderLogistics();
+        if(StringUtils.isBlank(orderLogistics.getOrderNo())) {
+            orderLogistics.setOrderNo(orderInfo.getOrderNo());
+        }
+        int orderInfoResult = orderInfoDao.orderDelivery(orderInfo);
+        if(orderInfoResult <= 0) {
+            return false;
+        }
+        orderLogisticsDao.orderDeliverySave(orderLogistics);
+        return true;
     }
 
 }

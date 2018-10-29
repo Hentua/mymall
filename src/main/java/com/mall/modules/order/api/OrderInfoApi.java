@@ -37,12 +37,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import sun.net.www.content.image.gif;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -152,7 +151,16 @@ public class OrderInfoApi extends BaseController {
                 giftExchangeLog.setCustomerCode(customerCode);
                 giftExchangeLog.setGiftCustomerId(giftCustomer.getId());
                 giftExchangeLogService.save(giftExchangeLog);
-                goodsArr = new JSONArray((ArrayList) giftCustomer.getGiftCustomerGoodsList());
+                goodsArr = new JSONArray();
+                for (GiftCustomerGoods g : giftCustomer.getGiftCustomerGoodsList()) {
+                    JSONObject goodsJson = new JSONObject();
+                    goodsJson.put("goodsId", g.getGoodsId());
+                    goodsJson.put("goodsCount", g.getGoodsCount());
+                    goodsArr.add(goodsJson);
+                }
+            }
+            if(null == goodsArr || goodsArr.size() <= 0) {
+                throw new ServiceException("未选择要购买的商品，请重新选择");
             }
             // 获取商品信息
             List<OrderGoods> orderGoodsList;
@@ -251,8 +259,13 @@ public class OrderInfoApi extends BaseController {
                     }else {
                         throw new ServiceException("优惠券不可用");
                     }
+                }else if("1".equals(orderType)){
+                    orderInfo.setPayTime(new Date());
                 }
                 double orderAmountTotal = orderInfo.getOrderAmountTotal() - orderDiscountAmountTotal;
+                if(orderAmountTotal < 0) {
+                    orderAmountTotal = 0;
+                }
                 amountTotal += orderAmountTotal;
                 orderInfo.setOrderAmountTotal(orderAmountTotal);
                 orderInfo.setDiscountAmountTotal(orderDiscountAmountTotal);

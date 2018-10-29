@@ -39,6 +39,7 @@
 				<form:select path="couponType" class="input-medium">
 					<form:option value="0" label="折扣减免"/>
 					<form:option value="1" label="金额减免"/>
+					<form:option value="2" label="满减"/>
 				</form:select>
 				<span class="help-inline"><font color="red">*</font> </span>
 			</div>

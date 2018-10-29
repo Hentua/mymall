@@ -59,9 +59,6 @@ public class OrderShoppingCart extends DataEntity<OrderShoppingCart> {
 	}
 
 	public void setImage(String image) {
-		if(null != image){
-			image = Global.getConfig("userfiles.baseURL")+image;
-		}
 		this.image = image;
 	}
 
@@ -99,5 +96,12 @@ public class OrderShoppingCart extends DataEntity<OrderShoppingCart> {
 	public void setGoodsCount(Double goodsCount) {
 		this.goodsCount = goodsCount;
 	}
-	
+
+	public String getFullImageUrl() {
+		String fullImageUrl = "";
+		if(null != image){
+			fullImageUrl = Global.getConfig("userfiles.baseURL")+image;
+		}
+		return fullImageUrl;
+	}
 }

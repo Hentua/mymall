@@ -18,9 +18,9 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li class="active"><a href="${ctx}/order/orderInfo/">订单信息列表</a></li>
+		<li class="active"><a href="${ctx}/order/orderInfo/merchantList">订单信息列表</a></li>
 	</ul>
-	<form:form id="searchForm" modelAttribute="orderInfo" action="${ctx}/order/orderInfo/" method="post" class="breadcrumb form-search">
+	<form:form id="searchForm" modelAttribute="orderInfo" action="${ctx}/order/orderInfo/merchantList" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<ul class="ul-form">
@@ -53,32 +53,30 @@
 	<sys:message content="${message}"/>
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
 		<thead>
-		<tr>
-			<th>订单号</th>
-			<th>订单状态</th>
-			<th>订单类型</th>
-			<th>商家</th>
-			<th>买家</th>
-			<th>商品总数量</th>
-			<th>商品总金额</th>
-			<th>运费</th>
-			<th>应付金额</th>
-			<th>优惠金额</th>
-			<th>下单人</th>
-			<th>下单时间</th>
-			<th>备注</th>
-			<th>支付时间</th>
-			<th>操作</th>
-		</tr>
+			<tr>
+				<th>订单号</th>
+				<th>订单状态</th>
+				<th>订单类型</th>
+				<th>商品总数量</th>
+				<th>商品总金额</th>
+				<th>运费</th>
+				<th>应付金额</th>
+				<th>优惠金额</th>
+				<th>下单人</th>
+				<th>下单时间</th>
+				<th>备注</th>
+				<th>支付时间</th>
+				<th>操作</th>
+			</tr>
 		</thead>
 		<tbody>
 		<c:forEach items="${page.list}" var="orderInfo">
 			<tr>
 				<td>
-						${orderInfo.orderNo}
+					${orderInfo.orderNo}
 				</td>
 				<td>
-						${orderInfo.orderStatusZh}
+					${orderInfo.orderStatusZh}
 				</td>
 				<td>
 					<c:choose>
@@ -91,41 +89,38 @@
 					</c:choose>
 				</td>
 				<td>
-						${orderInfo.merchantName}
+					${orderInfo.goodsCount}
 				</td>
 				<td>
-						${orderInfo.customerName}
+					${orderInfo.goodsAmountTotal}
 				</td>
 				<td>
-						${orderInfo.goodsCount}
+					${orderInfo.logisticsFee}
 				</td>
 				<td>
-						${orderInfo.goodsAmountTotal}
+					${orderInfo.orderAmountTotal}
 				</td>
 				<td>
-						${orderInfo.logisticsFee}
+					${orderInfo.discountAmountTotal}
 				</td>
 				<td>
-						${orderInfo.orderAmountTotal}
-				</td>
-				<td>
-						${orderInfo.discountAmountTotal}
-				</td>
-				<td>
-						${orderInfo.customerName}
+					${orderInfo.customerName}
 				</td>
 				<td>
 					<fmt:formatDate value="${orderInfo.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
 				</td>
 				<td>
-						${orderInfo.remarks}
+					${orderInfo.remarks}
 				</td>
 				<td>
 					<fmt:formatDate value="${orderInfo.payTime}" pattern="yyyy-MM-dd HH:mm:ss"/>
 				</td>
-				<td>
-					<a href="${ctx}/order/orderInfo/form?id=${orderInfo.id}">详情</a>
-				</td>
+				<shiro:hasPermission name="order:orderInfo:edit"><td>
+					<a href="${ctx}/order/orderInfo/orderDelivery?id=${orderInfo.id}">详情</a>
+    				<c:if test="${orderInfo.orderStatus eq '1'}">
+						<a href="${ctx}/order/orderInfo/orderDelivery?id=${orderInfo.id}">发货</a>
+					</c:if>
+				</td></shiro:hasPermission>
 			</tr>
 		</c:forEach>
 		</tbody>

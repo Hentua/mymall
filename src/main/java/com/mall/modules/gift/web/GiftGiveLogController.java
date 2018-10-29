@@ -1,8 +1,12 @@
 package com.mall.modules.gift.web;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.mall.common.config.Global;
+import com.mall.common.persistence.Page;
+import com.mall.common.utils.StringUtils;
+import com.mall.common.web.BaseController;
+import com.mall.modules.gift.entity.GiftGiveLog;
+import com.mall.modules.gift.service.GiftGiveLogService;
+import com.mall.modules.sys.utils.UserUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,12 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.mall.common.config.Global;
-import com.mall.common.persistence.Page;
-import com.mall.common.web.BaseController;
-import com.mall.common.utils.StringUtils;
-import com.mall.modules.gift.entity.GiftGiveLog;
-import com.mall.modules.gift.service.GiftGiveLogService;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 礼包赠送记录Controller
@@ -46,6 +46,7 @@ public class GiftGiveLogController extends BaseController {
 	@RequiresPermissions("gift:giftGiveLog:view")
 	@RequestMapping(value = {"list", ""})
 	public String list(GiftGiveLog giftGiveLog, HttpServletRequest request, HttpServletResponse response, Model model) {
+		giftGiveLog.setMerchantCode(UserUtils.getUser().getId());
 		Page<GiftGiveLog> page = giftGiveLogService.findPage(new Page<GiftGiveLog>(request, response), giftGiveLog); 
 		model.addAttribute("page", page);
 		return "modules/gift/giftGiveLogList";

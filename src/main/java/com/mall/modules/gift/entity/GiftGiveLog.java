@@ -1,9 +1,9 @@
 package com.mall.modules.gift.entity;
 
-import org.hibernate.validator.constraints.Length;
-import javax.validation.constraints.NotNull;
-
 import com.mall.common.persistence.DataEntity;
+import org.hibernate.validator.constraints.Length;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 礼包赠送记录Entity
@@ -21,6 +21,8 @@ public class GiftGiveLog extends DataEntity<GiftGiveLog> {
 	private Integer giftGoodsCount;		// 赠送礼包商品数量
 	private Integer giftCount;		// 赠送数量
 	private String giftName;		// 礼包名称
+
+	private String customerName; // 收到礼包会员昵称
 	
 	public GiftGiveLog() {
 		super();
@@ -28,6 +30,14 @@ public class GiftGiveLog extends DataEntity<GiftGiveLog> {
 
 	public GiftGiveLog(String id){
 		super(id);
+	}
+
+	public String getCustomerName() {
+		return customerName;
+	}
+
+	public void setCustomerName(String customerName) {
+		this.customerName = customerName;
 	}
 
 	@Length(min=1, max=64, message="购买礼包配置ID长度必须介于 1 和 64 之间")

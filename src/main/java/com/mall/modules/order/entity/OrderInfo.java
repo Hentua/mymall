@@ -3,6 +3,7 @@ package com.mall.modules.order.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.google.common.collect.Lists;
 import com.mall.common.persistence.DataEntity;
+import com.mall.modules.order.utils.OrderStatus;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotNull;
@@ -40,6 +41,7 @@ public class OrderInfo extends DataEntity<OrderInfo> {
 	private Date autoCompletedTime; // 自动完成交易时间
 
 	private String merchantName;
+	private String customerName;
 
 	public OrderInfo() {
 		super();
@@ -47,6 +49,22 @@ public class OrderInfo extends DataEntity<OrderInfo> {
 
 	public OrderInfo(String id){
 		super(id);
+	}
+
+	public Date getAutoCompletedTime() {
+		return autoCompletedTime;
+	}
+
+	public void setAutoCompletedTime(Date autoCompletedTime) {
+		this.autoCompletedTime = autoCompletedTime;
+	}
+
+	public String getCustomerName() {
+		return customerName;
+	}
+
+	public void setCustomerName(String customerName) {
+		this.customerName = customerName;
 	}
 
 	public String getMerchantName() {
@@ -227,5 +245,9 @@ public class OrderInfo extends DataEntity<OrderInfo> {
 
 	public void setPaymentNo(String paymentNo) {
 		this.paymentNo = paymentNo;
+	}
+
+	public String getOrderStatusZh() {
+		return OrderStatus.status2Zh(this.orderStatus);
 	}
 }

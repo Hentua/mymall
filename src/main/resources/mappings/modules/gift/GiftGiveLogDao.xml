@@ -15,10 +15,12 @@
 		a.create_date AS "createDate",
 		a.update_by AS "updateBy.name",
 		a.update_date AS "updateDate",
-		a.gift_name AS "giftName"
+		a.gift_name AS "giftName",
+		m.nickname AS "customerName"
 	</sql>
 	
 	<sql id="giftGiveLogJoins">
+		left join member_info m on m.id = a.customer_code
 	</sql>
     
 	<select id="get" resultType="GiftGiveLog">

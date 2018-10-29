@@ -166,6 +166,14 @@
 			reconciliation_time = #{reconciliationTime}
 		WHERE id = #{id}
 	</update>
+
+	<update id="orderDeliverySave">
+		update order_logistics set
+			logistics_type = #{logisticsType},
+		    express_no = #{expressNo},
+			logistics_create_time = now()
+		where order_no = #{orderNo}
+	</update>
 	
 	<update id="delete">
 		DELETE FROM order_logistics
