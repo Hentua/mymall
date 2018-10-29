@@ -52,6 +52,9 @@
 					<if test="dbName == 'mssql'">'%'+#{giftName}+'%'</if>
 					<if test="dbName == 'mysql'">concat('%',#{giftName},'%')</if>
 			</if>
+			<if test="merchantCode != null and merchantCode != ''">
+				and a.merchant_code = #{merchantCode}
+			</if>
 		</where>
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
