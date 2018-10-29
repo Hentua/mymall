@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 
 /**
  * 会员注册验证码DAO接口
+ *
  * @author wankang
  * @version 2018-10-11
  */
@@ -15,10 +16,12 @@ public interface MemberVerifyCodeDao extends CrudDao<MemberVerifyCode> {
 
     /**
      * 验证短信验证码是否正确
-     * @param telPhone 手机号
+     *
+     * @param telPhone   手机号
      * @param verifyCode 验证码
+     * @param type       类型 0-注册验证码 1-重置密码验证码
      * @return 查询的数据
      */
-    public int validVerifyCode(@Param("telPhone") String telPhone, @Param("verifyCode") String verifyCode);
-	
+    public int validVerifyCode(@Param("telPhone") String telPhone, @Param("verifyCode") String verifyCode, @Param("type") String type);
+
 }

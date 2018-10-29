@@ -321,7 +321,8 @@
 			update_by = #{updateBy.id}, 
 			update_date = #{updateDate}, 
 			remarks = #{remarks},
-			photo = #{photo}
+			photo = #{photo},
+		    name = #{name}
 		WHERE id = #{id}
 	</update>
 	
@@ -346,5 +347,9 @@
 			del_flag = #{DEL_FLAG_DELETE}
 		WHERE id = #{id}
 	</update>
+	
+	<select id="validatePassword" resultType="Map">
+		select count(0) as "result" from sys_user where id=#{id} and password=#{password} and del_flag=#{DEL_FLAG_NORMAL}
+	</select>
 	
 </mapper>

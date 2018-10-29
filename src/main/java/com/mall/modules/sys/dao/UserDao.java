@@ -4,6 +4,7 @@
 package com.mall.modules.sys.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.mall.modules.sys.entity.User;
 import com.mall.common.persistence.CrudDao;
@@ -71,5 +72,13 @@ public interface UserDao extends CrudDao<User> {
 	 * @return
 	 */
 	public int updateUserInfo(User user);
+
+	/**
+	 * 验证用户密码
+	 *
+	 * @param user 验证用户实体
+	 * @return 结果
+	 */
+	public Map<String, String> validatePassword(User user);
 
 }

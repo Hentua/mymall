@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.modules.member.dao.MemberFootprintDao">
+    
+	<sql id="memberFootprintColumns">
+		a.id AS "id",
+		a.customer_code AS "customerCode",
+		a.goods_id AS "goodsId",
+		a.create_date AS "createDate",
+		a.create_by AS "createBy.id",
+		g.goods_price AS "goodsPrice",
+		g.goods_name AS "goodsName",
+		g.image AS "image",
+		g.unit AS "unit"
+	</sql>
+	
+	<sql id="memberFootprintJoins">
+		left join goods_info g on g.id = a.goods_id
+	</sql>
+    
+	<select id="get" resultType="MemberFootprint">
+		SELECT 
+			<include refid="memberFootprintColumns"/>
+		FROM member_footprint a
+		<include refid="memberFootprintJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="MemberFootprint">
+		SELECT 
+			<include refid="memberFootprintColumns"/>
+		FROM member_footprint a
+		<include refid="memberFootprintJoins"/>
+		<where>
+			
+			<if test="customerCode != null and customerCode != ''">
+				AND a.customer_code = #{customerCode}
+			</if>
+			<if test="goodsId != null and goodsId != ''">
+				AND a.goods_id = #{goodsId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="MemberFootprint">
+		SELECT 
+			<include refid="memberFootprintColumns"/>
+		FROM member_footprint a
+		<include refid="memberFootprintJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO member_footprint(
+			id,
+			customer_code,
+			goods_id,
+			create_date,
+			create_by
+		) VALUES (
+			#{id},
+			#{customerCode},
+			#{goodsId},
+			#{createDate},
+			#{createBy.id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE member_footprint SET 	
+			customer_code = #{customerCode},
+			goods_id = #{goodsId}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM member_footprint
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

@@ -3,10 +3,7 @@
  */
 package com.mall.modules.sys.service;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 import com.mall.common.config.Global;
 import com.mall.common.utils.CacheUtils;
@@ -190,6 +187,17 @@ public class SystemService extends BaseService implements InitializingBean {
 		UserUtils.clearCache(user);
 //		// 清除权限缓存
 //		systemRealm.clearAllCachedAuthorizationInfo();
+	}
+
+	@Transactional(readOnly = false, rollbackFor = Exception.class)
+	public boolean validatePassword(User user) {
+		Map<String, String> resultMap = userDao.validatePassword(user);
+		String result = resultMap.get("result");
+		int validateResult = Integer.valueOf(result);
+		if(validateResult <= 0) {
+			return false;
+		}
+		return true;
 	}
 	
 	@Transactional(readOnly = false)

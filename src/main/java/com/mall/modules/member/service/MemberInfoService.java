@@ -4,9 +4,11 @@ import com.mall.common.persistence.Page;
 import com.mall.common.service.CrudService;
 import com.mall.common.service.ServiceException;
 import com.mall.modules.member.dao.MemberFavoriteDao;
+import com.mall.modules.member.dao.MemberFootprintDao;
 import com.mall.modules.member.dao.MemberInfoDao;
 import com.mall.modules.member.entity.MemberFavorite;
 import com.mall.modules.member.entity.MemberFeedback;
+import com.mall.modules.member.entity.MemberFootprint;
 import com.mall.modules.member.entity.MemberInfo;
 import com.mall.modules.member.utils.Base32;
 import com.sohu.idcenter.IdWorker;
@@ -35,6 +37,8 @@ public class MemberInfoService extends CrudService<MemberInfoDao, MemberInfo> {
     private MemberFavoriteDao memberFavoriteDao;
     @Autowired
     private MemberFeedbackService memberFeedbackService;
+    @Autowired
+    private MemberFootprintDao memberFootprintDao;
 
     public MemberInfo get(String id) {
         return super.get(id);
@@ -113,6 +117,16 @@ public class MemberInfoService extends CrudService<MemberInfoDao, MemberInfo> {
 
     public List<MemberFeedback> findList(MemberFeedback memberFeedback) {
         return memberFeedbackService.findList(memberFeedback);
+    }
+
+    @Transactional(readOnly = false, rollbackFor = Exception.class)
+    public void addFootprint(MemberFootprint memberFootprint) {
+        memberFootprint.preInsert();
+        memberFootprintDao.insert(memberFootprint);
+    }
+
+    public List<MemberFootprint> findList(MemberFootprint memberFootprint) {
+        return memberFootprintDao.findList(memberFootprint);
     }
 
 }

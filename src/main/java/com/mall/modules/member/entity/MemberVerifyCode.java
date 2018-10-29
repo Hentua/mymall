@@ -17,6 +17,7 @@ public class MemberVerifyCode extends DataEntity<MemberVerifyCode> {
 	private String phone;		// 手机号
 	private String verifyCode;		// 验证码
 	private Date outTime;		// 超时时间
+	private String type;
 	
 	public MemberVerifyCode() {
 		super();
@@ -24,6 +25,14 @@ public class MemberVerifyCode extends DataEntity<MemberVerifyCode> {
 
 	public MemberVerifyCode(String id){
 		super(id);
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	@Length(min=0, max=20, message="手机号长度必须介于 0 和 20 之间")

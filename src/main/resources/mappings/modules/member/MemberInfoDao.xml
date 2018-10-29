@@ -130,13 +130,6 @@
 	
 	<update id="update">
 		UPDATE member_info SET 	
-			referee = #{referee},
-			referee_id = #{refereeId},
-			balance = #{balance},
-			avatar = #{avatar},
-			update_date = #{updateDate},
-			register_way = #{registerWay},
-			update_by = #{updateBy.id},
 			nickname = #{nickname},
 			sex = #{sex}
 		WHERE id = #{id}

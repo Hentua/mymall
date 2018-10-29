@@ -14,6 +14,8 @@ import com.mall.modules.goods.entity.GoodsInfo;
 import com.mall.modules.goods.service.GoodsCategoryService;
 import com.mall.modules.goods.service.GoodsImageService;
 import com.mall.modules.goods.service.GoodsInfoService;
+import com.mall.modules.member.entity.MemberFootprint;
+import com.mall.modules.member.service.MemberInfoService;
 import com.mall.modules.sys.entity.User;
 import com.mall.modules.sys.entity.UserVo;
 import com.mall.modules.sys.utils.UserUtils;
@@ -41,6 +43,9 @@ public class GoodsInfoApi extends BaseController {
 
     @Autowired
     private GoodsImageService goodsImageService;
+
+    @Autowired
+    private MemberInfoService memberInfoService;
 
 
     /**
@@ -92,6 +97,18 @@ public class GoodsInfoApi extends BaseController {
         User merchant = UserUtils.get(goodsInfo.getMerchantId());
         List<GoodsImage> goodsImages = goodsImageService.findListByGoodsId(goodsInfo.getId());
         goodsInfo.setGoodsImages(goodsImages);
+
+        // 获取当前登录用户
+        User currUser = UserUtils.getUser();
+        // 判断是否登录
+        if(null != currUser && StringUtils.isNotBlank(currUser.getId())) {
+            // 用户已登录，保存用户足迹
+            MemberFootprint memberFootprint = new MemberFootprint();
+            memberFootprint.setCustomerCode(currUser.getId());
+            memberFootprint.setGoodsId(goodsInfo.getId());
+            memberInfoService.addFootprint(memberFootprint);
+        }
+
         JSONObject result = new JSONObject();
         result.put("goodsInfo",goodsInfo);
         result.put("merchant",new UserVo(merchant));

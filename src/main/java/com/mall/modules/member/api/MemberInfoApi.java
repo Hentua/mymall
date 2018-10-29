@@ -13,10 +13,7 @@ import com.mall.modules.coupon.service.CouponCustomerService;
 import com.mall.modules.gift.service.GiftCustomerService;
 import com.mall.modules.goods.entity.GoodsInfo;
 import com.mall.modules.goods.service.GoodsInfoService;
-import com.mall.modules.member.entity.MemberDeliveryAddress;
-import com.mall.modules.member.entity.MemberFavorite;
-import com.mall.modules.member.entity.MemberFeedback;
-import com.mall.modules.member.entity.MemberInfo;
+import com.mall.modules.member.entity.*;
 import com.mall.modules.member.service.MemberDeliveryAddressService;
 import com.mall.modules.member.service.MemberInfoService;
 import com.mall.modules.member.service.MemberVerifyCodeService;
@@ -36,6 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.ws.Service;
 import java.util.List;
 import java.util.Map;
 
@@ -96,12 +94,16 @@ public class MemberInfoApi extends BaseController {
                 throw new ServiceException("密码不能为空");
             } else if (StringUtils.isBlank(refereeCode)) {
                 throw new ServiceException("邀请人不能为空");
+            } else if (StringUtils.isBlank(nickname)) {
+                throw new ServiceException("用户昵称不能为空");
+            } else if (nickname.length() > 20) {
+                throw new ServiceException("用户昵称最多不能超过20");
             } else {
                 if (!MemberInfoService.isPhone(mobile)) {
                     throw new ServiceException("手机号码格式不正确");
                 }
             }
-            boolean validResult = memberVerifyCodeService.validVerifyCode(mobile, verifyCode);
+            boolean validResult = memberVerifyCodeService.validVerifyCode(mobile, verifyCode, "0");
             if (!validResult) {
                 throw new ServiceException("验证码错误");
             }
@@ -161,6 +163,8 @@ public class MemberInfoApi extends BaseController {
     @RequestMapping(value = "genVerifyCode", method = RequestMethod.POST)
     public void genVerifyCode(HttpServletRequest request, HttpServletResponse response) {
         String mobile = request.getParameter("mobile");
+        // type 为0时发送注册验证码 为1时发送忘记密码验证码
+        String type = request.getParameter("type");
         try {
             if (StringUtils.isBlank(mobile)) {
                 throw new ServiceException("手机号不能为空");
@@ -169,8 +173,45 @@ public class MemberInfoApi extends BaseController {
                     throw new ServiceException("手机号码格式不正确");
                 }
             }
-            memberVerifyCodeService.sendVerifyCodeSms(mobile);
+            memberVerifyCodeService.sendVerifyCodeSms(mobile, type);
             renderString(response, ResultGenerator.genSuccessResult("验证码发送成功"));
+        } catch (Exception e) {
+            renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
+        }
+    }
+
+    /**
+     * 修改用户个人信息
+     *
+     * @param request  请求体
+     * @param response 响应体
+     */
+    @RequestMapping(value = "modifyMemberInfo", method = RequestMethod.POST)
+    public void modifyMemberInfo(HttpServletRequest request, HttpServletResponse response) {
+        String nickname = request.getParameter("nickname");
+        String sex = request.getParameter("sex");
+        User currUser = UserUtils.getUser();
+        try {
+            if (StringUtils.isBlank(nickname)) {
+                throw new ServiceException("昵称不能为空");
+            }
+            if (StringUtils.isBlank(sex)) {
+                throw new ServiceException("性别不能为空");
+            }
+            if (!"0".equals(sex) && !"1".equals(sex)) {
+                throw new ServiceException("性别不正确");
+            }
+            if (nickname.length() > 20) {
+                throw new ServiceException("用户昵称最多不能超过20");
+            }
+            currUser.setName(nickname);
+            systemService.updateUserInfo(currUser);
+            MemberInfo memberInfo = new MemberInfo();
+            memberInfo.setId(currUser.getId());
+            memberInfo.setNickname(nickname);
+            memberInfo.setSex(sex);
+            memberInfoService.save(memberInfo);
+            renderString(response, ResultGenerator.genSuccessResult());
         } catch (Exception e) {
             renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
         }
@@ -526,6 +567,112 @@ public class MemberInfoApi extends BaseController {
             queryCondition.setCustomerCode(customerCode);
             List<MemberFeedback> memberFeedbackList = memberInfoService.findList(queryCondition);
             renderString(response, ResultGenerator.genSuccessResult(memberFeedbackList));
+        } catch (Exception e) {
+            renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
+        }
+    }
+
+    /**
+     * 查询当前用户商品足迹
+     *
+     * @param request  请求体
+     * @param response 响应体
+     */
+    @RequestMapping(value = "footprintList", method = RequestMethod.POST)
+    public void footprintList(HttpServletRequest request, HttpServletResponse response) {
+        User currUser = UserUtils.getUser();
+        String customerCode = currUser.getId();
+        try {
+            MemberFootprint queryCondition = new MemberFootprint();
+            queryCondition.setCustomerCode(customerCode);
+            List<MemberFootprint> memberFootprints = memberInfoService.findList(queryCondition);
+            renderString(response, ResultGenerator.genSuccessResult(memberFootprints));
+        } catch (Exception e) {
+            renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
+        }
+    }
+
+    /**
+     * 修改密码
+     *
+     * @param request  请求体
+     * @param response 响应体
+     */
+    @RequestMapping(value = "modifyPassword", method = RequestMethod.POST)
+    public void modifyPassword(HttpServletRequest request, HttpServletResponse response) {
+        String oldPassword = request.getParameter("oldPassword");
+        String newPassword = request.getParameter("newPassword");
+        String repeatPassword = request.getParameter("repeatPassword");
+        User currUser = UserUtils.getUser();
+        String userId = currUser.getId();
+        try {
+            if (StringUtils.isBlank(oldPassword)) {
+                throw new ServiceException("旧密码不能为空");
+            }
+            if (StringUtils.isBlank(newPassword)) {
+                throw new ServiceException("密码不能为空");
+            }
+            if (StringUtils.isBlank(repeatPassword)) {
+                throw new ServiceException("请确认新密码");
+            }
+            String entryptOldPassword = SystemService.entryptPassword(oldPassword);
+            User validateUser = new User();
+            validateUser.setId(userId);
+            validateUser.setPassword(entryptOldPassword);
+            boolean flag = systemService.validatePassword(validateUser);
+            if (!flag) {
+                throw new ServiceException("用户密码错误");
+            }
+            if (!newPassword.equals(repeatPassword)) {
+                throw new ServiceException("两次输入密码不一致");
+            }
+            systemService.updatePasswordById(userId, currUser.getLoginName(), newPassword);
+            renderString(response, ResultGenerator.genSuccessResult());
+        } catch (Exception e) {
+            renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
+        }
+    }
+
+    /**
+     * 忘记密码 重置密码
+     *
+     * @param request  请求体
+     * @param response 响应体
+     */
+    @RequestMapping(value = "resetPassword", method = RequestMethod.POST)
+    public void resetPassword(HttpServletRequest request, HttpServletResponse response) {
+        String mobile = request.getParameter("mobile");
+        String verifyCode = request.getParameter("verifyCode");
+        String password = request.getParameter("password");
+        String repeatPassword = request.getParameter("repeatPassword");
+        try {
+            if (StringUtils.isBlank(mobile)) {
+                throw new ServiceException("手机号码不能为空");
+            }
+            if (!MemberInfoService.isPhone(mobile)) {
+                throw new ServiceException("手机号码格式不正确");
+            }
+            User user = UserUtils.getByLoginName(mobile);
+            if (null == user) {
+                throw new ServiceException("用户不存在");
+            }
+            if (StringUtils.isBlank(verifyCode)) {
+                throw new ServiceException("验证码不能为空");
+            }
+            if (!memberVerifyCodeService.validVerifyCode(mobile, verifyCode, "1")) {
+                throw new ServiceException("验证码错误");
+            }
+            if (StringUtils.isBlank(password)) {
+                throw new ServiceException("密码不能为空");
+            }
+            if (StringUtils.isBlank(repeatPassword)) {
+                throw new ServiceException("请确认新密码");
+            }
+            if (!password.equals(repeatPassword)) {
+                throw new ServiceException("两次输入密码不一致");
+            }
+            systemService.updatePasswordById(user.getId(), user.getLoginName(), password);
+            renderString(response, ResultGenerator.genSuccessResult());
         } catch (Exception e) {
             renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
         }

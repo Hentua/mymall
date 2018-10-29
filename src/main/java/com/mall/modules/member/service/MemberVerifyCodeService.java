@@ -2,12 +2,16 @@ package com.mall.modules.member.service;
 
 import com.aliyuncs.dysmsapi.model.v20170525.SendSmsResponse;
 import com.aliyuncs.exceptions.ClientException;
+import com.aliyuncs.exceptions.ServerException;
 import com.mall.common.persistence.Page;
 import com.mall.common.service.CrudService;
 import com.mall.common.service.ServiceException;
 import com.mall.common.utils.SmsAliyunUtils;
+import com.mall.common.utils.StringUtils;
 import com.mall.modules.member.dao.MemberVerifyCodeDao;
 import com.mall.modules.member.entity.MemberVerifyCode;
+import com.mall.modules.sys.entity.User;
+import com.mall.modules.sys.utils.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,9 +56,17 @@ public class MemberVerifyCodeService extends CrudService<MemberVerifyCodeDao, Me
     }
 
     @Transactional(readOnly = false, rollbackFor = Exception.class)
-    public void sendVerifyCodeSms(String telPhone) throws ClientException {
-
+    public void sendVerifyCodeSms(String telPhone, String type) throws ClientException, ServiceException {
         String templateCode = "SMS_147417546";
+        if(StringUtils.isNotBlank(type) && "1".equals(type)) {
+            User user = UserUtils.getByLoginName(telPhone);
+            if(null == user) {
+                throw new ServiceException("用户不存在");
+            }
+            templateCode = "SMS_149390626";
+        }else if (StringUtils.isBlank(type)) {
+            type = "0";
+        }
         //生成短信验证码
         String verifyCode = String.valueOf(new Random().nextInt(899999) + 100000);
         String templateParam = "{ \"code\":\"" + verifyCode + "\"}";
@@ -69,12 +81,13 @@ public class MemberVerifyCodeService extends CrudService<MemberVerifyCodeDao, Me
         memberVerifyCode.setPhone(telPhone);
         memberVerifyCode.setVerifyCode(verifyCode);
         memberVerifyCode.setOutTime(outTime);
+        memberVerifyCode.setType(type);
         this.save(memberVerifyCode);
     }
 
-    public boolean validVerifyCode(String telPhone, String verifyCode) {
+    public boolean validVerifyCode(String telPhone, String verifyCode, String type) {
         boolean flag = false;
-        int count = verifyCodeDao.validVerifyCode(telPhone, verifyCode);
+        int count = verifyCodeDao.validVerifyCode(telPhone, verifyCode, type);
         if (count > 0) {
             flag = true;
         }

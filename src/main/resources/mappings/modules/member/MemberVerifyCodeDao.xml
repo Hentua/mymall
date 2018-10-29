@@ -7,14 +7,15 @@
 		a.phone AS "phone",
 		a.verify_code AS "verifyCode",
 		a.create_date AS "createDate",
-		a.out_time AS "outTime"
+		a.out_time AS "outTime",
+		a.type AS "type"
 	</sql>
 	
 	<sql id="memberVerifyCodeJoins">
 	</sql>
 
 	<select id="validVerifyCode" resultType="int">
-		select count(0) from member_verify_code a where a.out_time &gt; now() and a.phone=#{telPhone} and a.verify_code=#{verifyCode}
+		select count(0) from member_verify_code a where a.out_time &gt; now() and a.phone=#{telPhone} and a.verify_code=#{verifyCode} and a.type=#{type}
 	</select>
     
 	<select id="get" resultType="MemberVerifyCode">
@@ -65,13 +66,15 @@
 			phone,
 			verify_code,
 			create_date,
-			out_time
+			out_time,
+		    type
 		) VALUES (
 			#{id},
 			#{phone},
 			#{verifyCode},
 			#{createDate},
-			#{outTime}
+			#{outTime},
+		    #{type}
 		)
 	</insert>
 	

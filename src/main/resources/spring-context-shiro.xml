@@ -22,6 +22,7 @@
 				${adminPath}/api/appLogin = api
 				${adminPath}/api/register = anon
 				${adminPath}/api/genVerifyCode = anon
+				${adminPath}/api/resetPassword = anon
 				${adminPath}/api/goods/** = anon
 				${adminPath}/api/billboard/** = anon
 				${adminPath}/cas = cas
