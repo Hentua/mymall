@@ -1,19 +1,18 @@
 package com.mall.modules.gift.service;
 
-import java.util.List;
-import java.util.Map;
-
+import com.mall.common.persistence.Page;
+import com.mall.common.service.CrudService;
+import com.mall.common.utils.StringUtils;
+import com.mall.modules.gift.dao.GiftCustomerDao;
+import com.mall.modules.gift.dao.GiftCustomerGoodsDao;
+import com.mall.modules.gift.entity.GiftCustomer;
+import com.mall.modules.gift.entity.GiftCustomerGoods;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.mall.common.persistence.Page;
-import com.mall.common.service.CrudService;
-import com.mall.common.utils.StringUtils;
-import com.mall.modules.gift.entity.GiftCustomer;
-import com.mall.modules.gift.dao.GiftCustomerDao;
-import com.mall.modules.gift.entity.GiftCustomerGoods;
-import com.mall.modules.gift.dao.GiftCustomerGoodsDao;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 会员礼包Service
@@ -53,7 +52,7 @@ public class GiftCustomerService extends CrudService<GiftCustomerDao, GiftCustom
 			}
 			if (GiftCustomerGoods.DEL_FLAG_NORMAL.equals(giftCustomerGoods.getDelFlag())){
 				if (StringUtils.isBlank(giftCustomerGoods.getId())){
-					giftCustomerGoods.setGiftCustomerId(giftCustomer);
+					giftCustomerGoods.setGiftCustomerId(giftCustomer.getId());
 					giftCustomerGoods.preInsert();
 					giftCustomerGoodsDao.insert(giftCustomerGoods);
 				}else{

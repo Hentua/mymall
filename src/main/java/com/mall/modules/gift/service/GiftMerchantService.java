@@ -1,9 +1,12 @@
 package com.mall.modules.gift.service;
 
-import java.util.List;
-
 import com.google.common.collect.Lists;
+import com.mall.common.persistence.Page;
+import com.mall.common.service.CrudService;
 import com.mall.common.service.ServiceException;
+import com.mall.common.utils.StringUtils;
+import com.mall.modules.gift.dao.GiftMerchantDao;
+import com.mall.modules.gift.dao.GiftMerchantGoodsDao;
 import com.mall.modules.gift.entity.*;
 import com.mall.modules.sys.utils.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,11 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.mall.common.persistence.Page;
-import com.mall.common.service.CrudService;
-import com.mall.common.utils.StringUtils;
-import com.mall.modules.gift.dao.GiftMerchantDao;
-import com.mall.modules.gift.dao.GiftMerchantGoodsDao;
+import java.util.List;
 
 /**
  * 礼包列表Service
@@ -82,6 +81,7 @@ public class GiftMerchantService extends CrudService<GiftMerchantDao, GiftMercha
 		List<GiftMerchantGoods> merchantGoods = Lists.newArrayList();
 		for (GiftConfigGoods g : configGoods) {
 			GiftMerchantGoods giftMerchantGoods = new GiftMerchantGoods();
+			giftMerchantGoods.setId("");
 			giftMerchantGoods.setGoodsCount(g.getGoodsCount());
 			giftMerchantGoods.setGoodsId(g.getGoodsId());
 			giftMerchantGoods.setMerchantCode(g.getMerchantCode());
@@ -94,6 +94,7 @@ public class GiftMerchantService extends CrudService<GiftMerchantDao, GiftMercha
 		List<GiftCustomerGoods> customerGoods = Lists.newArrayList();
 		for (GiftMerchantGoods g : merchantGoods) {
 			GiftCustomerGoods giftCustomerGoods = new GiftCustomerGoods();
+			giftCustomerGoods.setId("");
 			giftCustomerGoods.setGoodsCount(g.getGoodsCount());
 			giftCustomerGoods.setGoodsId(g.getGoodsId());
 			giftCustomerGoods.setMerchantCode(g.getMerchantCode());

@@ -12,7 +12,7 @@ import com.mall.common.persistence.DataEntity;
 public class GiftCustomerGoods extends DataEntity<GiftCustomerGoods> {
 	
 	private static final long serialVersionUID = 1L;
-	private GiftCustomer giftCustomerId;		// 礼包配置ID 父类
+	private String giftCustomerId;		// 礼包配置ID 父类
 	private String goodsId;		// 商品ID
 	private int goodsCount;		// 商品数量
 	private String merchantCode;		// 店铺ID
@@ -26,15 +26,15 @@ public class GiftCustomerGoods extends DataEntity<GiftCustomerGoods> {
 	}
 
 	public GiftCustomerGoods(GiftCustomer giftCustomerId){
-		this.giftCustomerId = giftCustomerId;
+		this.giftCustomerId = giftCustomerId.getId();
 	}
 
 	@Length(min=1, max=64, message="礼包配置ID长度必须介于 1 和 64 之间")
-	public GiftCustomer getGiftCustomerId() {
+	public String getGiftCustomerId() {
 		return giftCustomerId;
 	}
 
-	public void setGiftCustomerId(GiftCustomer giftCustomerId) {
+	public void setGiftCustomerId(String giftCustomerId) {
 		this.giftCustomerId = giftCustomerId;
 	}
 	
