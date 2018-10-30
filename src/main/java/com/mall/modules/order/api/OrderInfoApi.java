@@ -193,7 +193,6 @@ public class OrderInfoApi extends BaseController {
                 } else {
                     orderNo = String.valueOf(idWorker.getId());
                     orderInfo = new OrderInfo();
-                    orderInfo.setCouponCode(couponCode);
                     orderInfo.setOrderNo(orderNo);
                     orderInfo.setMerchantCode(merchantCode);
                     orderInfo.setOrderStatus(orderStatus);
@@ -259,6 +258,7 @@ public class OrderInfoApi extends BaseController {
                     }else {
                         throw new ServiceException("优惠券不可用");
                     }
+                    orderInfo.setCouponCode(couponCode);
                     // 修改优惠券为已使用
                     couponCustomerService.updateCouponUsed(couponCustomer.getId());
                 }else if("1".equals(orderType)){

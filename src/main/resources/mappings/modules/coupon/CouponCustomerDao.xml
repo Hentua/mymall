@@ -53,8 +53,8 @@
 		<include refid="couponCustomerColumns"/>
 		from coupon_customer a
 		<include refid="couponCustomerJoins"/>
-		where a.merchant_code = #{merchantCodes}
-		and a.customer_code = #{customerCode} and a.start_date &lt;= now() and a.end_date &gt;= now() and a.coupon_status = '0' and a.coupon_type in ('0', '1') and a.limit_amount &lt;= #{limitAmount}
+		where a.merchant_code = #{merchantCode}
+		and a.customer_code = #{customerCode} and a.start_date &lt;= now() and a.end_date &gt;= now() and a.coupon_status = '0' and a.coupon_type = '2' and a.limit_amount &lt;= #{limitAmount}
 	</select>
 
 	<select id="enabledCouponsCount" resultType="Map">
