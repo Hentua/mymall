@@ -1,11 +1,11 @@
 package com.mall.modules.member.web;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import com.google.common.collect.Lists;
+import com.mall.common.config.Global;
+import com.mall.common.persistence.Page;
 import com.mall.common.service.ServiceException;
-import com.mall.common.utils.ResultGenerator;
+import com.mall.common.utils.StringUtils;
+import com.mall.common.web.BaseController;
 import com.mall.modules.account.entity.AccountInfo;
 import com.mall.modules.account.service.AccountInfoService;
 import com.mall.modules.commission.entity.CommissionInfo;
@@ -16,6 +16,8 @@ import com.mall.modules.coupon.service.CouponConfigService;
 import com.mall.modules.coupon.service.CouponCustomerService;
 import com.mall.modules.gift.entity.GiftMerchant;
 import com.mall.modules.gift.service.GiftMerchantService;
+import com.mall.modules.member.entity.MemberInfo;
+import com.mall.modules.member.service.MemberInfoService;
 import com.mall.modules.sys.entity.Office;
 import com.mall.modules.sys.entity.Role;
 import com.mall.modules.sys.entity.User;
@@ -30,13 +32,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.mall.common.config.Global;
-import com.mall.common.persistence.Page;
-import com.mall.common.web.BaseController;
-import com.mall.common.utils.StringUtils;
-import com.mall.modules.member.entity.MemberInfo;
-import com.mall.modules.member.service.MemberInfoService;
-
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -107,12 +104,12 @@ public class MemberInfoController extends BaseController {
 	@RequestMapping(value = "checkPass")
 	public String checkPass(MemberInfo memberInfo, Model model, RedirectAttributes redirectAttributes) {
 
+		memberInfo.setStatus("1");
 		memberInfoService.memberCheck(memberInfo);
 		UserUtils.clearCache();
 		//  用户注册返佣金
 		//商家信息
 		memberInfo = memberInfoService.get(memberInfo);
-		memberInfo.setStatus("1");
 		//推荐人信息
 		User referee = UserUtils.get(memberInfo.getRefereeId());
 		//新增佣金记录

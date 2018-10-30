@@ -1,14 +1,16 @@
 package com.mall.modules.goods.web;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.mall.common.config.Global;
+import com.mall.common.persistence.Page;
+import com.mall.common.utils.StringUtils;
+import com.mall.common.web.BaseController;
 import com.mall.modules.goods.entity.GoodsImage;
+import com.mall.modules.goods.entity.GoodsInfo;
 import com.mall.modules.goods.service.GoodsImageService;
+import com.mall.modules.goods.service.GoodsInfoService;
 import com.mall.modules.sys.utils.UserUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -16,13 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.mall.common.config.Global;
-import com.mall.common.persistence.Page;
-import com.mall.common.web.BaseController;
-import com.mall.common.utils.StringUtils;
-import com.mall.modules.goods.entity.GoodsInfo;
-import com.mall.modules.goods.service.GoodsInfoService;
-
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -56,6 +53,7 @@ public class GoodsInfoController extends BaseController {
 	@RequiresPermissions("goods:goodsInfo:view")
 	@RequestMapping(value = {"list", ""})
 	public String list(GoodsInfo goodsInfo, HttpServletRequest request, HttpServletResponse response, Model model) {
+		goodsInfo.setMerchantId(UserUtils.getUser().getId());
 		Page<GoodsInfo> page = goodsInfoService.findPage(new Page<GoodsInfo>(request, response), goodsInfo); 
 		model.addAttribute("page", page);
 		return "modules/goods/goodsInfoList";
@@ -95,6 +93,24 @@ public class GoodsInfoController extends BaseController {
 		}
 		model.addAttribute("goodsInfo", goodsInfo);
 		return "modules/goods/goodsInfoForm";
+	}
+
+	@RequiresPermissions("goods:goodsInfo:view")
+	@RequestMapping(value = "goodsDetail")
+	public String goodsDetail(GoodsInfo goodsInfo, Model model) {
+
+//		goodsInfo.getId()
+		if(!StringUtils.isEmpty(goodsInfo.getId())){
+			goodsInfo = get(goodsInfo.getId());
+			List<GoodsImage> gms = goodsImageService.findListByGoodsId(goodsInfo.getId());
+			List<String> images = new ArrayList<String>();
+			for (GoodsImage m: gms) {
+				images.add(m.getImageUrl());
+			}
+			goodsInfo.setDespImages(images);
+		}
+		model.addAttribute("goodsInfo", goodsInfo);
+		return "modules/goods/goodsInfoDetail";
 	}
 
 

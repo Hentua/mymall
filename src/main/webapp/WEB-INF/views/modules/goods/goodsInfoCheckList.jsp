@@ -82,7 +82,7 @@
 		<c:forEach items="${page.list}" var="goodsInfo">
 			<tr>
 				<td>
-					<a href="${ctx}/goods/goodsInfo/form?id=${goodsInfo.id}">
+					<a href="${ctx}/goods/goodsInfo/goodsDetail?id=${goodsInfo.id}">
 					<img src="${goodsInfo.image}" width="50px">
 						${goodsInfo.goodsName}
 				</a></td>
