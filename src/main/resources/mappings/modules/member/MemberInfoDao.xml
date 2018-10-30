@@ -31,13 +31,13 @@
 		<include refid="memberInfoJoins"/>
 		<where>
 			<if test="id != null and id != ''">
-				a.id = #{id}
+				and a.id = #{id}
 			</if>
 			<if test="referee != null and referee != ''">
-				(a.referee = #{referee} or u.login_name = #{referee})
+				and (a.referee = #{referee} or u.login_name = #{referee})
 			</if>
 			<if test="mobile != null and mobile != ''">
-				u.login_name = #{mobile}
+				and u.login_name = #{mobile}
 			</if>
 		</where>
 	</select>
