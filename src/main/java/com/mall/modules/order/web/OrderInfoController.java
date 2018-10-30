@@ -114,7 +114,7 @@ public class OrderInfoController extends BaseController {
 			return orderDelivery(this.get(orderInfo.getId()), model);
 		}
 		addMessage(redirectAttributes, "发货成功");
-		return "redirect:"+Global.getAdminPath()+"/order/orderInfo/orderDelivery/?repage";
+		return "redirect:"+Global.getAdminPath()+"/order/orderInfo/merchantList/?repage";
 	}
 	
 	@RequiresPermissions("order:orderInfo:edit")

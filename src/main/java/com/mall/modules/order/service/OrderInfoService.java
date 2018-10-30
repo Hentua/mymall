@@ -93,7 +93,7 @@ public class OrderInfoService extends CrudService<OrderInfoDao, OrderInfo> {
             }
         }
         OrderLogistics orderLogistics = orderInfo.getOrderLogistics();
-        if (orderLogistics.getId() != null) {
+        if (orderLogistics != null && orderLogistics.getId() != null) {
             if (OrderLogistics.DEL_FLAG_NORMAL.equals(orderLogistics.getDelFlag())) {
                 if (StringUtils.isBlank(orderLogistics.getId())) {
                     orderLogistics.setOrderNo(orderInfo.getOrderNo());

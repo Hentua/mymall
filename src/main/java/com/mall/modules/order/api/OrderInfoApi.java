@@ -97,7 +97,6 @@ public class OrderInfoApi extends BaseController {
         String goodsList = request.getParameter("goodsList");
         String addressId = request.getParameter("addressId");
         String giftCustomerId = request.getParameter("giftCustomerId");
-        String paymentNo = String.valueOf(idWorker.getId());
         GiftCustomer giftCustomer;
         try {
             User currUser = UserUtils.getUser();
@@ -127,6 +126,7 @@ public class OrderInfoApi extends BaseController {
 
             // 组装合并订单支付信息
             OrderPaymentInfo orderPaymentInfo = OrderPaymentInfoService.genDefaultPaymentInfo(orderType);
+            String paymentNo = orderPaymentInfo.getPaymentNo();
 
             // 订单Collection 根据店铺进行订单拆单
             Map<String, OrderInfo> orderInfoMap = Maps.newHashMap();
