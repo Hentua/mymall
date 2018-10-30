@@ -32,7 +32,16 @@
 	</ul><br/>
 	<form:form id="inputForm" modelAttribute="indexBillboard" action="${ctx}/billboard/indexBillboard/save" method="post" class="form-horizontal">
 		<form:hidden path="id"/>
-		<sys:message content="${message}"/>		
+		<sys:message content="${message}"/>
+		<div class="control-group">
+			<label class="control-label">类型：</label>
+			<div class="controls">
+				<form:select path="type" class="input-xlarge ">
+					<form:option value="1" label="轮播图广告位"/>
+					<form:option value="2" label="独立广告位"/>
+				</form:select>
+			</div>
+		</div>
 		<div class="control-group">
 			<label class="control-label">标题：</label>
 			<div class="controls">
@@ -40,7 +49,7 @@
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">轮播图片：</label>
+			<label class="control-label">广告图片：</label>
 			<div class="controls">
 				<form:hidden id="image" path="image" htmlEscape="false" maxlength="100" class="input-xlarge"/>
 				<sys:ckfinder input="image" type="files" uploadPath="/billboard/indexBillboard" selectMultiple="true"/>
@@ -50,24 +59,6 @@
 			<label class="control-label">排序：</label>
 			<div class="controls">
 				<form:input path="sort" htmlEscape="false" maxlength="11" class="input-xlarge  digits"/>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">类型：1轮播图广告位 2独立广告位：</label>
-			<div class="controls">
-				<form:select path="type" class="input-xlarge ">
-					<form:option value="" label=""/>
-					<form:options items="${fns:getDictList('index_billboard_type')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
-				</form:select>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">app广告位标识：</label>
-			<div class="controls">
-				<form:select path="appFlag" class="input-xlarge ">
-					<form:option value="" label=""/>
-					<form:options items="${fns:getDictList('index_billboard_app_flag')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
-				</form:select>
 			</div>
 		</div>
 		<div class="control-group">
