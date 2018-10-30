@@ -446,6 +446,8 @@ public class MemberInfoApi extends BaseController {
             memberDataCount.putAll(orderCount);
             memberDataCount.putAll(enabledCouponsCount);
             memberDataCount.putAll(enabledGiftCount);
+            MemberInfo m  = memberInfoService.get(currUser.getId());
+            memberDataCount.put("balance",m.getBalance()==null?"0.0":m.getBalance().toString());
             renderString(response, ResultGenerator.genSuccessResult(memberDataCount));
         } catch (Exception e) {
             renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
