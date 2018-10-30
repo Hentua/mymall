@@ -1,5 +1,6 @@
 package com.mall.modules.goods.entity;
 
+import com.mall.common.config.Global;
 import com.mall.common.utils.TreeNodeData;
 import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.NotNull;
@@ -104,6 +105,14 @@ public class GoodsCategory extends DataEntity<GoodsCategory> implements TreeNode
 
 	public void setImage(String image) {
 		this.image = image;
+	}
+
+	public String getFullImageUrl() {
+		String fullImageUrl = "";
+		if (null != image) {
+			fullImageUrl = Global.getConfig("userfiles.baseURL") + image;
+		}
+		return fullImageUrl;
 	}
 
 	@Length(min=0, max=64, message="父分类id长度必须介于 0 和 64 之间")

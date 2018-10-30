@@ -6,6 +6,11 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.common.collect.Lists;
 import com.mall.common.service.ServiceException;
 import com.mall.common.utils.ResultGenerator;
+import com.mall.modules.account.entity.AccountInfo;
+import com.mall.modules.account.service.AccountInfoService;
+import com.mall.modules.commission.entity.CommissionInfo;
+import com.mall.modules.commission.service.CommissionConfigService;
+import com.mall.modules.commission.service.CommissionInfoService;
 import com.mall.modules.coupon.entity.CouponConfig;
 import com.mall.modules.coupon.service.CouponConfigService;
 import com.mall.modules.coupon.service.CouponCustomerService;
@@ -53,6 +58,17 @@ public class MemberInfoController extends BaseController {
 	private CouponCustomerService couponCustomerService;
 	@Autowired
 	private GiftMerchantService giftMerchantService;
+
+	//佣金详情service
+	@Autowired
+	private CommissionInfoService commissionInfoService;
+
+	@Autowired
+	private AccountInfoService accountInfoService;
+
+	//佣金配置service
+	@Autowired
+	private CommissionConfigService commissionConfigService;
 	
 	@ModelAttribute
 	public MemberInfo get(@RequestParam(required=false) String id) {
@@ -94,8 +110,34 @@ public class MemberInfoController extends BaseController {
 		memberInfoService.memberCheck(memberInfo);
 		UserUtils.clearCache();
 
-		// todo 用户注册返佣金
+		//  用户注册返佣金
+		//商家信息
+		memberInfo = memberInfoService.get(memberInfo.getId());
+		//推荐人信息
+		User referee = UserUtils.get(memberInfo.getRefereeId());
+		//新增佣金记录
+		//卖家推荐人佣金
+		CommissionInfo commissionInfo = new CommissionInfo();
+		//1：推荐用户消费返佣 2：推荐商家销售返佣 3：推荐商家入驻返佣 4：推荐商家送出礼包返佣 5：商家送出礼包返佣
+		commissionInfo.setType("5");
+		commissionInfo.setUserId(referee.getId());
+		commissionInfo.setProduceUserId(memberInfo.getId());
+		commissionInfo.setOriginAmount(0.0);
+		commissionInfo.setAmount(commissionConfigService.getCommissionAmount("3",0.0));
+		commissionInfo.setUnionId("");
+		commissionInfoService.save(commissionInfo);
 
+
+		//新增账单流水记录
+		//卖家账单流水
+		AccountInfo merchantAccountInfo = new AccountInfo();
+		merchantAccountInfo.setUserId(referee.getId());
+		merchantAccountInfo.setType("1"); //收支类型 1：收入 2：支出
+		merchantAccountInfo.setWay("1");//收支方式（1：佣金收益 2：销售收益） 支出（3：提现 4：结算）
+		merchantAccountInfo.setAmount(commissionInfo.getAmount());
+		merchantAccountInfo.setUnionId(commissionInfo.getId());
+		merchantAccountInfo.setStatus("1");//状态 （1：已到账 2：未到账 3：未提现结算 4：已提现结算 ）
+		accountInfoService.save(merchantAccountInfo);
 		addMessage(redirectAttributes, "审核成功");
 		return "redirect:"+Global.getAdminPath()+"/member/memberInfo/memberInfoCheckList/?repage";
 	}
