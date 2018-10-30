@@ -40,13 +40,7 @@
 				AND a.goods_id = #{goodsId}
 			</if>
 		</where>
-		<choose>
-			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
-				ORDER BY ${page.orderBy}
-			</when>
-			<otherwise>
-			</otherwise>
-		</choose>
+		order by a.create_date desc limit 30
 	</select>
 	
 	<select id="findAllList" resultType="MemberFootprint">
