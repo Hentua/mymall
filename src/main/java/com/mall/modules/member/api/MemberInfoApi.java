@@ -498,7 +498,7 @@ public class MemberInfoApi extends BaseController {
             if (existedList.size() <= 0) {
                 memberInfoService.addFavorite(memberFavorite);
             }
-            renderString(response, ResultGenerator.genSuccessResult());
+            renderString(response, ResultGenerator.genSuccessResult(memberFavorite));
         } catch (Exception e) {
             renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
         }
