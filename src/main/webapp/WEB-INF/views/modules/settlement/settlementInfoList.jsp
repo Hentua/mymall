@@ -115,7 +115,7 @@
 					<fmt:formatDate value="${settlementInfo.subDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
 				</td>
 				<td>
-					${settlementInfo.settlementUserId}
+					${settlementInfo.settlementUserName}
 
 				</td>
 				<td>

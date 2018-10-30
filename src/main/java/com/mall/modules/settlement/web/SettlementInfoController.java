@@ -71,6 +71,7 @@ public class SettlementInfoController extends BaseController {
 		s.setSettlementUserId(UserUtils.getUser().getId());
 		s.setSettlementDate(new Date());
 		s.setSettlementRemarks(settlementInfo.getSettlementRemarks());
+		s.setStatus("3");
 		settlementInfoService.save(s);
 		addMessage(redirectAttributes, "结算成功");
 		return "redirect:"+Global.getAdminPath()+"/settlement/settlementInfo/list?repage";

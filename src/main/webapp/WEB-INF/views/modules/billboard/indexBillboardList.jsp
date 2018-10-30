@@ -28,12 +28,6 @@
 			<li><label>标题：</label>
 				<form:input path="title" htmlEscape="false" maxlength="100" class="input-medium"/>
 			</li>
-			<li><label>app广告位标识：</label>
-				<form:select path="appFlag" class="input-medium">
-					<form:option value="" label=""/>
-					<form:options items="${fns:getDictList('index_billboard_app_flag')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
-				</form:select>
-			</li>
 			<li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
 			<li class="clearfix"></li>
 		</ul>
@@ -45,8 +39,7 @@
 				<th>标题</th>
 				<th>轮播图片</th>
 				<th>排序</th>
-				<th>类型：1轮播图广告位 2独立广告位</th>
-				<th>app广告位标识</th>
+				<th>类型</th>
 				<th>更新时间</th>
 				<th>备注信息</th>
 				<shiro:hasPermission name="billboard:indexBillboard:edit"><th>操作</th></shiro:hasPermission>
@@ -65,10 +58,12 @@
 					${indexBillboard.sort}
 				</td>
 				<td>
-					${fns:getDictLabel(indexBillboard.type, 'index_billboard_type', '')}
-				</td>
-				<td>
-					${fns:getDictLabel(indexBillboard.appFlag, 'index_billboard_app_flag', '')}
+					<c:if test="${indexBillboard.type == 1}">
+						轮播图广告
+					</c:if>
+					<c:if test="${indexBillboard.type == 2}">
+						固定广告
+					</c:if>
 				</td>
 				<td>
 					<fmt:formatDate value="${indexBillboard.updateDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
