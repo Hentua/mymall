@@ -30,6 +30,8 @@ public class CouponCustomer extends DataEntity<CouponCustomer> {
 	private Date usedTime;		// 使用时间
 	private Double limitAmount; // 满减金额限制
 
+	private String merchantName; // 可用商家名称
+
 	@JsonIgnore
 	private Set<String> merchantCodes; // 查询条件使用 商家ID
 	
@@ -39,6 +41,14 @@ public class CouponCustomer extends DataEntity<CouponCustomer> {
 
 	public CouponCustomer(String id){
 		super(id);
+	}
+
+	public String getMerchantName() {
+		return merchantName;
+	}
+
+	public void setMerchantName(String merchantName) {
+		this.merchantName = merchantName;
 	}
 
 	public Double getLimitAmount() {

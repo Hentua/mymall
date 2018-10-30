@@ -20,10 +20,12 @@
 		a.remarks AS "remarks",
 		a.coupon_status AS "couponStatus",
 		a.used_time AS "usedTime",
-		a.limit_amount AS "limitAmount"
+		a.limit_amount AS "limitAmount",
+		m.nickname AS "merchantName"
 	</sql>
 	
 	<sql id="couponCustomerJoins">
+		left join member_info m on m.id = a.merchant_code
 	</sql>
     
 	<select id="get" resultType="CouponCustomer">
