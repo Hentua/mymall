@@ -40,6 +40,7 @@
 				AND a.goods_id = #{goodsId}
 			</if>
 		</where>
+		group by a.customer_code, a.goods_id
 		order by a.create_date desc limit 30
 	</select>
 	
