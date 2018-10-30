@@ -33,16 +33,15 @@
 					<form:option value="">全部</form:option>
 					<form:option value="0">一级分类</form:option>
 					<form:option value="1">二级分类</form:option>
-					<form:option value="2">三级分类</form:option>
 				</form:select>
 			</li>
-			<li><label>分类状态：</label>
-				<form:select path="status"  cssStyle="width: 170px">
-					<form:option value="">全部</form:option>
-					<form:option value="1">有效</form:option>
-					<form:option value="0">无效</form:option>
-				</form:select>
-			</li>
+			<%--<li><label>分类状态：</label>--%>
+				<%--<form:select path="status"  cssStyle="width: 170px">--%>
+					<%--<form:option value="">全部</form:option>--%>
+					<%--<form:option value="1">有效</form:option>--%>
+					<%--<form:option value="0">无效</form:option>--%>
+				<%--</form:select>--%>
+			<%--</li>--%>
 			<li><label>创建时间：</label>
 				<input name="createDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
 					value="<fmt:formatDate value="${goodsCategory.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/>"
@@ -61,7 +60,7 @@
 				<th>分类名称</th>
 				<th>层级</th>
 				<th>排序</th>
-				<th>状态</th>
+				<%--<th>状态</th>--%>
 				<th>创建者</th>
 				<th>创建时间</th>
 				<th>更新者</th>
@@ -88,19 +87,16 @@
 					<c:if test="${goodsCategory.depth == 1}">
 						二级分类
 					</c:if>
-					<c:if test="${goodsCategory.depth == 2}">
-						三级分类
-					</c:if>
 				</td>
 				<td>${goodsCategory.sort}</td>
-				<td>
-					<c:if test="${goodsCategory.status == 1}">
-						有效
-					</c:if>
-					<c:if test="${goodsCategory.status == 0}">
-						无效
-					</c:if>
-				</td>
+				<%--<td>--%>
+					<%--<c:if test="${goodsCategory.status == 1}">--%>
+						<%--有效--%>
+					<%--</c:if>--%>
+					<%--<c:if test="${goodsCategory.status == 0}">--%>
+						<%--无效--%>
+					<%--</c:if>--%>
+				<%--</td>--%>
 				<td>
 					${goodsCategory.createBy.name}
 				</td>

@@ -87,11 +87,11 @@
 		<div class="control-group">
 			<label class="control-label">广告图片：</label>
 			<div class="controls">
-				<form:hidden id="image" path="image" htmlEscape="false" maxlength="100" class="input-xlarge"/>
-				<sys:ckfinder input="image" type="images" uploadPath="/billboard/indexBillboard" selectMultiple="true"/>
+				<form:hidden id="image" path="image" htmlEscape="false" maxlength="255" class="input-xlarge"/>
+				<sys:ckfinder input="image" type="images" uploadPath="/billboard/indexBillboard" selectMultiple="false" maxWidth="100" maxHeight="100"/>
 			</div>
 		</div>
-		<div class="control-group" id="selGoods" style="${indexBillboard.type == 1?'display: none':''}">
+		<div class="control-group" id="selGoods" style="${(indexBillboard.type == 2)?'':'display: none'}">
 			<label class="control-label">广告商品：</label>
 			<div class="controls">
 				<div style="" id="goodsInfos">

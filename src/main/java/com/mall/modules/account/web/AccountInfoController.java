@@ -54,8 +54,12 @@ public class AccountInfoController extends BaseController {
 	@RequiresPermissions("account:accountInfo:view")
 	@RequestMapping(value = {"list", ""})
 	public String list(AccountInfo accountInfo, HttpServletRequest request, HttpServletResponse response, Model model) {
+
+		accountInfo.setUserId(UserUtils.getUser().getId());
 		Page<AccountInfo> page = accountInfoService.findPage(new Page<AccountInfo>(request, response), accountInfo); 
 		model.addAttribute("page", page);
+		//收入 income 支出 expenditure 未到账 outAccount
+		model.addAttribute("stsInfo",accountInfoService.getStsInfo(accountInfo));
 		return "modules/account/accountInfoList";
 	}
 
@@ -97,8 +101,12 @@ public class AccountInfoController extends BaseController {
 			settlementInfo.setAmount(a.getAmount());
 			settlementInfo.setStatus("2");
 			settlementInfoService.save(settlementInfo);
+			// 状态 （1：已到账 2：未到账 3：未提现结算 4：已提现结算 ）【订单交易成功后可退货期内（7天）不可以提现结算】【推荐商家入驻除外， 入驻成功则佣金到账可提现】
+			a.setIsSub("1");
+			accountInfoService.save(a);
+			addMessage(redirectAttributes, "提现成功");
 		}
-		addMessage(redirectAttributes, "保存账户明细成功");
+
 		return "redirect:"+Global.getAdminPath()+"/account/accountInfo/list?repage";
 	}
 

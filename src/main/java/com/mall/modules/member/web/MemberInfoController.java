@@ -34,6 +34,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -116,7 +117,7 @@ public class MemberInfoController extends BaseController {
 		//卖家推荐人佣金
 		CommissionInfo commissionInfo = new CommissionInfo();
 		//1：推荐用户消费返佣 2：推荐商家销售返佣 3：推荐商家入驻返佣 4：推荐商家送出礼包返佣 5：商家送出礼包返佣
-		commissionInfo.setType("5");
+		commissionInfo.setType("3");
 		commissionInfo.setUserId(referee.getId());
 		commissionInfo.setProduceUserId(memberInfo.getId());
 		commissionInfo.setOriginAmount(0.0);
@@ -134,6 +135,7 @@ public class MemberInfoController extends BaseController {
 		merchantAccountInfo.setAmount(commissionInfo.getAmount());
 		merchantAccountInfo.setUnionId(commissionInfo.getId());
 		merchantAccountInfo.setStatus("1");//状态 （1：已到账 2：未到账 3：未提现结算 4：已提现结算 ）
+		merchantAccountInfo.setToAccountDate(new Date());
 		accountInfoService.save(merchantAccountInfo);
 		addMessage(redirectAttributes, "审核成功");
 		return "redirect:"+Global.getAdminPath()+"/member/memberInfo/memberInfoCheckList/?repage";

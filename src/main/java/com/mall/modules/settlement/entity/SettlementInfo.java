@@ -29,6 +29,24 @@ public class SettlementInfo extends DataEntity<SettlementInfo> {
 	private Date settlementDate;		// 结算时间
 	private String settlementRemarks;		// 结束备注
 
+	private Date startSubDate;
+	private Date endSubDate;
+
+	public Date getStartSubDate() {
+		return startSubDate;
+	}
+
+	public void setStartSubDate(Date startSubDate) {
+		this.startSubDate = startSubDate;
+	}
+
+	public Date getEndSubDate() {
+		return endSubDate;
+	}
+
+	public void setEndSubDate(Date endSubDate) {
+		this.endSubDate = endSubDate;
+	}
 
 	public String getSubUserName() {
 		return subUserName;

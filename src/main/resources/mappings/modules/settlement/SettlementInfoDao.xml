@@ -39,7 +39,15 @@
 		FROM settlement_info a
 		<include refid="settlementInfoJoins"/>
 		<where>
-			
+			<if test="subUserName != null and subUserName != ''">
+				sub_u.name LIKE CONCAT('%',#{subUserName},'%')
+			</if>
+			<if test="startSubDate != null ">
+				and a.sub_date &gt; #{startSubDate}
+			</if>
+			<if test="endSubDate != null ">
+				and a.sub_date &lt; #{endSubDate}
+			</if>
 			<if test="type != null and type != ''">
 				AND a.type = #{type}
 			</if>

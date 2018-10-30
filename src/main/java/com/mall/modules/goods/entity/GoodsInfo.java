@@ -42,6 +42,7 @@ public class GoodsInfo extends DataEntity<GoodsInfo> {
 
     private String goodsBrandId; //商品品牌 三级分类
     private String merchantId; //商家id
+    private String merchantName; //商家名称
     private String colour; //商品颜色
     private String billboardType;
     private List<GoodsImage> goodsImages;
@@ -59,6 +60,14 @@ public class GoodsInfo extends DataEntity<GoodsInfo> {
 
     public String getFavorite() {
         return favorite;
+    }
+
+    public String getMerchantName() {
+        return merchantName;
+    }
+
+    public void setMerchantName(String merchantName) {
+        this.merchantName = merchantName;
     }
 
     public void setFavorite(String favorite) {

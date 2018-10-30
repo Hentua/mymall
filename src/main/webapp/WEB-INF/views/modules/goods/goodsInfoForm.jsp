@@ -27,7 +27,7 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li><a href="${ctx}/goods/goodsInfo/">商品信息列表</a></li>
+		<li><a href="${ctx}/goods/goodsInfo/list">商品信息列表</a></li>
 		<li class="active"><a href="${ctx}/goods/goodsInfo/form?id=${goodsInfo.id}">商品信息<shiro:hasPermission name="goods:goodsInfo:edit">${not empty goodsInfo.id?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="goods:goodsInfo:edit">查看</shiro:lacksPermission></a></li>
 	</ul><br/>
 	<form:form id="inputForm" modelAttribute="goodsInfo" action="${ctx}/goods/goodsInfo/save" method="post" class="form-horizontal">

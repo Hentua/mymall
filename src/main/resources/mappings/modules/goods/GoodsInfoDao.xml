@@ -24,11 +24,13 @@
 		a.update_date AS "updateDate",
 		a.remarks AS "remarks",
 		a.merchant_id as "merchantId",
-		gc.category_name as "goodsCategoryName"
+		gc.category_name as "goodsCategoryName",
+		merchant.nickname as "merchantName"
 	</sql>
 	
 	<sql id="goodsInfoJoins">
 		left join goods_category gc on gc.id = a.goods_category_id
+		left join member_info merchant on merchant.id = a.merchant_id
 	</sql>
     
 	<select id="get" resultType="GoodsInfo">
@@ -92,6 +94,7 @@
 		a.merchant_id as "merchantId"
 		FROM goods_info a
 		<where>
+			a.status = 3
 			<if test="goodsCategoryId != null and goodsCategoryId != ''">
 				AND a.goods_category_id = #{goodsCategoryId}
 			</if>
@@ -126,7 +129,10 @@
 				AND a.goods_barcode = #{goodsBarcode}
 			</if>
 			<if test="goodsTitle != null and goodsTitle != ''">
-				AND a.goods_title = #{goodsTitle}
+				AND a.goods_title = LIKE CONCAT('%',#{goodsTitle},'%')
+			</if>
+			<if test="merchantName != null and merchantName != ''">
+				and merchant.nickname LIKE CONCAT('%',#{merchantName},'%')
 			</if>
 			<if test="goodsType != null and goodsType != ''">
 				AND a.goods_type = #{goodsType}

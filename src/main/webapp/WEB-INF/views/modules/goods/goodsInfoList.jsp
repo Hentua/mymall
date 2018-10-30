@@ -70,12 +70,12 @@
 				<th>商品名称</th>
 				<th>商品分类</th>
 				<th>商品标题</th>
-				<th>商品状态</th>
 				<th>单位</th>
 				<th>商品价格</th>
 				<th>销量</th>
 				<th>上架时间</th>
 				<th>创建时间</th>
+				<th>商品状态</th>
 				<shiro:hasPermission name="goods:goodsInfo:edit"><th>操作</th></shiro:hasPermission>
 			</tr>
 		</thead>
@@ -83,7 +83,7 @@
 		<c:forEach items="${page.list}" var="goodsInfo">
 			<tr>
 				<td>
-					<a href="${ctx}/goods/goodsInfo/form?id=${goodsInfo.id}">
+					<a href="${ctx}/goods/goodsInfo/goodsDetail?id=${goodsInfo.id}">
 					<img src="${goodsInfo.image}" width="50px">
 						${goodsInfo.goodsName}
 				</a></td>
@@ -92,17 +92,6 @@
 				</td>
 				<td>
 					${goodsInfo.goodsTitle}
-				</td>
-				<td>
-					<c:if test="${goodsInfo.status == '1'}">
-						待提交
-					</c:if>
-					<c:if test="${goodsInfo.status == '2'}">
-						待审核
-					</c:if>
-					<c:if test="${goodsInfo.status == '3'}">
-						已上架
-					</c:if>
 				</td>
 				<td>
 					${goodsInfo.unit}
@@ -119,11 +108,25 @@
 				<td>
 					<fmt:formatDate value="${goodsInfo.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
 				</td>
+				<td>
+					<c:if test="${goodsInfo.status == '1'}">
+						<span style="color: #ffc839">待提交</span>
+					</c:if>
+					<c:if test="${goodsInfo.status == '2'}">
+						<span style="color: #ff0f1e">待审核</span>
+					</c:if>
+					<c:if test="${goodsInfo.status == '3'}">
+						<span style="color: #4cab0b">已上架</span>
+					</c:if>
+				</td>
 				<shiro:hasPermission name="goods:goodsInfo:edit"><td>
 					<c:if test="${goodsInfo.status == '1'}">
 						<a href="${ctx}/goods/goodsInfo/updateStatus?id=${goodsInfo.id}&status=2">提交上架</a>
 						<a href="${ctx}/goods/goodsInfo/form?id=${goodsInfo.id}">修改</a>
 						<a href="${ctx}/goods/goodsInfo/delete?id=${goodsInfo.id}" onclick="return confirmx('确认要删除该商品信息吗？', this.href)">删除</a>
+					</c:if>
+					<c:if test="${goodsInfo.status == '2'}">
+						<a href="${ctx}/goods/goodsInfo/updateStatus?id=${goodsInfo.id}&status=1" onclick="return confirmx('确认要下架该商品信息吗？', this.href)">下架</a>
 					</c:if>
 					<c:if test="${goodsInfo.status == '3'}">
 						<a href="${ctx}/goods/goodsInfo/updateStatus?id=${goodsInfo.id}&status=1" onclick="return confirmx('确认要下架该商品信息吗？', this.href)">下架</a>

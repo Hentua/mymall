@@ -59,7 +59,11 @@ public class GoodsCategoryController extends BaseController {
 	@RequiresPermissions("goods:goodsCategory:view")
 	@RequestMapping(value = {"list"})
 	public String list(GoodsCategory goodsCategory, HttpServletRequest request, HttpServletResponse response, Model model) {
-		Page<GoodsCategory> page = goodsCategoryService.findPage(new Page<GoodsCategory>(request, response), goodsCategory); 
+//		if(StringUtils.isEmpty(goodsCategory.getParentCategoryId())
+//			&& null == goodsCategory.getStatus()){
+//			goodsCategory.setParentCategoryId("0");
+//		}
+		Page<GoodsCategory> page = goodsCategoryService.findPage(new Page<GoodsCategory>(request, response), goodsCategory);
 		model.addAttribute("page", page);
 		return "modules/goods/goodsCategoryList";
 	}
@@ -81,9 +85,10 @@ public class GoodsCategoryController extends BaseController {
 		if(null == pg){
 			goodsCategory.setParentCategoryId("0");
 			goodsCategory.setDepth(0);
+		}else{
+			goodsCategory.setDepth(pg.getDepth()+1);
 		}
 		goodsCategory.setStatus(1);
-
 		goodsCategoryService.save(goodsCategory);
 		addMessage(redirectAttributes, "保存商品分类成功");
 		return "redirect:"+Global.getAdminPath()+"/goods/goodsCategory/list?repage";
@@ -100,10 +105,15 @@ public class GoodsCategoryController extends BaseController {
 	@RequiresPermissions("user")
 	@ResponseBody
 	@RequestMapping(value = "treeData")
-	public List<Map<String, Object>> treeData(@RequestParam(required=false) String extId, @RequestParam(required=false) String type,
+	public List<Map<String, Object>> treeData(@RequestParam(required=false) String extId, @RequestParam(required=false) String type
+			, @RequestParam(required=false) String parentCategoryId,
 											  @RequestParam(required=false) Long grade, @RequestParam(required=false) Boolean isAll, HttpServletResponse response) {
 		List<Map<String, Object>> mapList = Lists.newArrayList();
-		List<GoodsCategory> list = goodsCategoryService.findList(new GoodsCategory());
+		GoodsCategory gc = new GoodsCategory();
+		if(!StringUtils.isEmpty(parentCategoryId)){
+			gc.setParentCategoryId(parentCategoryId);
+		}
+		List<GoodsCategory> list = goodsCategoryService.findList(gc);
 		for (int i=0; i<list.size(); i++){
 			GoodsCategory e = list.get(i);
 			if ((StringUtils.isBlank(extId) || (extId!=null && !extId.equals(e.getId()) )) ){

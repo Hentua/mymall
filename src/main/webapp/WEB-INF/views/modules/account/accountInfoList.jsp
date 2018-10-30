@@ -15,6 +15,9 @@
         	return false;
         }
 	</script>
+	<style>
+		.sts_tab{text-align: center;font-weight: bold;font-size: 15px}
+	</style>
 </head>
 <body>
 	<ul class="nav nav-tabs">
@@ -24,7 +27,7 @@
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<ul class="ul-form">
-			<li><label>收支类型11：</label>
+			<li><label>收支类型：</label>
 				<form:select path="type" cssStyle="width: 170px">
 					<form:option value="">全部</form:option>
 					<form:option value="1">收入</form:option>
@@ -54,6 +57,15 @@
 		</ul>
 	</form:form>
 	<sys:message content="${message}"/>
+	<%--//收入 income 支出 expenditure 未到账 outAccount--%>
+	<table width="100%" class="sts_tab">
+		<tr>
+			<td colspan="3">余额：${stsInfo.income - stsInfo.expenditure - stsInfo.outAccount}</td>
+		</tr>
+		<tr>
+			<td width="33.33%">收入：${stsInfo.income}</td><td width="33.33%">支出：${stsInfo.expenditure}</td><td width="33.33%">未到账：${stsInfo.outAccount}</td>
+		</tr>
+	</table>
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
 		<thead>
 			<tr>
@@ -79,7 +91,7 @@
 				</td>
 				<td>
 					<c:if test="${accountInfo.way == 1}">
-						佣金收益
+						佣金收益【${accountInfo.commissionInfo.typeText}】
 					</c:if>
 					<c:if test="${accountInfo.way == 2}">
 						销售收益
@@ -112,7 +124,7 @@
 				<td><fmt:formatDate value="${accountInfo.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
 				<td><fmt:formatDate value="${accountInfo.toAccountDate}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
 				<shiro:hasPermission name="account:accountInfo:edit"><td>
-					<c:if test="${accountInfo.way == 1 && accountInfo.status == 1}">
+					<c:if test="${accountInfo.way == 1 && accountInfo.status == 1 && accountInfo.isSub == 0}">
 						<a href="${ctx}/account/accountInfo/updateStatus?id=${accountInfo.id}&status=11" onclick="return confirmx('确认要提现该笔收益吗？', this.href)">提现</a>
 					</c:if>
 				</td></shiro:hasPermission>

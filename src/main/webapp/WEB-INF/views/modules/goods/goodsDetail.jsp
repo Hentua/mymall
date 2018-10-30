@@ -7,7 +7,7 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li><a href="${ctx}/goods/goodsInfo/checkList/">商品信息列表</a></li>
+		<li><a href="${ctx}/goods/goodsInfo/list/">商品信息列表</a></li>
 		<li class="active"><a href="${ctx}/goods/goodsInfo/goodsDetail?id=${goodsInfo.id}">商品详情</a></li>
 	</ul><br/>
 	<form:form id="inputForm" modelAttribute="goodsInfo" action="" method="post" class="form-horizontal">
@@ -62,7 +62,9 @@
 		<div class="control-group">
 			<label class="control-label">商品描述：</label>
 			<div class="controls">
-				${goodsInfo.goodsDesp}
+					<%--${goodsInfo.goodsDesp}--%>
+						<form:textarea id="goodsDesp" htmlEscape="false" disabled="true" path="goodsDesp" rows="4" maxlength="200" class="input-xxlarge"/>
+						<sys:ckeditor replace="goodsDesp" uploadPath="/goods/goodsDesp" />
 			</div>
 		</div>
 		<div class="control-group">

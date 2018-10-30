@@ -37,7 +37,7 @@
 			<label class="control-label">上级分类：${message}</label>
 			<div class="controls">
 				<sys:treeselect id="parentCategoryId" name="parentCategoryId" value="${goodsCategory.parentCategoryId}" labelName="parentCategoryName" labelValue="${goodsCategory.parentCategoryName}"
-								title="上级分类" url="/goods/goodsCategory/treeData" extId="${goodsCategory.id}" cssClass=""  />
+								title="上级分类" url="/goods/goodsCategory/treeData?parentCategoryId=0" extId="${goodsCategory.id}" cssClass=""  />
 			</div>
 		</div>
 		<div class="control-group">

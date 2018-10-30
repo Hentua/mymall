@@ -28,6 +28,9 @@
 				<sys:treeselect notAllowSelectParent="true" id="goodsCategoryId" name="goodsCategoryId" value="${goodsCategory.parentCategoryId}" labelName="parentCategoryName" labelValue="${goodsCategory.parentCategoryName}"
 								title="商品分类" url="/goods/goodsCategory/treeData" extId="${goodsCategory.id}" cssClass=""  />
 			</li>
+			<li><label>商家名称：</label>
+				<form:input path="merchantName" htmlEscape="false" maxlength="200" class="input-medium"/>
+			</li>
 			<li><label>商品名称：</label>
 				<form:input path="goodsName" htmlEscape="false" maxlength="200" class="input-medium"/>
 			</li>
@@ -45,18 +48,10 @@
 			<li><label>上架时间：</label>
 				<input name="beginOnlinetime" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
 					value="<fmt:formatDate value="${goodsInfo.beginOnlinetime}" pattern="yyyy-MM-dd HH:mm:ss"/>"
-					onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});"/> - 
+					onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});" isShowClear="true"/> -
 				<input name="endOnlinetime" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
 					value="<fmt:formatDate value="${goodsInfo.endOnlinetime}" pattern="yyyy-MM-dd HH:mm:ss"/>"
-					onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});"/>
-			</li>
-			<li><label>创建时间：</label>
-				<input name="beginCreateDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
-					value="<fmt:formatDate value="${goodsInfo.beginCreateDate}" pattern="yyyy-MM-dd HH:mm:ss"/>"
-					onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});"/> - 
-				<input name="endCreateDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
-					value="<fmt:formatDate value="${goodsInfo.endCreateDate}" pattern="yyyy-MM-dd HH:mm:ss"/>"
-					onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});"/>
+					onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});" isShowClear="true"/>
 			</li>
 			<li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
 			<li class="clearfix"></li>
@@ -68,13 +63,14 @@
 			<tr>
 				<th>商品名称</th>
 				<th>商品分类</th>
+				<th>商家名称</th>
 				<th>商品标题</th>
-				<th>商品状态</th>
 				<th>单位</th>
 				<th>商品价格</th>
 				<th>销量</th>
 				<th>上架时间</th>
 				<th>创建时间</th>
+				<th>商品状态</th>
 				<shiro:hasPermission name="goods:goodsInfo:edit"><th>操作</th></shiro:hasPermission>
 			</tr>
 		</thead>
@@ -82,7 +78,7 @@
 		<c:forEach items="${page.list}" var="goodsInfo">
 			<tr>
 				<td>
-					<a href="${ctx}/goods/goodsInfo/goodsDetail?id=${goodsInfo.id}">
+					<a href="${ctx}/goods/goodsInfo/goodsDetailCheck?id=${goodsInfo.id}">
 					<img src="${goodsInfo.image}" width="50px">
 						${goodsInfo.goodsName}
 				</a></td>
@@ -90,18 +86,10 @@
 						${goodsInfo.goodsCategoryName}
 				</td>
 				<td>
-					${goodsInfo.goodsTitle}
+						${goodsInfo.merchantName}
 				</td>
 				<td>
-					<c:if test="${goodsInfo.status == '1'}">
-						待提交
-					</c:if>
-					<c:if test="${goodsInfo.status == '2'}">
-						待审核
-					</c:if>
-					<c:if test="${goodsInfo.status == '3'}">
-						已上架
-					</c:if>
+					${goodsInfo.goodsTitle}
 				</td>
 				<td>
 					${goodsInfo.unit}
@@ -117,6 +105,17 @@
 				</td>
 				<td>
 					<fmt:formatDate value="${goodsInfo.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
+				</td>
+				<td>
+					<c:if test="${goodsInfo.status == '1'}">
+						<span style="color: #ffc839">待提交</span>
+					</c:if>
+					<c:if test="${goodsInfo.status == '2'}">
+						<span style="color: #ff0f1e">待审核</span>
+					</c:if>
+					<c:if test="${goodsInfo.status == '3'}">
+						<span style="color: #4cab0b">已上架</span>
+					</c:if>
 				</td>
 				<shiro:hasPermission name="goods:goodsInfo:edit"><td>
 					<c:if test="${goodsInfo.status == '2'}">

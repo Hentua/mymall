@@ -11,10 +11,15 @@
 		a.amount AS "amount",
 		a.status AS "status",
 		a.create_date AS "createDate",
-		a.to_account_date AS "toAccountDate"
+		a.to_account_date AS "toAccountDate",
+		a.is_sub as "isSub",
+		ci.type AS "commissionInfo.type"
 	</sql>
 	
 	<sql id="accountInfoJoins">
+		left join commission_info ci on ci.id = a.union_id
+		left join order_info oi on oi.id = a.union_id
+		left join settlement_info si on si.id = a.union_id
 	</sql>
     
 	<select id="get" resultType="AccountInfo">
@@ -27,9 +32,17 @@
 
 	<select id="getByApi" resultType="AccountInfo">
 		SELECT
-		<include refid="accountInfoColumns"/>
+		a.id AS "id",
+		a.user_id AS "userId",
+		a.type AS "type",
+		a.way AS "way",
+		a.union_id AS "unionId",
+		a.amount AS "amount",
+		a.status AS "status",
+		a.create_date AS "createDate",
+		a.to_account_date AS "toAccountDate",
+		a.is_sub as "isSub"
 		FROM account_info a
-		<include refid="accountInfoJoins"/>
 		<where>
 			<if test="id != null and id != ''">
 				AND a.id = #{id}
@@ -52,7 +65,6 @@
 			ifnull(sum(case WHEN a.type =2 THEN amount end ),0) as "expenditure",
 			ifnull(sum(case WHEN a.`status` =2 THEN amount end),0) as "outAccount"
 		FROM account_info a
-		<include refid="accountInfoJoins"/>
 		<where>
 			<if test="id != null and id != ''">
 				AND a.id = #{id}
@@ -91,7 +103,7 @@
 			<if test="unionId != null and unionId != ''">
 				AND a.union_id = #{unionId}
 			</if>
-			<if test="amount != null and amount != ''">
+			<if test="amount != null ">
 				AND a.amount = #{amount}
 			</if>
 			<if test="status != null and status != ''">
@@ -106,6 +118,7 @@
 				ORDER BY ${page.orderBy}
 			</when>
 			<otherwise>
+				ORDER BY a.create_date desc
 			</otherwise>
 		</choose>
 	</select>
@@ -129,7 +142,7 @@
 			<if test="amount != null and amount != ''">
 				AND a.amount = #{amount}
 			</if>
-			<if test="status != null and status != ''">
+			<if test="status != null ">
 				AND a.status = #{status}
 			</if>
 			<if test="userId != null and userId != ''">
@@ -195,7 +208,8 @@
 			union_id = #{unionId},
 			amount = #{amount},
 			status = #{status},
-			to_account_date = #{toAccountDate}
+			to_account_date = #{toAccountDate},
+			is_sub = #{isSub}
 		WHERE id = #{id}
 	</update>
 	

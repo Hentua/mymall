@@ -59,7 +59,7 @@
 			<if test="categoryName != null and categoryName != ''">
 				AND a.category_name = #{categoryName}
 			</if>
-			<if test="depth != null and depth != ''">
+			<if test="depth != null ">
 				AND a.depth = #{depth}
 			</if>
 			<if test="status != null">
@@ -77,7 +77,7 @@
 				ORDER BY ${page.orderBy}
 			</when>
 			<otherwise>
-				ORDER BY a.update_date DESC
+				ORDER BY a.sort asc
 			</otherwise>
 		</choose>
 	</select>
@@ -87,6 +87,7 @@
 			<include refid="goodsCategoryColumnsByApi"/>
 		FROM goods_category a
 		<where>
+			a.id != '0'
 			<if test="parentCategoryId != null and parentCategoryId != ''">
 				AND a.parent_category_id = #{parentCategoryId}
 			</if>

@@ -28,6 +28,13 @@
 			<li><label>标题：</label>
 				<form:input path="title" htmlEscape="false" maxlength="100" class="input-medium"/>
 			</li>
+			<li><label>类型：</label>
+				<form:select path="type" cssStyle="width: 170px">
+					<form:option value="">全部</form:option>
+					<form:option value="1">轮播广告</form:option>
+					<form:option value="2">标题广告</form:option>
+				</form:select>
+			</li>
 			<li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
 			<li class="clearfix"></li>
 		</ul>
@@ -59,10 +66,10 @@
 				</td>
 				<td>
 					<c:if test="${indexBillboard.type == 1}">
-						轮播图广告
+						轮播广告
 					</c:if>
 					<c:if test="${indexBillboard.type == 2}">
-						固定广告
+						标题广告
 					</c:if>
 				</td>
 				<td>

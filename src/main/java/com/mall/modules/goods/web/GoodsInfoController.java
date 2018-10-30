@@ -96,6 +96,24 @@ public class GoodsInfoController extends BaseController {
 	}
 
 	@RequiresPermissions("goods:goodsInfo:view")
+	@RequestMapping(value = "goodsDetailCheck")
+	public String goodsDetailCheck(GoodsInfo goodsInfo, Model model) {
+
+//		goodsInfo.getId()
+		if(!StringUtils.isEmpty(goodsInfo.getId())){
+			goodsInfo = get(goodsInfo.getId());
+			List<GoodsImage> gms = goodsImageService.findListByGoodsId(goodsInfo.getId());
+			List<String> images = new ArrayList<String>();
+			for (GoodsImage m: gms) {
+				images.add(m.getImageUrl());
+			}
+			goodsInfo.setDespImages(images);
+		}
+		model.addAttribute("goodsInfo", goodsInfo);
+		return "modules/goods/goodsDetailCheck";
+	}
+
+	@RequiresPermissions("goods:goodsInfo:view")
 	@RequestMapping(value = "goodsDetail")
 	public String goodsDetail(GoodsInfo goodsInfo, Model model) {
 
@@ -110,7 +128,7 @@ public class GoodsInfoController extends BaseController {
 			goodsInfo.setDespImages(images);
 		}
 		model.addAttribute("goodsInfo", goodsInfo);
-		return "modules/goods/goodsInfoDetail";
+		return "modules/goods/goodsDetail";
 	}
 
 
@@ -127,6 +145,7 @@ public class GoodsInfoController extends BaseController {
 		g.setStatus(goodsInfo.getStatus());
 		goodsInfoService.save(g);
 		addMessage(redirectAttributes, "操作成功");
+
 		return "redirect:"+Global.getAdminPath()+"/goods/goodsInfo/list?repage";
 	}
 
@@ -139,6 +158,9 @@ public class GoodsInfoController extends BaseController {
 		GoodsInfo g = goodsInfoService.get(goodsInfo.getId());
 		if(3 == goodsInfo.getStatus()) {
 			g.setOnlinetime(new Date());
+		}
+		if(0 == goodsInfo.getStatus()){
+			g.setOnlinetime(null);
 		}
 		g.setStatus(goodsInfo.getStatus());
 		goodsInfoService.save(g);
@@ -158,6 +180,8 @@ public class GoodsInfoController extends BaseController {
 			gm.setGoodsId(goodsInfo.getId());
 			//清空图片
 			goodsImageService.deleteByGoodsId(gm);
+		}else{
+			goodsInfo.setSalesTotal(0);
 		}
 		goodsInfo.setMerchantId(UserUtils.getUser().getId());
 		goodsInfo.setStatus(1);

@@ -49,13 +49,15 @@ public class CheckAccountTimer {
         Long dayTime = Long.parseLong(DictUtils.getDictValue("account_day_time","account_day_time","1"));
         for (OrderInfo orderInfo : orderInfos) {
             if("3".equals(orderInfo.getOrderStatus())){
-                //完成时间减去当前时间 大于结算时间
-                if((date.getTime() - orderInfo.getPayChannelTime().getTime())>=dayTime){
+                //当前时间 减去大 完成时间 于结算时间
+                Date completedTime = orderInfo.getCompletedTime();
+                if(null == completedTime){
+                    completedTime = orderInfo.getAutoCompletedTime();
+                }
+                if((date.getTime() - completedTime.getTime())>dayTime){
                     //清算
                     logger.info("清算订单号："+orderInfo.getOrderNo());
                     accountInfoService.toAccount(orderInfo.getId());
-                    //销售收益生成结算单
-
                 }
             }
         }

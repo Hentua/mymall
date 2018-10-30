@@ -3,6 +3,8 @@ package com.mall.modules.settlement.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.mall.modules.account.entity.AccountInfo;
+import com.mall.modules.account.service.AccountInfoService;
 import com.mall.modules.sys.utils.UserUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,9 @@ public class SettlementInfoController extends BaseController {
 
 	@Autowired
 	private SettlementInfoService settlementInfoService;
+
+	@Autowired
+	private AccountInfoService accountInfoService;
 	
 	@ModelAttribute
 	public SettlementInfo get(@RequestParam(required=false) String id) {
@@ -73,6 +78,19 @@ public class SettlementInfoController extends BaseController {
 		s.setSettlementRemarks(settlementInfo.getSettlementRemarks());
 		s.setStatus("3");
 		settlementInfoService.save(s);
+
+		//新增账单流水记录
+		//卖家账单流水
+		AccountInfo accountInfo = new AccountInfo();
+		accountInfo.setUserId(s.getSubUserId());
+		accountInfo.setType("2"); //收支类型 1：收入 2：支出
+		//1：佣金提现 2：订单交易结算
+		accountInfo.setWay("1".equals(s.getType())?"3":"4");//收支方式（1：佣金收益 2：销售收益） 支出（3：提现 4：结算）
+		accountInfo.setAmount(s.getAmount());
+		accountInfo.setUnionId(s.getId());
+		accountInfo.setStatus("4");//状态 （1：已到账 2：未到账 3：未提现结算 4：已提现结算 ）
+		accountInfoService.save(accountInfo);
+
 		addMessage(redirectAttributes, "结算成功");
 		return "redirect:"+Global.getAdminPath()+"/settlement/settlementInfo/list?repage";
 	}

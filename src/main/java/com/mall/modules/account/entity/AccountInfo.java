@@ -2,6 +2,7 @@ package com.mall.modules.account.entity;
 
 import com.mall.modules.commission.entity.CommissionInfo;
 import com.mall.modules.order.entity.OrderInfo;
+import com.mall.modules.settlement.entity.SettlementInfo;
 import org.hibernate.validator.constraints.Length;
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -23,6 +24,9 @@ public class AccountInfo extends DataEntity<AccountInfo> {
 	private Double amount;		// 金额
 	private String status;		// 状态 （1：已到账 2：未到账 3：未提现结算 4：已提现结算 ）【订单交易成功后可退货期内（7天）不可以提现结算】【推荐商家入驻除外， 入驻成功则佣金到账可提现】
 	private Date toAccountDate;		// 到账时间
+	private String isSub; //是否提交 0未提交 已提交
+
+
 
 	//查询起始时间
 	private Date startDate;
@@ -33,13 +37,33 @@ public class AccountInfo extends DataEntity<AccountInfo> {
 
 	//订单信息
 	private OrderInfo orderInfo;
-	
+
+	private SettlementInfo settlementInfo;//结算信息
+
+
+
 	public AccountInfo() {
 		super();
 	}
 
 	public AccountInfo(String id){
 		super(id);
+	}
+
+	public String getIsSub() {
+		return isSub;
+	}
+
+	public void setIsSub(String isSub) {
+		this.isSub = isSub;
+	}
+
+	public SettlementInfo getSettlementInfo() {
+		return settlementInfo;
+	}
+
+	public void setSettlementInfo(SettlementInfo settlementInfo) {
+		this.settlementInfo = settlementInfo;
 	}
 
 	public CommissionInfo getCommissionInfo() {
