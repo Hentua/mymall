@@ -52,7 +52,7 @@
 					${indexBillboard.title}
 				</a></td>
 				<td>
-					${indexBillboard.image}
+					<img src="${indexBillboard.image}" width="200px" height="80px">
 				</td>
 				<td>
 					${indexBillboard.sort}

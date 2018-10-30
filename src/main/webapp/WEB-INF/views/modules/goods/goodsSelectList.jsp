@@ -109,7 +109,7 @@
 					<fmt:formatDate value="${goodsInfo.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
 				</td>
 				<td>
-					<a href="javascript:void(0)" onclick="selectGoods('${goodsInfo.id}', '${goodsInfo.goodsName}', '${goodsInfo.merchantId}')">选择</a>
+					<a href="javascript:void(0)" onclick="selectGoods('${goodsInfo.id}', '${goodsInfo.goodsName}', '${goodsInfo.merchantId}','${goodsInfo.image}')">选择</a>
 				</td>
 			</tr>
 		</c:forEach>
@@ -118,11 +118,13 @@
 	<input id="goodsId" type="hidden"/>
 	<input id="goodsName" type="hidden"/>
 	<input id="merchantCode" type="hidden"/>
+	<input id="goodsImage" type="hidden"/>
 	<script type="text/javascript">
-		function selectGoods(id, name, merchantId) {
+		function selectGoods(id, name, merchantId,image) {
 			$('#goodsId').val(id);
 			$('#goodsName').val(name);
 			$('#merchantCode').val(merchantId);
+			$("#goodsImage").val(image)
 			$('#selectedGoodsInfo').text(name);
         }
 	</script>

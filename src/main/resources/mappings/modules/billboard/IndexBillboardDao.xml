@@ -102,6 +102,15 @@
 			#{remarks}
 		)
 	</insert>
+
+	<insert id="insertGoodsInfo" parameterType="java.util.Map" >
+		insert into index_billboard_goods(id,goods_id,billboard_id)
+		values (REPLACE(UUID(), '-', ''),#{goodsId},#{billboardId})
+	</insert>
+
+	<delete id="delIndexGoodsInfo" parameterType="java.lang.String">
+		delete from index_billboard_goods where billboard_id = #{billboardId}
+	</delete>
 	
 	<update id="update">
 		UPDATE index_billboard SET 	

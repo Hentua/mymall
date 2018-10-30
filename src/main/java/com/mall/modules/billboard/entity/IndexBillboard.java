@@ -21,6 +21,7 @@ public class IndexBillboard extends DataEntity<IndexBillboard> {
 	private Integer sort;		// 排序
 	private String type;		// 类型：1轮播图广告位 2独立广告位
 	private String appFlag;		// app广告位标识
+	private String[] goodsId;   //form表单商品ID集合
 
 	//广告位关联商品集合
 	private List<GoodsInfo> goodsList;
@@ -33,6 +34,14 @@ public class IndexBillboard extends DataEntity<IndexBillboard> {
 		super(id);
 	}
 
+
+	public String[] getGoodsId() {
+		return goodsId;
+	}
+
+	public void setGoodsId(String[] goodsId) {
+		this.goodsId = goodsId;
+	}
 
 	public List<GoodsInfo> getGoodsList() {
 		return goodsList;

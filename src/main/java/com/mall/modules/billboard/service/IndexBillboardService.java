@@ -1,6 +1,8 @@
 package com.mall.modules.billboard.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +36,15 @@ public class IndexBillboardService extends CrudService<IndexBillboardDao, IndexB
 	@Transactional(readOnly = false)
 	public void save(IndexBillboard indexBillboard) {
 		super.save(indexBillboard);
+		if("2".equals(indexBillboard.getType())){
+			dao.delIndexGoodsInfo(indexBillboard.getId());
+			for (String goodsId: indexBillboard.getGoodsId()) {
+				Map<String,Object> map = new HashMap<>();
+				map.put("goodsId",goodsId);
+				map.put("billboardId",indexBillboard.getId());
+				dao.insertGoodsInfo(map);
+			}
+		}
 	}
 	
 	@Transactional(readOnly = false)

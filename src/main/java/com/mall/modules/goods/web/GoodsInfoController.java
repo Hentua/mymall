@@ -70,6 +70,7 @@ public class GoodsInfoController extends BaseController {
 		return "modules/goods/goodsSelectList";
 	}
 
+
 	@RequiresPermissions("goods:goodsInfo:view")
 	@RequestMapping(value = {"checkList", ""})
 	public String checkList(GoodsInfo goodsInfo, HttpServletRequest request, HttpServletResponse response, Model model) {

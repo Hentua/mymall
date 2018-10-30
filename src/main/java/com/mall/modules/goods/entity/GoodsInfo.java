@@ -37,6 +37,8 @@ public class GoodsInfo extends DataEntity<GoodsInfo> {
     private Date endOnlinetime;        // 结束 上架时间
     private Date beginCreateDate;        // 开始 创建时间
     private Date endCreateDate;        // 结束 创建时间
+    private String favorite = "0";          //是否收藏 0否 1是
+    private String favoriteId;
 
     private String goodsBrandId; //商品品牌 三级分类
     private String merchantId; //商家id
@@ -55,6 +57,21 @@ public class GoodsInfo extends DataEntity<GoodsInfo> {
         super(id);
     }
 
+    public String getFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(String favorite) {
+        this.favorite = favorite;
+    }
+
+    public String getFavoriteId() {
+        return favoriteId;
+    }
+
+    public void setFavoriteId(String favoriteId) {
+        this.favoriteId = favoriteId;
+    }
 
     public String getGoodsCategoryName() {
         return goodsCategoryName;

@@ -3,6 +3,9 @@ package com.mall.modules.billboard.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.mall.modules.goods.entity.BillboardGoods;
+import com.mall.modules.goods.entity.GoodsInfo;
+import com.mall.modules.goods.service.GoodsInfoService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,6 +22,8 @@ import com.mall.common.utils.StringUtils;
 import com.mall.modules.billboard.entity.IndexBillboard;
 import com.mall.modules.billboard.service.IndexBillboardService;
 
+import java.util.List;
+
 /**
  * 首页广告位Controller
  * @author hub
@@ -30,7 +35,10 @@ public class IndexBillboardController extends BaseController {
 
 	@Autowired
 	private IndexBillboardService indexBillboardService;
-	
+
+	@Autowired
+	private GoodsInfoService goodsInfoService;
+
 	@ModelAttribute
 	public IndexBillboard get(@RequestParam(required=false) String id) {
 		IndexBillboard entity = null;
@@ -54,6 +62,12 @@ public class IndexBillboardController extends BaseController {
 	@RequiresPermissions("billboard:indexBillboard:view")
 	@RequestMapping(value = "form")
 	public String form(IndexBillboard indexBillboard, Model model) {
+		if(!StringUtils.isEmpty(indexBillboard.getId())){
+			BillboardGoods billboardGoods = new BillboardGoods();
+			billboardGoods.setBillboard(indexBillboard);
+			List<GoodsInfo> goodsInfos = goodsInfoService.findListByBillboard(billboardGoods);
+			indexBillboard.setGoodsList(goodsInfos);
+		}
 		model.addAttribute("indexBillboard", indexBillboard);
 		return "modules/billboard/indexBillboardForm";
 	}

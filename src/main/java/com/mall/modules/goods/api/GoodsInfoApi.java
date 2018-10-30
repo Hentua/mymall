@@ -14,6 +14,7 @@ import com.mall.modules.goods.entity.GoodsInfo;
 import com.mall.modules.goods.service.GoodsCategoryService;
 import com.mall.modules.goods.service.GoodsImageService;
 import com.mall.modules.goods.service.GoodsInfoService;
+import com.mall.modules.member.entity.MemberFavorite;
 import com.mall.modules.member.entity.MemberFootprint;
 import com.mall.modules.member.service.MemberInfoService;
 import com.mall.modules.sys.entity.User;
@@ -102,12 +103,23 @@ public class GoodsInfoApi extends BaseController {
         User currUser = UserUtils.getUser();
         // 判断是否登录
         if(null != currUser && StringUtils.isNotBlank(currUser.getId())) {
+
+            //获取当前用户 此商品是否收藏
+            MemberFavorite queryCondition = new MemberFavorite();
+            queryCondition.setCustomerCode(currUser.getId());
+            queryCondition.setGoodsId(goodsInfo.getId());
+            List<MemberFavorite> memberFavorites = memberInfoService.findList(queryCondition);
+            if(memberFavorites != null && memberFavorites.size()>0){
+                goodsInfo.setFavorite("1");
+                goodsInfo.setFavoriteId(memberFavorites.get(0).getId());
+            }
             // 用户已登录，保存用户足迹
             MemberFootprint memberFootprint = new MemberFootprint();
             memberFootprint.setCustomerCode(currUser.getId());
             memberFootprint.setGoodsId(goodsInfo.getId());
             memberInfoService.addFootprint(memberFootprint);
         }
+
 
         JSONObject result = new JSONObject();
         result.put("goodsInfo",goodsInfo);
