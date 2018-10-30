@@ -106,13 +106,13 @@ public class MemberInfoController extends BaseController {
 	@RequiresPermissions("member:memberInfo:edit")
 	@RequestMapping(value = "checkPass")
 	public String checkPass(MemberInfo memberInfo, Model model, RedirectAttributes redirectAttributes) {
-		memberInfo.setStatus("1");
+
 		memberInfoService.memberCheck(memberInfo);
 		UserUtils.clearCache();
-
 		//  用户注册返佣金
 		//商家信息
-		memberInfo = memberInfoService.get(memberInfo.getId());
+		memberInfo = memberInfoService.get(memberInfo);
+		memberInfo.setStatus("1");
 		//推荐人信息
 		User referee = UserUtils.get(memberInfo.getRefereeId());
 		//新增佣金记录
