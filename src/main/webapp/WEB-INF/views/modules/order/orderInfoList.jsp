@@ -61,9 +61,9 @@
 			<th>买家</th>
 			<th>商品总数量</th>
 			<th>商品总金额</th>
+			<th>优惠金额</th>
 			<th>运费</th>
 			<th>应付金额</th>
-			<th>优惠金额</th>
 			<th>下单人</th>
 			<th>下单时间</th>
 			<th>备注</th>
@@ -103,13 +103,13 @@
 						${orderInfo.goodsAmountTotal}
 				</td>
 				<td>
+						${orderInfo.discountAmountTotal}
+				</td>
+				<td>
 						${orderInfo.logisticsFee}
 				</td>
 				<td>
 						${orderInfo.orderAmountTotal}
-				</td>
-				<td>
-						${orderInfo.discountAmountTotal}
 				</td>
 				<td>
 						${orderInfo.customerName}

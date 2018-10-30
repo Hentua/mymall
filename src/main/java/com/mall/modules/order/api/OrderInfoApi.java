@@ -259,6 +259,8 @@ public class OrderInfoApi extends BaseController {
                     }else {
                         throw new ServiceException("优惠券不可用");
                     }
+                    // 修改优惠券为已使用
+                    couponCustomerService.updateCouponUsed(couponCustomer.getId());
                 }else if("1".equals(orderType)){
                     orderInfo.setPayTime(new Date());
                 }

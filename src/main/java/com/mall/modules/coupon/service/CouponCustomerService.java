@@ -94,4 +94,9 @@ public class CouponCustomerService extends CrudService<CouponCustomerDao, Coupon
         couponCustomer.setLimitAmount(couponConfig.getLimitAmount());
         this.save(couponCustomer);
     }
+
+    @Transactional(readOnly = false, rollbackFor = Exception.class)
+    public void updateCouponUsed(String id) {
+        couponCustomerDao.updateCouponUsed(id);
+    }
 }

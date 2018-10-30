@@ -107,6 +107,12 @@
         </div>
     </div>
     <div class="control-group">
+        <label class="control-label">优惠扣减金额：</label>
+        <div class="controls">
+                ${orderInfo.discountAmountTotal}
+        </div>
+    </div>
+    <div class="control-group">
         <label class="control-label">运费：</label>
         <div class="controls">
                 ${orderInfo.logisticsFee}
@@ -116,12 +122,6 @@
         <label class="control-label">应付总金额：</label>
         <div class="controls">
                 ${orderInfo.orderAmountTotal}
-        </div>
-    </div>
-    <div class="control-group">
-        <label class="control-label">优惠扣减金额：</label>
-        <div class="controls">
-                ${orderInfo.discountAmountTotal}
         </div>
     </div>
     <div class="control-group">

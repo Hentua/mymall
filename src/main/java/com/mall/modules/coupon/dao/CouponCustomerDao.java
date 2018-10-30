@@ -40,4 +40,11 @@ public interface CouponCustomerDao extends CrudDao<CouponCustomer> {
      */
     Map<String, String> enabledCouponsCount(String customerCode);
 
+    /**
+     * 使用优惠券 修改优惠券状态
+     *
+     * @param id 优惠券ID
+     */
+    void updateCouponUsed(String id);
+
 }
