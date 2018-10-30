@@ -17,7 +17,7 @@ public class OrderGoods extends DataEntity<OrderGoods> {
 	private String goodsName;		// 商品名称
 	private String goodsBarcode;		// 商品条码
 	private String goodsTitle;		// 商品标题
-	private int goodsType;		// 商品类别
+	private Integer goodsType;		// 商品类别
 	private String unit;		// 商品单位
 	private String image;		// 商品图片
 	private String goodsDesp;		// 商品描述
@@ -82,11 +82,11 @@ public class OrderGoods extends DataEntity<OrderGoods> {
 	}
 	
 	@Length(min=0, max=64, message="商品类别长度必须介于 0 和 64 之间")
-	public int getGoodsType() {
+	public Integer getGoodsType() {
 		return goodsType;
 	}
 
-	public void setGoodsType(int goodsType) {
+	public void setGoodsType(Integer goodsType) {
 		this.goodsType = goodsType;
 	}
 	
