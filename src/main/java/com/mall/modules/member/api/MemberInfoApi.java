@@ -33,7 +33,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.ws.Service;
 import java.util.List;
 import java.util.Map;
 
@@ -495,7 +494,10 @@ public class MemberInfoApi extends BaseController {
             MemberFavorite memberFavorite = new MemberFavorite();
             memberFavorite.setCustomerCode(customerCode);
             memberFavorite.setGoodsId(goodsId);
-            memberInfoService.addFavorite(memberFavorite);
+            List<MemberFavorite> existedList = memberInfoService.findList(memberFavorite);
+            if (existedList.size() <= 0) {
+                memberInfoService.addFavorite(memberFavorite);
+            }
             renderString(response, ResultGenerator.genSuccessResult());
         } catch (Exception e) {
             renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
