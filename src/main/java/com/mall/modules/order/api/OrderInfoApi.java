@@ -106,7 +106,7 @@ public class OrderInfoApi extends BaseController {
             if (StringUtils.isBlank(orderType) || (!"0".equals(orderType) && !"1".equals(orderType))) {
                 throw new ServiceException("订单类型不合法");
             }
-            if("1".equals(orderType) && StringUtils.isBlank(giftCustomerId)) {
+            if ("1".equals(orderType) && StringUtils.isBlank(giftCustomerId)) {
                 throw new ServiceException("未选择要兑换的礼包");
             }
             if (StringUtils.isBlank(addressId)) {
@@ -120,7 +120,7 @@ public class OrderInfoApi extends BaseController {
             }
 
             CouponCustomer couponCustomer = null;
-            if(StringUtils.isNotBlank(couponCode)) {
+            if (StringUtils.isNotBlank(couponCode)) {
                 couponCustomer = couponCustomerService.get(couponCode);
             }
 
@@ -132,16 +132,16 @@ public class OrderInfoApi extends BaseController {
             Map<String, OrderInfo> orderInfoMap = Maps.newHashMap();
             // 获取前端传来的商品列表
             JSONArray goodsArr;
-            if("0".equals(orderType)) {
+            if ("0".equals(orderType)) {
                 goodsArr = JSON.parseArray(goodsList);
-            }else {
+            } else {
                 orderStatus = "1";
                 giftCustomer = giftCustomerService.get(giftCustomerId);
                 int giftCount = giftCustomer.getGiftCount();
-                if(giftCount <= 0) {
+                if (giftCount <= 0) {
                     throw new ServiceException("礼包数量不合法");
                 }
-                if(!customerCode.equals(giftCustomer.getCustomerCode())) {
+                if (!customerCode.equals(giftCustomer.getCustomerCode())) {
                     throw new ServiceException("礼包不可兑换");
                 }
                 giftCustomer.setGiftCount(giftCount - 1);
@@ -159,7 +159,7 @@ public class OrderInfoApi extends BaseController {
                     goodsArr.add(goodsJson);
                 }
             }
-            if(null == goodsArr || goodsArr.size() <= 0) {
+            if (null == goodsArr || goodsArr.size() <= 0) {
                 throw new ServiceException("未选择要购买的商品，请重新选择");
             }
             // 获取商品信息
@@ -242,30 +242,30 @@ public class OrderInfoApi extends BaseController {
             for (OrderInfo orderInfo : orderInfoMap.values()) {
                 double orderDiscountAmountTotal = 0.00;
                 String merchantCode = orderInfo.getMerchantCode();
-                if(null != couponCustomer && merchantCode.equals(couponCustomer.getMerchantCode()) && "0".equals(orderType)) {
+                if (null != couponCustomer && merchantCode.equals(couponCustomer.getMerchantCode()) && "0".equals(orderType)) {
                     String couponType = couponCustomer.getCouponType();
-                    if("1".equals(couponType)) {
+                    if ("1".equals(couponType)) {
                         orderDiscountAmountTotal = couponCustomer.getDiscountAmount();
-                    }else if("0".equals(couponType)) {
+                    } else if ("0".equals(couponType)) {
                         orderDiscountAmountTotal = Double.valueOf(df.format(couponCustomer.getDiscountRate() * orderInfo.getOrderAmountTotal()));
-                    }else if("2".equals(couponType)) {
+                    } else if ("2".equals(couponType)) {
                         Double limitAmount = couponCustomer.getLimitAmount();
-                        if(orderInfo.getOrderAmountTotal() >= limitAmount) {
+                        if (orderInfo.getOrderAmountTotal() >= limitAmount) {
                             orderDiscountAmountTotal = couponCustomer.getDiscountAmount();
-                        }else {
+                        } else {
                             throw new ServiceException("优惠券不可用");
                         }
-                    }else {
+                    } else {
                         throw new ServiceException("优惠券不可用");
                     }
                     orderInfo.setCouponCode(couponCode);
                     // 修改优惠券为已使用
                     couponCustomerService.updateCouponUsed(couponCustomer.getId());
-                }else if("1".equals(orderType)){
+                } else if ("1".equals(orderType)) {
                     orderInfo.setPayTime(new Date());
                 }
                 double orderAmountTotal = orderInfo.getOrderAmountTotal() - orderDiscountAmountTotal;
-                if(orderAmountTotal < 0) {
+                if (orderAmountTotal < 0) {
                     orderAmountTotal = 0;
                 }
                 amountTotal += orderAmountTotal;
@@ -275,9 +275,9 @@ public class OrderInfoApi extends BaseController {
             }
             // 扣减优惠
             amountTotal -= discountAmountTotal;
-            if("0".equals(orderType)) {
+            if ("0".equals(orderType)) {
                 orderPaymentInfo.setAmountTotal(amountTotal);
-            }else {
+            } else {
                 orderPaymentInfo.setAmountTotal(0.00);
             }
             orderPaymentInfoService.save(orderPaymentInfo);
@@ -335,7 +335,7 @@ public class OrderInfoApi extends BaseController {
         User currUser = UserUtils.getUser();
         String customerCode = currUser.getId();
         try {
-            if(StringUtils.isBlank(orderId)) {
+            if (StringUtils.isBlank(orderId)) {
                 throw new ServiceException("未选择订单");
             }
             OrderInfo updateCondition = new OrderInfo();
@@ -356,7 +356,7 @@ public class OrderInfoApi extends BaseController {
             } else {
                 throw new ServiceException("确认收货失败");
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
         }
     }
@@ -423,6 +423,25 @@ public class OrderInfoApi extends BaseController {
             } else {
                 renderString(response, ResultGenerator.genFailResult("删除失败，订单有误"));
             }
+        } catch (Exception e) {
+            renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
+        }
+    }
+
+    /**
+     * 根据订单查询物流信息
+     *
+     * @param request  请求体
+     * @param response 响应体
+     */
+    @RequestMapping(value = "logisticsInfo", method = RequestMethod.POST)
+    public void logisticsInfo(HttpServletRequest request, HttpServletResponse response) {
+        String orderId = request.getParameter("orderId");
+        try {
+            if (StringUtils.isBlank(orderId)) {
+                throw new ServiceException("未选择要查询的订单");
+            }
+            // todo logistics info query
         } catch (Exception e) {
             renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
         }

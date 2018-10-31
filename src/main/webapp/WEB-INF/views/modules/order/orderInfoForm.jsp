@@ -155,7 +155,6 @@
 						<th>购买数量</th>
 						<th>商品单位</th>
 						<th>商品图片</th>
-						<th>商品描述</th>
 						<th>商品价格</th>
 						<th>折扣比例</th>
 						<th>折扣金额</th>
@@ -184,9 +183,6 @@
 							</td>
 							<td>
 								<img src="{{row.fullImageUrl}}" width="50px"/>
-							</td>
-							<td>
-								{{row.goodsDesp}}
 							</td>
 							<td>
 								{{row.goodsPrice}}

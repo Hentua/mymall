@@ -199,7 +199,6 @@
                     <th>购买数量</th>
                     <th>商品单位</th>
                     <th>商品图片</th>
-                    <th>商品描述</th>
                     <th>商品价格</th>
                     <th>折扣比例</th>
                     <th>折扣金额</th>
@@ -230,9 +229,6 @@
 								<img src="{{row.fullImageUrl}}" width="50px"/>
 							</td>
 							<td>
-								{{row.goodsDesp}}
-							</td>
-							<td>
 								{{row.goodsPrice}}
 							</td>
 							<td>
@@ -261,7 +257,7 @@
     </div>
     <div class="form-actions">
         <c:if test="${orderInfo.orderStatus eq '1'}"><input id="btnSubmit" class="btn btn-primary" type="submit"
-                                                                value="发货"/>&nbsp;</c:if>
+                                                                value="发 货"/>&nbsp;</c:if>
         <input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
     </div>
 </form:form>

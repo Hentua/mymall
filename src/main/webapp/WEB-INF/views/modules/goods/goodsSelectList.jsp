@@ -72,10 +72,10 @@
 		<c:forEach items="${page.list}" var="goodsInfo">
 			<tr>
 				<td>
-					<a href="${ctx}/goods/goodsInfo/form?id=${goodsInfo.id}">
-					<img src="${goodsInfo.fullImageUrl}" width="50px">
+					<%--<a href="${ctx}/goods/goodsInfo/form?id=${goodsInfo.id}">--%>
+					<%--<img src="${goodsInfo.fullImageUrl}" width="50px">--%>
 						${goodsInfo.goodsName}
-				</a></td>
+				<%--</a>--%></td>
 				<td>
 						${goodsInfo.goodsCategoryName}
 				</td>
@@ -124,7 +124,7 @@
 			$('#goodsId').val(id);
 			$('#goodsName').val(name);
 			$('#merchantCode').val(merchantId);
-			$("#goodsImage").val(image)
+			$("#goodsImage").val(image);
 			$('#selectedGoodsInfo').text(name);
         }
 	</script>
