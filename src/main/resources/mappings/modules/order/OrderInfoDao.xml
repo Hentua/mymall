@@ -220,6 +220,7 @@
 				ORDER BY ${page.orderBy}
 			</when>
 			<otherwise>
+				order by a.create_date desc
 			</otherwise>
 		</choose>
 	</select>
@@ -237,6 +238,7 @@
 				ORDER BY ${page.orderBy}
 			</when>
 			<otherwise>
+				order by a.create_date desc
 			</otherwise>
 		</choose>
 	</select>
