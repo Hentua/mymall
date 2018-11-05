@@ -129,10 +129,10 @@ public class MemberInfoApi extends BaseController {
             user.setOffice(new Office("1000"));
             user.setPassword(SystemService.entryptPassword(password));
             user.setName(nickname);
-            // 赋予角色
-            List<Role> roleList = Lists.newArrayList();
-            roleList.add(new Role("1000"));
-            user.setRoleList(roleList);
+            // 刚刚注册普通会员不赋予角色
+//            List<Role> roleList = Lists.newArrayList();
+//            roleList.add(new Role("1000"));
+//            user.setRoleList(roleList);
             // 保存用户信息
             systemService.saveUser(user);
             // 清除当前用户缓存

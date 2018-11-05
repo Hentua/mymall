@@ -68,18 +68,18 @@ public class User extends DataEntity<User> {
 		super();
 		this.loginFlag = Global.YES;
 	}
-
-	public User getAppUserInfo(){
-		User u = new User();
-		u.setLoginName(this.getLoginName());
-		u.setEmail(this.getEmail());
-		u.setMobile(this.getMobile());
-		u.setNickname(this.getNickname());
-		u.setPhoto(this.getPhoto());
-		u.setPhone(this.getPhone());
-		u.setName(this.getName());
-		return u;
-	}
+//
+//	public User getAppUserInfo(){
+//		User u = new User();
+//		u.setLoginName(this.getLoginName());
+//		u.setEmail(this.getEmail());
+//		u.setMobile(this.getMobile());
+//		u.setNickname(this.getNickname());
+//		u.setPhoto(this.getPhoto());
+//		u.setPhone(this.getPhone());
+//		u.setName(this.getName());
+//		return u;
+//	}
 
 	public User(String id){
 		super(id);
