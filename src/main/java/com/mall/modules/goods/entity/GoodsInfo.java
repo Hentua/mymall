@@ -3,6 +3,7 @@ package com.mall.modules.goods.entity;
 import com.mall.common.config.Global;
 import org.hibernate.validator.constraints.Length;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -48,6 +49,12 @@ public class GoodsInfo extends DataEntity<GoodsInfo> {
     private List<GoodsImage> goodsImages;
     private List<String> despImages;
 
+    //商品规格
+    private List<GoodsStandard> goodsStandards = new ArrayList<GoodsStandard>();
+
+    private String[] goodsStandardsName;
+    private Double[] goodsStandardsPrice;
+
     private String goodsCategoryName;
 
     public GoodsInfo() {
@@ -56,6 +63,31 @@ public class GoodsInfo extends DataEntity<GoodsInfo> {
 
     public GoodsInfo(String id) {
         super(id);
+    }
+
+
+    public String[] getGoodsStandardsName() {
+        return goodsStandardsName;
+    }
+
+    public void setGoodsStandardsName(String[] goodsStandardsName) {
+        this.goodsStandardsName = goodsStandardsName;
+    }
+
+    public Double[] getGoodsStandardsPrice() {
+        return goodsStandardsPrice;
+    }
+
+    public void setGoodsStandardsPrice(Double[] goodsStandardsPrice) {
+        this.goodsStandardsPrice = goodsStandardsPrice;
+    }
+
+    public List<GoodsStandard> getGoodsStandards() {
+        return goodsStandards;
+    }
+
+    public void setGoodsStandards(List<GoodsStandard> goodsStandards) {
+        this.goodsStandards = goodsStandards;
     }
 
     public String getFavorite() {

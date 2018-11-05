@@ -3,6 +3,7 @@
  */
 package com.mall.modules.sys.web;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,10 +11,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.mall.common.config.Global;
+import com.mall.common.utils.CacheUtils;
 import com.mall.common.utils.StringUtils;
 import com.mall.common.web.BaseController;
 import com.mall.modules.sys.entity.Dict;
+import com.mall.modules.sys.entity.sysConfig;
 import com.mall.modules.sys.service.DictService;
+import com.mall.modules.sys.utils.DictUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -65,6 +69,39 @@ public class DictController extends BaseController {
 		model.addAttribute("dict", dict);
 		return "modules/sys/dictForm";
 	}
+
+	/**
+	 * 系统参数配置
+	 * @param sysConfig
+	 * @param model
+	 * @return
+	 */
+	@RequiresPermissions("sys:dict:view")
+	@RequestMapping(value = "sysConfig")
+	public String sysConfig(sysConfig sysConfig, Model model) {
+		String settlesmentCycle = DictUtils.getDictValue("account_day_time","account_day_time","0");
+		String serviceCharge = DictUtils.getDictValue("service_charge","service_charge","0");
+		sysConfig.setServiceCharge(serviceCharge);
+		sysConfig.setSettlementCycle(settlesmentCycle);
+		return "modules/sys/sysConfig";
+	}
+
+	@RequiresPermissions("sys:dict:edit")
+	@RequestMapping(value = "saveSysConfig")
+	public String saveSysConfig(sysConfig sysConfig, Model model, RedirectAttributes redirectAttributes) {
+		Map<String,String> map = new HashMap<>();
+		map.put("type","service_charge");
+		map.put("label","service_charge");
+		map.put("value",sysConfig.getServiceCharge());
+		dictService.editSysConfig(map);
+		map.put("type","account_day_time");
+		map.put("label","account_day_time");
+		map.put("value",sysConfig.getSettlementCycle());
+		dictService.editSysConfig(map);
+		addMessage(redirectAttributes, "更新系统配置成功");
+		return "redirect:" + adminPath + "/sys/dict/sysConfig";
+	}
+
 
 	@RequiresPermissions("sys:dict:edit")
 	@RequestMapping(value = "save")//@Valid 

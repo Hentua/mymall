@@ -17,7 +17,9 @@
 		a.remarks AS "remarks",
 		a.sort as "sort",
 		a.image as "image",
-		pgc.category_name as "parentCategoryName"
+		pgc.category_name as "parentCategoryName",
+		a.commission_mode as "commissionMode",
+		a.commission_number as "commissionNumber"
 	</sql>
 
 
@@ -148,7 +150,9 @@
 			update_date,
 			remarks,
 			image,
-			sort
+			sort,
+			commission_mode,
+			commission_number
 		) VALUES (
 			#{id},
 			#{parentCategoryId},
@@ -161,7 +165,9 @@
 			#{updateDate},
 			#{remarks},
 			#{image},
-			#{sort}
+			#{sort},
+			#{commissionMode},
+			#{commissionNumber}
 		)
 	</insert>
 	
@@ -175,7 +181,9 @@
 			update_date = #{updateDate},
 			remarks = #{remarks},
 			image = #{image},
-			sort = #{sort}
+			sort = #{sort},
+			commission_mode = #{commissionMode},
+			commission_number = #{commissionNumber}
 		WHERE id = #{id}
 	</update>
 	

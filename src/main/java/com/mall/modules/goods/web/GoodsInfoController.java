@@ -6,8 +6,10 @@ import com.mall.common.utils.StringUtils;
 import com.mall.common.web.BaseController;
 import com.mall.modules.goods.entity.GoodsImage;
 import com.mall.modules.goods.entity.GoodsInfo;
+import com.mall.modules.goods.entity.GoodsStandard;
 import com.mall.modules.goods.service.GoodsImageService;
 import com.mall.modules.goods.service.GoodsInfoService;
+import com.mall.modules.goods.service.GoodsStandardService;
 import com.mall.modules.sys.utils.UserUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +39,8 @@ public class GoodsInfoController extends BaseController {
 	private GoodsInfoService goodsInfoService;
 	@Autowired
 	private GoodsImageService goodsImageService;
+	@Autowired
+	private GoodsStandardService goodsStandardService;
 	
 	@ModelAttribute
 	public GoodsInfo get(@RequestParam(required=false) String id) {
@@ -90,6 +94,11 @@ public class GoodsInfoController extends BaseController {
 				images.add(m.getImageUrl());
 			}
 			goodsInfo.setDespImages(images);
+			//商品规格
+			GoodsStandard goodsStandard = new GoodsStandard();
+			goodsStandard.setGoodsId(goodsInfo.getId());
+			List<GoodsStandard> goodsStandards = goodsStandardService.findList(goodsStandard);
+			goodsInfo.setGoodsStandards(goodsStandards);
 		}
 		model.addAttribute("goodsInfo", goodsInfo);
 		return "modules/goods/goodsInfoForm";
@@ -108,6 +117,11 @@ public class GoodsInfoController extends BaseController {
 				images.add(m.getImageUrl());
 			}
 			goodsInfo.setDespImages(images);
+			//商品规格
+			GoodsStandard goodsStandard = new GoodsStandard();
+			goodsStandard.setGoodsId(goodsInfo.getId());
+			List<GoodsStandard> goodsStandards = goodsStandardService.findList(goodsStandard);
+			goodsInfo.setGoodsStandards(goodsStandards);
 		}
 		model.addAttribute("goodsInfo", goodsInfo);
 		return "modules/goods/goodsDetailCheck";
@@ -126,6 +140,11 @@ public class GoodsInfoController extends BaseController {
 				images.add(m.getImageUrl());
 			}
 			goodsInfo.setDespImages(images);
+			//商品规格
+			GoodsStandard goodsStandard = new GoodsStandard();
+			goodsStandard.setGoodsId(goodsInfo.getId());
+			List<GoodsStandard> goodsStandards = goodsStandardService.findList(goodsStandard);
+			goodsInfo.setGoodsStandards(goodsStandards);
 		}
 		model.addAttribute("goodsInfo", goodsInfo);
 		return "modules/goods/goodsDetail";
@@ -194,6 +213,19 @@ public class GoodsInfoController extends BaseController {
 				goodsImageService.save(goodsImage);
 			}
 		}
+		//商品规格
+		if(null != goodsInfo.getGoodsStandardsName() && goodsInfo.getGoodsStandardsName().length>0){
+			goodsStandardService.deleteByGoodsId(goodsInfo.getId());
+			for(int i=0;i<goodsInfo.getGoodsStandardsName().length;i++){
+				GoodsStandard goodsStandard =new GoodsStandard();
+				goodsStandard.setName(goodsInfo.getGoodsStandardsName()[i]);
+				goodsStandard.setPrice(goodsInfo.getGoodsStandardsPrice()[i]);
+				goodsStandard.setGoodsId(goodsInfo.getId());
+				goodsStandard.setCategoryId(goodsInfo.getGoodsCategoryId());
+				goodsStandardService.save(goodsStandard);
+			 }
+		}
+
 		addMessage(redirectAttributes, "保存商品信息成功");
 		return "redirect:"+Global.getAdminPath()+"/goods/goodsInfo/list/?repage";
 	}

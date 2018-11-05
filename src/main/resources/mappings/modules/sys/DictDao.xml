@@ -85,6 +85,11 @@
 			remarks = #{remarks}
 		WHERE id = #{id}
 	</update>
+
+	<update id="editSysConfig" parameterType="java.util.Map">
+		UPDATE sys_dict SET
+			value = #{value}  where label = #{label} and type = #{type}
+	</update>
 	
 	<update id="delete">
 		UPDATE sys_dict SET 

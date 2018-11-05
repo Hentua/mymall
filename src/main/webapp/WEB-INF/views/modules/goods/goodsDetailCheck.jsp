@@ -39,9 +39,18 @@
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">商品现价：</label>
+			<label class="control-label">规格：</label>
 			<div class="controls">
-				${goodsInfo.goodsPrice}
+				<table id="standardTab">
+					<c:if test="${goodsInfo.goodsStandards != null && fn:length(goodsInfo.goodsStandards)>0}">
+						<c:forEach items="${goodsInfo.goodsStandards}" var="goodsStandard">
+							<tr>
+								<td>名称：${goodsStandard.name}</td>
+								<td>价格： ${goodsStandard.price}</td>
+							</tr>
+						</c:forEach>
+					</c:if>
+				</table>
 			</div>
 		</div>
 		<div class="control-group">

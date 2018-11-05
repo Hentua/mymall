@@ -8,12 +8,8 @@ import com.mall.common.utils.ResultGenerator;
 import com.mall.common.utils.StringUtils;
 import com.mall.common.utils.TreeNode;
 import com.mall.common.web.BaseController;
-import com.mall.modules.goods.entity.GoodsCategory;
-import com.mall.modules.goods.entity.GoodsImage;
-import com.mall.modules.goods.entity.GoodsInfo;
-import com.mall.modules.goods.service.GoodsCategoryService;
-import com.mall.modules.goods.service.GoodsImageService;
-import com.mall.modules.goods.service.GoodsInfoService;
+import com.mall.modules.goods.entity.*;
+import com.mall.modules.goods.service.*;
 import com.mall.modules.member.entity.MemberFavorite;
 import com.mall.modules.member.entity.MemberFootprint;
 import com.mall.modules.member.service.MemberInfoService;
@@ -30,6 +26,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping(value = "${adminPath}/api/goods/")
@@ -47,6 +44,12 @@ public class GoodsInfoApi extends BaseController {
 
     @Autowired
     private MemberInfoService memberInfoService;
+
+    @Autowired
+    private GoodsStandardService goodsStandardService;
+
+    @Autowired
+    private GoodsEvaluateService goodsEvaluateService;
 
 
     /**
@@ -99,6 +102,12 @@ public class GoodsInfoApi extends BaseController {
         List<GoodsImage> goodsImages = goodsImageService.findListByGoodsId(goodsInfo.getId());
         goodsInfo.setGoodsImages(goodsImages);
 
+        GoodsStandard goodsStandard = new GoodsStandard();
+        goodsStandard.setGoodsId(goodsInfo.getId());
+        List<GoodsStandard> goodsStandards = goodsStandardService.findList(goodsStandard);
+        goodsInfo.setGoodsStandards(goodsStandards);
+
+
         // 获取当前登录用户
         User currUser = UserUtils.getUser();
         // 判断是否登录
@@ -119,11 +128,18 @@ public class GoodsInfoApi extends BaseController {
             memberFootprint.setGoodsId(goodsInfo.getId());
             memberInfoService.addFootprint(memberFootprint);
         }
-
-
+        //商品评价
+        GoodsEvaluate goodsEvaluate =new GoodsEvaluate();
+        goodsEvaluate.setGoodsId(goodsInfo.getId());
+        Map<String,Object> map = goodsEvaluateService.findCount(goodsEvaluate);
+        List<GoodsEvaluate> goodsEvaluates = goodsEvaluateService.findListBy2(goodsEvaluate);
+        JSONObject evaluate = new JSONObject();
+        evaluate.putAll(map);
+        evaluate.put("list",goodsEvaluates);
         JSONObject result = new JSONObject();
         result.put("goodsInfo",goodsInfo);
         result.put("merchant",new UserVo(merchant));
+        result.put("evaluate",evaluate);
         return ResultGenerator.genSuccessResult(result);
     }
 

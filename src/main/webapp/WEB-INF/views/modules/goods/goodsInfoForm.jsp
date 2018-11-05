@@ -23,6 +23,18 @@
 				}
 			});
 		});
+		
+		function addStandard() {
+			$("#standardTab").append("<tr>\n" +
+                "\t\t\t\t\t\t<td>名称：<input id=\"goodsStandardsName\" name=\"goodsStandardsName\" class=\"input-xlarge required\" type=\"text\" value=\"\" maxlength=\"10\"></td>\n" +
+                "\t\t\t\t\t\t<td>价格：<input id=\"goodsStandardsPrice\" name=\"goodsStandardsPrice\" class=\"input-xlarge  number required\" type=\"text\" value=\"\"></td>\n" +
+                "\t\t\t\t\t\t<td>&nbsp;&nbsp;<a style=\"cursor: pointer\" onclick=\"delStandard(this)\">×</a></td>\n" +
+                "\t\t\t\t\t</tr>")
+        }
+
+        function delStandard(t) {
+			$(t).parent().parent().remove()
+        }
 	</script>
 </head>
 <body>
@@ -60,9 +72,28 @@
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">商品现价：</label>
+			<label class="control-label">规格：</label>
 			<div class="controls">
-				<form:input path="goodsPrice" htmlEscape="false" class="input-xlarge  number"/>
+				<table id="standardTab">
+
+					<c:if test="${goodsInfo.goodsStandards == null ||  fn:length(goodsInfo.goodsStandards) == 0}">
+						<tr>
+							<td>名称：<form:input path="goodsStandardsName" htmlEscape="false" maxlength="10" class="input-xlarge required"/></td>
+							<td>价格：<form:input path="goodsStandardsPrice" htmlEscape="false" class="input-xlarge  number required"/></td>
+							<td>&nbsp;&nbsp;<a style="cursor: pointer" onclick="delStandard(this)">×</a></td>
+						</tr>
+					</c:if>
+					<c:if test="${goodsInfo.goodsStandards != null && fn:length(goodsInfo.goodsStandards)>0}">
+						<c:forEach items="${goodsInfo.goodsStandards}" var="goodsStandard">
+							<tr>
+								<td>名称：<input   name="goodsStandardsName" class="input-xlarge  required" type="text" value="${goodsStandard.name}"></td>
+								<td>价格：<input   name="goodsStandardsPrice" class="input-xlarge  number required" type="text" value="${goodsStandard.price}"></td>
+								<td>&nbsp;&nbsp;<a style="cursor: pointer" onclick="delStandard(this)">×</a></td>
+							</tr>
+						</c:forEach>
+					</c:if>
+				</table>
+				<input   class="btn" type="button" value="添加规格" onclick="addStandard()"/>
 			</div>
 		</div>
 		<div class="control-group">

@@ -29,6 +29,11 @@ public class GoodsCategory extends DataEntity<GoodsCategory> implements TreeNode
 	 */
 	private List<GoodsCategory> childrens;
 
+	//佣金产生方式
+	private String commissionMode;
+	//佣金产生比例
+	private Double commissionNumber;
+
 
 
 	public GoodsCategory() {
@@ -90,6 +95,22 @@ public class GoodsCategory extends DataEntity<GoodsCategory> implements TreeNode
 		return getSort();
 	}
 
+
+	public String getCommissionMode() {
+		return commissionMode;
+	}
+
+	public void setCommissionMode(String commissionMode) {
+		this.commissionMode = commissionMode;
+	}
+
+	public Double getCommissionNumber() {
+		return commissionNumber;
+	}
+
+	public void setCommissionNumber(Double commissionNumber) {
+		this.commissionNumber = commissionNumber;
+	}
 
 	public Long getSort() {
 		return sort;

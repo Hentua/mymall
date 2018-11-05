@@ -36,8 +36,9 @@
 		<div class="control-group">
 			<label class="control-label">上级分类：${message}</label>
 			<div class="controls">
-				<sys:treeselect id="parentCategoryId" name="parentCategoryId" value="${goodsCategory.parentCategoryId}" labelName="parentCategoryName" labelValue="${goodsCategory.parentCategoryName}"
+				<sys:treeselect id="parentCategoryId" name="parentCategoryId" value="${goodsCategory.parentCategoryId}" labelName="parentCategoryName" labelValue="${empty goodsCategory.parentCategoryName?'商品分类':goodsCategory.parentCategoryName}"
 								title="上级分类" url="/goods/goodsCategory/treeData?parentCategoryId=0" extId="${goodsCategory.id}" cssClass=""  />
+				<span class="help-inline"><font color="red">（注：不选择上级分类为默认为添加一级分类）</font> </span>
 			</div>
 		</div>
 		<div class="control-group">
@@ -77,6 +78,20 @@
 			<label class="control-label">备注信息：</label>
 			<div class="controls">
 				<form:textarea path="remarks" htmlEscape="false" rows="4" maxlength="500" class="input-xxlarge "/>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">佣金计算方式：</label>
+			<div class="controls">
+				<form:radiobutton title="固定金额" htmlEscape="false" class="required" path="commissionMode" value="1" label="固定金额"/>
+				<form:radiobutton title="百分比" htmlEscape="false" class="required" path="commissionMode" value="2" label="百分比"/>
+			</div>
+			<span class="help-inline"><font color="red">（注：不配置佣金计算方式该品类下商品不计算佣金）</font> </span>
+		</div>
+		<div class="control-group">
+			<label class="control-label">数值：</label>
+			<div class="controls">
+				<form:input path="commissionNumber" htmlEscape="false" class="input-xlarge  number"/>
 			</div>
 		</div>
 		<div class="form-actions">

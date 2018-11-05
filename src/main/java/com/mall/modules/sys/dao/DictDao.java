@@ -4,6 +4,7 @@
 package com.mall.modules.sys.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.mall.modules.sys.entity.Dict;
 import com.mall.common.persistence.CrudDao;
@@ -18,5 +19,7 @@ import com.mall.common.persistence.annotation.MyBatisDao;
 public interface DictDao extends CrudDao<Dict> {
 
 	public List<String> findTypeList(Dict dict);
+
+	public void editSysConfig(Map<String,String> map);
 	
 }

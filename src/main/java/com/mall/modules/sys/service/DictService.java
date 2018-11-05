@@ -4,6 +4,7 @@
 package com.mall.modules.sys.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.mall.common.utils.CacheUtils;
 import org.springframework.stereotype.Service;
@@ -40,6 +41,12 @@ public class DictService extends CrudService<DictDao, Dict> {
 	@Transactional(readOnly = false)
 	public void delete(Dict dict) {
 		super.delete(dict);
+		CacheUtils.remove(DictUtils.CACHE_DICT_MAP);
+	}
+
+	@Transactional(readOnly = false)
+	public void editSysConfig(Map<String,String> map){
+		dao.editSysConfig(map);
 		CacheUtils.remove(DictUtils.CACHE_DICT_MAP);
 	}
 
