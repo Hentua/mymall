@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.modules.goods.dao.GoodsStandardDao">
+    
+	<sql id="goodsStandardColumns">
+		a.id AS "id",
+		a.name AS "name",
+		a.price AS "price",
+		a.goods_id AS "goodsId",
+		a.category_id AS "categoryId"
+	</sql>
+	
+	<sql id="goodsStandardJoins">
+	</sql>
+    
+	<select id="get" resultType="GoodsStandard">
+		SELECT 
+			<include refid="goodsStandardColumns"/>
+		FROM goods_standard a
+		<include refid="goodsStandardJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="GoodsStandard">
+		SELECT 
+			<include refid="goodsStandardColumns"/>
+		FROM goods_standard a
+		<include refid="goodsStandardJoins"/>
+		<where>
+			
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+			<if test="price != null and price != ''">
+				AND a.price = #{price}
+			</if>
+			<if test="goodsId != null and goodsId != ''">
+				AND a.goods_id = #{goodsId}
+			</if>
+			<if test="categoryId != null and categoryId != ''">
+				AND a.category_id = #{categoryId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="GoodsStandard">
+		SELECT 
+			<include refid="goodsStandardColumns"/>
+		FROM goods_standard a
+		<include refid="goodsStandardJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO goods_standard(
+			id,
+			name,
+			price,
+			goods_id,
+			category_id
+		) VALUES (
+			#{id},
+			#{name},
+			#{price},
+			#{goodsId},
+			#{categoryId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE goods_standard SET 	
+			name = #{name},
+			price = #{price},
+			goods_id = #{goodsId},
+			category_id = #{categoryId}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM goods_standard
+		WHERE id = #{id}
+	</update>
+
+	<update id="deleteByGoodsId" parameterType="java.lang.String">
+		DELETE FROM goods_standard
+		WHERE goods_id = #{goodsId}
+	</update>
+
+
+	
+</mapper>

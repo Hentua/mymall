@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.modules.goods.dao.GoodsEvaluateDao">
+    
+	<sql id="goodsEvaluateColumns">
+		a.id AS "id",
+		a.goods_id AS "goodsId",
+		a.evaluate AS "evaluate",
+		a.level AS "level",
+		a.title AS "title",
+		a.goods_name AS "goodsName",
+		a.evaluate_user_id AS "evaluateUserId",
+		a.evaluate_date AS "evaluateDate",
+		a.evaluate_user_name AS "evaluateUserName"
+	</sql>
+	
+	<sql id="goodsEvaluateJoins">
+	</sql>
+    
+	<select id="get" resultType="GoodsEvaluate">
+		SELECT 
+			<include refid="goodsEvaluateColumns"/>
+		FROM goods_evaluate a
+		<include refid="goodsEvaluateJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+
+	<select id="findListBy2" resultType="GoodsEvaluate">
+		SELECT
+		<include refid="goodsEvaluateColumns"/>
+		FROM goods_evaluate a
+		<include refid="goodsEvaluateJoins"/>
+		<where>
+			<if test="goodsId != null and goodsId != ''">
+				 and a.goods_id = #{goodsId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY evaluate_date desc
+			</otherwise>
+		</choose>
+		 limit 0,2
+	</select>
+
+	
+	<select id="findList" resultType="GoodsEvaluate">
+		SELECT 
+			<include refid="goodsEvaluateColumns"/>
+		FROM goods_evaluate a
+		<include refid="goodsEvaluateJoins"/>
+		<where>
+			
+			<if test="evaluate != null and evaluate != ''">
+				AND a.evaluate LIKE 
+					<if test="dbName == 'oracle'">'%'||#{evaluate}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{evaluate}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{evaluate},'%')</if>
+			</if>
+			<if test="level != null and level != ''   ">
+				AND a.level = #{level}
+			</if>
+			<if test="goodsId != null and goodsId != ''">
+				AND a.goods_id = #{goodsId}
+			</if>
+			<if test="title != null and title != ''">
+				AND a.title LIKE 
+					<if test="dbName == 'oracle'">'%'||#{title}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{title}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{title},'%')</if>
+			</if>
+			<if test="goodsName != null and goodsName != ''">
+				AND a.goods_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{goodsName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{goodsName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{goodsName},'%')</if>
+			</if>
+			<if test="evaluateUserName != null and evaluateUserName != ''">
+				AND a.evaluate_user_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{evaluateUserName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{evaluateUserName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{evaluateUserName},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY evaluate_date desc
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findCount" resultType="java.util.Map">
+		SELECT
+		 count(0) as "count"
+		FROM
+			goods_evaluate a
+		WHERE
+		  a.goods_id = #{goodsId}
+	</select>
+	
+	<select id="findAllList" resultType="GoodsEvaluate">
+		SELECT 
+			<include refid="goodsEvaluateColumns"/>
+		FROM goods_evaluate a
+		<include refid="goodsEvaluateJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO goods_evaluate(
+			id,
+			goods_id,
+			evaluate,
+			level,
+			title,
+			goods_name,
+			evaluate_user_id,
+			evaluate_date,
+			evaluate_user_name
+		) VALUES (
+			#{id},
+			#{goodsId},
+			#{evaluate},
+			#{level},
+			#{title},
+			#{goodsName},
+			#{evaluateUserId},
+			#{evaluateDate},
+			#{evaluateUserName}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE goods_evaluate SET 	
+			goods_id = #{goodsId},
+			evaluate = #{evaluate},
+			level = #{level},
+			title = #{title},
+			goods_name = #{goodsName},
+			evaluate_user_id = #{evaluateUserId},
+			evaluate_date = #{evaluateDate},
+			evaluate_user_name = #{evaluateUserName}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM goods_evaluate
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
