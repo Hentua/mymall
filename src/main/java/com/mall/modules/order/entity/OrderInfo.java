@@ -39,6 +39,7 @@ public class OrderInfo extends DataEntity<OrderInfo> {
 	private Date autoClosedTime; // 自动关闭交易时间
 	private Date completedTime; // 交易完成时间
 	private Date autoCompletedTime; // 自动完成交易时间
+	private Double settlementsAmount;//结算金额
 
 	private String merchantName;
 	private String customerName;
@@ -49,6 +50,14 @@ public class OrderInfo extends DataEntity<OrderInfo> {
 
 	public OrderInfo(String id){
 		super(id);
+	}
+
+	public Double getSettlementsAmount() {
+		return settlementsAmount;
+	}
+
+	public void setSettlementsAmount(Double settlementsAmount) {
+		this.settlementsAmount = settlementsAmount;
 	}
 
 	public Date getAutoCompletedTime() {

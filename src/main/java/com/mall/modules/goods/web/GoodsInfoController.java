@@ -177,6 +177,14 @@ public class GoodsInfoController extends BaseController {
 		GoodsInfo g = goodsInfoService.get(goodsInfo.getId());
 		if(3 == goodsInfo.getStatus()) {
 			g.setOnlinetime(new Date());
+			//上架更新结算金额
+			GoodsStandard goodsStandard = new GoodsStandard();
+			goodsStandard.setGoodsId(goodsInfo.getId());
+			List<GoodsStandard> goodsStandards = goodsStandardService.findList(goodsStandard);
+			for(int i=0;i<goodsStandards.size();i++){
+				goodsStandards.get(i).setSettlementsAmount(goodsInfo.getSettlementsAmounts()[i]);
+				goodsStandardService.save(goodsStandards.get(i));
+			}
 		}
 		if(0 == goodsInfo.getStatus()){
 			g.setOnlinetime(null);

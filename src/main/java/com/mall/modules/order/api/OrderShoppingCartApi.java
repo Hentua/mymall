@@ -43,6 +43,10 @@ public class OrderShoppingCartApi extends BaseController {
         User currUser = UserUtils.getUser();
         String goodsId = request.getParameter("goodsId");
         String merchantCode = request.getParameter("merchantCode");
+
+        String goodsPrice = request.getParameter("goodsPrice");
+        String goodsStandard = request.getParameter("goodsStandard");
+        String settlementsAmount = request.getParameter("settlementsAmount");
         try {
             if(null == currUser) {
                 throw new ServiceException("未登录");
@@ -63,6 +67,9 @@ public class OrderShoppingCartApi extends BaseController {
                 orderShoppingCart.setCustomerCode(currUser.getId());
                 orderShoppingCart.setGoodsCount(1.00);
                 orderShoppingCart.setMerchantCode(merchantCode);
+                orderShoppingCart.setGoodsPrice(Double.valueOf(goodsPrice));
+                orderShoppingCart.setGoodsStandard(goodsStandard);
+                orderShoppingCart.setSettlementsAmount(Double.valueOf(settlementsAmount));
             }else {
                 orderShoppingCart.setGoodsCount(orderShoppingCart.getGoodsCount() + 1);
             }

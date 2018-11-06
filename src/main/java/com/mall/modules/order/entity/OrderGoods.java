@@ -27,6 +27,8 @@ public class OrderGoods extends DataEntity<OrderGoods> {
 	private Double discountAmount;		// 折扣金额
 	private Double count;		// 购买数量
 	private Double subtotal;		// 小计金额
+	private String goodsStandard; //商品规格
+	private Double settlementsAmount;//结算金额
 	
 	public OrderGoods() {
 		super();
@@ -34,6 +36,23 @@ public class OrderGoods extends DataEntity<OrderGoods> {
 
 	public OrderGoods(String orderNo){
 		this.orderNo = orderNo;
+	}
+
+
+	public Double getSettlementsAmount() {
+		return settlementsAmount;
+	}
+
+	public void setSettlementsAmount(Double settlementsAmount) {
+		this.settlementsAmount = settlementsAmount;
+	}
+
+	public String getGoodsStandard() {
+		return goodsStandard;
+	}
+
+	public void setGoodsStandard(String goodsStandard) {
+		this.goodsStandard = goodsStandard;
 	}
 
 	@Length(min=1, max=64, message="商品ID长度必须介于 1 和 64 之间")

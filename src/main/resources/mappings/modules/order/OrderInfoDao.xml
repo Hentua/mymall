@@ -269,7 +269,8 @@
 			closed_time,
 			auto_closed_time,
 			completed_time,
-		    del_flag
+		    del_flag,
+		    settlements_amount
 		) VALUES (
 			#{id},
 			#{orderNo},
@@ -295,7 +296,8 @@
 			#{closedTime},
 			#{autoClosedTime},
 			#{completedTime},
-		    #{delFlag}
+		    #{delFlag},
+		    #{settlementsAmount}
 		)
 	</insert>
 

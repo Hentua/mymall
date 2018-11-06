@@ -170,6 +170,9 @@ public class OrderInfoApi extends BaseController {
                 JSONObject goodsInfoJson = goodsArr.getJSONObject(i);
                 String goodsId = goodsInfoJson.getString("goodsId");
                 String shoppingCartId = goodsInfoJson.getString("shoppingCartId");
+                OrderShoppingCart shoppingCart = new OrderShoppingCart();
+                shoppingCart.setId(shoppingCartId);
+                shoppingCart = orderShoppingCartService.get(shoppingCart);
                 double goodsCount = goodsInfoJson.getDouble("goodsCount");
                 // 验证数据正确性
                 if (StringUtils.isBlank(goodsId)) {
@@ -214,8 +217,12 @@ public class OrderInfoApi extends BaseController {
                     orderAmountTotal += orderLogistics.getLogisticsFee();
                 }
                 orderGoodsCount += goodsCount;
-                double price = goodsInfo.getGoodsPrice();
+                //商品单价
+                double price = shoppingCart.getGoodsPrice();
+                double settlementsAmount = shoppingCart.getSettlementsAmount();
                 double goodsAmountTotal = Double.valueOf(df.format(price * goodsCount));
+                //结算总价
+                double settlementsTotal = Double.valueOf(df.format(settlementsAmount * goodsCount));
 
                 orderAmountTotal += goodsAmountTotal;
 
@@ -223,12 +230,16 @@ public class OrderInfoApi extends BaseController {
                 orderInfo.setGoodsAmountTotal(orderGoodsAmountTotal);
                 orderInfo.setGoodsCount(orderGoodsCount);
                 orderInfo.setOrderAmountTotal(orderAmountTotal);
+                orderInfo.setSettlementsAmount(settlementsTotal);
 
                 OrderGoods orderGoods = orderInfoService.genOrderGoods(goodsInfo);
                 orderGoods.setOrderNo(orderInfo.getOrderNo());
                 orderGoods.setCount(goodsCount);
                 orderGoods.setSubtotal(goodsAmountTotal);
                 orderGoods.setId("");
+                orderGoods.setGoodsPrice(price);
+                orderGoods.setGoodsStandard(shoppingCart.getGoodsStandard());
+                orderGoods.setSettlementsAmount(settlementsAmount);
                 orderGoodsList.add(orderGoods);
 
                 orderInfo.setOrderGoodsList(orderGoodsList);
