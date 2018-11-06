@@ -9,10 +9,13 @@ import javax.servlet.http.HttpServletRequest;
 import com.mall.common.config.Global;
 import com.mall.common.security.Digests;
 import com.mall.common.utils.*;
+import com.mall.modules.sys.entity.User;
+import com.mall.modules.sys.service.SystemService;
 import com.mall.modules.sys.utils.UserUtils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.subject.Subject;
+import org.apache.shiro.util.ByteSource;
 import org.apache.shiro.web.util.WebUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +38,8 @@ public class ApiAuthenticationFilter extends org.apache.shiro.web.filter.authc.F
     private String captchaParam = DEFAULT_CAPTCHA_PARAM;
     private String mobileLoginParam = DEFAULT_MOBILE_PARAM;
     private String messageParam = DEFAULT_MESSAGE_PARAM;
+
+    private SystemService systemService;
 
     protected AuthenticationToken createToken(ServletRequest request, ServletResponse response) {
         String username = getUsername(request);
@@ -169,8 +174,33 @@ public class ApiAuthenticationFilter extends org.apache.shiro.web.filter.authc.F
         return token;
     }
 
+    /**
+     * 获取系统业务对象
+     */
+    public SystemService getSystemService() {
+        if (systemService == null){
+            systemService = SpringContextHolder.getBean(SystemService.class);
+        }
+        return systemService;
+    }
 
 
+    @Override
+    protected boolean executeLogin(ServletRequest request, ServletResponse response) throws Exception {
+        AuthenticationToken token = createToken(request, response);
+        if (token == null) {
+            String msg = "createToken method implementation returned null. A valid non-null AuthenticationToken " +
+                    "must be created in order to execute a login attempt.";
+            throw new IllegalStateException(msg);
+        }
+        try {
+            Subject subject = getSubject(request, response);
+            subject.login(token);
+            return onLoginSuccess(token, subject, request, response);
+        } catch (AuthenticationException e) {
+            return onLoginFailure(token, e, request, response);
+        }
+    }
 
     /**
      * APP登录 请求鉴权

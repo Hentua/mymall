@@ -87,7 +87,7 @@ public class SystemAuthorizingRealm extends AuthorizingRealm {
 				throw new AuthenticationException("msg:该已帐号禁止登录.");
 			}
 			// 2018-11-06 ADD BY WANKANG 用户类型为普通会员时 禁止登录
-			if(!ADMIN.equals(user.getLoginName()) && (!StringUtils.isNotBlank(user.getUserType()) || MEMBER.equals(user.getUserType()))) {
+			if(!token.isMobileLogin() && !ADMIN.equals(user.getLoginName()) && (!StringUtils.isNotBlank(user.getUserType()) || MEMBER.equals(user.getUserType()))) {
 				throw new AuthenticationException("msg:用户不存在");
 			}
 			byte[] salt = Encodes.decodeHex(user.getPassword().substring(0,16));
