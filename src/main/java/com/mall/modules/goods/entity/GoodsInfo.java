@@ -40,6 +40,10 @@ public class GoodsInfo extends DataEntity<GoodsInfo> {
     private Date endCreateDate;        // 结束 创建时间
     private String favorite = "0";          //是否收藏 0否 1是
     private String favoriteId;
+    //参与优惠类型 0：不参与 1：5折 2：7折 3：都可以
+    private String discountType;
+
+    private Double[] settlementsAmounts;//结算金额
 
     private String goodsBrandId; //商品品牌 三级分类
     private String merchantId; //商家id
@@ -65,6 +69,22 @@ public class GoodsInfo extends DataEntity<GoodsInfo> {
         super(id);
     }
 
+
+    public String getDiscountType() {
+        return discountType;
+    }
+
+    public void setDiscountType(String discountType) {
+        this.discountType = discountType;
+    }
+
+    public Double[] getSettlementsAmounts() {
+        return settlementsAmounts;
+    }
+
+    public void setSettlementsAmounts(Double[] settlementsAmounts) {
+        this.settlementsAmounts = settlementsAmounts;
+    }
 
     public String[] getGoodsStandardsName() {
         return goodsStandardsName;

@@ -39,6 +39,24 @@
 			</div>
 		</div>
 		<div class="control-group">
+			<label class="control-label">优惠类型：</label>
+			<div class="controls">
+				<c:if test="${goodsInfo.discountType == '0'}">
+					不可使用优惠
+				</c:if>
+				<c:if test="${goodsInfo.discountType == '1'}">
+					仅可以使用5折优惠
+				</c:if>
+				<c:if test="${goodsInfo.discountType == '2'}">
+					仅可以使用7折优惠
+				</c:if>
+				<c:if test="${goodsInfo.discountType == '3'}">
+					都可使用
+				</c:if>
+			</div>
+		</div>
+
+		<div class="control-group">
 			<label class="control-label">规格：</label>
 			<div class="controls">
 				<table id="standardTab">
@@ -46,7 +64,8 @@
 						<c:forEach items="${goodsInfo.goodsStandards}" var="goodsStandard">
 							<tr>
 								<td>名称：${goodsStandard.name}，</td>
-								<td>价格：${goodsStandard.price}</td>
+								<td>价格：${goodsStandard.price}，</td>
+								<td>结算金额：${goodsStandard.settlementsAmount}</td>
 							</tr>
 						</c:forEach>
 					</c:if>

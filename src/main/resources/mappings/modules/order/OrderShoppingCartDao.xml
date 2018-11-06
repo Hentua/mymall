@@ -86,9 +86,11 @@
                a.goods_count   as "orderShoppingCarts.goodsCount",
                m.nickname     as "merchantName",
                g.goods_name   as "orderShoppingCarts.goodsName",
-               g.goods_price  as "orderShoppingCarts.goodsPrice",
+               a.goods_price  as "orderShoppingCarts.goodsPrice",
                g.image        as "orderShoppingCarts.image",
-               g.unit         as "orderShoppingCarts.unit"
+               g.unit         as "orderShoppingCarts.unit",
+               a.goods_standard as "orderShoppingCarts.goodsStandard",
+               a.settlements_amount as "orderShoppingCarts.settlementsAmount"
         from order_shopping_cart a
                  left join member_info m on m.id = a.customer_code
                  left join goods_info g on g.id = a.goods_id
@@ -142,7 +144,10 @@
                                         create_by,
                                         update_date,
                                         update_by,
-                                        remarks
+                                        remarks,
+                                        goods_price,
+                                        goods_standard,
+                                        settlements_amount
             )
         VALUES (
                 #{id},
@@ -154,7 +159,10 @@
                 #{createBy.id},
                 #{updateDate},
                 #{updateBy.id},
-                #{remarks}
+                #{remarks},
+                #{goodsPrice},
+                #{goodsStandard},
+                #{settlementsAmount}
                    )
     </insert>
 

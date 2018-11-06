@@ -16,6 +16,7 @@ public class GoodsStandard extends DataEntity<GoodsStandard> {
 	private Double price;		// price
 	private String goodsId;		// goods_id
 	private String categoryId;		// category_id
+	private Double settlementsAmount; //结算金额
 	
 	public GoodsStandard() {
 		super();
@@ -23,6 +24,15 @@ public class GoodsStandard extends DataEntity<GoodsStandard> {
 
 	public GoodsStandard(String id){
 		super(id);
+	}
+
+
+	public Double getSettlementsAmount() {
+		return settlementsAmount;
+	}
+
+	public void setSettlementsAmount(Double settlementsAmount) {
+		this.settlementsAmount = settlementsAmount;
 	}
 
 	@Length(min=1, max=200, message="name长度必须介于 1 和 200 之间")

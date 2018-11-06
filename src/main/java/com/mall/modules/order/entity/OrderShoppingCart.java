@@ -21,6 +21,8 @@ public class OrderShoppingCart extends DataEntity<OrderShoppingCart> {
 	private String goodsName; // 商品名称
 	private String image; // 商品图片
 	private String unit; // 商品单位
+	private String goodsStandard;//商品规格
+	private Double settlementsAmount;//结算金额
 	
 	public OrderShoppingCart() {
 		super();
@@ -28,6 +30,22 @@ public class OrderShoppingCart extends DataEntity<OrderShoppingCart> {
 
 	public OrderShoppingCart(String id){
 		super(id);
+	}
+
+	public Double getSettlementsAmount() {
+		return settlementsAmount;
+	}
+
+	public void setSettlementsAmount(Double settlementsAmount) {
+		this.settlementsAmount = settlementsAmount;
+	}
+
+	public String getGoodsStandard() {
+		return goodsStandard;
+	}
+
+	public void setGoodsStandard(String goodsStandard) {
+		this.goodsStandard = goodsStandard;
 	}
 
 	public String getUnit() {

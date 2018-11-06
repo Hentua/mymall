@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -156,4 +157,44 @@ public class GoodsInfoApi extends BaseController {
         TreeNode<GoodsCategory> tree=new TreeNode<GoodsCategory>(list);
         return ResultGenerator.genSuccessResult(tree.TreeFormat());
     }
+
+
+    @ResponseBody
+    @RequestMapping(value = "addGoodsEvaluate", method = RequestMethod.POST)
+    public Result addGoodsEvaluate(HttpServletRequest request, HttpServletResponse response) {
+        GoodsInfo goodsInfo = goodsInfoService.get(request.getParameter("goodsId"));
+        if(null == goodsInfo){
+            return  ResultGenerator.genFailResult("商品信息未找到");
+        }
+        User user = UserUtils.getUser();
+        GoodsEvaluate goodsEvaluate = new GoodsEvaluate();
+        goodsEvaluate.setGoodsId(request.getParameter("goodsId"));
+        goodsEvaluate.setEvaluate(request.getParameter("evaluate"));
+        goodsEvaluate.setLevel(request.getParameter("level"));
+        goodsEvaluate.setTitle(request.getParameter("title"));
+        goodsEvaluate.setGoodsName(goodsInfo.getGoodsName());
+        goodsEvaluate.setEvaluateUserId(user.getId());
+        goodsEvaluate.setEvaluateUserName(user.getNickname());
+        goodsEvaluate.setEvaluateDate(new Date());
+        goodsEvaluateService.save(goodsEvaluate);
+        return ResultGenerator.genSuccessResult();
+    }
+
+
+    @ResponseBody
+    @RequestMapping(value = "goodsEvaluateList", method = RequestMethod.POST)
+    public Result goodsEvaluateList(HttpServletRequest request, HttpServletResponse response) {
+        GoodsInfo goodsInfo = goodsInfoService.get(request.getParameter("goodsId"));
+        if(null == goodsInfo){
+            return  ResultGenerator.genFailResult("商品信息未找到");
+        }
+        logger.info(request.getParameter("pageNo"));
+        logger.info(request.getParameter("pageSize"));
+        GoodsEvaluate goodsEvaluate = new GoodsEvaluate();
+        goodsEvaluate.setGoodsId(goodsInfo.getId());
+        Page<GoodsEvaluate> page = new Page<GoodsEvaluate>(request,response);
+        page = goodsEvaluateService.findPage(page,goodsEvaluate);
+        return ResultGenerator.genSuccessResult(page);
+    }
+
 }
