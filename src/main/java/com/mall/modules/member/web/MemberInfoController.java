@@ -1,6 +1,5 @@
 package com.mall.modules.member.web;
 
-import com.google.common.collect.Lists;
 import com.mall.common.config.Global;
 import com.mall.common.persistence.Page;
 import com.mall.common.service.ServiceException;
@@ -19,7 +18,6 @@ import com.mall.modules.gift.service.GiftMerchantService;
 import com.mall.modules.member.entity.MemberInfo;
 import com.mall.modules.member.service.MemberInfoService;
 import com.mall.modules.sys.entity.Office;
-import com.mall.modules.sys.entity.Role;
 import com.mall.modules.sys.entity.User;
 import com.mall.modules.sys.service.SystemService;
 import com.mall.modules.sys.utils.UserUtils;
@@ -35,7 +33,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
-import java.util.List;
 
 /**
  * 用户信息Controller
@@ -265,10 +262,11 @@ public class MemberInfoController extends BaseController {
 		user.setOffice(new Office("1000"));
 		user.setPassword(SystemService.entryptPassword(password));
 		user.setName(nickname);
+		user.setUserType("0");
 		// 赋予角色
-		List<Role> roleList = Lists.newArrayList();
-		roleList.add(new Role("1000"));
-		user.setRoleList(roleList);
+//		List<Role> roleList = Lists.newArrayList();
+//		roleList.add(new Role("1000"));
+//		user.setRoleList(roleList);
 		// 保存用户信息
 		systemService.saveUser(user);
 		// 清除当前用户缓存

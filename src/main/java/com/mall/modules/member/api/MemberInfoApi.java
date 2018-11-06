@@ -1,6 +1,5 @@
 package com.mall.modules.member.api;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.mall.common.persistence.Page;
 import com.mall.common.service.ServiceException;
@@ -19,7 +18,6 @@ import com.mall.modules.member.service.MemberInfoService;
 import com.mall.modules.member.service.MemberVerifyCodeService;
 import com.mall.modules.order.service.OrderInfoService;
 import com.mall.modules.sys.entity.Office;
-import com.mall.modules.sys.entity.Role;
 import com.mall.modules.sys.entity.User;
 import com.mall.modules.sys.entity.UserVo;
 import com.mall.modules.sys.service.SystemService;
@@ -129,6 +127,7 @@ public class MemberInfoApi extends BaseController {
             user.setOffice(new Office("1000"));
             user.setPassword(SystemService.entryptPassword(password));
             user.setName(nickname);
+            user.setUserType("0");
             // 刚刚注册普通会员不赋予角色
 //            List<Role> roleList = Lists.newArrayList();
 //            roleList.add(new Role("1000"));

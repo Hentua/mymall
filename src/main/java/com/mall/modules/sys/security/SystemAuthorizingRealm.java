@@ -3,17 +3,18 @@
  */
 package com.mall.modules.sys.security;
 
-import java.io.Serializable;
-import java.util.Collection;
-import java.util.List;
-
-import javax.annotation.PostConstruct;
-
 import com.mall.common.config.Global;
+import com.mall.common.servlet.ValidateCodeServlet;
 import com.mall.common.utils.Encodes;
 import com.mall.common.utils.SpringContextHolder;
 import com.mall.common.web.Servlets;
+import com.mall.modules.sys.entity.Menu;
+import com.mall.modules.sys.entity.Role;
+import com.mall.modules.sys.entity.User;
 import com.mall.modules.sys.service.SystemService;
+import com.mall.modules.sys.utils.LogUtils;
+import com.mall.modules.sys.utils.UserUtils;
+import com.mall.modules.sys.web.LoginController;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
@@ -31,13 +32,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.mall.common.servlet.ValidateCodeServlet;
-import com.mall.modules.sys.entity.Menu;
-import com.mall.modules.sys.entity.Role;
-import com.mall.modules.sys.entity.User;
-import com.mall.modules.sys.utils.LogUtils;
-import com.mall.modules.sys.utils.UserUtils;
-import com.mall.modules.sys.web.LoginController;
+import javax.annotation.PostConstruct;
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * 系统安全认证实现类
@@ -51,6 +49,11 @@ public class SystemAuthorizingRealm extends AuthorizingRealm {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	
 	private SystemService systemService;
+
+	private final static String MEMBER = "0";
+	private final static String MERCHANT = "1";
+	private final static String OPERATOR = "2";
+	private final static String ADMIN = "admin";
 	
 	public SystemAuthorizingRealm() {
 		this.setCachingEnabled(false);
@@ -82,6 +85,10 @@ public class SystemAuthorizingRealm extends AuthorizingRealm {
 		if (user != null) {
 			if (Global.NO.equals(user.getLoginFlag())){
 				throw new AuthenticationException("msg:该已帐号禁止登录.");
+			}
+			// 2018-11-06 ADD BY WANKANG 用户类型为普通会员时 禁止登录
+			if(!ADMIN.equals(user.getLoginName()) && (!StringUtils.isNotBlank(user.getUserType()) || MEMBER.equals(user.getUserType()))) {
+				throw new AuthenticationException("msg:用户不存在");
 			}
 			byte[] salt = Encodes.decodeHex(user.getPassword().substring(0,16));
 			return new SimpleAuthenticationInfo(new Principal(user, token.isMobileLogin()), 
