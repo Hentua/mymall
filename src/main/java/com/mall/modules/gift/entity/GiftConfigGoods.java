@@ -7,17 +7,15 @@ import com.mall.common.persistence.DataEntity;
 /**
  * 礼包配置Entity
  * @author wankang
- * @version 2018-10-28
+ * @version 2018-11-06
  */
 public class GiftConfigGoods extends DataEntity<GiftConfigGoods> {
 	
 	private static final long serialVersionUID = 1L;
-	private String giftConfigId;		// 礼包配置ID 父类
+	private GiftConfig giftConfigId;		// 礼包配置ID 父类
 	private String goodsId;		// 商品ID
-	private int goodsCount;		// 商品数量
+	private String goodsCount;		// 商品数量
 	private String merchantCode;		// 店铺ID
-
-	private String goodsName;
 	
 	public GiftConfigGoods() {
 		super();
@@ -28,23 +26,15 @@ public class GiftConfigGoods extends DataEntity<GiftConfigGoods> {
 	}
 
 	public GiftConfigGoods(GiftConfig giftConfigId){
-		this.giftConfigId = giftConfigId.getId();
-	}
-
-	public String getGoodsName() {
-		return goodsName;
-	}
-
-	public void setGoodsName(String goodsName) {
-		this.goodsName = goodsName;
+		this.giftConfigId = giftConfigId;
 	}
 
 	@Length(min=1, max=64, message="礼包配置ID长度必须介于 1 和 64 之间")
-	public String getGiftConfigId() {
+	public GiftConfig getGiftConfigId() {
 		return giftConfigId;
 	}
 
-	public void setGiftConfigId(String giftConfigId) {
+	public void setGiftConfigId(GiftConfig giftConfigId) {
 		this.giftConfigId = giftConfigId;
 	}
 	
@@ -58,11 +48,11 @@ public class GiftConfigGoods extends DataEntity<GiftConfigGoods> {
 	}
 	
 	@Length(min=1, max=11, message="商品数量长度必须介于 1 和 11 之间")
-	public int getGoodsCount() {
+	public String getGoodsCount() {
 		return goodsCount;
 	}
 
-	public void setGoodsCount(int goodsCount) {
+	public void setGoodsCount(String goodsCount) {
 		this.goodsCount = goodsCount;
 	}
 	

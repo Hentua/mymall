@@ -3,13 +3,6 @@ package com.mall.modules.gift.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.mall.modules.gift.entity.GiftMerchant;
-import com.mall.modules.gift.entity.GiftMerchantGoods;
-import com.mall.modules.gift.entity.GiftSaleLog;
-import com.mall.modules.gift.service.GiftMerchantService;
-import com.mall.modules.gift.service.GiftSaleLogService;
-import com.mall.modules.sys.utils.UserUtils;
-import com.sohu.idcenter.IdWorker;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,24 +19,17 @@ import com.mall.common.utils.StringUtils;
 import com.mall.modules.gift.entity.GiftConfig;
 import com.mall.modules.gift.service.GiftConfigService;
 
-import java.util.List;
-
 /**
  * 礼包配置Controller
  * @author wankang
- * @version 2018-10-28
+ * @version 2018-11-06
  */
 @Controller
 @RequestMapping(value = "${adminPath}/gift/giftConfig")
 public class GiftConfigController extends BaseController {
 
-	private static IdWorker idWorker = new IdWorker();
 	@Autowired
 	private GiftConfigService giftConfigService;
-	@Autowired
-	private GiftSaleLogService giftSaleLogService;
-	@Autowired
-	private GiftMerchantService giftMerchantService;
 	
 	@ModelAttribute
 	public GiftConfig get(@RequestParam(required=false) String id) {
@@ -63,57 +49,6 @@ public class GiftConfigController extends BaseController {
 		Page<GiftConfig> page = giftConfigService.findPage(new Page<GiftConfig>(request, response), giftConfig); 
 		model.addAttribute("page", page);
 		return "modules/gift/giftConfigList";
-	}
-
-	@RequiresPermissions("gift:giftConfig:view")
-	@RequestMapping(value = {"giftBuyList"})
-	public String giftBuyList(GiftConfig giftConfig, HttpServletRequest request, HttpServletResponse response, Model model) {
-		Page<GiftConfig> page = giftConfigService.findPage(new Page<GiftConfig>(request, response), giftConfig);
-		model.addAttribute("page", page);
-		return "modules/gift/giftBuy";
-	}
-
-	@RequiresPermissions("gift:giftConfig:view")
-	@RequestMapping(value = "giftDetail")
-	public String giftDetail(GiftConfig giftConfig, Model model) {
-		model.addAttribute("giftConfig", giftConfig);
-		return "modules/gift/giftConfigDetail";
-	}
-
-	@RequestMapping(value = "giftBuySubmit")
-	public String giftBuySubmit(GiftConfig giftConfig, HttpServletRequest request, HttpServletResponse response, Model model) {
-		String buyCountStr = request.getParameter("buyCount");
-		int buyCount = Integer.parseInt(buyCountStr);
-		String orderNo = String.valueOf(idWorker.getId());
-		// 组装商户礼包信息
-		GiftMerchant giftMerchant = new GiftMerchant();
-		giftMerchant.setGiftConfigId(giftConfig.getId());
-		giftMerchant.setGiftName(giftConfig.getGiftName());
-		giftMerchant.setOriginalPrice(giftConfig.getOriginalPrice());
-		giftMerchant.setGiftPrice(giftConfig.getGiftPrice());
-		giftMerchant.setGoodsCount(giftConfig.getGoodsCount());
-		giftMerchant.setGiftCount(buyCount);
-		giftMerchant.setOrderNo(orderNo);
-		giftMerchant.setDelFlag("1");
-		giftMerchant.setMerchantCode(UserUtils.getUser().getId());
-		List<GiftMerchantGoods> merchantGoodsList = giftMerchantService.translateConfigGoods(giftConfig.getGiftConfigGoodsList());
-		giftMerchant.setGiftMerchantGoodsList(merchantGoodsList);
-		giftMerchantService.save(giftMerchant);
-		// 组装支付信息
-		GiftSaleLog giftSaleLog = new GiftSaleLog();
-		giftSaleLog.setOrderNo(orderNo);
-		giftSaleLog.setFlag("0");
-		giftSaleLog.setGiftConfigId(giftConfig.getId());
-		giftSaleLog.setMerchantCode(UserUtils.getUser().getId());
-		giftSaleLog.setGiftPrice(giftConfig.getGiftPrice());
-		giftSaleLog.setGiftCount(buyCount);
-		giftSaleLog.setGiftGoodsCount(giftConfig.getGoodsCount());
-		giftSaleLog.setGiftName(giftConfig.getGiftName());
-		giftSaleLog.setGiftAmountTotal(buyCount * giftConfig.getGiftPrice());
-		giftSaleLog.setGiftMerchantId(giftMerchant.getId());
-		giftSaleLogService.save(giftSaleLog);
-		model.addAttribute("message", "提交成功，打款到公司财务账户，并备注订单号："+orderNo+"，审核后礼包将会到库");
-		return this.giftBuyList(new GiftConfig(), request, response, model);
 	}
 
 	@RequiresPermissions("gift:giftConfig:view")

@@ -5,19 +5,20 @@
 	<sql id="giftConfigColumns">
 		a.id AS "id",
 		a.gift_name AS "giftName",
-		a.original_price AS "originalPrice",
-		a.gift_price AS "giftPrice",
 		a.goods_count AS "goodsCount",
 		a.create_by AS "createBy.name",
 		a.create_date AS "createDate",
 		a.update_by AS "updateBy.name",
 		a.update_date AS "updateDate",
+		a.show_goods_price AS "showGoodsPrice",
 		a.del_flag AS "delFlag",
-		a.remarks AS "remarks"
+		a.remarks AS "remarks",
+		a.gift_category AS "giftCategory",
+		a.coupon_count AS "couponCount"
 	</sql>
 	
 	<sql id="giftConfigJoins">
-		LEFT JOIN sys_user u6 ON u6.id = a.create_by
+		LEFT JOIN sys_user u4 ON u4.id = a.create_by
 	</sql>
     
 	<select id="get" resultType="GiftConfig">
@@ -77,39 +78,42 @@
 		INSERT INTO gift_config(
 			id,
 			gift_name,
-			original_price,
-			gift_price,
 			goods_count,
 			create_by,
 			create_date,
 			update_by,
 			update_date,
+			show_goods_price,
 			del_flag,
-			remarks
+			remarks,
+			gift_category,
+			coupon_count
 		) VALUES (
 			#{id},
 			#{giftName},
-			#{originalPrice},
-			#{giftPrice},
 			#{goodsCount},
 			#{createBy.name},
 			#{createDate},
 			#{updateBy.name},
 			#{updateDate},
+			#{showGoodsPrice},
 			#{delFlag},
-			#{remarks}
+			#{remarks},
+			#{giftCategory},
+			#{couponCount}
 		)
 	</insert>
 	
 	<update id="update">
 		UPDATE gift_config SET 	
 			gift_name = #{giftName},
-			original_price = #{originalPrice},
-			gift_price = #{giftPrice},
 			goods_count = #{goodsCount},
 			update_by = #{updateBy.name},
 			update_date = #{updateDate},
-			remarks = #{remarks}
+			show_goods_price = #{showGoodsPrice},
+			remarks = #{remarks},
+			gift_category = #{giftCategory},
+			coupon_count = #{couponCount}
 		WHERE id = #{id}
 	</update>
 	

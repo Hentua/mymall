@@ -1,33 +1,32 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.mall.modules.gift.dao.GiftConfigGoodsDao">
+<mapper namespace="com.mall.modules.gift.dao.GiftConfigCouponDao">
     
-	<sql id="giftConfigGoodsColumns">
+	<sql id="giftConfigCouponColumns">
 		a.id AS "id",
 		a.gift_config_id AS "giftConfigId",
-		a.goods_id AS "goodsId",
-		a.goods_count AS "goodsCount",
-		a.merchant_code AS "merchantCode",
+		a.coupon_id AS "couponId",
+		a.coupon_count AS "couponCount",
 		a.del_flag AS "delFlag"
 	</sql>
 	
-	<sql id="giftConfigGoodsJoins">
+	<sql id="giftConfigCouponJoins">
 		LEFT JOIN gift_config b ON b.id = a.gift_config_id
 	</sql>
     
-	<select id="get" resultType="GiftConfigGoods">
+	<select id="get" resultType="GiftConfigCoupon">
 		SELECT 
-			<include refid="giftConfigGoodsColumns"/>
-		FROM gift_config_goods a
-		<include refid="giftConfigGoodsJoins"/>
+			<include refid="giftConfigCouponColumns"/>
+		FROM gift_config_coupon a
+		<include refid="giftConfigCouponJoins"/>
 		WHERE a.id = #{id}
 	</select>
 	
-	<select id="findList" resultType="GiftConfigGoods">
+	<select id="findList" resultType="GiftConfigCoupon">
 		SELECT 
-			<include refid="giftConfigGoodsColumns"/>
-		FROM gift_config_goods a
-		<include refid="giftConfigGoodsJoins"/>
+			<include refid="giftConfigCouponColumns"/>
+		FROM gift_config_coupon a
+		<include refid="giftConfigCouponJoins"/>
 		<where>
 			a.del_flag = #{DEL_FLAG_NORMAL}
 			<if test="giftConfigId != null and giftConfigId != ''">
@@ -43,11 +42,11 @@
 		</choose>
 	</select>
 	
-	<select id="findAllList" resultType="GiftConfigGoods">
+	<select id="findAllList" resultType="GiftConfigCoupon">
 		SELECT 
-			<include refid="giftConfigGoodsColumns"/>
-		FROM gift_config_goods a
-		<include refid="giftConfigGoodsJoins"/>
+			<include refid="giftConfigCouponColumns"/>
+		FROM gift_config_coupon a
+		<include refid="giftConfigCouponJoins"/>
 		<where>
 			a.del_flag = #{DEL_FLAG_NORMAL}
 		</where>		
@@ -61,34 +60,31 @@
 	</select>
 	
 	<insert id="insert">
-		INSERT INTO gift_config_goods(
+		INSERT INTO gift_config_coupon(
 			id,
 			gift_config_id,
-			goods_id,
-			goods_count,
-			merchant_code,
+			coupon_id,
+			coupon_count,
 			del_flag
 		) VALUES (
 			#{id},
 			#{giftConfigId},
-			#{goodsId},
-			#{goodsCount},
-			#{merchantCode},
+			#{couponId},
+			#{couponCount},
 			#{delFlag}
 		)
 	</insert>
 	
 	<update id="update">
-		UPDATE gift_config_goods SET 	
+		UPDATE gift_config_coupon SET 	
 			gift_config_id = #{giftConfigId},
-			goods_id = #{goodsId},
-			goods_count = #{goodsCount},
-			merchant_code = #{merchantCode}
+			coupon_id = #{couponId},
+			coupon_count = #{couponCount}
 		WHERE id = #{id}
 	</update>
 	
 	<update id="delete">
-		UPDATE gift_config_goods SET 
+		UPDATE gift_config_coupon SET 
 			del_flag = #{DEL_FLAG_DELETE}
 		<choose>
 			<when test="id !=null and id != ''">

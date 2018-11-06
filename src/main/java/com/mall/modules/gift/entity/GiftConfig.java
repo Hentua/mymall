@@ -11,17 +11,19 @@ import com.mall.common.persistence.DataEntity;
 /**
  * 礼包配置Entity
  * @author wankang
- * @version 2018-10-28
+ * @version 2018-11-06
  */
 public class GiftConfig extends DataEntity<GiftConfig> {
 	
 	private static final long serialVersionUID = 1L;
 	private String giftName;		// 礼包名称
-	private Double originalPrice;		// 原价
-	private Double giftPrice;		// 现价
 	private Integer goodsCount;		// 商品总数量
+	private String showGoodsPrice;		// 是否在APP显示商品价格 0-否 1-是
+	private String giftCategory;		// 对应分类ID
+	private Integer couponCount;		// 优惠券数量
 	private Date beginCreateDate;		// 开始 create_date
 	private Date endCreateDate;		// 结束 create_date
+	private List<GiftConfigCoupon> giftConfigCouponList = Lists.newArrayList();		// 子表列表
 	private List<GiftConfigGoods> giftConfigGoodsList = Lists.newArrayList();		// 子表列表
 	
 	public GiftConfig() {
@@ -41,24 +43,6 @@ public class GiftConfig extends DataEntity<GiftConfig> {
 		this.giftName = giftName;
 	}
 	
-	@NotNull(message="原价不能为空")
-	public Double getOriginalPrice() {
-		return originalPrice;
-	}
-
-	public void setOriginalPrice(Double originalPrice) {
-		this.originalPrice = originalPrice;
-	}
-	
-	@NotNull(message="现价不能为空")
-	public Double getGiftPrice() {
-		return giftPrice;
-	}
-
-	public void setGiftPrice(Double giftPrice) {
-		this.giftPrice = giftPrice;
-	}
-	
 	@NotNull(message="商品总数量不能为空")
 	public Integer getGoodsCount() {
 		return goodsCount;
@@ -66,6 +50,33 @@ public class GiftConfig extends DataEntity<GiftConfig> {
 
 	public void setGoodsCount(Integer goodsCount) {
 		this.goodsCount = goodsCount;
+	}
+	
+	@Length(min=1, max=1, message="是否在APP显示商品价格 0-否 1-是长度必须介于 1 和 1 之间")
+	public String getShowGoodsPrice() {
+		return showGoodsPrice;
+	}
+
+	public void setShowGoodsPrice(String showGoodsPrice) {
+		this.showGoodsPrice = showGoodsPrice;
+	}
+	
+	@Length(min=1, max=64, message="对应分类ID长度必须介于 1 和 64 之间")
+	public String getGiftCategory() {
+		return giftCategory;
+	}
+
+	public void setGiftCategory(String giftCategory) {
+		this.giftCategory = giftCategory;
+	}
+	
+	@NotNull(message="优惠券数量不能为空")
+	public Integer getCouponCount() {
+		return couponCount;
+	}
+
+	public void setCouponCount(Integer couponCount) {
+		this.couponCount = couponCount;
 	}
 	
 	public Date getBeginCreateDate() {
@@ -84,6 +95,13 @@ public class GiftConfig extends DataEntity<GiftConfig> {
 		this.endCreateDate = endCreateDate;
 	}
 		
+	public List<GiftConfigCoupon> getGiftConfigCouponList() {
+		return giftConfigCouponList;
+	}
+
+	public void setGiftConfigCouponList(List<GiftConfigCoupon> giftConfigCouponList) {
+		this.giftConfigCouponList = giftConfigCouponList;
+	}
 	public List<GiftConfigGoods> getGiftConfigGoodsList() {
 		return giftConfigGoodsList;
 	}

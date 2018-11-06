@@ -15,11 +15,11 @@ import com.mall.common.web.BaseController;
 import com.mall.modules.account.service.AccountInfoService;
 import com.mall.modules.coupon.entity.CouponCustomer;
 import com.mall.modules.coupon.service.CouponCustomerService;
-import com.mall.modules.gift.entity.GiftCustomer;
-import com.mall.modules.gift.entity.GiftCustomerGoods;
-import com.mall.modules.gift.entity.GiftExchangeLog;
-import com.mall.modules.gift.service.GiftCustomerService;
-import com.mall.modules.gift.service.GiftExchangeLogService;
+//import com.mall.modules.gift.entity.GiftCustomer;
+//import com.mall.modules.gift.entity.GiftCustomerGoods;
+//import com.mall.modules.gift.entity.GiftExchangeLog;
+//import com.mall.modules.gift.service.GiftCustomerService;
+//import com.mall.modules.gift.service.GiftExchangeLogService;
 import com.mall.modules.goods.entity.GoodsInfo;
 import com.mall.modules.goods.service.GoodsInfoService;
 import com.mall.modules.member.entity.MemberDeliveryAddress;
@@ -71,10 +71,10 @@ public class OrderInfoApi extends BaseController {
 
     @Autowired
     private AccountInfoService accountInfoService;
-    @Autowired
-    private GiftCustomerService giftCustomerService;
-    @Autowired
-    private GiftExchangeLogService giftExchangeLogService;
+//    @Autowired
+//    private GiftCustomerService giftCustomerService;
+//    @Autowired
+//    private GiftExchangeLogService giftExchangeLogService;
 
     /**
      * 提交订单 订单30分钟内需要支付 否则关闭订单
@@ -97,7 +97,7 @@ public class OrderInfoApi extends BaseController {
         String goodsList = request.getParameter("goodsList");
         String addressId = request.getParameter("addressId");
         String giftCustomerId = request.getParameter("giftCustomerId");
-        GiftCustomer giftCustomer;
+//        GiftCustomer giftCustomer;
         try {
             User currUser = UserUtils.getUser();
             if (null == currUser) {
@@ -132,32 +132,33 @@ public class OrderInfoApi extends BaseController {
             Map<String, OrderInfo> orderInfoMap = Maps.newHashMap();
             // 获取前端传来的商品列表
             JSONArray goodsArr;
+            goodsArr = JSON.parseArray(goodsList);
             if ("0".equals(orderType)) {
                 goodsArr = JSON.parseArray(goodsList);
             } else {
-                orderStatus = "1";
-                giftCustomer = giftCustomerService.get(giftCustomerId);
-                int giftCount = giftCustomer.getGiftCount();
-                if (giftCount <= 0) {
-                    throw new ServiceException("礼包数量不合法");
-                }
-                if (!customerCode.equals(giftCustomer.getCustomerCode())) {
-                    throw new ServiceException("礼包不可兑换");
-                }
-                giftCustomer.setGiftCount(giftCount - 1);
-                giftCustomerService.save(giftCustomer);
-                // 保存礼包兑换记录
-                GiftExchangeLog giftExchangeLog = new GiftExchangeLog();
-                giftExchangeLog.setCustomerCode(customerCode);
-                giftExchangeLog.setGiftCustomerId(giftCustomer.getId());
-                giftExchangeLogService.save(giftExchangeLog);
-                goodsArr = new JSONArray();
-                for (GiftCustomerGoods g : giftCustomer.getGiftCustomerGoodsList()) {
-                    JSONObject goodsJson = new JSONObject();
-                    goodsJson.put("goodsId", g.getGoodsId());
-                    goodsJson.put("goodsCount", g.getGoodsCount());
-                    goodsArr.add(goodsJson);
-                }
+//                orderStatus = "1";
+//                giftCustomer = giftCustomerService.get(giftCustomerId);
+//                int giftCount = giftCustomer.getGiftCount();
+//                if (giftCount <= 0) {
+//                    throw new ServiceException("礼包数量不合法");
+//                }
+//                if (!customerCode.equals(giftCustomer.getCustomerCode())) {
+//                    throw new ServiceException("礼包不可兑换");
+//                }
+//                giftCustomer.setGiftCount(giftCount - 1);
+//                giftCustomerService.save(giftCustomer);
+//                // 保存礼包兑换记录
+//                GiftExchangeLog giftExchangeLog = new GiftExchangeLog();
+//                giftExchangeLog.setCustomerCode(customerCode);
+//                giftExchangeLog.setGiftCustomerId(giftCustomer.getId());
+//                giftExchangeLogService.save(giftExchangeLog);
+//                goodsArr = new JSONArray();
+//                for (GiftCustomerGoods g : giftCustomer.getGiftCustomerGoodsList()) {
+//                    JSONObject goodsJson = new JSONObject();
+//                    goodsJson.put("goodsId", g.getGoodsId());
+//                    goodsJson.put("goodsCount", g.getGoodsCount());
+//                    goodsArr.add(goodsJson);
+//                }
             }
             if (null == goodsArr || goodsArr.size() <= 0) {
                 throw new ServiceException("未选择要购买的商品，请重新选择");

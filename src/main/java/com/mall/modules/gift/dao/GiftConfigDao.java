@@ -7,7 +7,7 @@ import com.mall.modules.gift.entity.GiftConfig;
 /**
  * 礼包配置DAO接口
  * @author wankang
- * @version 2018-10-28
+ * @version 2018-11-06
  */
 @MyBatisDao
 public interface GiftConfigDao extends CrudDao<GiftConfig> {

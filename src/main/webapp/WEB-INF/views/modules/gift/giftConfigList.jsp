@@ -28,7 +28,7 @@
 			<li><label>礼包名称：</label>
 				<form:input path="giftName" htmlEscape="false" maxlength="20" class="input-medium"/>
 			</li>
-			<li><label>创建时间：</label>
+			<li><label>create_date：</label>
 				<input name="beginCreateDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
 					value="<fmt:formatDate value="${giftConfig.beginCreateDate}" pattern="yyyy-MM-dd HH:mm:ss"/>"
 					onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});"/> - 
@@ -45,14 +45,15 @@
 		<thead>
 			<tr>
 				<th>礼包名称</th>
-				<th>原价</th>
-				<th>现价</th>
 				<th>商品总数量</th>
-				<th>创建人</th>
-				<th>创建时间</th>
-				<th>最后更新人</th>
-				<th>最后更新时间</th>
-				<th>备注</th>
+				<th>create_by</th>
+				<th>create_date</th>
+				<th>update_by</th>
+				<th>update_date</th>
+				<th>是否在APP显示商品价格 0-否 1-是</th>
+				<th>remarks</th>
+				<th>对应分类ID</th>
+				<th>优惠券数量</th>
 				<shiro:hasPermission name="gift:giftConfig:edit"><th>操作</th></shiro:hasPermission>
 			</tr>
 		</thead>
@@ -63,16 +64,10 @@
 					${giftConfig.giftName}
 				</a></td>
 				<td>
-					${giftConfig.originalPrice}
-				</td>
-				<td>
-					${giftConfig.giftPrice}
-				</td>
-				<td>
 					${giftConfig.goodsCount}
 				</td>
 				<td>
-					${giftConfig.createBy.name}
+					${giftConfig.}
 				</td>
 				<td>
 					<fmt:formatDate value="${giftConfig.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
@@ -84,7 +79,16 @@
 					<fmt:formatDate value="${giftConfig.updateDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
 				</td>
 				<td>
+					${fns:getDictLabel(giftConfig.showGoodsPrice, '', '')}
+				</td>
+				<td>
 					${giftConfig.remarks}
+				</td>
+				<td>
+					${giftConfig.giftCategory}
+				</td>
+				<td>
+					${giftConfig.couponCount}
 				</td>
 				<shiro:hasPermission name="gift:giftConfig:edit"><td>
     				<a href="${ctx}/gift/giftConfig/form?id=${giftConfig.id}">修改</a>

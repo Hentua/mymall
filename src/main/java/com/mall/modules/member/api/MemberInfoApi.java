@@ -9,7 +9,6 @@ import com.mall.common.utils.api.ApiExceptionHandleUtil;
 import com.mall.common.utils.api.ApiPageEntityHandleUtil;
 import com.mall.common.web.BaseController;
 import com.mall.modules.coupon.service.CouponCustomerService;
-import com.mall.modules.gift.service.GiftCustomerService;
 import com.mall.modules.goods.entity.GoodsInfo;
 import com.mall.modules.goods.service.GoodsInfoService;
 import com.mall.modules.member.entity.*;
@@ -58,9 +57,6 @@ public class MemberInfoApi extends BaseController {
 
     @Autowired
     private OrderInfoService orderInfoService;
-
-    @Autowired
-    private GiftCustomerService giftCustomerService;
 
     @Autowired
     private CouponCustomerService couponCustomerService;
@@ -439,12 +435,9 @@ public class MemberInfoApi extends BaseController {
             Map<String, String> orderCount = orderInfoService.orderCount(customerCode);
             // 获取优惠券统计
             Map<String, String> enabledCouponsCount = couponCustomerService.enabledCouponsCount(customerCode);
-            // 获取礼包统计
-            Map<String, String> enabledGiftCount = giftCustomerService.enabledGiftCount(customerCode);
 
             memberDataCount.putAll(orderCount);
             memberDataCount.putAll(enabledCouponsCount);
-            memberDataCount.putAll(enabledGiftCount);
             MemberInfo m = new MemberInfo();
             m.setId(currUser.getId());
             m  = memberInfoService.get(m);

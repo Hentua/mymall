@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.modules.gift.dao.GiftConfigCategoryDao">
+    
+	<sql id="giftConfigCategoryColumns">
+		a.id AS "id",
+		a.category_name AS "categoryName",
+		a.gift_price AS "giftPrice",
+		a.merchant_qualification AS "merchantQualification",
+		a.create_date AS "createDate",
+		a.create_by AS "createBy.id",
+		a.update_date AS "updateDate",
+		a.update_by AS "updateBy.id",
+		a.del_flag AS "delFlag",
+		a.remarks AS "remarks",
+		a.status AS "status"
+	</sql>
+	
+	<sql id="giftConfigCategoryJoins">
+	</sql>
+    
+	<select id="get" resultType="GiftConfigCategory">
+		SELECT 
+			<include refid="giftConfigCategoryColumns"/>
+		FROM gift_config_category a
+		<include refid="giftConfigCategoryJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="GiftConfigCategory">
+		SELECT 
+			<include refid="giftConfigCategoryColumns"/>
+		FROM gift_config_category a
+		<include refid="giftConfigCategoryJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="categoryName != null and categoryName != ''">
+				AND a.category_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{categoryName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{categoryName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{categoryName},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="GiftConfigCategory">
+		SELECT 
+			<include refid="giftConfigCategoryColumns"/>
+		FROM gift_config_category a
+		<include refid="giftConfigCategoryJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO gift_config_category(
+			id,
+			category_name,
+			gift_price,
+			merchant_qualification,
+			create_date,
+			create_by,
+			update_date,
+			update_by,
+			del_flag,
+			remarks,
+			status
+		) VALUES (
+			#{id},
+			#{categoryName},
+			#{giftPrice},
+			#{merchantQualification},
+			#{createDate},
+			#{createBy.id},
+			#{updateDate},
+			#{updateBy.id},
+			#{delFlag},
+			#{remarks},
+			#{status}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE gift_config_category SET 	
+			category_name = #{categoryName},
+			gift_price = #{giftPrice},
+			merchant_qualification = #{merchantQualification},
+			update_date = #{updateDate},
+			update_by = #{updateBy.id},
+			remarks = #{remarks},
+			status = #{status}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE gift_config_category SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

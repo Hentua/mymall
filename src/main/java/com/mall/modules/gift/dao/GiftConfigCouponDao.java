@@ -2,14 +2,14 @@ package com.mall.modules.gift.dao;
 
 import com.mall.common.persistence.CrudDao;
 import com.mall.common.persistence.annotation.MyBatisDao;
-import com.mall.modules.gift.entity.GiftMerchantGoods;
+import com.mall.modules.gift.entity.GiftConfigCoupon;
 
 /**
- * 礼包列表DAO接口
+ * 礼包配置DAO接口
  * @author wankang
- * @version 2018-10-28
+ * @version 2018-11-06
  */
 @MyBatisDao
-public interface GiftMerchantGoodsDao extends CrudDao<GiftMerchantGoods> {
+public interface GiftConfigCouponDao extends CrudDao<GiftConfigCoupon> {
 	
 }

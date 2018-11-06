@@ -13,8 +13,6 @@ import com.mall.modules.commission.service.CommissionInfoService;
 import com.mall.modules.coupon.entity.CouponConfig;
 import com.mall.modules.coupon.service.CouponConfigService;
 import com.mall.modules.coupon.service.CouponCustomerService;
-import com.mall.modules.gift.entity.GiftMerchant;
-import com.mall.modules.gift.service.GiftMerchantService;
 import com.mall.modules.member.entity.MemberInfo;
 import com.mall.modules.member.service.MemberInfoService;
 import com.mall.modules.sys.entity.Office;
@@ -51,8 +49,6 @@ public class MemberInfoController extends BaseController {
 	private CouponConfigService couponConfigService;
 	@Autowired
 	private CouponCustomerService couponCustomerService;
-	@Autowired
-	private GiftMerchantService giftMerchantService;
 
 	//佣金详情service
 	@Autowired
@@ -166,39 +162,6 @@ public class MemberInfoController extends BaseController {
 		model.addAttribute("memberInfo", memberInfo);
 		model.addAttribute("couponConfigs", page);
 		return "modules/member/memberCoupon";
-	}
-
-	@RequiresPermissions("member:memberInfo:edit")
-	@RequestMapping(value = "giveGift")
-	public String giveGift(MemberInfo memberInfo, HttpServletRequest request, HttpServletResponse response, Model model) {
-		GiftMerchant queryCondition = new GiftMerchant();
-		queryCondition.setMerchantCode(UserUtils.getUser().getId());
-		Page<GiftMerchant> page = giftMerchantService.findPage(new Page<GiftMerchant>(request, response), queryCondition);
-		model.addAttribute("memberInfo", memberInfo);
-		model.addAttribute("gifts", page);
-		return "modules/member/memberGift";
-	}
-
-	@RequiresPermissions("member:memberInfo:edit")
-	@RequestMapping(value = "memberGiveGift")
-	public String memberGiveGift(Model model, HttpServletRequest request, HttpServletResponse response) {
-		String id = request.getParameter("id");
-		String giftMerchantId = request.getParameter("giftMerchantId");
-		MemberInfo memberInfo = this.get(id);
-		try {
-			giftMerchantService.memberGiftGive(id, giftMerchantId);
-		}catch (Exception e) {
-			if(e instanceof ServiceException) {
-				model.addAttribute("message", e.getMessage());
-				return giveGift(memberInfo, request, response, model);
-			}else {
-				e.printStackTrace();
-				model.addAttribute("message", "赠送失败");
-				return giveGift(memberInfo, request, response, model);
-			}
-		}
-		model.addAttribute("message", "礼包赠送成功");
-		return giveGift(memberInfo, request, response, model);
 	}
 
 	@RequiresPermissions("member:memberInfo:edit")
