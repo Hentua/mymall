@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.modules.goods.dao.GoodsRecommendDao">
+    
+	<sql id="goodsRecommendColumns">
+		a.id AS "id",
+		a.goods_id AS "goodsId",
+		a.user_id AS "userId",
+		a.create_date AS "createDate"
+	</sql>
+	
+	<sql id="goodsRecommendJoins">
+	</sql>
+    
+	<select id="get" resultType="GoodsRecommend">
+		SELECT 
+			<include refid="goodsRecommendColumns"/>
+		FROM goods_recommend a
+		<include refid="goodsRecommendJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="GoodsRecommend">
+		SELECT 
+			<include refid="goodsRecommendColumns"/>
+		FROM goods_recommend a
+		<include refid="goodsRecommendJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="GoodsRecommend">
+		SELECT 
+			<include refid="goodsRecommendColumns"/>
+		FROM goods_recommend a
+		<include refid="goodsRecommendJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO goods_recommend(
+			id,
+			goods_id,
+			user_id,
+			create_date
+		) VALUES (
+			#{id},
+			#{goodsId},
+			#{userId},
+			#{createDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE goods_recommend SET 	
+			goods_id = #{goodsId},
+			user_id = #{userId}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM goods_recommend
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

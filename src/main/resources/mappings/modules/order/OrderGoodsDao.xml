@@ -18,7 +18,10 @@
 		a.discount_rate AS "discountRate",
 		a.discount_amount AS "discountAmount",
 		a.count AS "count",
-		a.subtotal AS "subtotal"
+		a.subtotal AS "subtotal",
+		a.goods_standard AS "goodsStandard",
+		a.settlements_amount AS "settlementsAmount",
+		a.goods_recommend_id as "goodsRecommendId"
 	</sql>
 
 	<sql id="orderGoodsJoins">
@@ -87,7 +90,10 @@
 			discount_rate,
 			discount_amount,
 			count,
-			subtotal
+			subtotal,
+			goods_standard,
+			settlements_amount,
+			goods_recommend_id
 		) VALUES (
 			#{id},
 			#{goodsId},
@@ -104,7 +110,10 @@
 			#{discountRate},
 			#{discountAmount},
 			#{count},
-			#{subtotal}
+			#{subtotal},
+			#{goodsStandard},
+			#{settlementsAmount}
+			#{goodsRecommendId}
 		)
 	</insert>
 
