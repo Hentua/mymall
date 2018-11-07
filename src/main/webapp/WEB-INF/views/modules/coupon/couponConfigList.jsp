@@ -25,22 +25,16 @@
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<ul class="ul-form">
-			<li><label>优惠券类型：</label>
-				<form:select path="couponType" class="input-medium">
-					<form:option value="" label="全部"/>
-					<form:option value="0" label="折扣减免"/>
-					<form:option value="1" label="金额减免"/>
-					<form:option value="2" label="满减"/>
-				</form:select>
+			<li><label>优惠券类型（0-折扣减免，1-金额减免）：</label>
+				<form:input path="couponType" htmlEscape="false" maxlength="2" class="input-medium"/>
 			</li>
 			<li><label>优惠券名称：</label>
 				<form:input path="couponName" htmlEscape="false" maxlength="20" class="input-medium"/>
 			</li>
-			<li><label>是否可使用：</label>
+			<li><label>是否可使用（0-可使用，1-不可使用） 代表商家是否可发放：</label>
 				<form:select path="status" class="input-medium">
-					<form:option value="" label="全部"/>
-					<form:option value="0" label="可使用"/>
-					<form:option value="1" label="不可使用"/>
+					<form:option value="" label=""/>
+					<form:options items="${fns:getDictList('')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
 				</form:select>
 			</li>
 			<li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
@@ -51,61 +45,37 @@
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
 		<thead>
 			<tr>
-				<th>优惠券类型</th>
+				<th>优惠券类型（0-折扣减免，1-金额减免）</th>
 				<th>优惠券名称</th>
-				<th>过期时间</th>
-				<th>扣减比例</th>
-				<th>扣减金额</th>
-				<th>满减金额限制</th>
-				<th>是否可使用</th>
-				<th>创建人</th>
-				<th>创建时间</th>
-				<th>更新人</th>
-				<th>更新时间</th>
-				<th>备注</th>
+				<th>是否可使用（0-可使用，1-不可使用） 代表商家是否可发放</th>
+				<th>create_by</th>
+				<th>create_date</th>
+				<th>update_by</th>
+				<th>update_date</th>
+				<th>remarks</th>
 				<shiro:hasPermission name="coupon:couponConfig:edit"><th>操作</th></shiro:hasPermission>
 			</tr>
 		</thead>
 		<tbody>
 		<c:forEach items="${page.list}" var="couponConfig">
 			<tr>
-				<td>
-					<c:if test="${couponConfig.couponType == '0'}">
-						折扣减免
-					</c:if>
-					<c:if test="${couponConfig.couponType == '1'}">
-						金额减免
-					</c:if>
-					<c:if test="${couponConfig.couponType == '2'}">
-						满减
-					</c:if>
-				</td>
+				<td><a href="${ctx}/coupon/couponConfig/form?id=${couponConfig.id}">
+					${couponConfig.couponType}
+				</a></td>
 				<td>
 					${couponConfig.couponName}
 				</td>
 				<td>
-					${couponConfig.eapiryTime} 天
+					${fns:getDictLabel(couponConfig.status, '', '')}
 				</td>
 				<td>
-					${couponConfig.discountRate}
-				</td>
-				<td>
-					${couponConfig.discountAmount}
-				</td>
-				<td>
-					${couponConfig.limitAmount}
-				</td>
-				<td>
-					${couponConfig.status eq '0' ? '可使用' : '不可使用'}
-				</td>
-				<td>
-					${couponConfig.createBy.name}
+					${couponConfig.createBy.id}
 				</td>
 				<td>
 					<fmt:formatDate value="${couponConfig.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
 				</td>
 				<td>
-					${couponConfig.updateBy.name}
+					${couponConfig.updateBy.id}
 				</td>
 				<td>
 					<fmt:formatDate value="${couponConfig.updateDate}" pattern="yyyy-MM-dd HH:mm:ss"/>

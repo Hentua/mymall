@@ -8,7 +8,9 @@
 		a.goods_id AS "goodsId",
 		a.goods_count AS "goodsCount",
 		a.merchant_code AS "merchantCode",
-		a.del_flag AS "delFlag"
+		a.del_flag AS "delFlag",
+		a.goods_settlement_price AS "goodsSettlementPrice",
+		a.goods_standart_id AS "goodsStandartId"
 	</sql>
 	
 	<sql id="giftConfigGoodsJoins">
@@ -67,14 +69,18 @@
 			goods_id,
 			goods_count,
 			merchant_code,
-			del_flag
+			del_flag,
+			goods_settlement_price,
+			goods_standart_id
 		) VALUES (
 			#{id},
 			#{giftConfigId},
 			#{goodsId},
 			#{goodsCount},
 			#{merchantCode},
-			#{delFlag}
+			#{delFlag},
+			#{goodsSettlementPrice},
+			#{goodsStandartId}
 		)
 	</insert>
 	
@@ -83,7 +89,9 @@
 			gift_config_id = #{giftConfigId},
 			goods_id = #{goodsId},
 			goods_count = #{goodsCount},
-			merchant_code = #{merchantCode}
+			merchant_code = #{merchantCode},
+			goods_settlement_price = #{goodsSettlementPrice},
+			goods_standart_id = #{goodsStandartId}
 		WHERE id = #{id}
 	</update>
 	

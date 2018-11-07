@@ -154,39 +154,6 @@ public class MemberInfoController extends BaseController {
 	}
 
 	@RequiresPermissions("member:memberInfo:edit")
-	@RequestMapping(value = "couponDistribution")
-	public String couponDistribution(MemberInfo memberInfo, HttpServletRequest request, HttpServletResponse response, Model model) {
-		CouponConfig queryCondition = new CouponConfig();
-		queryCondition.setStatus("0");
-		Page<CouponConfig> page = couponConfigService.findPage(new Page<CouponConfig>(request, response), queryCondition);
-		model.addAttribute("memberInfo", memberInfo);
-		model.addAttribute("couponConfigs", page);
-		return "modules/member/memberCoupon";
-	}
-
-	@RequiresPermissions("member:memberInfo:edit")
-	@RequestMapping(value = "memberCouponDistribution")
-	public String memberCouponDistribution(Model model, HttpServletRequest request, HttpServletResponse response) {
-		String id = request.getParameter("id");
-		String couponId = request.getParameter("couponId");
-		MemberInfo memberInfo = this.get(id);
-		try {
-			couponCustomerService.customerCouponDistribution(id, couponId);
-		}catch (Exception e) {
-			if(e instanceof ServiceException) {
-				model.addAttribute("message", e.getMessage());
-				return couponDistribution(memberInfo, request, response, model);
-			}else {
-				e.printStackTrace();
-				model.addAttribute("message", "分配失败");
-				return couponDistribution(memberInfo, request, response, model);
-			}
-		}
-		model.addAttribute("message", "优惠券分配成功");
-		return couponDistribution(memberInfo, request, response, model);
-	}
-
-	@RequiresPermissions("member:memberInfo:edit")
 	@RequestMapping(value = "save")
 	public String save(MemberInfo memberInfo, Model model, RedirectAttributes redirectAttributes) {
 		if (!beanValidator(model, memberInfo)){

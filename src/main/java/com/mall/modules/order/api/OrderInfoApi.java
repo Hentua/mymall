@@ -254,7 +254,7 @@ public class OrderInfoApi extends BaseController {
             for (OrderInfo orderInfo : orderInfoMap.values()) {
                 double orderDiscountAmountTotal = 0.00;
                 String merchantCode = orderInfo.getMerchantCode();
-                if (null != couponCustomer && merchantCode.equals(couponCustomer.getMerchantCode()) && "0".equals(orderType)) {
+                /*if (null != couponCustomer && merchantCode.equals(couponCustomer.getMerchantCode()) && "0".equals(orderType)) {
                     String couponType = couponCustomer.getCouponType();
                     if ("1".equals(couponType)) {
                         orderDiscountAmountTotal = couponCustomer.getDiscountAmount();
@@ -273,7 +273,7 @@ public class OrderInfoApi extends BaseController {
                     orderInfo.setCouponCode(couponCode);
                     // 修改优惠券为已使用
                     couponCustomerService.updateCouponUsed(couponCustomer.getId());
-                } else if ("1".equals(orderType)) {
+                } else*/ if ("1".equals(orderType)) {
                     orderInfo.setPayTime(new Date());
                 }
                 double orderAmountTotal = orderInfo.getOrderAmountTotal() - orderDiscountAmountTotal;

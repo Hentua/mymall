@@ -1,20 +1,21 @@
 package com.mall.modules.gift.entity;
 
 import org.hibernate.validator.constraints.Length;
+import javax.validation.constraints.NotNull;
 
 import com.mall.common.persistence.DataEntity;
 
 /**
  * 礼包配置Entity
  * @author wankang
- * @version 2018-11-06
+ * @version 2018-11-07
  */
 public class GiftConfigCoupon extends DataEntity<GiftConfigCoupon> {
 	
 	private static final long serialVersionUID = 1L;
 	private GiftConfig giftConfigId;		// 礼包配置ID 父类
 	private String couponId;		// 优惠券ID
-	private String couponCount;		// 优惠券数量
+	private Integer couponCount;		// 优惠券数量
 	
 	public GiftConfigCoupon() {
 		super();
@@ -46,12 +47,12 @@ public class GiftConfigCoupon extends DataEntity<GiftConfigCoupon> {
 		this.couponId = couponId;
 	}
 	
-	@Length(min=1, max=11, message="优惠券数量长度必须介于 1 和 11 之间")
-	public String getCouponCount() {
+	@NotNull(message="优惠券数量不能为空")
+	public Integer getCouponCount() {
 		return couponCount;
 	}
 
-	public void setCouponCount(String couponCount) {
+	public void setCouponCount(Integer couponCount) {
 		this.couponCount = couponCount;
 	}
 	

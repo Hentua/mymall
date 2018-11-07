@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.modules.gift.dao.GiftTransferLogDao">
+    
+	<sql id="giftTransferLogColumns">
+		a.id AS "id",
+		a.merchant_code AS "merchantCode",
+		a.customer_code AS "customerCode",
+		a.gift_category AS "giftCategory",
+		a.gift_count AS "giftCount",
+		a.create_date AS "createDate",
+		a.create_by AS "createBy.id",
+		a.update_date AS "updateDate",
+		a.update_by AS "updateBy.id",
+		a.remarks AS "remarks"
+	</sql>
+	
+	<sql id="giftTransferLogJoins">
+	</sql>
+    
+	<select id="get" resultType="GiftTransferLog">
+		SELECT 
+			<include refid="giftTransferLogColumns"/>
+		FROM gift_transfer_log a
+		<include refid="giftTransferLogJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="GiftTransferLog">
+		SELECT 
+			<include refid="giftTransferLogColumns"/>
+		FROM gift_transfer_log a
+		<include refid="giftTransferLogJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="GiftTransferLog">
+		SELECT 
+			<include refid="giftTransferLogColumns"/>
+		FROM gift_transfer_log a
+		<include refid="giftTransferLogJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO gift_transfer_log(
+			id,
+			merchant_code,
+			customer_code,
+			gift_category,
+			gift_count,
+			create_date,
+			create_by,
+			update_date,
+			update_by,
+			remarks
+		) VALUES (
+			#{id},
+			#{merchantCode},
+			#{customerCode},
+			#{giftCategory},
+			#{giftCount},
+			#{createDate},
+			#{createBy.id},
+			#{updateDate},
+			#{updateBy.id},
+			#{remarks}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE gift_transfer_log SET 	
+			merchant_code = #{merchantCode},
+			customer_code = #{customerCode},
+			gift_category = #{giftCategory},
+			gift_count = #{giftCount},
+			update_date = #{updateDate},
+			update_by = #{updateBy.id},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM gift_transfer_log
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

@@ -19,7 +19,7 @@ import com.mall.modules.gift.dao.GiftConfigGoodsDao;
 /**
  * 礼包配置Service
  * @author wankang
- * @version 2018-11-06
+ * @version 2018-11-07
  */
 @Service
 @Transactional(readOnly = true)

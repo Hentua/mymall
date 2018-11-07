@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.modules.coupon.dao.CouponMerchantDao">
+    
+	<sql id="couponMerchantColumns">
+		a.id AS "id",
+		a.config_id AS "configId",
+		a.coupon_type AS "couponType",
+		a.coupon_name AS "couponName",
+		a.start_date AS "startDate",
+		a.end_date AS "endDate",
+		a.limit_amount AS "limitAmount",
+		a.merchant_code AS "merchantCode",
+		a.coupon_status AS "couponStatus",
+		a.transfer_time AS "transferTime",
+		a.transfer_customer_code AS "transferCustomerCode",
+		a.create_date AS "createDate",
+		a.create_by AS "createBy.id",
+		a.update_date AS "updateDate",
+		a.update_by AS "updateBy.id",
+		a.access_channel AS "accessChannel",
+		a.gift_code AS "giftCode"
+	</sql>
+	
+	<sql id="couponMerchantJoins">
+	</sql>
+    
+	<select id="get" resultType="CouponMerchant">
+		SELECT 
+			<include refid="couponMerchantColumns"/>
+		FROM coupon_merchant a
+		<include refid="couponMerchantJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CouponMerchant">
+		SELECT 
+			<include refid="couponMerchantColumns"/>
+		FROM coupon_merchant a
+		<include refid="couponMerchantJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CouponMerchant">
+		SELECT 
+			<include refid="couponMerchantColumns"/>
+		FROM coupon_merchant a
+		<include refid="couponMerchantJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO coupon_merchant(
+			id,
+			config_id,
+			coupon_type,
+			coupon_name,
+			start_date,
+			end_date,
+			limit_amount,
+			merchant_code,
+			coupon_status,
+			transfer_time,
+			transfer_customer_code,
+			create_date,
+			create_by,
+			update_date,
+			update_by,
+			access_channel,
+			gift_code
+		) VALUES (
+			#{id},
+			#{configId},
+			#{couponType},
+			#{couponName},
+			#{startDate},
+			#{endDate},
+			#{limitAmount},
+			#{merchantCode},
+			#{couponStatus},
+			#{transferTime},
+			#{transferCustomerCode},
+			#{createDate},
+			#{createBy.id},
+			#{updateDate},
+			#{updateBy.id},
+			#{accessChannel},
+			#{giftCode}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE coupon_merchant SET 	
+			config_id = #{configId},
+			coupon_type = #{couponType},
+			coupon_name = #{couponName},
+			start_date = #{startDate},
+			end_date = #{endDate},
+			limit_amount = #{limitAmount},
+			merchant_code = #{merchantCode},
+			coupon_status = #{couponStatus},
+			transfer_time = #{transferTime},
+			transfer_customer_code = #{transferCustomerCode},
+			update_date = #{updateDate},
+			update_by = #{updateBy.id},
+			access_channel = #{accessChannel},
+			gift_code = #{giftCode}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM coupon_merchant
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

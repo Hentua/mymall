@@ -3,6 +3,8 @@ package com.mall.modules.gift.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.mall.modules.gift.entity.GiftConfigCategory;
+import com.mall.modules.gift.service.GiftConfigCategoryService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,10 +21,12 @@ import com.mall.common.utils.StringUtils;
 import com.mall.modules.gift.entity.GiftConfig;
 import com.mall.modules.gift.service.GiftConfigService;
 
+import java.util.List;
+
 /**
  * 礼包配置Controller
  * @author wankang
- * @version 2018-11-06
+ * @version 2018-11-07
  */
 @Controller
 @RequestMapping(value = "${adminPath}/gift/giftConfig")
@@ -30,6 +34,8 @@ public class GiftConfigController extends BaseController {
 
 	@Autowired
 	private GiftConfigService giftConfigService;
+	@Autowired
+	private GiftConfigCategoryService giftConfigCategoryService;
 	
 	@ModelAttribute
 	public GiftConfig get(@RequestParam(required=false) String id) {
@@ -54,6 +60,8 @@ public class GiftConfigController extends BaseController {
 	@RequiresPermissions("gift:giftConfig:view")
 	@RequestMapping(value = "form")
 	public String form(GiftConfig giftConfig, Model model) {
+		List<GiftConfigCategory> giftConfigCategoryList = giftConfigCategoryService.findList(new GiftConfigCategory());
+		model.addAttribute("giftConfigCategoryList", giftConfigCategoryList);
 		model.addAttribute("giftConfig", giftConfig);
 		return "modules/gift/giftConfigForm";
 	}

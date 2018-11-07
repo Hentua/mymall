@@ -3,6 +3,8 @@ package com.mall.modules.gift.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.mall.modules.sys.entity.User;
+import com.mall.modules.sys.utils.UserUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -63,6 +65,13 @@ public class GiftConfigCategoryController extends BaseController {
 	public String save(GiftConfigCategory giftConfigCategory, Model model, RedirectAttributes redirectAttributes) {
 		if (!beanValidator(model, giftConfigCategory)){
 			return form(giftConfigCategory, model);
+		}
+		if (StringUtils.isNotBlank(giftConfigCategory.getMerchantMobile())) {
+			User merchantUser = UserUtils.getByLoginName(giftConfigCategory.getMerchantMobile());
+			if (null == merchantUser) {
+				model.addAttribute("message", "商家不存在");
+				return form(giftConfigCategory, model);
+			}
 		}
 		if (StringUtils.isNotBlank(giftConfigCategory.getId())) {
 			String remarks = giftConfigCategory.getRemarks();

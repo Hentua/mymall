@@ -4,28 +4,25 @@
     
 	<sql id="couponCustomerColumns">
 		a.id AS "id",
-		a.coupon_no AS "couponNo",
+		a.config_id AS "configId",
 		a.coupon_type AS "couponType",
 		a.coupon_name AS "couponName",
 		a.customer_code AS "customerCode",
 		a.start_date AS "startDate",
+		a.limit_amount AS "limitAmount",
 		a.end_date AS "endDate",
-		a.merchant_code AS "merchantCode",
-		a.discount_rate AS "discountRate",
-		a.discount_amount AS "discountAmount",
+		a.transfer_merchant_code AS "transferMerchantCode",
 		a.create_date AS "createDate",
 		a.create_by AS "createBy.id",
 		a.update_date AS "updateDate",
 		a.update_by AS "updateBy.id",
-		a.remarks AS "remarks",
+		a.access_channel AS "accessChannel",
+		a.gift_code AS "giftCode",
 		a.coupon_status AS "couponStatus",
-		a.used_time AS "usedTime",
-		a.limit_amount AS "limitAmount",
-		m.nickname AS "merchantName"
+		a.balance AS "balance"
 	</sql>
 	
 	<sql id="couponCustomerJoins">
-		left join member_info m on m.id = a.merchant_code
 	</sql>
     
 	<select id="get" resultType="CouponCustomer">
@@ -35,37 +32,7 @@
 		<include refid="couponCustomerJoins"/>
 		WHERE a.id = #{id}
 	</select>
-
-	<select id="orderEnabledCoupons" resultType="CouponCustomer">
-		select
-		<include refid="couponCustomerColumns"/>
-		from coupon_customer a
-		<include refid="couponCustomerJoins"/>
-		where a.merchant_code in
-		<foreach collection="merchantCodes" open="(" close=")" index="index" item="merchantCode" separator=",">
-			#{merchantCode}
-		</foreach>
-		and a.customer_code = #{customerCode} and a.start_date &lt;= now() and a.end_date &gt;= now() and a.coupon_status = '0' and a.coupon_type in ('0', '1')
-	</select>
-
-	<select id="enabledMerchantLimitCoupons" resultType="CouponCustomer">
-		select
-		<include refid="couponCustomerColumns"/>
-		from coupon_customer a
-		<include refid="couponCustomerJoins"/>
-		where a.merchant_code = #{merchantCode}
-		and a.customer_code = #{customerCode} and a.start_date &lt;= now() and a.end_date &gt;= now() and a.coupon_status = '0' and a.coupon_type = '2' and a.limit_amount &lt;= #{limitAmount}
-	</select>
-
-	<select id="enabledCouponsCount" resultType="Map">
-		select count(0) as "enabledCouponsCount" from coupon_customer a where
-			a.customer_code = #{customerCode} and a.start_date &lt;= now() and a.end_date &gt;= now() and a.coupon_status = '0'
-	</select>
-
-	<update id="updateCouponUsed">
-		update coupon_customer set coupon_status = '1', used_time = now() where id = #{id}
-	</update>
-
+	
 	<select id="findList" resultType="CouponCustomer">
 		SELECT 
 			<include refid="couponCustomerColumns"/>
@@ -73,9 +40,6 @@
 		<include refid="couponCustomerJoins"/>
 		<where>
 			
-			<if test="couponNo != null and couponNo != ''">
-				AND a.coupon_no = #{couponNo}
-			</if>
 			<if test="couponType != null and couponType != ''">
 				AND a.coupon_type = #{couponType}
 			</if>
@@ -87,9 +51,6 @@
 			</if>
 			<if test="endDate != null and endDate != ''">
 				AND a.end_date &lt;= #{endDate}
-			</if>
-			<if test="merchantCode != null and merchantCode != ''">
-				AND a.merchant_code = #{merchantCode}
 			</if>
 			<if test="couponStatus != null and couponStatus != ''">
 				AND a.coupon_status = #{couponStatus}
@@ -126,62 +87,59 @@
 	<insert id="insert">
 		INSERT INTO coupon_customer(
 			id,
-			coupon_no,
+			config_id,
 			coupon_type,
 			coupon_name,
 			customer_code,
 			start_date,
+			limit_amount,
 			end_date,
-			merchant_code,
-			discount_rate,
-			discount_amount,
+			transfer_merchant_code,
 			create_date,
 			create_by,
 			update_date,
 			update_by,
-			remarks,
+			access_channel,
+			gift_code,
 			coupon_status,
-			used_time,
-			limit_amount
+			balance
 		) VALUES (
 			#{id},
-			#{couponNo},
+			#{configId},
 			#{couponType},
 			#{couponName},
 			#{customerCode},
 			#{startDate},
+			#{limitAmount},
 			#{endDate},
-			#{merchantCode},
-			#{discountRate},
-			#{discountAmount},
+			#{transferMerchantCode},
 			#{createDate},
 			#{createBy.id},
 			#{updateDate},
 			#{updateBy.id},
-			#{remarks},
+			#{accessChannel},
+			#{giftCode},
 			#{couponStatus},
-			#{usedTime},
-			#{limitAmount}
+			#{balance}
 		)
 	</insert>
 	
 	<update id="update">
 		UPDATE coupon_customer SET 	
-			coupon_no = #{couponNo},
+			config_id = #{configId},
 			coupon_type = #{couponType},
 			coupon_name = #{couponName},
 			customer_code = #{customerCode},
 			start_date = #{startDate},
+			limit_amount = #{limitAmount},
 			end_date = #{endDate},
-			merchant_code = #{merchantCode},
-			discount_rate = #{discountRate},
-			discount_amount = #{discountAmount},
+			transfer_merchant_code = #{transferMerchantCode},
 			update_date = #{updateDate},
 			update_by = #{updateBy.id},
-			remarks = #{remarks},
+			access_channel = #{accessChannel},
+			gift_code = #{giftCode},
 			coupon_status = #{couponStatus},
-			used_time = #{usedTime},
-		  	limit_amount = #{limitAmount}
+			balance = #{balance}
 		WHERE id = #{id}
 	</update>
 	

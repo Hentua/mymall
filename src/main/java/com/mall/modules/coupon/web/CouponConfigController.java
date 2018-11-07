@@ -22,7 +22,7 @@ import com.mall.modules.coupon.service.CouponConfigService;
 /**
  * 优惠券规则配置Controller
  * @author wankang
- * @version 2018-10-28
+ * @version 2018-11-07
  */
 @Controller
 @RequestMapping(value = "${adminPath}/coupon/couponConfig")

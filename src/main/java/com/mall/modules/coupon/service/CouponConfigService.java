@@ -13,7 +13,7 @@ import com.mall.modules.coupon.dao.CouponConfigDao;
 /**
  * 优惠券规则配置Service
  * @author wankang
- * @version 2018-10-28
+ * @version 2018-11-07
  */
 @Service
 @Transactional(readOnly = true)

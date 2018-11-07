@@ -39,6 +39,7 @@
 				<th>礼包分类名称</th>
 				<th>礼包价格</th>
 				<th>是否赠送商家资格</th>
+				<th>定制礼包商家</th>
 				<th>创建时间</th>
 				<th>备注</th>
 				<th>是否上架销售</th>
@@ -59,6 +60,9 @@
 						<c:when test="${giftConfigCategory.merchantQualification == '0'}">否</c:when>
 						<c:when test="${giftConfigCategory.merchantQualification == '1'}">是</c:when>
 					</c:choose>
+				</td>
+				<td>
+                    ${giftConfigCategory.merchantName}
 				</td>
 				<td>
 					<fmt:formatDate value="${giftConfigCategory.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/>

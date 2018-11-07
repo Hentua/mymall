@@ -42,44 +42,44 @@ public class CouponCustomerApi extends BaseController {
      * @param request 请求体
      * @param response 响应体
      */
-    @RequestMapping(value = "orderEnabledCoupons", method = RequestMethod.POST)
-    public void orderEnabledCoupons(HttpServletRequest request, HttpServletResponse response) {
-        User currUser = UserUtils.getUser();
-        String customerCode = currUser.getId();
-        String orderAmountData = request.getParameter("orderAmountData");
-        try {
-            JSONArray orderAmountArr = JSONArray.parseArray(orderAmountData);
-            if(null == orderAmountArr || orderAmountArr.size() <= 0) {
-                throw new ServiceException("未选择商品");
-            }
-            Set<String> merchantCodeSet = Sets.newHashSet();
-            List<CouponCustomer> couponCustomers = Lists.newArrayList();
-            CouponCustomer queryCondition = new CouponCustomer();
-            for (Object o : orderAmountArr) {
-                JSONObject orderAmount = (JSONObject) JSON.toJSON(o);
-                String merchantCode = orderAmount.getString("merchantCode");
-                Double amount = orderAmount.getDouble("amount");
-                queryCondition.setMerchantCode(merchantCode);
-                queryCondition.setLimitAmount(amount);
-                queryCondition.setCustomerCode(customerCode);
-                List<CouponCustomer> couponCustomerList = couponCustomerService.enabledMerchantLimitCoupons(queryCondition);
-                if(couponCustomerList.size() > 0) {
-                    couponCustomers.addAll(couponCustomerList);
-                }
-                merchantCodeSet.add(merchantCode);
-
-            }
-            queryCondition.setCustomerCode(customerCode);
-            queryCondition.setMerchantCodes(merchantCodeSet);
-            List<CouponCustomer> couponCustomerList = couponCustomerService.orderEnabledCoupons(queryCondition);
-            if(couponCustomerList.size() > 0) {
-                couponCustomers.addAll(couponCustomerList);
-            }
-            renderString(response, ResultGenerator.genSuccessResult(couponCustomers));
-        }catch (Exception e) {
-            renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
-        }
-    }
+//    @RequestMapping(value = "orderEnabledCoupons", method = RequestMethod.POST)
+//    public void orderEnabledCoupons(HttpServletRequest request, HttpServletResponse response) {
+//        User currUser = UserUtils.getUser();
+//        String customerCode = currUser.getId();
+//        String orderAmountData = request.getParameter("orderAmountData");
+//        try {
+//            JSONArray orderAmountArr = JSONArray.parseArray(orderAmountData);
+//            if(null == orderAmountArr || orderAmountArr.size() <= 0) {
+//                throw new ServiceException("未选择商品");
+//            }
+//            Set<String> merchantCodeSet = Sets.newHashSet();
+//            List<CouponCustomer> couponCustomers = Lists.newArrayList();
+//            CouponCustomer queryCondition = new CouponCustomer();
+//            for (Object o : orderAmountArr) {
+//                JSONObject orderAmount = (JSONObject) JSON.toJSON(o);
+//                String merchantCode = orderAmount.getString("merchantCode");
+//                Double amount = orderAmount.getDouble("amount");
+//                queryCondition.setMerchantCode(merchantCode);
+//                queryCondition.setLimitAmount(amount);
+//                queryCondition.setCustomerCode(customerCode);
+//                List<CouponCustomer> couponCustomerList = couponCustomerService.enabledMerchantLimitCoupons(queryCondition);
+//                if(couponCustomerList.size() > 0) {
+//                    couponCustomers.addAll(couponCustomerList);
+//                }
+//                merchantCodeSet.add(merchantCode);
+//
+//            }
+//            queryCondition.setCustomerCode(customerCode);
+//            queryCondition.setMerchantCodes(merchantCodeSet);
+//            List<CouponCustomer> couponCustomerList = couponCustomerService.orderEnabledCoupons(queryCondition);
+//            if(couponCustomerList.size() > 0) {
+//                couponCustomers.addAll(couponCustomerList);
+//            }
+//            renderString(response, ResultGenerator.genSuccessResult(couponCustomers));
+//        }catch (Exception e) {
+//            renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
+//        }
+//    }
 
     /**
      * 获取当前用户可用所有优惠券列表

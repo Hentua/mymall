@@ -14,11 +14,14 @@
 		a.del_flag AS "delFlag",
 		a.remarks AS "remarks",
 		a.gift_category AS "giftCategory",
-		a.coupon_count AS "couponCount"
+		a.coupon_count AS "couponCount",
+		c.category_name AS "giftCategoryName",
+		c.gift_price AS "giftCategoryPrice"
 	</sql>
 	
 	<sql id="giftConfigJoins">
 		LEFT JOIN sys_user u4 ON u4.id = a.create_by
+		left join gift_config_category c on c.id = a.gift_category
 	</sql>
     
 	<select id="get" resultType="GiftConfig">

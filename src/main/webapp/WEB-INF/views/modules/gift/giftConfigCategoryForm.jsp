@@ -62,12 +62,26 @@
 			</div>
 		</div>
 		<div class="control-group">
+			<label class="control-label">定制礼包商家手机号码：</label>
+			<div class="controls">
+				<c:choose>
+					<c:when test="${empty giftConfigCategory.id }">
+						<form:input path="merchantMobile" htmlEscape="false" maxlength="20" class="input-xlarge"/>
+						<span class="help-inline"><font color="red">留空则不是定制礼包类别</font> </span>
+					</c:when>
+					<c:otherwise>
+						${giftConfigCategory.merchantName}
+					</c:otherwise>
+				</c:choose>
+			</div>
+		</div>
+		<div class="control-group">
 			<label class="control-label">是否赠送商家资格：</label>
 			<div class="controls">
 				<c:choose>
 					<c:when test="${empty giftConfigCategory.id }">
 						<form:radiobutton path="merchantQualification" label="是" value="1"/>
-						<form:radiobutton path="merchantQualification" label="否" value="0"/>
+						<form:radiobutton path="merchantQualification" label="否" value="0" checked="true"/>
 						<span class="help-inline"><font color="red">*</font> </span>
 					</c:when>
 					<c:otherwise>
@@ -82,7 +96,7 @@
 				<c:choose>
 					<c:when test="${empty giftConfigCategory.id }">
 						<form:radiobutton path="status" label="是" value="1"/>
-						<form:radiobutton path="status" label="否" value="0"/>
+						<form:radiobutton path="status" label="否" value="0" checked="true"/>
 						<span class="help-inline"><font color="red">*</font> </span>
 					</c:when>
 					<c:otherwise>

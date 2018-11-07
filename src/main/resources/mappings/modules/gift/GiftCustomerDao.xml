@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.modules.gift.dao.GiftCustomerDao">
+    
+	<sql id="giftCustomerColumns">
+		a.id AS "id",
+		a.gift_category AS "giftCategory",
+		a.gift_merchant_id AS "giftMerchantId",
+		a.transfer_merchant_code AS "transferMerchantCode",
+		a.customer_code AS "customerCode",
+		a.gift_count AS "giftCount",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks"
+	</sql>
+	
+	<sql id="giftCustomerJoins">
+	</sql>
+    
+	<select id="get" resultType="GiftCustomer">
+		SELECT 
+			<include refid="giftCustomerColumns"/>
+		FROM gift_customer a
+		<include refid="giftCustomerJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="GiftCustomer">
+		SELECT 
+			<include refid="giftCustomerColumns"/>
+		FROM gift_customer a
+		<include refid="giftCustomerJoins"/>
+		<where>
+			
+			<if test="customerCode != null and customerCode != ''">
+				AND a.customer_code = #{customerCode}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="GiftCustomer">
+		SELECT 
+			<include refid="giftCustomerColumns"/>
+		FROM gift_customer a
+		<include refid="giftCustomerJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO gift_customer(
+			id,
+			gift_category,
+			gift_merchant_id,
+			transfer_merchant_code,
+			customer_code,
+			gift_count,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks
+		) VALUES (
+			#{id},
+			#{giftCategory},
+			#{giftMerchantId},
+			#{transferMerchantCode},
+			#{customerCode},
+			#{giftCount},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE gift_customer SET 	
+			gift_category = #{giftCategory},
+			gift_merchant_id = #{giftMerchantId},
+			transfer_merchant_code = #{transferMerchantCode},
+			customer_code = #{customerCode},
+			gift_count = #{giftCount},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM gift_customer
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

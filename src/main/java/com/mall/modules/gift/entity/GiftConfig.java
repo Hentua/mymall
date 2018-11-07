@@ -11,7 +11,7 @@ import com.mall.common.persistence.DataEntity;
 /**
  * 礼包配置Entity
  * @author wankang
- * @version 2018-11-06
+ * @version 2018-11-07
  */
 public class GiftConfig extends DataEntity<GiftConfig> {
 	
@@ -25,6 +25,9 @@ public class GiftConfig extends DataEntity<GiftConfig> {
 	private Date endCreateDate;		// 结束 create_date
 	private List<GiftConfigCoupon> giftConfigCouponList = Lists.newArrayList();		// 子表列表
 	private List<GiftConfigGoods> giftConfigGoodsList = Lists.newArrayList();		// 子表列表
+
+	private String giftCategoryName;
+	private String giftCategoryPrice;
 	
 	public GiftConfig() {
 		super();
@@ -32,6 +35,22 @@ public class GiftConfig extends DataEntity<GiftConfig> {
 
 	public GiftConfig(String id){
 		super(id);
+	}
+
+	public String getGiftCategoryName() {
+		return giftCategoryName;
+	}
+
+	public void setGiftCategoryName(String giftCategoryName) {
+		this.giftCategoryName = giftCategoryName;
+	}
+
+	public String getGiftCategoryPrice() {
+		return giftCategoryPrice;
+	}
+
+	public void setGiftCategoryPrice(String giftCategoryPrice) {
+		this.giftCategoryPrice = giftCategoryPrice;
 	}
 
 	@Length(min=1, max=20, message="礼包名称长度必须介于 1 和 20 之间")

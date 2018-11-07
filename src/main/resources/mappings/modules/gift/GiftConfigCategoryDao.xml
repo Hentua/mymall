@@ -13,10 +13,13 @@
 		a.update_by AS "updateBy.id",
 		a.del_flag AS "delFlag",
 		a.remarks AS "remarks",
-		a.status AS "status"
+		a.status AS "status",
+		a.merchant_code AS "merchantCode",
+		m.nickname AS "merchantName"
 	</sql>
 	
 	<sql id="giftConfigCategoryJoins">
+		left join member_info m on m.id = a.merchant_code
 	</sql>
     
 	<select id="get" resultType="GiftConfigCategory">
@@ -81,7 +84,8 @@
 			update_by,
 			del_flag,
 			remarks,
-			status
+			status,
+		    merchant_code
 		) VALUES (
 			#{id},
 			#{categoryName},
@@ -93,7 +97,8 @@
 			#{updateBy.id},
 			#{delFlag},
 			#{remarks},
-			#{status}
+			#{status},
+			#{merchantCode}
 		)
 	</insert>
 	
@@ -105,7 +110,8 @@
 			update_date = #{updateDate},
 			update_by = #{updateBy.id},
 			remarks = #{remarks},
-			status = #{status}
+			status = #{status},
+			merchant_code = #{merchantCode}
 		WHERE id = #{id}
 	</update>
 	

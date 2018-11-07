@@ -72,35 +72,19 @@
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">商品总数量：</label>
-			<div class="controls">
-				<form:input path="goodsCount" htmlEscape="false" maxlength="11" class="input-xlarge required digits"/>
-				<span class="help-inline"><font color="red">*</font> </span>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">是否在APP显示商品价格 0-否 1-是：</label>
-			<div class="controls">
-				<form:radiobuttons path="showGoodsPrice" items="${fns:getDictList('')}" itemLabel="label" itemValue="value" htmlEscape="false" class="required"/>
-				<span class="help-inline"><font color="red">*</font> </span>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">remarks：</label>
-			<div class="controls">
-				<form:textarea path="remarks" htmlEscape="false" rows="4" maxlength="255" class="input-xxlarge "/>
-			</div>
-		</div>
-		<div class="control-group">
 			<label class="control-label">对应分类ID：</label>
 			<div class="controls">
+				<form:select path="giftCategory">
+					<form:options items="${giftConfigCategoryList}" itemValue="id" itemLabel="categoryName"/>
+				</form:select>
 				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">优惠券数量：</label>
+			<label class="control-label">是否在APP显示商品价格：</label>
 			<div class="controls">
-				<form:input path="couponCount" htmlEscape="false" maxlength="11" class="input-xlarge required digits"/>
+				<form:radiobutton path="showGoodsPrice" label="是" value="1"/>
+				<form:radiobutton path="showGoodsPrice" label="否" value="0" checked="true"/>
 				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>
@@ -132,7 +116,7 @@
 								<input id="giftConfigCouponList{{idx}}_couponId" name="giftConfigCouponList[{{idx}}].couponId" type="text" value="{{row.couponId}}" maxlength="64" class="input-small required"/>
 							</td>
 							<td>
-								<input id="giftConfigCouponList{{idx}}_couponCount" name="giftConfigCouponList[{{idx}}].couponCount" type="text" value="{{row.couponCount}}" maxlength="11" class="input-small required"/>
+								<input id="giftConfigCouponList{{idx}}_couponCount" name="giftConfigCouponList[{{idx}}].couponCount" type="text" value="{{row.couponCount}}" maxlength="11" class="input-small required digits"/>
 							</td>
 							<shiro:hasPermission name="gift:giftConfig:edit"><td class="text-center" width="10">
 								{{#delBtn}}<span class="close" onclick="delRow(this, '#giftConfigCouponList{{idx}}')" title="删除">&times;</span>{{/delBtn}}
@@ -161,13 +145,15 @@
 								<th>商品ID</th>
 								<th>商品数量</th>
 								<th>店铺ID</th>
+								<th>单个商品结算价格</th>
+								<th>商品规格ID</th>
 								<shiro:hasPermission name="gift:giftConfig:edit"><th width="10">&nbsp;</th></shiro:hasPermission>
 							</tr>
 						</thead>
 						<tbody id="giftConfigGoodsList">
 						</tbody>
 						<shiro:hasPermission name="gift:giftConfig:edit"><tfoot>
-							<tr><td colspan="5"><a href="javascript:" onclick="addRow('#giftConfigGoodsList', giftConfigGoodsRowIdx, giftConfigGoodsTpl);giftConfigGoodsRowIdx = giftConfigGoodsRowIdx + 1;" class="btn">新增</a></td></tr>
+							<tr><td colspan="7"><a href="javascript:" onclick="addRow('#giftConfigGoodsList', giftConfigGoodsRowIdx, giftConfigGoodsTpl);giftConfigGoodsRowIdx = giftConfigGoodsRowIdx + 1;" class="btn">新增</a></td></tr>
 						</tfoot></shiro:hasPermission>
 					</table>
 					<script type="text/template" id="giftConfigGoodsTpl">//<!--
@@ -180,10 +166,16 @@
 								<input id="giftConfigGoodsList{{idx}}_goodsId" name="giftConfigGoodsList[{{idx}}].goodsId" type="text" value="{{row.goodsId}}" maxlength="64" class="input-small required"/>
 							</td>
 							<td>
-								<input id="giftConfigGoodsList{{idx}}_goodsCount" name="giftConfigGoodsList[{{idx}}].goodsCount" type="text" value="{{row.goodsCount}}" maxlength="11" class="input-small required"/>
+								<input id="giftConfigGoodsList{{idx}}_goodsCount" name="giftConfigGoodsList[{{idx}}].goodsCount" type="text" value="{{row.goodsCount}}" maxlength="11" class="input-small required digits"/>
 							</td>
 							<td>
 								<input id="giftConfigGoodsList{{idx}}_merchantCode" name="giftConfigGoodsList[{{idx}}].merchantCode" type="text" value="{{row.merchantCode}}" maxlength="64" class="input-small required"/>
+							</td>
+							<td>
+								<input id="giftConfigGoodsList{{idx}}_goodsSettlementPrice" name="giftConfigGoodsList[{{idx}}].goodsSettlementPrice" type="text" value="{{row.goodsSettlementPrice}}" class="input-small required number"/>
+							</td>
+							<td>
+								<input id="giftConfigGoodsList{{idx}}_goodsStandartId" name="giftConfigGoodsList[{{idx}}].goodsStandartId" type="text" value="{{row.goodsStandartId}}" maxlength="64" class="input-small required"/>
 							</td>
 							<shiro:hasPermission name="gift:giftConfig:edit"><td class="text-center" width="10">
 								{{#delBtn}}<span class="close" onclick="delRow(this, '#giftConfigGoodsList{{idx}}')" title="删除">&times;</span>{{/delBtn}}
@@ -200,6 +192,12 @@
 							}
 						});
 					</script>
+				</div>
+				<div class="control-group">
+					<label class="control-label">备注：</label>
+					<div class="controls">
+						<form:textarea path="remarks" htmlEscape="false" rows="4" maxlength="255" class="input-xxlarge "/>
+					</div>
 				</div>
 			</div>
 		<div class="form-actions">
