@@ -5,6 +5,8 @@ import com.mall.common.utils.api.ApiExceptionHandleUtil;
 import com.mall.common.utils.ResultGenerator;
 import com.mall.common.utils.StringUtils;
 import com.mall.common.web.BaseController;
+import com.mall.modules.goods.entity.GoodsStandard;
+import com.mall.modules.goods.service.GoodsStandardService;
 import com.mall.modules.order.entity.OrderShoppingCart;
 import com.mall.modules.order.entity.OrderShoppingCartVo;
 import com.mall.modules.order.service.OrderShoppingCartService;
@@ -32,6 +34,9 @@ public class OrderShoppingCartApi extends BaseController {
     @Autowired
     private OrderShoppingCartService orderShoppingCartService;
 
+    @Autowired
+    private GoodsStandardService goodsStandardService;
+
     /**
      * 添加商品到购物车
      *
@@ -45,8 +50,10 @@ public class OrderShoppingCartApi extends BaseController {
         String merchantCode = request.getParameter("merchantCode");
 
         String goodsPrice = request.getParameter("goodsPrice");
-        String goodsStandard = request.getParameter("goodsStandard");
-        String settlementsAmount = request.getParameter("settlementsAmount");
+//        String goodsStandard = request.getParameter("goodsStandard");
+//        String settlementsAmount = request.getParameter("settlementsAmount");
+        String goodsStandardId =request.getParameter("goodsStandardId");//商品规格ID
+        GoodsStandard goodsStandard = goodsStandardService.get(goodsStandardId);
         try {
             if(null == currUser) {
                 throw new ServiceException("未登录");
@@ -56,6 +63,9 @@ public class OrderShoppingCartApi extends BaseController {
             }
             if(StringUtils.isBlank(merchantCode)) {
                 throw new ServiceException("商家信息错误");
+            }
+            if(null == goodsStandard){
+                throw new ServiceException("未选择商品规格");
             }
             OrderShoppingCart condition = new OrderShoppingCart();
             condition.setGoodsId(goodsId);
@@ -67,9 +77,9 @@ public class OrderShoppingCartApi extends BaseController {
                 orderShoppingCart.setCustomerCode(currUser.getId());
                 orderShoppingCart.setGoodsCount(1.00);
                 orderShoppingCart.setMerchantCode(merchantCode);
-                orderShoppingCart.setGoodsPrice(Double.valueOf(goodsPrice));
-                orderShoppingCart.setGoodsStandard(goodsStandard);
-                orderShoppingCart.setSettlementsAmount(Double.valueOf(settlementsAmount));
+                orderShoppingCart.setGoodsPrice(Double.valueOf(goodsStandard.getPrice()));
+                orderShoppingCart.setGoodsStandard(goodsStandard.getName());
+                orderShoppingCart.setSettlementsAmount(Double.valueOf(goodsStandard.getSettlementsAmount()));
             }else {
                 orderShoppingCart.setGoodsCount(orderShoppingCart.getGoodsCount() + 1);
             }
