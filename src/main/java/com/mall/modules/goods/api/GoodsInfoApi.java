@@ -3,6 +3,7 @@ package com.mall.modules.goods.api;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.mall.common.persistence.Page;
+import com.mall.common.service.ServiceException;
 import com.mall.common.utils.Result;
 import com.mall.common.utils.ResultGenerator;
 import com.mall.common.utils.StringUtils;
@@ -52,6 +53,9 @@ public class GoodsInfoApi extends BaseController {
     @Autowired
     private GoodsEvaluateService goodsEvaluateService;
 
+    @Autowired
+    private GoodsRecommendService goodsRecommendService;
+
 
     /**
      * 商品列表
@@ -95,7 +99,19 @@ public class GoodsInfoApi extends BaseController {
     @ResponseBody
     @RequestMapping(value = "goodsDetails", method = RequestMethod.POST)
     public Result goodsDetails(HttpServletRequest request, HttpServletResponse response) {
-        GoodsInfo goodsInfo = goodsInfoService.get(request.getParameter("goodsId"));
+        GoodsInfo goodsInfo = null;
+        String goodsRecommendCode = request.getParameter("goodsRecommendCode");
+
+        if(!StringUtils.isEmpty(goodsRecommendCode)){
+            GoodsRecommend goodsRecommend= goodsRecommendService.get(goodsRecommendCode);
+            if(null == goodsRecommend){
+                throw new ServiceException("无效推荐码");
+            }
+            goodsInfo=goodsInfoService.get(goodsRecommend.getGoodsId());
+        }else{
+            goodsInfo=goodsInfoService.get(request.getParameter("goodsId"));
+        }
+
         if(null == goodsInfo){
             return  ResultGenerator.genFailResult("商品信息未找到");
         }
@@ -137,10 +153,14 @@ public class GoodsInfoApi extends BaseController {
         JSONObject evaluate = new JSONObject();
         evaluate.putAll(map);
         evaluate.put("list",goodsEvaluates);
+
+        JSONObject recommend = new JSONObject();
+        recommend.put("goodsRecommendCode",goodsRecommendCode);
         JSONObject result = new JSONObject();
         result.put("goodsInfo",goodsInfo);
         result.put("merchant",new UserVo(merchant));
         result.put("evaluate",evaluate);
+        result.put("recommend",recommend);
         return ResultGenerator.genSuccessResult(result);
     }
 
@@ -196,5 +216,4 @@ public class GoodsInfoApi extends BaseController {
         page = goodsEvaluateService.findPage(page,goodsEvaluate);
         return ResultGenerator.genSuccessResult(page);
     }
-
 }

@@ -49,10 +49,11 @@ public class OrderShoppingCartApi extends BaseController {
         String goodsId = request.getParameter("goodsId");
         String merchantCode = request.getParameter("merchantCode");
 
-        String goodsPrice = request.getParameter("goodsPrice");
+//        String goodsPrice = request.getParameter("goodsPrice");
 //        String goodsStandard = request.getParameter("goodsStandard");
 //        String settlementsAmount = request.getParameter("settlementsAmount");
         String goodsStandardId =request.getParameter("goodsStandardId");//商品规格ID
+        String goodsRecommendCode =request.getParameter("goodsRecommendCode");//商品推荐码
         GoodsStandard goodsStandard = goodsStandardService.get(goodsStandardId);
         try {
             if(null == currUser) {
@@ -80,6 +81,7 @@ public class OrderShoppingCartApi extends BaseController {
                 orderShoppingCart.setGoodsPrice(Double.valueOf(goodsStandard.getPrice()));
                 orderShoppingCart.setGoodsStandard(goodsStandard.getName());
                 orderShoppingCart.setSettlementsAmount(Double.valueOf(goodsStandard.getSettlementsAmount()));
+                orderShoppingCart.setGoodsRecommendId(goodsRecommendCode);
             }else {
                 orderShoppingCart.setGoodsCount(orderShoppingCart.getGoodsCount() + 1);
             }

@@ -21,6 +21,18 @@
         a.create_date
         AS
         "createDate",
+        a.goods_price
+        AS
+        "goodsPrice",
+        a.goods_standard
+        AS
+        "goodsStandard",
+        a.settlements_amount
+        AS
+        "settlementsAmount",
+        a.goods_recommend_id
+        AS
+        "goodsRecommendId",
         a.create_by
         AS
         "createBy.id",
@@ -147,7 +159,8 @@
                                         remarks,
                                         goods_price,
                                         goods_standard,
-                                        settlements_amount
+                                        settlements_amount,
+                                        goods_recommend_id
             )
         VALUES (
                 #{id},
@@ -162,7 +175,8 @@
                 #{remarks},
                 #{goodsPrice},
                 #{goodsStandard},
-                #{settlementsAmount}
+                #{settlementsAmount},
+                #{goodsRecommendId}
                    )
     </insert>
 
