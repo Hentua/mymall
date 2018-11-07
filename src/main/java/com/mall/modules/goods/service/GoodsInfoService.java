@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.mall.modules.billboard.entity.IndexBillboard;
 import com.mall.modules.goods.entity.BillboardGoods;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,9 @@ import com.mall.modules.goods.dao.GoodsInfoDao;
 @Service
 @Transactional(readOnly = true)
 public class GoodsInfoService extends CrudService<GoodsInfoDao, GoodsInfo> {
+
+	@Autowired
+	private GoodsInfoDao goodsInfoDao;
 
 	public GoodsInfo get(String id) {
 		return super.get(id);
@@ -51,7 +55,13 @@ public class GoodsInfoService extends CrudService<GoodsInfoDao, GoodsInfo> {
 	public Page<GoodsInfo> findPage(Page<GoodsInfo> page, GoodsInfo goodsInfo) {
 		return super.findPage(page, goodsInfo);
 	}
-	
+
+	public Page<GoodsInfo> findSelectList(Page<GoodsInfo> page, GoodsInfo goodsInfo) {
+		goodsInfo.setPage(page);
+		page.setList(goodsInfoDao.findSelectList(goodsInfo));
+		return page;
+	}
+
 	@Transactional(readOnly = false)
 	public void save(GoodsInfo goodsInfo) {
 		super.save(goodsInfo);

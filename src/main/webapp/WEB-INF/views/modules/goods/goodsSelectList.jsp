@@ -61,7 +61,7 @@
 				<th>商品标题</th>
 				<th>商品状态</th>
 				<th>单位</th>
-				<th>商品价格</th>
+				<th>商品规格</th>
 				<th>销量</th>
 				<th>上架时间</th>
 				<th>创建时间</th>
@@ -95,6 +95,9 @@
 				</td>
 				<td>
 					${goodsInfo.unit}
+				</td>
+				<td>
+					${goodsInfo.standardName}
 				</td>
 				<td>
 					${goodsInfo.goodsPrice}

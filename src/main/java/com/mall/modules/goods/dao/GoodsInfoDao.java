@@ -19,4 +19,6 @@ public interface GoodsInfoDao extends CrudDao<GoodsInfo> {
     public List<GoodsInfo> findListByApi(GoodsInfo entity);
 
     public List<GoodsInfo> findListByBillboard(BillboardGoods billboardGoods);
+
+    public List<GoodsInfo> findSelectList(GoodsInfo goodsInfo);
 }

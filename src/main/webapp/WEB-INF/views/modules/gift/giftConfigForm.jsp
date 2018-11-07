@@ -153,7 +153,7 @@
 						<tbody id="giftConfigGoodsList">
 						</tbody>
 						<shiro:hasPermission name="gift:giftConfig:edit"><tfoot>
-							<tr><td colspan="7"><a href="javascript:" onclick="addRow('#giftConfigGoodsList', giftConfigGoodsRowIdx, giftConfigGoodsTpl);giftConfigGoodsRowIdx = giftConfigGoodsRowIdx + 1;" class="btn">新增</a></td></tr>
+						<tr><td colspan="5"><a href="javascript:void(0)" class="btn" id="addGoodsBtn">新增</a></td></tr>
 						</tfoot></shiro:hasPermission>
 					</table>
 					<script type="text/template" id="giftConfigGoodsTpl">//<!--
@@ -191,6 +191,20 @@
 								giftConfigGoodsRowIdx = giftConfigGoodsRowIdx + 1;
 							}
 						});
+					</script>
+					<script type="text/javascript">
+                        $("#addGoodsBtn").click(function(){
+                            top.$.jBox.open("iframe:${ctx}/goods/goodsInfo/selectList", "选择商品", 1200, $(top.document).height()-280, {
+                                buttons:{"确定":"ok","关闭":true}, submit:function(v, h, f){
+                                    if (v=="ok"){
+                                        addRow('#giftConfigGoodsList', giftConfigGoodsRowIdx, giftConfigGoodsTpl, {goodsId: h.find("iframe")[0].contentWindow.$("#goodsId").val(), goodsName: h.find("iframe")[0].contentWindow.$("#goodsName").val(), merchantCode: h.find("iframe")[0].contentWindow.$("#merchantCode").val()});
+                                        giftConfigGoodsRowIdx = giftConfigGoodsRowIdx + 1;
+                                    }
+                                }, loaded:function(h){
+                                    $(".jbox-content", top.document).css("overflow-y","hidden");
+                                }
+                            });
+                        });
 					</script>
 				</div>
 				<div class="control-group">

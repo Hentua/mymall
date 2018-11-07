@@ -53,6 +53,9 @@ public class GoodsInfo extends DataEntity<GoodsInfo> {
     private List<GoodsImage> goodsImages;
     private List<String> despImages;
 
+    private String standardId; // 商品规格ID
+    private String standardName; // 商品规格名称
+
     //商品规格
     private List<GoodsStandard> goodsStandards = new ArrayList<GoodsStandard>();
 
@@ -69,6 +72,21 @@ public class GoodsInfo extends DataEntity<GoodsInfo> {
         super(id);
     }
 
+    public String getStandardId() {
+        return standardId;
+    }
+
+    public void setStandardId(String standardId) {
+        this.standardId = standardId;
+    }
+
+    public String getStandardName() {
+        return standardName;
+    }
+
+    public void setStandardName(String standardName) {
+        this.standardName = standardName;
+    }
 
     public String getDiscountType() {
         return discountType;

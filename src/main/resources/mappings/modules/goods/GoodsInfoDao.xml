@@ -176,7 +176,73 @@
 			</otherwise>
 		</choose>
 	</select>
-	
+
+	<select id="findSelectList" resultType="GoodsInfo">
+		SELECT
+		<include refid="goodsInfoColumns"/>,
+		       s.name as "standardName",
+		       s.id as "standardId"
+		FROM goods_info a
+		<include refid="goodsInfoJoins"/>
+		left join goods_standard s on s.goods_id = a.id
+		<where>
+
+			<if test="goodsCategoryId != null and goodsCategoryId != ''">
+				AND a.goods_category_id = #{goodsCategoryId}
+			</if>
+			<if test="goodsName != null and goodsName != ''">
+				AND a.goods_name LIKE CONCAT('%',#{goodsName},'%')
+			</if>
+			<if test="goodsBarcode != null and goodsBarcode != ''">
+				AND a.goods_barcode = #{goodsBarcode}
+			</if>
+			<if test="goodsTitle != null and goodsTitle != ''">
+				AND a.goods_title = LIKE CONCAT('%',#{goodsTitle},'%')
+			</if>
+			<if test="merchantName != null and merchantName != ''">
+				and merchant.nickname LIKE CONCAT('%',#{merchantName},'%')
+			</if>
+			<if test="goodsType != null and goodsType != ''">
+				AND a.goods_type = #{goodsType}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="unit != null and unit != ''">
+				AND a.unit = #{unit}
+			</if>
+			<if test="originalPrice != null and originalPrice != ''">
+				AND a.original_price = #{originalPrice}
+			</if>
+			<if test="goodsPrice != null and goodsPrice != ''">
+				AND a.goods_price = #{goodsPrice}
+			</if>
+			<if test="salesTotal != null and salesTotal != ''">
+				AND a.sales_total = #{salesTotal}
+			</if>
+			<if test="isDeleted != null and isDeleted != ''">
+				AND a.is_deleted = #{isDeleted}
+			</if>
+			<if test="beginOnlinetime != null and endOnlinetime != null and beginOnlinetime != '' and endOnlinetime != ''">
+				AND a.onlinetime BETWEEN #{beginOnlinetime} AND #{endOnlinetime}
+			</if>
+			<if test="beginCreateDate != null and endCreateDate != null and beginCreateDate != '' and endCreateDate != ''">
+				AND a.create_date BETWEEN #{beginCreateDate} AND #{endCreateDate}
+			</if>
+			<if test="merchantId != null and merchantId != ''">
+				and a.merchant_id = #{merchantId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
 	<select id="findAllList" resultType="GoodsInfo">
 		SELECT 
 			<include refid="goodsInfoColumns"/>
