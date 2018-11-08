@@ -7,11 +7,15 @@
 		a.gift_config_id AS "giftConfigId",
 		a.coupon_id AS "couponId",
 		a.coupon_count AS "couponCount",
-		a.del_flag AS "delFlag"
+		a.del_flag AS "delFlag",
+		c.coupon_name AS "couponName",
+		c.coupon_type AS "couponType",
+		c.limit_amount AS "limitAmount"
 	</sql>
 	
 	<sql id="giftConfigCouponJoins">
 		LEFT JOIN gift_config b ON b.id = a.gift_config_id
+		LEFT JOIN coupon_config c ON c.id = a.coupon_id
 	</sql>
     
 	<select id="get" resultType="GiftConfigCoupon">

@@ -67,7 +67,7 @@ public class GoodsInfoController extends BaseController {
 	@RequestMapping(value = {"selectList"})
 	public String selectList(GoodsInfo goodsInfo, HttpServletRequest request, HttpServletResponse response, Model model) {
 		goodsInfo.setStatus(3);
-		Page<GoodsInfo> page = goodsInfoService.findSelectList(new Page<GoodsInfo>(request, response), goodsInfo);
+		Page<GoodsInfo> page = goodsInfoService.findSelectList(new Page<GoodsInfo>(request, response, 10), goodsInfo);
 		model.addAttribute("page", page);
 		return "modules/goods/goodsSelectList";
 	}

@@ -3,6 +3,8 @@ package com.mall.modules.gift.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.mall.modules.gift.entity.GiftConfigCategory;
+import com.mall.modules.gift.service.GiftConfigCategoryService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -30,6 +32,8 @@ public class GiftMerchantController extends BaseController {
 
 	@Autowired
 	private GiftMerchantService giftMerchantService;
+	@Autowired
+	private GiftConfigCategoryService giftConfigCategoryService;
 	
 	@ModelAttribute
 	public GiftMerchant get(@RequestParam(required=false) String id) {
@@ -56,6 +60,24 @@ public class GiftMerchantController extends BaseController {
 	public String form(GiftMerchant giftMerchant, Model model) {
 		model.addAttribute("giftMerchant", giftMerchant);
 		return "modules/gift/giftMerchantForm";
+	}
+
+	@RequiresPermissions("gift:giftMerchant:view")
+	@RequestMapping(value = "giftTransferForm")
+	public String giftTransferForm(GiftMerchant giftMerchant, Model model) {
+		giftMerchant = this.get(giftMerchant.getId());
+		giftMerchant.setGiftConfigCategory(giftConfigCategoryService.get(giftMerchant.getGiftCategory()));
+		model.addAttribute("giftMerchant", giftMerchant);
+		return "modules/gift/giftMerchantTransfer";
+	}
+
+	@RequiresPermissions("gift:giftMerchant:view")
+	@RequestMapping(value = "giftTransfer")
+	public String giftTransfer(GiftMerchant giftMerchant, Model model) {
+		// todo gift transfer
+		giftMerchant.setGiftConfigCategory(giftConfigCategoryService.get(giftMerchant.getGiftCategory()));
+		model.addAttribute("giftMerchant", giftMerchant);
+		return "modules/gift/giftMerchantTransfer";
 	}
 
 	@RequiresPermissions("gift:giftMerchant:edit")

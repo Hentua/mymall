@@ -28,6 +28,12 @@
 			<li><label>礼包名称：</label>
 				<form:input path="giftName" htmlEscape="false" maxlength="20" class="input-medium"/>
 			</li>
+			<li><label>礼包分类：</label>
+				<form:select path="giftCategory">
+					<form:option value="" label="全部"/>
+					<form:options items="${giftConfigCategoryList}" itemValue="id" itemLabel="categoryName"/>
+				</form:select>
+			</li>
 			<li><label>创建时间：</label>
 				<input name="beginCreateDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
 					value="<fmt:formatDate value="${giftConfig.beginCreateDate}" pattern="yyyy-MM-dd HH:mm:ss"/>"
@@ -45,16 +51,14 @@
 		<thead>
 			<tr>
 				<th>礼包名称</th>
-				<th>商品总数量</th>
-				<th>创建人</th>
-				<th>创建时间</th>
-				<th>最后修改人</th>
-				<th>最后修改时间</th>
-				<th>是否在APP显示商品价格</th>
-				<th>备注</th>
-				<th>所属分类</th>
+				<th>礼包分类</th>
 				<th>礼包价格</th>
 				<th>优惠券数量</th>
+				<th>商品总数量</th>
+				<th>是否在APP显示商品价格</th>
+				<th>创建时间</th>
+				<th>最后修改时间</th>
+				<th>备注</th>
 				<shiro:hasPermission name="gift:giftConfig:edit"><th>操作</th></shiro:hasPermission>
 			</tr>
 		</thead>
@@ -65,30 +69,6 @@
 					${giftConfig.giftName}
 				</a></td>
 				<td>
-					${giftConfig.goodsCount}
-				</td>
-				<td>
-					${giftConfig.createBy.name}
-				</td>
-				<td>
-					<fmt:formatDate value="${giftConfig.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
-				</td>
-				<td>
-					${giftConfig.updateBy.name}
-				</td>
-				<td>
-					<fmt:formatDate value="${giftConfig.updateDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
-				</td>
-				<td>
-					<c:choose>
-						<c:when test="${giftConfig.showGoodsPrice == '0'}">否</c:when>
-						<c:when test="${giftConfig.showGoodsPrice == '1'}">是</c:when>
-					</c:choose>
-				</td>
-				<td>
-					${giftConfig.remarks}
-				</td>
-				<td>
 					${giftConfig.giftCategoryName}
 				</td>
 				<td>
@@ -97,8 +77,26 @@
 				<td>
 					${giftConfig.couponCount}
 				</td>
+				<td>
+					${giftConfig.goodsCount}
+				</td>
+				<td>
+					<c:choose>
+						<c:when test="${giftConfig.showGoodsPrice == '0'}">否</c:when>
+						<c:when test="${giftConfig.showGoodsPrice == '1'}">是</c:when>
+					</c:choose>
+				</td>
+				<td>
+					<fmt:formatDate value="${giftConfig.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
+				</td>
+				<td>
+					<fmt:formatDate value="${giftConfig.updateDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
+				</td>
+				<td>
+					${giftConfig.remarks}
+				</td>
 				<shiro:hasPermission name="gift:giftConfig:edit"><td>
-    				<a href="${ctx}/gift/giftConfig/form?id=${giftConfig.id}">修改</a>
+    				<a href="${ctx}/gift/giftConfig/form?id=${giftConfig.id}">详情</a>
 					<a href="${ctx}/gift/giftConfig/delete?id=${giftConfig.id}" onclick="return confirmx('确认要删除该礼包配置吗？', this.href)">删除</a>
 				</td></shiro:hasPermission>
 			</tr>

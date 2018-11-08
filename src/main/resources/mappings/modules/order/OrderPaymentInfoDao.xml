@@ -20,7 +20,8 @@
 		a.create_by AS "createBy.id",
 		a.update_date AS "updateDate",
 		a.update_by AS "updateBy.id",
-		a.payment_status AS "paymentStatus"
+		a.payment_status AS "paymentStatus",
+		a.payment_type AS "paymentType"
 	</sql>
 	
 	<sql id="orderPaymentInfoJoins">
@@ -116,7 +117,8 @@
 			create_by,
 			update_date,
 			update_by,
-		    payment_status
+		    payment_status,
+		    payment_type
 		) VALUES (
 			#{id},
 			#{paymentNo},
@@ -135,7 +137,8 @@
 			#{createBy.id},
 			#{updateDate},
 			#{updateBy.id},
-		    #{paymentStatus}
+		    #{paymentStatus},
+		    #{paymentType}
 		)
 	</insert>
 	
@@ -155,7 +158,8 @@
 			code_url = #{codeUrl},
 			update_date = #{updateDate},
 			update_by = #{updateBy.id},
-		  	payment_status = #{paymentStatus}
+		  	payment_status = #{paymentStatus},
+		  	payment_type = #{paymentType}
 		WHERE id = #{id}
 	</update>
 

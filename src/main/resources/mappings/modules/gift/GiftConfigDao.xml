@@ -38,12 +38,15 @@
 		FROM gift_config a
 		<include refid="giftConfigJoins"/>
 		<where>
-			a.del_flag = #{DEL_FLAG_NORMAL}
+			a.del_flag = #{DEL_FLAG_NORMAL} and c.del_flag = #{DEL_FLAG_NORMAL}
 			<if test="giftName != null and giftName != ''">
 				AND a.gift_name LIKE 
 					<if test="dbName == 'oracle'">'%'||#{giftName}||'%'</if>
 					<if test="dbName == 'mssql'">'%'+#{giftName}+'%'</if>
 					<if test="dbName == 'mysql'">concat('%',#{giftName},'%')</if>
+			</if>
+			<if test="giftCategory != null and giftCategory != ''">
+				AND a.gift_category = #{giftCategory}
 			</if>
 			<if test="beginCreateDate != null and endCreateDate != null and beginCreateDate != '' and endCreateDate != ''">
 				AND a.create_date BETWEEN #{beginCreateDate} AND #{endCreateDate}

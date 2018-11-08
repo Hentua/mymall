@@ -17,10 +17,6 @@
 	</script>
 </head>
 <body>
-	<ul class="nav nav-tabs">
-		<li class="active"><a href="${ctx}/coupon/couponConfig/">优惠券规则列表</a></li>
-		<shiro:hasPermission name="coupon:couponConfig:edit"><li><a href="${ctx}/coupon/couponConfig/form">优惠券规则添加</a></li></shiro:hasPermission>
-	</ul>
 	<form:form id="searchForm" modelAttribute="couponConfig" action="${ctx}/coupon/couponConfig/" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
@@ -35,18 +31,12 @@
 			<li><label>优惠券名称：</label>
 				<form:input path="couponName" htmlEscape="false" maxlength="20" class="input-medium"/>
 			</li>
-			<li><label>是否可使用：</label>
-				<form:select path="status" class="input-medium">
-					<form:option value="" label="全部"/>
-					<form:option value="1" label="是"/>
-					<form:option value="0" label="否"/>
-				</form:select>
-			</li>
 			<li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
 			<li class="clearfix"></li>
 		</ul>
 	</form:form>
 	<sys:message content="${message}"/>
+	已选择：<span id="selectedCoupon"></span>
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
 		<thead>
 			<tr>
@@ -57,7 +47,7 @@
 				<th>最后修改时间</th>
 				<th>状态</th>
 				<th>备注</th>
-				<shiro:hasPermission name="coupon:couponConfig:edit"><th>操作</th></shiro:hasPermission>
+				<th>选择</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -90,17 +80,26 @@
 				<td>
 					${couponConfig.remarks}
 				</td>
-				<shiro:hasPermission name="coupon:couponConfig:edit"><td>
-					<c:choose>
-						<c:when test="${couponConfig.status == '0'}"><a href="${ctx}/coupon/couponConfig/enableCouponConfig?id=${couponConfig.id}">启用</a></c:when>
-						<c:when test="${couponConfig.status == '1'}"><a href="${ctx}/coupon/couponConfig/disableCouponConfig?id=${couponConfig.id}">停用</a></c:when>
-					</c:choose>
-					<a href="${ctx}/coupon/couponConfig/delete?id=${couponConfig.id}" onclick="return confirmx('确认要删除该优惠券规则吗？', this.href)">删除</a>
-				</td></shiro:hasPermission>
+				<td>
+					<a href="javascript:void(0)" onclick="selectCoupon('${couponConfig.id}', '${couponConfig.couponType}', '${couponConfig.limitAmount}', '${couponConfig.couponName}')">选择</a>
+				</td>
 			</tr>
 		</c:forEach>
 		</tbody>
 	</table>
+	<input id="couponId" type="hidden"/>
+	<input id="couponType" type="hidden"/>
+	<input id="limitAmount" type="hidden"/>
+	<input id="couponShowName" type="hidden"/>
+	<script type="text/javascript">
+        function selectCoupon(id, couponType, limitAmount, couponName) {
+            $('#couponId').val(id);
+            $('#couponType').val(couponType);
+            $('#limitAmount').val(limitAmount);
+            $('#couponShowName').val(limitAmount);
+            $('#selectedCoupon').text(couponName);
+        }
+	</script>
 	<div class="pagination">${page}</div>
 </body>
 </html>

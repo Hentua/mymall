@@ -59,6 +59,7 @@
 				<th>商品名称</th>
 				<th>商品分类</th>
 				<th>商品标题</th>
+				<th>商家名称</th>
 				<th>商品状态</th>
 				<th>单位</th>
 				<th>商品规格</th>
@@ -74,13 +75,16 @@
 				<td>
 					<%--<a href="${ctx}/goods/goodsInfo/form?id=${goodsInfo.id}">--%>
 					<%--<img src="${goodsInfo.fullImageUrl}" width="50px">--%>
-						${goodsInfo.goodsName}
+					${goodsInfo.goodsName}
 				<%--</a>--%></td>
 				<td>
-						${goodsInfo.goodsCategoryName}
+					${goodsInfo.goodsCategoryName}
 				</td>
 				<td>
 					${goodsInfo.goodsTitle}
+				</td>
+				<td>
+					${goodsInfo.merchantName}
 				</td>
 				<td>
 					<c:if test="${goodsInfo.status == '1'}">
@@ -116,7 +120,7 @@
 		</tbody>
 	</table>
 	<input id="goodsId" type="hidden"/>
-	<input id="goodsName" type="hidden"/>
+	<input id="goodsShowName" type="hidden"/>
 	<input id="merchantCode" type="hidden"/>
 	<input id="goodsImage" type="hidden"/>
 	<input id="standardId" type="hidden"/>
@@ -124,12 +128,12 @@
 	<script type="text/javascript">
 		function selectGoods(id, name, merchantId,image,standardId,standardName) {
 			$('#goodsId').val(id);
-			$('#goodsName').val(name);
+			$('#goodsShowName').val(name);
 			$('#merchantCode').val(merchantId);
 			$("#goodsImage").val(image);
             $("#standardId").val(standardId);
             $("#standardName").val(standardName);
-			$('#selectedGoodsInfo').text(name);
+			$('#selectedGoodsInfo').text(name + "   " + standardName);
         }
 	</script>
 	<div class="pagination">${page}</div>

@@ -16,10 +16,16 @@
 		a.update_date AS "updateDate",
 		a.update_by AS "updateBy.id",
 		a.status AS "status",
-		a.remarks AS "remarks"
+		a.remarks AS "remarks",
+		a.gift_merchant_code AS "giftMerchantCode",
+		c.category_name AS "giftConfigCategoryName",
+		m.nickname AS "merchantName",
+		a.pay_channel AS "payChannel"
 	</sql>
 	
 	<sql id="giftPurchaseLogJoins">
+		left join member_info m on m.id = a.merchant_code
+		left join gift_config_category c on c.id = a.gift_category
 	</sql>
     
 	<select id="get" resultType="GiftPurchaseLog">
@@ -36,14 +42,19 @@
 		FROM gift_purchase_log a
 		<include refid="giftPurchaseLogJoins"/>
 		<where>
-			
+			<if test="giftConfigCategoryName != null and giftConfigCategoryName != ''">
+				and c.category_name like concat('%',#{giftConfigCategoryName},'%')
+			</if>
+			<if test="paymentNo != null and paymentNo != ''">
+				and a.payment_no = #{paymentNo}
+			</if>
 		</where>
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
 				ORDER BY ${page.orderBy}
 			</when>
 			<otherwise>
-				ORDER BY a.update_date DESC
+				ORDER BY a.create_date DESC
 			</otherwise>
 		</choose>
 	</select>
@@ -81,7 +92,9 @@
 			update_date,
 			update_by,
 			status,
-			remarks
+			remarks,
+			gift_merchant_code,
+			pay_channel
 		) VALUES (
 			#{id},
 			#{merchantCode},
@@ -96,7 +109,9 @@
 			#{updateDate},
 			#{updateBy.id},
 			#{status},
-			#{remarks}
+			#{remarks},
+			#{giftMerchantCode},
+			#{payChannel}
 		)
 	</insert>
 	
@@ -112,7 +127,9 @@
 			update_date = #{updateDate},
 			update_by = #{updateBy.id},
 			status = #{status},
-			remarks = #{remarks}
+			remarks = #{remarks},
+			gift_merchant_code = #{giftMerchantCode},
+			pay_channel = #{payChannel}
 		WHERE id = #{id}
 	</update>
 	

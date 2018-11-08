@@ -4,6 +4,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.mall.modules.gift.entity.GiftConfigCategory;
+import com.mall.modules.gift.entity.GiftConfigCoupon;
+import com.mall.modules.gift.entity.GiftConfigGoods;
 import com.mall.modules.gift.service.GiftConfigCategoryService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +54,9 @@ public class GiftConfigController extends BaseController {
 	@RequiresPermissions("gift:giftConfig:view")
 	@RequestMapping(value = {"list", ""})
 	public String list(GiftConfig giftConfig, HttpServletRequest request, HttpServletResponse response, Model model) {
-		Page<GiftConfig> page = giftConfigService.findPage(new Page<GiftConfig>(request, response), giftConfig); 
+		Page<GiftConfig> page = giftConfigService.findPage(new Page<GiftConfig>(request, response), giftConfig);
+		List<GiftConfigCategory> giftConfigCategoryList = giftConfigCategoryService.findList(new GiftConfigCategory());
+		model.addAttribute("giftConfigCategoryList", giftConfigCategoryList);
 		model.addAttribute("page", page);
 		return "modules/gift/giftConfigList";
 	}
@@ -69,6 +73,28 @@ public class GiftConfigController extends BaseController {
 	@RequiresPermissions("gift:giftConfig:edit")
 	@RequestMapping(value = "save")
 	public String save(GiftConfig giftConfig, Model model, RedirectAttributes redirectAttributes) {
+		List<GiftConfigGoods> giftConfigGoods = giftConfig.getGiftConfigGoodsList();
+		List<GiftConfigCoupon> giftConfigCoupons = giftConfig.getGiftConfigCouponList();
+		int goodsCount = 0;
+		int couponCount = 0;
+		if(null != giftConfigGoods && giftConfigGoods.size() > 0) {
+			for (GiftConfigGoods g : giftConfigGoods) {
+				goodsCount += g.getGoodsCount();
+			}
+		}else {
+			model.addAttribute("message", "未选择商品");
+			return form(giftConfig, model);
+		}
+		if(null != giftConfigCoupons && giftConfigCoupons.size() > 0) {
+			for (GiftConfigCoupon giftConfigCoupon : giftConfigCoupons) {
+				couponCount += giftConfigCoupon.getCouponCount();
+			}
+		}else {
+			model.addAttribute("message", "未选择优惠券");
+			return form(giftConfig, model);
+		}
+		giftConfig.setGoodsCount(goodsCount);
+		giftConfig.setCouponCount(couponCount);
 		if (!beanValidator(model, giftConfig)){
 			return form(giftConfig, model);
 		}

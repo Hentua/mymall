@@ -3,9 +3,15 @@ package com.mall.modules.gift.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.mall.modules.gift.entity.GiftMerchant;
+import com.mall.modules.gift.service.GiftMerchantService;
+import com.mall.modules.sys.entity.User;
+import com.mall.modules.sys.utils.UserUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +25,8 @@ import com.mall.common.utils.StringUtils;
 import com.mall.modules.gift.entity.GiftPurchaseLog;
 import com.mall.modules.gift.service.GiftPurchaseLogService;
 
+import java.util.Date;
+
 /**
  * 礼包购买记录Controller
  * @author wankang
@@ -30,6 +38,8 @@ public class GiftPurchaseLogController extends BaseController {
 
 	@Autowired
 	private GiftPurchaseLogService giftPurchaseLogService;
+	@Autowired
+	private GiftMerchantService giftMerchantService;
 	
 	@ModelAttribute
 	public GiftPurchaseLog get(@RequestParam(required=false) String id) {
@@ -46,9 +56,52 @@ public class GiftPurchaseLogController extends BaseController {
 	@RequiresPermissions("gift:giftPurchaseLog:view")
 	@RequestMapping(value = {"list", ""})
 	public String list(GiftPurchaseLog giftPurchaseLog, HttpServletRequest request, HttpServletResponse response, Model model) {
-		Page<GiftPurchaseLog> page = giftPurchaseLogService.findPage(new Page<GiftPurchaseLog>(request, response), giftPurchaseLog); 
+		User currUser = UserUtils.getUser();
+		giftPurchaseLog.setMerchantCode(currUser.getId());
+		Page<GiftPurchaseLog> page = giftPurchaseLogService.findPage(new Page<GiftPurchaseLog>(request, response), giftPurchaseLog);
 		model.addAttribute("page", page);
 		return "modules/gift/giftPurchaseLogList";
+	}
+
+	@RequiresPermissions("gift:giftPurchaseLog:view")
+	@RequestMapping(value = {"checkList"})
+	public String checkList(GiftPurchaseLog giftPurchaseLog, HttpServletRequest request, HttpServletResponse response, Model model) {
+		Page<GiftPurchaseLog> page = giftPurchaseLogService.findPage(new Page<GiftPurchaseLog>(request, response), giftPurchaseLog);
+		model.addAttribute("page", page);
+		return "modules/gift/giftPurchaseCheckList";
+	}
+
+	@RequestMapping(value = "checkPass")
+	@Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+	public String checkPass(GiftPurchaseLog giftPurchaseLog, HttpServletRequest request, HttpServletResponse response, Model model, RedirectAttributes redirectAttributes) {
+		String id = giftPurchaseLog.getId();
+		if(StringUtils.isBlank(id)) {
+			model.addAttribute("message", "未选择要审核的购买记录");
+			return checkList(new GiftPurchaseLog(), request, response, model);
+		}
+		giftPurchaseLog = this.get(id);
+		giftPurchaseLog.setStatus("1");
+		giftPurchaseLog.setPayTime(new Date());
+		GiftMerchant giftMerchant = giftPurchaseLogService.genGiftMerchant(giftPurchaseLog);
+		giftMerchantService.save(giftMerchant);
+		giftPurchaseLog.setGiftMerchantCode(giftMerchant.getId());
+		giftPurchaseLogService.save(giftPurchaseLog);
+		addMessage(redirectAttributes, "审核成功");
+		return "redirect:"+Global.getAdminPath()+"/gift/giftPurchaseLog/checkList?repage";
+	}
+
+	@RequestMapping(value = "checkNotPass")
+	public String checkNotPass(GiftPurchaseLog giftPurchaseLog, HttpServletRequest request, HttpServletResponse response, Model model, RedirectAttributes redirectAttributes) {
+		String id = giftPurchaseLog.getId();
+		if(StringUtils.isBlank(id)) {
+			model.addAttribute("message", "未选择要审核的购买记录");
+			return checkList(new GiftPurchaseLog(), request, response, model);
+		}
+		giftPurchaseLog = this.get(id);
+		giftPurchaseLog.setStatus("2");
+		giftPurchaseLogService.save(giftPurchaseLog);
+		addMessage(redirectAttributes, "审核成功");
+		return "redirect:"+Global.getAdminPath()+"/gift/giftPurchaseLog/checkList?repage";
 	}
 
 	@RequiresPermissions("gift:giftPurchaseLog:view")

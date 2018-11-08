@@ -52,7 +52,7 @@
 			<div class="controls">
 				<c:choose>
 					<c:when test="${empty giftConfigCategory.id }">
-						<form:input path="giftPrice" htmlEscape="false" maxlength="20" class="input-xlarge required"/>
+						<form:input path="giftPrice" htmlEscape="false" maxlength="20" class="input-xlarge required number"/>
 						<span class="help-inline"><font color="red">*</font> </span>
 					</c:when>
 					<c:otherwise>
@@ -62,12 +62,12 @@
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">定制礼包商家手机号码：</label>
+			<label class="control-label">定制礼包商家：</label>
 			<div class="controls">
 				<c:choose>
 					<c:when test="${empty giftConfigCategory.id }">
 						<form:input path="merchantMobile" htmlEscape="false" maxlength="20" class="input-xlarge"/>
-						<span class="help-inline"><font color="red">留空则不是定制礼包类别</font> </span>
+						<span class="help-inline"><font color="red">留空则不是定制礼包类别，填写商家手机号码</font> </span>
 					</c:when>
 					<c:otherwise>
 						${giftConfigCategory.merchantName}

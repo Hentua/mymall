@@ -25,6 +25,7 @@ public class OrderPaymentInfo extends DataEntity<OrderPaymentInfo> {
 	private String prepayId;		// 预支付交易会话标识
 	private String codeUrl;		// 二维码链接
 	private String paymentStatus; // 付款状态 0-未付款 1-付款成功 2-付款失败
+	private String paymentType; // 支付来源类型 0-订单 1-礼包购买
 	
 	public OrderPaymentInfo() {
 		super();
@@ -40,6 +41,14 @@ public class OrderPaymentInfo extends DataEntity<OrderPaymentInfo> {
 
 	public void setPaymentStatus(String paymentStatus) {
 		this.paymentStatus = paymentStatus;
+	}
+
+	public String getPaymentType() {
+		return paymentType;
+	}
+
+	public void setPaymentType(String paymentType) {
+		this.paymentType = paymentType;
 	}
 
 	@Length(min=1, max=32, message="支付单号长度必须介于 1 和 32 之间")

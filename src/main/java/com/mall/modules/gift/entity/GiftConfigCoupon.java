@@ -13,9 +13,14 @@ import com.mall.common.persistence.DataEntity;
 public class GiftConfigCoupon extends DataEntity<GiftConfigCoupon> {
 	
 	private static final long serialVersionUID = 1L;
-	private GiftConfig giftConfigId;		// 礼包配置ID 父类
+	private String giftConfigId;		// 礼包配置ID 父类
 	private String couponId;		// 优惠券ID
 	private Integer couponCount;		// 优惠券数量
+
+	private String couponName; // 优惠券名称
+	private String couponType; // 优惠券类型
+	private Double limitAmount; // 优惠券金额
+	private String couponTypeName; // 优惠券类型中文名
 	
 	public GiftConfigCoupon() {
 		super();
@@ -26,15 +31,52 @@ public class GiftConfigCoupon extends DataEntity<GiftConfigCoupon> {
 	}
 
 	public GiftConfigCoupon(GiftConfig giftConfigId){
-		this.giftConfigId = giftConfigId;
+		this.giftConfigId = giftConfigId.getId();
+	}
+
+	public String getCouponTypeName() {
+		if("0".equals(this.couponType)) {
+			this.couponTypeName = "五折券";
+		}else if("1".equals(this.couponType)) {
+			this.couponTypeName = "七折券";
+		}
+		return couponTypeName;
+	}
+
+	public void setCouponTypeName(String couponTypeName) {
+		this.couponTypeName = couponTypeName;
+	}
+
+	public String getCouponName() {
+		return couponName;
+	}
+
+	public void setCouponName(String couponName) {
+		this.couponName = couponName;
+	}
+
+	public String getCouponType() {
+		return couponType;
+	}
+
+	public void setCouponType(String couponType) {
+		this.couponType = couponType;
+	}
+
+	public Double getLimitAmount() {
+		return limitAmount;
+	}
+
+	public void setLimitAmount(Double limitAmount) {
+		this.limitAmount = limitAmount;
 	}
 
 	@Length(min=1, max=64, message="礼包配置ID长度必须介于 1 和 64 之间")
-	public GiftConfig getGiftConfigId() {
+	public String getGiftConfigId() {
 		return giftConfigId;
 	}
 
-	public void setGiftConfigId(GiftConfig giftConfigId) {
+	public void setGiftConfigId(String giftConfigId) {
 		this.giftConfigId = giftConfigId;
 	}
 	

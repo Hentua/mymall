@@ -13,12 +13,15 @@ import com.mall.common.persistence.DataEntity;
 public class GiftConfigGoods extends DataEntity<GiftConfigGoods> {
 	
 	private static final long serialVersionUID = 1L;
-	private GiftConfig giftConfigId;		// 礼包配置ID 父类
+	private String giftConfigId;		// 礼包配置ID 父类
 	private String goodsId;		// 商品ID
 	private Integer goodsCount;		// 商品数量
 	private String merchantCode;		// 店铺ID
 	private Double goodsSettlementPrice;		// 单个商品结算价格
-	private String goodsStandartId;		// 商品规格ID
+	private String goodsStandardId;		// 商品规格ID
+
+	private String goodsName; // 商品名称
+	private String standardName; // 商品规格名称
 	
 	public GiftConfigGoods() {
 		super();
@@ -29,15 +32,31 @@ public class GiftConfigGoods extends DataEntity<GiftConfigGoods> {
 	}
 
 	public GiftConfigGoods(GiftConfig giftConfigId){
-		this.giftConfigId = giftConfigId;
+		this.giftConfigId = giftConfigId.getId();
+	}
+
+	public String getGoodsName() {
+		return goodsName;
+	}
+
+	public void setGoodsName(String goodsName) {
+		this.goodsName = goodsName;
+	}
+
+	public String getStandardName() {
+		return standardName;
+	}
+
+	public void setStandardName(String standardName) {
+		this.standardName = standardName;
 	}
 
 	@Length(min=1, max=64, message="礼包配置ID长度必须介于 1 和 64 之间")
-	public GiftConfig getGiftConfigId() {
+	public String getGiftConfigId() {
 		return giftConfigId;
 	}
 
-	public void setGiftConfigId(GiftConfig giftConfigId) {
+	public void setGiftConfigId(String giftConfigId) {
 		this.giftConfigId = giftConfigId;
 	}
 	
@@ -78,12 +97,12 @@ public class GiftConfigGoods extends DataEntity<GiftConfigGoods> {
 	}
 	
 	@Length(min=1, max=64, message="商品规格ID长度必须介于 1 和 64 之间")
-	public String getGoodsStandartId() {
-		return goodsStandartId;
+	public String getGoodsStandardId() {
+		return goodsStandardId;
 	}
 
-	public void setGoodsStandartId(String goodsStandartId) {
-		this.goodsStandartId = goodsStandartId;
+	public void setGoodsStandardId(String goodsStandardId) {
+		this.goodsStandardId = goodsStandardId;
 	}
 	
 }

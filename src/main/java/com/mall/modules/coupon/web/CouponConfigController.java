@@ -52,6 +52,15 @@ public class CouponConfigController extends BaseController {
 	}
 
 	@RequiresPermissions("coupon:couponConfig:view")
+	@RequestMapping(value = {"selectList"})
+	public String selectList(CouponConfig couponConfig, HttpServletRequest request, HttpServletResponse response, Model model) {
+		couponConfig.setStatus("1");
+		Page<CouponConfig> page = couponConfigService.findPage(new Page<CouponConfig>(request, response, 10), couponConfig);
+		model.addAttribute("page", page);
+		return "modules/coupon/couponConfigSelectList";
+	}
+
+	@RequiresPermissions("coupon:couponConfig:view")
 	@RequestMapping(value = "form")
 	public String form(CouponConfig couponConfig, Model model) {
 		model.addAttribute("couponConfig", couponConfig);
@@ -75,6 +84,42 @@ public class CouponConfigController extends BaseController {
 		couponConfigService.delete(couponConfig);
 		addMessage(redirectAttributes, "删除优惠券规则成功");
 		return "redirect:"+Global.getAdminPath()+"/coupon/couponConfig/?repage";
+	}
+
+	@RequiresPermissions("coupon:couponConfig:edit")
+	@RequestMapping(value = "enableCouponConfig")
+	public String enableCouponConfig(CouponConfig couponConfig, RedirectAttributes redirectAttributes) {
+		if(null == couponConfig || StringUtils.isBlank(couponConfig.getId())) {
+			addMessage(redirectAttributes, "未选择要启用的优惠券配置");
+			return "redirect:" + Global.getAdminPath() + "/coupon/couponConfig/?repage";
+		}
+		couponConfig = this.get(couponConfig.getId());
+		if("1".equals(couponConfig.getStatus())) {
+			addMessage(redirectAttributes, "启用失败，优惠券配置已启用");
+			return "redirect:" + Global.getAdminPath() + "/coupon/couponConfig/?repage";
+		}
+		couponConfig.setStatus("1");
+		couponConfigService.save(couponConfig);
+		addMessage(redirectAttributes, "启用优惠券配置成功");
+		return "redirect:" + Global.getAdminPath() + "/coupon/couponConfig/?repage";
+	}
+
+	@RequiresPermissions("coupon:couponConfig:edit")
+	@RequestMapping(value = "disableCouponConfig")
+	public String disableCouponConfig(CouponConfig couponConfig, RedirectAttributes redirectAttributes) {
+		if(null == couponConfig || StringUtils.isBlank(couponConfig.getId())) {
+			addMessage(redirectAttributes, "未选择要禁用的优惠券配置");
+			return "redirect:" + Global.getAdminPath() + "/coupon/couponConfig/?repage";
+		}
+		couponConfig = this.get(couponConfig.getId());
+		if("0".equals(couponConfig.getStatus())) {
+			addMessage(redirectAttributes, "禁用失败，优惠券配置已禁用");
+			return "redirect:" + Global.getAdminPath() + "/coupon/couponConfig/?repage";
+		}
+		couponConfig.setStatus("0");
+		couponConfigService.save(couponConfig);
+		addMessage(redirectAttributes, "禁用优惠券配置成功");
+		return "redirect:" + Global.getAdminPath() + "/coupon/couponConfig/?repage";
 	}
 
 }

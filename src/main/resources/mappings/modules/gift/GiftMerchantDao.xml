@@ -13,10 +13,12 @@
 		a.merchant_code AS "merchantCode",
 		a.update_by AS "updateBy.name",
 		a.update_date AS "updateDate",
-		a.remarks AS "remarks"
+		a.remarks AS "remarks",
+		c.category_name AS "giftConfigCategoryName"
 	</sql>
 	
 	<sql id="giftMerchantJoins">
+		left join gift_config_category c on c.id = a.gift_category
 	</sql>
     
 	<select id="get" resultType="GiftMerchant">
@@ -39,6 +41,9 @@
 			</if>
 			<if test="beginCreateDate != null and endCreateDate != null and beginCreateDate != '' and endCreateDate != ''">
 				AND a.create_date BETWEEN #{beginCreateDate} AND #{endCreateDate}
+			</if>
+			<if test="giftConfigCategoryName != null and giftConfigCategoryName != ''">
+				and c.category_name like concat('%',#{giftConfigCategoryName},'%')
 			</if>
 		</where>
 		<choose>

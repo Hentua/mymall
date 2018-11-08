@@ -61,12 +61,22 @@ public class OrderPaymentInfoService extends CrudService<OrderPaymentInfoDao, Or
 		}else if("1".equals(orderType)) {
 			orderPaymentInfo.setPaymentStatus("1");
 		}
+		orderPaymentInfo.setPaymentType("0");
 		return orderPaymentInfo;
 	}
 
 	@Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
-	public int modifyPaymentInfoStatus(OrderPaymentInfo orderPaymentInfo) {
-		return orderPaymentInfoDao.modifyPaymentInfoStatus(orderPaymentInfo);
+	public OrderPaymentInfo genAmountPaymentInfo(String payChannel, String paymentType, Double amountTotal) {
+		OrderPaymentInfo orderPaymentInfo = genDefaultPaymentInfo(payChannel);
+		orderPaymentInfo.setAmountTotal(amountTotal);
+		orderPaymentInfo.setPaymentType(paymentType);
+		this.save(orderPaymentInfo);
+		return orderPaymentInfo;
+	}
+
+	@Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+	public void modifyPaymentInfoStatus(OrderPaymentInfo orderPaymentInfo) {
+		orderPaymentInfoDao.modifyPaymentInfoStatus(orderPaymentInfo);
 	}
 
 }

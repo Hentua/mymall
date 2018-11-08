@@ -23,13 +23,80 @@ public class GiftPurchaseLog extends DataEntity<GiftPurchaseLog> {
 	private String paymentNo;		// 支付单号ID
 	private Date payTime;		// 支付时间
 	private String status;		// 礼包购买状态 0-待支付 1-购买成功 2-支付失败
-	
+	private String giftMerchantCode; // 商户礼包ID
+	private String payChannel; // 支付渠道 0-微信支付 3-余额支付 2-打款到财务
+
+	private String giftConfigCategoryName; // 礼包名称
+	private String merchantName; // 购买商户名称
+	private String statusZh; // 购买状态中文名称
+	private String payChannelZh; // 支付渠道中文名称
+
 	public GiftPurchaseLog() {
 		super();
 	}
 
 	public GiftPurchaseLog(String id){
 		super(id);
+	}
+
+	public String getPayChannel() {
+		return payChannel;
+	}
+
+	public void setPayChannel(String payChannel) {
+		this.payChannel = payChannel;
+	}
+
+	public String getPayChannelZh() {
+		switch (this.payChannel) {
+			case "0" : this.payChannelZh = "微信支付";break;
+			case "3" : this.payChannelZh = "余额支付";break;
+			case "2" : this.payChannelZh = "打款到财务";break;
+			default:;
+		}
+		return payChannelZh;
+	}
+
+	public void setPayChannelZh(String payChannelZh) {
+		this.payChannelZh = payChannelZh;
+	}
+
+	public String getGiftMerchantCode() {
+		return giftMerchantCode;
+	}
+
+	public void setGiftMerchantCode(String giftMerchantCode) {
+		this.giftMerchantCode = giftMerchantCode;
+	}
+
+	public String getGiftConfigCategoryName() {
+		return giftConfigCategoryName;
+	}
+
+	public void setGiftConfigCategoryName(String giftConfigCategoryName) {
+		this.giftConfigCategoryName = giftConfigCategoryName;
+	}
+
+	public String getMerchantName() {
+		return merchantName;
+	}
+
+	public void setMerchantName(String merchantName) {
+		this.merchantName = merchantName;
+	}
+
+	public String getStatusZh() {
+		switch (this.status) {
+			case "0" : this.statusZh = "未支付";break;
+			case "1" : this.statusZh = "购买成功";break;
+			case "2" : this.statusZh = "购买失败";break;
+			default:;
+		}
+		return statusZh;
+	}
+
+	public void setStatusZh(String statusZh) {
+		this.statusZh = statusZh;
 	}
 
 	@Length(min=1, max=64, message="购买商户ID长度必须介于 1 和 64 之间")

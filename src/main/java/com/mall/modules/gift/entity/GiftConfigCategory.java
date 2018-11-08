@@ -20,6 +20,9 @@ public class GiftConfigCategory extends DataEntity<GiftConfigCategory> {
 	private String merchantCode; // 定制礼包商户ID
 	private String merchantName; // 定制礼包商户名称
 	private String merchantMobile; // 定制礼包商户手机号
+
+	private Integer buyCount; // 购买数量
+	private String payChannel; // 支付渠道 0-微信支付 3-余额支付 2-打款到财务
 	
 	public GiftConfigCategory() {
 		super();
@@ -27,6 +30,22 @@ public class GiftConfigCategory extends DataEntity<GiftConfigCategory> {
 
 	public GiftConfigCategory(String id){
 		super(id);
+	}
+
+	public Integer getBuyCount() {
+		return buyCount;
+	}
+
+	public void setBuyCount(Integer buyCount) {
+		this.buyCount = buyCount;
+	}
+
+	public String getPayChannel() {
+		return payChannel;
+	}
+
+	public void setPayChannel(String payChannel) {
+		this.payChannel = payChannel;
 	}
 
 	public String getMerchantMobile() {

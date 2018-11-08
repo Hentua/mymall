@@ -18,9 +18,9 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li class="active"><a href="${ctx}/gift/giftPurchaseLog/">礼包购买记录</a></li>
+		<li class="active"><a href="${ctx}/gift/giftPurchaseLog/checkList">礼包购买审核</a></li>
 	</ul>
-	<form:form id="searchForm" modelAttribute="giftPurchaseLog" action="${ctx}/gift/giftPurchaseLog/" method="post" class="breadcrumb form-search">
+	<form:form id="searchForm" modelAttribute="giftPurchaseLog" action="${ctx}/gift/giftPurchaseLog/checkList" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<ul class="ul-form">
@@ -40,6 +40,7 @@
 			<tr>
 				<th>订单号</th>
 				<th>礼包名称</th>
+				<th>购买商户</th>
 				<th>购买数量</th>
 				<th>单价</th>
 				<th>总价</th>
@@ -47,6 +48,7 @@
 				<th>购买时间</th>
 				<th>支付时间</th>
 				<th>购买状态</th>
+				<shiro:hasPermission name="gift:giftPurchaseLog:edit"><th>操作</th></shiro:hasPermission>
 			</tr>
 		</thead>
 		<tbody>
@@ -57,6 +59,9 @@
 				</td>
 				<td>
 					<a href="${ctx}/gift/giftConfigCategory/giftConfigCategoryDetail?id=${giftPurchaseLog.giftCategory}">${giftPurchaseLog.giftConfigCategoryName}</a>
+				</td>
+				<td>
+					${giftPurchaseLog.merchantName}
 				</td>
 				<td>
 					${giftPurchaseLog.giftCount}
@@ -79,6 +84,12 @@
 				<td>
 					${giftPurchaseLog.statusZh}
 				</td>
+				<shiro:hasPermission name="gift:giftPurchaseLog:edit"><td>
+					<c:if test="${giftPurchaseLog.status == '0' && giftPurchaseLog.payChannel == '2'}">
+						<a href="${ctx}/gift/giftPurchaseLog/checkPass?id=${giftPurchaseLog.id}">审核通过</a>
+						<a href="${ctx}/gift/giftPurchaseLog/checkNotPass?id=${giftPurchaseLog.id}">审核不通过</a>
+					</c:if>
+				</td></shiro:hasPermission>
 			</tr>
 		</c:forEach>
 		</tbody>

@@ -54,7 +54,7 @@ public class GiftConfigService extends CrudService<GiftConfigDao, GiftConfig> {
 			}
 			if (GiftConfigCoupon.DEL_FLAG_NORMAL.equals(giftConfigCoupon.getDelFlag())){
 				if (StringUtils.isBlank(giftConfigCoupon.getId())){
-					giftConfigCoupon.setGiftConfigId(giftConfig);
+					giftConfigCoupon.setGiftConfigId(giftConfig.getId());
 					giftConfigCoupon.preInsert();
 					giftConfigCouponDao.insert(giftConfigCoupon);
 				}else{
@@ -71,7 +71,7 @@ public class GiftConfigService extends CrudService<GiftConfigDao, GiftConfig> {
 			}
 			if (GiftConfigGoods.DEL_FLAG_NORMAL.equals(giftConfigGoods.getDelFlag())){
 				if (StringUtils.isBlank(giftConfigGoods.getId())){
-					giftConfigGoods.setGiftConfigId(giftConfig);
+					giftConfigGoods.setGiftConfigId(giftConfig.getId());
 					giftConfigGoods.preInsert();
 					giftConfigGoodsDao.insert(giftConfigGoods);
 				}else{

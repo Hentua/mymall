@@ -18,14 +18,13 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li class="active"><a href="${ctx}/gift/giftConfigCategory/">礼包类别列表</a></li>
-		<shiro:hasPermission name="gift:giftConfigCategory:edit"><li><a href="${ctx}/gift/giftConfigCategory/form">礼包类别添加</a></li></shiro:hasPermission>
+		<li class="active"><a href="${ctx}/gift/giftConfigCategory/buyList">礼包购买</a></li>
 	</ul>
-	<form:form id="searchForm" modelAttribute="giftConfigCategory" action="${ctx}/gift/giftConfigCategory/" method="post" class="breadcrumb form-search">
+	<form:form id="searchForm" modelAttribute="giftConfigCategory" action="${ctx}/gift/giftConfigCategory/buyList" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<ul class="ul-form">
-			<li><label>分类名称：</label>
+			<li><label>礼包名称：</label>
 				<form:input path="categoryName" htmlEscape="false" maxlength="20" class="input-medium"/>
 			</li>
 			<li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
@@ -36,20 +35,19 @@
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
 		<thead>
 			<tr>
-				<th>礼包分类名称</th>
+				<th>礼包名称</th>
 				<th>礼包价格</th>
 				<th>是否赠送商家资格</th>
 				<th>定制礼包商家</th>
 				<th>创建时间</th>
 				<th>备注</th>
-				<th>是否上架销售</th>
-				<shiro:hasPermission name="gift:giftConfigCategory:edit"><th>操作</th></shiro:hasPermission>
+				<th>购买</th>
 			</tr>
 		</thead>
 		<tbody>
 		<c:forEach items="${page.list}" var="giftConfigCategory">
 			<tr>
-				<td><a href="${ctx}/gift/giftConfigCategory/form?id=${giftConfigCategory.id}">
+				<td><a href="${ctx}/gift/giftConfigCategory/giftConfigCategoryDetail?id=${giftConfigCategory.id}">
 					${giftConfigCategory.categoryName}
 				</a></td>
 				<td>
@@ -71,18 +69,8 @@
 					${giftConfigCategory.remarks}
 				</td>
 				<td>
-					<c:choose>
-						<c:when test="${giftConfigCategory.status == '0'}">否</c:when>
-						<c:when test="${giftConfigCategory.status == '1'}">是</c:when>
-					</c:choose>
+					<a href="${ctx}/gift/giftConfigCategory/giftConfigCategoryBuyDetail?id=${giftConfigCategory.id}" onclick="return confirmx('确认要购买该礼包吗？', this.href)">购买</a>
 				</td>
-				<shiro:hasPermission name="gift:giftConfigCategory:edit"><td>
-					<c:choose>
-						<c:when test="${giftConfigCategory.status == '0'}"><a href="${ctx}/gift/giftConfigCategory/enableGiftCategory?id=${giftConfigCategory.id}">上架</a></c:when>
-						<c:when test="${giftConfigCategory.status == '1'}"><a href="${ctx}/gift/giftConfigCategory/disableGiftCategory?id=${giftConfigCategory.id}">下架</a></c:when>
-					</c:choose>
-					<a href="${ctx}/gift/giftConfigCategory/delete?id=${giftConfigCategory.id}" onclick="return confirmx('确认要删除该礼包类别吗？', this.href)">删除</a>
-				</td></shiro:hasPermission>
 			</tr>
 		</c:forEach>
 		</tbody>

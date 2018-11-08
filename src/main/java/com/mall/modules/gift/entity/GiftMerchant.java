@@ -21,13 +21,42 @@ public class GiftMerchant extends DataEntity<GiftMerchant> {
 	private String merchantCode;		// 商户ID
 	private Date beginCreateDate;		// 开始 购买时间
 	private Date endCreateDate;		// 结束 购买时间
-	
+
+	private String giftConfigCategoryName; // 礼包名称
+
+	private GiftConfigCategory giftConfigCategory; // 对应礼包
+	private String customerMobile; // 赠送的会员手机号
+
 	public GiftMerchant() {
 		super();
 	}
 
 	public GiftMerchant(String id){
 		super(id);
+	}
+
+	public String getCustomerMobile() {
+		return customerMobile;
+	}
+
+	public void setCustomerMobile(String customerMobile) {
+		this.customerMobile = customerMobile;
+	}
+
+	public GiftConfigCategory getGiftConfigCategory() {
+		return giftConfigCategory;
+	}
+
+	public void setGiftConfigCategory(GiftConfigCategory giftConfigCategory) {
+		this.giftConfigCategory = giftConfigCategory;
+	}
+
+	public String getGiftConfigCategoryName() {
+		return giftConfigCategoryName;
+	}
+
+	public void setGiftConfigCategoryName(String giftConfigCategoryName) {
+		this.giftConfigCategoryName = giftConfigCategoryName;
 	}
 
 	@Length(min=1, max=64, message="礼包分类ID长度必须介于 1 和 64 之间")
