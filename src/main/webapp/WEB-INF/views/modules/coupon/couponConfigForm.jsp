@@ -32,14 +32,7 @@
 	</ul><br/>
 	<form:form id="inputForm" modelAttribute="couponConfig" action="${ctx}/coupon/couponConfig/save" method="post" class="form-horizontal">
 		<form:hidden path="id"/>
-		<sys:message content="${message}"/>		
-		<div class="control-group">
-			<label class="control-label">优惠券类型（0-折扣减免，1-金额减免）：</label>
-			<div class="controls">
-				<form:input path="couponType" htmlEscape="false" maxlength="2" class="input-xlarge required"/>
-				<span class="help-inline"><font color="red">*</font> </span>
-			</div>
-		</div>
+		<sys:message content="${message}"/>
 		<div class="control-group">
 			<label class="control-label">优惠券名称：</label>
 			<div class="controls">
@@ -48,39 +41,48 @@
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">过期时间 从发放时间开始计算 单位为天 如果为0 则为不过期：</label>
+			<label class="control-label">优惠券类型：</label>
 			<div class="controls">
-				<form:input path="expiryTime" htmlEscape="false" maxlength="11" class="input-xlarge required digits"/>
-				<span class="help-inline"><font color="red">*</font> </span>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">是否可使用（0-可使用，1-不可使用） 代表商家是否可发放：</label>
-			<div class="controls">
-				<form:select path="status" class="input-xlarge required">
-					<form:option value="" label=""/>
-					<form:options items="${fns:getDictList('')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
+				<form:select path="couponType">
+					<form:option value="0" label="五折券"/>
+					<form:option value="1" label="七折券"/>
 				</form:select>
 				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">最高折扣：</label>
+			<label class="control-label">过期时间：</label>
 			<div class="controls">
-				<form:input path="limitAmount" htmlEscape="false" class="input-xlarge  number"/>
+				<form:input path="expiryTime" htmlEscape="false" maxlength="11" class="input-xlarge required digits"/>
+				<span class="help-inline"><font color="red">*  从发放时间开始计算，单位为天。0为不过期。</font> </span>
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">remarks：</label>
+			<label class="control-label">转赠过期时间：</label>
+			<div class="controls">
+				<form:input path="transferExpiryTime" htmlEscape="false" maxlength="11" class="input-xlarge required digits" value="0"/>
+				<span class="help-inline"><font color="red">* 从获得日开始计算，单位为天。0为不过期。</font> </span>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">状态：</label>
+			<div class="controls">
+				<form:radiobutton path="status" value="1" label="启用"/>
+				<form:radiobutton path="status" value="0" label="停用" checked="true"/>
+				<span class="help-inline"><font color="red">*</font> </span>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">优惠券金额：</label>
+			<div class="controls">
+				<form:input path="limitAmount" htmlEscape="false" class="input-xlarge  number required"/>
+				<span class="help-inline"><font color="red">*</font> </span>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">备注：</label>
 			<div class="controls">
 				<form:textarea path="remarks" htmlEscape="false" rows="4" maxlength="255" class="input-xxlarge "/>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">转赠过期时间 从获得日开始计算 0为不过期：</label>
-			<div class="controls">
-				<form:input path="transferExpiryTime" htmlEscape="false" maxlength="11" class="input-xlarge required digits"/>
-				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>
 		<div class="form-actions">

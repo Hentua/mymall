@@ -100,9 +100,6 @@
 					${goodsInfo.standardName}
 				</td>
 				<td>
-					${goodsInfo.goodsPrice}
-				</td>
-				<td>
 					${goodsInfo.salesTotal}
 				</td>
 				<td>
@@ -112,7 +109,7 @@
 					<fmt:formatDate value="${goodsInfo.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
 				</td>
 				<td>
-					<a href="javascript:void(0)" onclick="selectGoods('${goodsInfo.id}', '${goodsInfo.goodsName}', '${goodsInfo.merchantId}','${goodsInfo.image}')">选择</a>
+					<a href="javascript:void(0)" onclick="selectGoods('${goodsInfo.id}', '${goodsInfo.goodsName}', '${goodsInfo.merchantId}','${goodsInfo.image}', '${goodsInfo.standardId}','${goodsInfo.standardName}')">选择</a>
 				</td>
 			</tr>
 		</c:forEach>
@@ -122,12 +119,16 @@
 	<input id="goodsName" type="hidden"/>
 	<input id="merchantCode" type="hidden"/>
 	<input id="goodsImage" type="hidden"/>
+	<input id="standardId" type="hidden"/>
+	<input id="standardName" type="hidden"/>
 	<script type="text/javascript">
-		function selectGoods(id, name, merchantId,image) {
+		function selectGoods(id, name, merchantId,image,standardId,standardName) {
 			$('#goodsId').val(id);
 			$('#goodsName').val(name);
 			$('#merchantCode').val(merchantId);
 			$("#goodsImage").val(image);
+            $("#standardId").val(standardId);
+            $("#standardName").val(standardName);
 			$('#selectedGoodsInfo').text(name);
         }
 	</script>
