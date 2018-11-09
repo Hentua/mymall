@@ -12,10 +12,18 @@
 		a.create_by AS "createBy.id",
 		a.update_date AS "updateDate",
 		a.update_by AS "updateBy.id",
-		a.remarks AS "remarks"
+		a.remarks AS "remarks",
+		a.gift_merchant_code AS "giftMerchantCode",
+		a.gift_customer_code AS "giftCustomerCode",
+		c.category_name AS "giftConfigCategoryName",
+		m.nickname AS "customerName",
+		s.mobile AS "customerMobile"
 	</sql>
 	
 	<sql id="giftTransferLogJoins">
+		left join member_info m on m.id = a.customer_code
+		left join gift_config_category c on c.id = a.gift_category
+		left join sys_user s on s.id = a.customer_code
 	</sql>
     
 	<select id="get" resultType="GiftTransferLog">
@@ -32,7 +40,18 @@
 		FROM gift_transfer_log a
 		<include refid="giftTransferLogJoins"/>
 		<where>
-			
+			<if test="merchantCode != null and merchantCode != ''">
+				and a.merchant_code = #{merchantCode}
+			</if>
+			<if test="giftConfigCategoryName != null and giftConfigCategoryName != ''">
+				and c.category_name like concat('%',#{giftConfigCategoryName},'%')
+			</if>
+			<if test="beginCreateDate != null and beginCreateDate != ''">
+				AND a.create_date &gt;= #{beginCreateDate}
+			</if>
+			<if test="endCreateDate != null and endCreateDate != ''">
+				AND a.create_date &lt;= #{endCreateDate}
+			</if>
 		</where>
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
@@ -43,7 +62,7 @@
 			</otherwise>
 		</choose>
 	</select>
-	
+
 	<select id="findAllList" resultType="GiftTransferLog">
 		SELECT 
 			<include refid="giftTransferLogColumns"/>
@@ -73,7 +92,9 @@
 			create_by,
 			update_date,
 			update_by,
-			remarks
+			remarks,
+			gift_merchant_code,
+			gift_customer_code
 		) VALUES (
 			#{id},
 			#{merchantCode},
@@ -84,7 +105,9 @@
 			#{createBy.id},
 			#{updateDate},
 			#{updateBy.id},
-			#{remarks}
+			#{remarks},
+			#{giftMerchantCode},
+			#{giftCustomerCode}
 		)
 	</insert>
 	
@@ -96,7 +119,9 @@
 			gift_count = #{giftCount},
 			update_date = #{updateDate},
 			update_by = #{updateBy.id},
-			remarks = #{remarks}
+			remarks = #{remarks},
+			gift_merchant_code = #{giftMerchantCode},
+			gift_customer_code = #{giftCustomerCode}
 		WHERE id = #{id}
 	</update>
 	

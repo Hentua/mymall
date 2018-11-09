@@ -27,9 +27,10 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
+		<li><a href="${ctx}/gift/giftMerchant/">礼包列表</a></li>
 		<li class="active"><a href="${ctx}/gift/giftMerchant/giftTransferForm?id=${giftMerchant.id}">礼包赠送</a></li>
 	</ul><br/>
-	<form:form id="inputForm" modelAttribute="giftMerchant" action="" method="post" class="form-horizontal">
+	<form:form id="inputForm" modelAttribute="giftMerchant" action="${ctx}/gift/giftMerchant/giftTransfer" method="post" class="form-horizontal">
 		<form:hidden path="id"/>
 		<sys:message content="${message}"/>		
 		<div class="control-group">
@@ -95,7 +96,7 @@
 		</div>
 		<div class="form-actions">
 			<input id="btnSubmit" class="btn btn-primary" type="submit" value="赠 送"/>&nbsp;
-			<input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
+			<input id="btnCancel" class="btn" type="button" value="返 回" onclick="location.href = '${ctx}/gift/giftMerchant/'"/>
 		</div>
 	</form:form>
 </body>

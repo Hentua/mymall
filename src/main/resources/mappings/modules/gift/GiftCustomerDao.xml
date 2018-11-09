@@ -13,10 +13,12 @@
 		a.create_date AS "createDate",
 		a.update_by AS "updateBy.id",
 		a.update_date AS "updateDate",
-		a.remarks AS "remarks"
+		a.remarks AS "remarks",
+		c.category_name AS "giftConfigCategoryName"
 	</sql>
 	
 	<sql id="giftCustomerJoins">
+		left join gift_config_category c on c.id = a.gift_category
 	</sql>
     
 	<select id="get" resultType="GiftCustomer">
@@ -33,9 +35,11 @@
 		FROM gift_customer a
 		<include refid="giftCustomerJoins"/>
 		<where>
-			
 			<if test="customerCode != null and customerCode != ''">
 				AND a.customer_code = #{customerCode}
+			</if>
+			<if test="giftCount != null and giftCount != ''">
+				AND a.gift_count &gt; #{giftCount}
 			</if>
 		</where>
 		<choose>

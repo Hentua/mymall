@@ -2,6 +2,7 @@ package com.mall.modules.gift.service;
 
 import java.util.List;
 
+import com.mall.modules.gift.entity.GiftMerchant;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,6 +40,15 @@ public class GiftTransferLogService extends CrudService<GiftTransferLogDao, Gift
 	@Transactional(readOnly = false)
 	public void delete(GiftTransferLog giftTransferLog) {
 		super.delete(giftTransferLog);
+	}
+
+	public GiftTransferLog genGiftTransferLog(GiftMerchant giftMerchant) {
+		GiftTransferLog giftTransferLog = new GiftTransferLog();
+		giftTransferLog.setMerchantCode(giftMerchant.getMerchantCode());
+		giftTransferLog.setGiftCategory(giftMerchant.getGiftCategory());
+		giftTransferLog.setGiftCount(1);
+		giftTransferLog.setGiftMerchantCode(giftMerchant.getId());
+		return giftTransferLog;
 	}
 	
 }

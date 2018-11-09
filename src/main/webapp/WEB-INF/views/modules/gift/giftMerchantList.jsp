@@ -18,7 +18,7 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li class="active"><a href="${ctx}/gift/giftMerchant/">礼包赠送</a></li>
+		<li class="active"><a href="${ctx}/gift/giftMerchant/">礼包列表</a></li>
 	</ul>
 	<form:form id="searchForm" modelAttribute="giftMerchant" action="${ctx}/gift/giftMerchant/" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
@@ -30,10 +30,10 @@
 			<li><label>购买时间：</label>
 				<input name="beginCreateDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
 					value="<fmt:formatDate value="${giftMerchant.beginCreateDate}" pattern="yyyy-MM-dd HH:mm:ss"/>"
-					onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});"/> - 
+					onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:true});"/> -
 				<input name="endCreateDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
 					value="<fmt:formatDate value="${giftMerchant.endCreateDate}" pattern="yyyy-MM-dd HH:mm:ss"/>"
-					onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});"/>
+					onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:true});"/>
 			</li>
 			<li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
 			<li class="clearfix"></li>
@@ -70,7 +70,7 @@
 					<fmt:formatDate value="${giftMerchant.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
 				</td>
 				<td>
-					<a href="${ctx}/gift/giftMerchant/giftTransferForm?id=${giftMerchant.id}" onclick="return confirmx('确认要赠送该礼包吗？', this.href)">赠送</a>
+					<c:if test="${giftMerchant.stock > 0}"><a href="${ctx}/gift/giftMerchant/giftTransferForm?id=${giftMerchant.id}" onclick="return confirmx('确认要赠送该礼包吗？', this.href)">赠送</a></c:if>
 				</td>
 			</tr>
 		</c:forEach>

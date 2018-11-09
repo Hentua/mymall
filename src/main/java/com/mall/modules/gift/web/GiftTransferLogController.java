@@ -3,6 +3,8 @@ package com.mall.modules.gift.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.mall.modules.sys.entity.User;
+import com.mall.modules.sys.utils.UserUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -46,7 +48,9 @@ public class GiftTransferLogController extends BaseController {
 	@RequiresPermissions("gift:giftTransferLog:view")
 	@RequestMapping(value = {"list", ""})
 	public String list(GiftTransferLog giftTransferLog, HttpServletRequest request, HttpServletResponse response, Model model) {
-		Page<GiftTransferLog> page = giftTransferLogService.findPage(new Page<GiftTransferLog>(request, response), giftTransferLog); 
+		User currUser = UserUtils.getUser();
+		giftTransferLog.setMerchantCode(currUser.getId());
+		Page<GiftTransferLog> page = giftTransferLogService.findPage(new Page<GiftTransferLog>(request, response), giftTransferLog);
 		model.addAttribute("page", page);
 		return "modules/gift/giftTransferLogList";
 	}

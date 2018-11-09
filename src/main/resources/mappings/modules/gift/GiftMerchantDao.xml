@@ -35,12 +35,17 @@
 		FROM gift_merchant a
 		<include refid="giftMerchantJoins"/>
 		<where>
-			
+			<if test="merchantCode != null and merchantCode != ''">
+				AND a.merchant_code = #{merchantCode}
+			</if>
 			<if test="giftCategory != null and giftCategory != ''">
 				AND a.gift_category = #{giftCategory}
 			</if>
-			<if test="beginCreateDate != null and endCreateDate != null and beginCreateDate != '' and endCreateDate != ''">
-				AND a.create_date BETWEEN #{beginCreateDate} AND #{endCreateDate}
+			<if test="beginCreateDate != null and beginCreateDate != ''">
+				AND a.create_date &gt;= #{beginCreateDate}
+			</if>
+			<if test="endCreateDate != null and endCreateDate != ''">
+				AND a.create_date &lt;= #{endCreateDate}
 			</if>
 			<if test="giftConfigCategoryName != null and giftConfigCategoryName != ''">
 				and c.category_name like concat('%',#{giftConfigCategoryName},'%')
@@ -51,7 +56,7 @@
 				ORDER BY ${page.orderBy}
 			</when>
 			<otherwise>
-				ORDER BY a.update_date DESC
+				ORDER BY a.create_date DESC
 			</otherwise>
 		</choose>
 	</select>

@@ -18,13 +18,23 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li class="active"><a href="${ctx}/gift/giftTransferLog/">礼包赠送记录列表</a></li>
-		<shiro:hasPermission name="gift:giftTransferLog:edit"><li><a href="${ctx}/gift/giftTransferLog/form">礼包赠送记录添加</a></li></shiro:hasPermission>
+		<li class="active"><a href="${ctx}/gift/giftTransferLog/">礼包赠送记录</a></li>
 	</ul>
 	<form:form id="searchForm" modelAttribute="giftTransferLog" action="${ctx}/gift/giftTransferLog/" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<ul class="ul-form">
+			<li><label>礼包名称：</label>
+				<form:input path="giftConfigCategoryName" htmlEscape="false" maxlength="20" class="input-medium"/>
+			</li>
+			<li><label>赠送时间：</label>
+				<input name="beginCreateDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
+					   value="<fmt:formatDate value="${giftTransferLog.beginCreateDate}" pattern="yyyy-MM-dd HH:mm:ss"/>"
+					   onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:true});"/> -
+				<input name="endCreateDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
+					   value="<fmt:formatDate value="${giftTransferLog.endCreateDate}" pattern="yyyy-MM-dd HH:mm:ss"/>"
+					   onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:true});"/>
+			</li>
 			<li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
 			<li class="clearfix"></li>
 		</ul>
@@ -33,24 +43,31 @@
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
 		<thead>
 			<tr>
-				<th>update_date</th>
-				<th>remarks</th>
-				<shiro:hasPermission name="gift:giftTransferLog:edit"><th>操作</th></shiro:hasPermission>
+				<th>礼包名称</th>
+				<th>赠送数量</th>
+				<th>会员</th>
+				<th>会员手机号</th>
+				<th>赠送时间</th>
 			</tr>
 		</thead>
 		<tbody>
 		<c:forEach items="${page.list}" var="giftTransferLog">
 			<tr>
-				<td><a href="${ctx}/gift/giftTransferLog/form?id=${giftTransferLog.id}">
-					<fmt:formatDate value="${giftTransferLog.updateDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
-				</a></td>
 				<td>
-					${giftTransferLog.remarks}
+					<a href="${ctx}/gift/giftConfigCategory/giftConfigCategoryDetail?id=${giftTransferLog.giftCategory}">${giftTransferLog.giftConfigCategoryName}</a>
 				</td>
-				<shiro:hasPermission name="gift:giftTransferLog:edit"><td>
-    				<a href="${ctx}/gift/giftTransferLog/form?id=${giftTransferLog.id}">修改</a>
-					<a href="${ctx}/gift/giftTransferLog/delete?id=${giftTransferLog.id}" onclick="return confirmx('确认要删除该礼包赠送记录吗？', this.href)">删除</a>
-				</td></shiro:hasPermission>
+				<td>
+					${giftTransferLog.giftCount}
+				</td>
+				<td>
+					${giftTransferLog.customerName}
+				</td>
+				<td>
+					${giftTransferLog.customerMobile}
+				</td>
+				<td>
+					<fmt:formatDate value="${giftTransferLog.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
+				</td>
 			</tr>
 		</c:forEach>
 		</tbody>

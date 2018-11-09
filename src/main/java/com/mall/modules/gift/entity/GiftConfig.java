@@ -1,5 +1,6 @@
 package com.mall.modules.gift.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -21,7 +22,9 @@ public class GiftConfig extends DataEntity<GiftConfig> {
 	private String showGoodsPrice;		// 是否在APP显示商品价格 0-否 1-是
 	private String giftCategory;		// 对应分类ID
 	private Integer couponCount;		// 优惠券数量
+	@JsonIgnore
 	private Date beginCreateDate;		// 开始 create_date
+	@JsonIgnore
 	private Date endCreateDate;		// 结束 create_date
 	private List<GiftConfigCoupon> giftConfigCouponList = Lists.newArrayList();		// 子表列表
 	private List<GiftConfigGoods> giftConfigGoodsList = Lists.newArrayList();		// 子表列表

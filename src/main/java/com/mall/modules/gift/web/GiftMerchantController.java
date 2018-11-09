@@ -2,6 +2,7 @@ package com.mall.modules.gift.web;
 
 import com.mall.common.config.Global;
 import com.mall.common.persistence.Page;
+import com.mall.common.service.ServiceException;
 import com.mall.common.utils.StringUtils;
 import com.mall.common.web.BaseController;
 import com.mall.modules.gift.entity.GiftMerchant;
@@ -50,6 +51,8 @@ public class GiftMerchantController extends BaseController {
 	@RequiresPermissions("gift:giftMerchant:view")
 	@RequestMapping(value = {"list", ""})
 	public String list(GiftMerchant giftMerchant, HttpServletRequest request, HttpServletResponse response, Model model) {
+		User currUser = UserUtils.getUser();
+		giftMerchant.setMerchantCode(currUser.getId());
 		Page<GiftMerchant> page = giftMerchantService.findPage(new Page<GiftMerchant>(request, response), giftMerchant); 
 		model.addAttribute("page", page);
 		return "modules/gift/giftMerchantList";
@@ -73,19 +76,20 @@ public class GiftMerchantController extends BaseController {
 
 	@RequiresPermissions("gift:giftMerchant:view")
 	@RequestMapping(value = "giftTransfer")
-	public String giftTransfer(GiftMerchant giftMerchant, Model model) {
+	public String giftTransfer(GiftMerchant giftMerchant, Model model, RedirectAttributes redirectAttributes) {
 		String id = giftMerchant.getId();
 		if(StringUtils.isBlank(id)) {
-			model.addAttribute("message", "未选择要赠送的礼包");
-			return giftTransferForm(giftMerchant, model);
+			addMessage(redirectAttributes, "未选择要赠送的礼包");
+			return "redirect:" + Global.getAdminPath() + "modules/gift/giftMerchantList?repage";
 		}
 		String customerMobile = giftMerchant.getCustomerMobile();
-		GiftMerchant giftMerchantEntity = this.get(id);
-		if(null == giftMerchantEntity) {
-			model.addAttribute("message", "礼包不存在");
-			return giftTransferForm(giftMerchant, model);
+		giftMerchant = this.get(id);
+		if(null == giftMerchant) {
+			addMessage(redirectAttributes, "礼包不存在");
+			return "redirect:" + Global.getAdminPath() + "modules/gift/giftMerchantList?repage";
 		}
-		giftMerchantEntity.setCustomerMobile(customerMobile);
+		giftMerchant.setGiftConfigCategory(giftConfigCategoryService.get(giftMerchant.getGiftCategory()));
+		giftMerchant.setCustomerMobile(customerMobile);
 		if(StringUtils.isBlank(customerMobile)) {
 			model.addAttribute("message", "请输入要赠送会员的手机号");
 			return giftTransferForm(giftMerchant, model);
@@ -95,8 +99,17 @@ public class GiftMerchantController extends BaseController {
 			model.addAttribute("message", "会员不存在");
 			return giftTransferForm(giftMerchant, model);
 		}
-		model.addAttribute("giftMerchant", giftMerchant);
-		return "modules/gift/giftMerchantTransfer";
+		try {
+			giftMerchantService.giftTransfer(giftMerchant);
+		}catch (Exception e) {
+			e.printStackTrace();
+			if(e instanceof ServiceException) {
+				model.addAttribute("message", e.getMessage());
+				return giftTransferForm(giftMerchant, model);
+			}
+		}
+		addMessage(redirectAttributes, "赠送成功");
+		return "redirect:" + Global.getAdminPath() + "modules/gift/giftMerchantList?repage";
 	}
 
 	@RequiresPermissions("gift:giftMerchant:edit")
