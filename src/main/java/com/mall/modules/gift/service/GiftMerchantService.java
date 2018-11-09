@@ -1,14 +1,14 @@
 package com.mall.modules.gift.service;
 
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.mall.common.persistence.Page;
 import com.mall.common.service.CrudService;
-import com.mall.modules.gift.entity.GiftMerchant;
 import com.mall.modules.gift.dao.GiftMerchantDao;
+import com.mall.modules.gift.entity.GiftMerchant;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * 礼包列表Service
@@ -40,5 +40,8 @@ public class GiftMerchantService extends CrudService<GiftMerchantDao, GiftMercha
 	public void delete(GiftMerchant giftMerchant) {
 		super.delete(giftMerchant);
 	}
+
+	@Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+	public void giftTransfer(GiftMerchant giftMerchant) {}
 	
 }

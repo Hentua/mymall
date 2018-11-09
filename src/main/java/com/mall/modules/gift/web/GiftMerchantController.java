@@ -1,10 +1,14 @@
 package com.mall.modules.gift.web;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.mall.modules.gift.entity.GiftConfigCategory;
+import com.mall.common.config.Global;
+import com.mall.common.persistence.Page;
+import com.mall.common.utils.StringUtils;
+import com.mall.common.web.BaseController;
+import com.mall.modules.gift.entity.GiftMerchant;
 import com.mall.modules.gift.service.GiftConfigCategoryService;
+import com.mall.modules.gift.service.GiftMerchantService;
+import com.mall.modules.sys.entity.User;
+import com.mall.modules.sys.utils.UserUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,12 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.mall.common.config.Global;
-import com.mall.common.persistence.Page;
-import com.mall.common.web.BaseController;
-import com.mall.common.utils.StringUtils;
-import com.mall.modules.gift.entity.GiftMerchant;
-import com.mall.modules.gift.service.GiftMerchantService;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 礼包列表Controller
@@ -74,8 +74,27 @@ public class GiftMerchantController extends BaseController {
 	@RequiresPermissions("gift:giftMerchant:view")
 	@RequestMapping(value = "giftTransfer")
 	public String giftTransfer(GiftMerchant giftMerchant, Model model) {
-		// todo gift transfer
-		giftMerchant.setGiftConfigCategory(giftConfigCategoryService.get(giftMerchant.getGiftCategory()));
+		String id = giftMerchant.getId();
+		if(StringUtils.isBlank(id)) {
+			model.addAttribute("message", "未选择要赠送的礼包");
+			return giftTransferForm(giftMerchant, model);
+		}
+		String customerMobile = giftMerchant.getCustomerMobile();
+		GiftMerchant giftMerchantEntity = this.get(id);
+		if(null == giftMerchantEntity) {
+			model.addAttribute("message", "礼包不存在");
+			return giftTransferForm(giftMerchant, model);
+		}
+		giftMerchantEntity.setCustomerMobile(customerMobile);
+		if(StringUtils.isBlank(customerMobile)) {
+			model.addAttribute("message", "请输入要赠送会员的手机号");
+			return giftTransferForm(giftMerchant, model);
+		}
+		User customerUser = UserUtils.getByLoginName(customerMobile);
+		if(null == customerUser) {
+			model.addAttribute("message", "会员不存在");
+			return giftTransferForm(giftMerchant, model);
+		}
 		model.addAttribute("giftMerchant", giftMerchant);
 		return "modules/gift/giftMerchantTransfer";
 	}
