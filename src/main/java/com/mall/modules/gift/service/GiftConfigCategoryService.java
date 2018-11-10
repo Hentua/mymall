@@ -76,6 +76,7 @@ public class GiftConfigCategoryService extends CrudService<GiftConfigCategoryDao
 		OrderPaymentInfo orderPaymentInfo = orderPaymentInfoService.genAmountPaymentInfo(payChannel, "1", amountTotal);
 		giftPurchaseLog.setPaymentNo(orderPaymentInfo.getPaymentNo());
 		giftPurchaseLog.setStatus("0");
+		giftPurchaseLog.setPayChannel(payChannel);
 		return giftPurchaseLog;
 	}
 }

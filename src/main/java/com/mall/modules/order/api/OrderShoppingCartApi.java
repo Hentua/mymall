@@ -71,6 +71,7 @@ public class OrderShoppingCartApi extends BaseController {
             OrderShoppingCart condition = new OrderShoppingCart();
             condition.setGoodsId(goodsId);
             condition.setCustomerCode(currUser.getId());
+            condition.setGoodsStandard(goodsStandardId);
             OrderShoppingCart orderShoppingCart = orderShoppingCartService.getByCondition(condition);
             if(null == orderShoppingCart) {
                 orderShoppingCart = new OrderShoppingCart();
@@ -78,9 +79,7 @@ public class OrderShoppingCartApi extends BaseController {
                 orderShoppingCart.setCustomerCode(currUser.getId());
                 orderShoppingCart.setGoodsCount(1.00);
                 orderShoppingCart.setMerchantCode(merchantCode);
-                orderShoppingCart.setGoodsPrice(Double.valueOf(goodsStandard.getPrice()));
-                orderShoppingCart.setGoodsStandard(goodsStandard.getName());
-                orderShoppingCart.setSettlementsAmount(Double.valueOf(goodsStandard.getSettlementsAmount()));
+                orderShoppingCart.setGoodsStandard(goodsStandard.getId());
                 orderShoppingCart.setGoodsRecommendId(goodsRecommendCode);
             }else {
                 orderShoppingCart.setGoodsCount(orderShoppingCart.getGoodsCount() + 1);

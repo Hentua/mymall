@@ -68,12 +68,14 @@ public class CouponCustomerApi extends BaseController {
             CouponCustomer queryCondition = new CouponCustomer();
             queryCondition.setCustomerCode(customerCode);
             boolean allCoupon = discountType.contains("3") || (discountType.contains("1") && discountType.contains("2"));
-            if (!allCoupon) {
+            if (allCoupon) {
                 if(discountType.contains("1")) {
+                    queryCondition.setCouponType("0");
+                }else if(discountType.contains("2")){
                     queryCondition.setCouponType("1");
-                }else {
-                    queryCondition.setCouponType("2");
                 }
+            }else {
+                renderString(response, ResultGenerator.genSuccessResult(Lists.newArrayList()));
             }
             List<CouponCustomer> couponCustomers = couponCustomerService.findList(queryCondition);
             renderString(response, ResultGenerator.genSuccessResult(couponCustomers));

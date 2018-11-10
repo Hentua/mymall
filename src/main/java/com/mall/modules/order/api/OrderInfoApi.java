@@ -15,11 +15,6 @@ import com.mall.common.web.BaseController;
 import com.mall.modules.account.service.AccountInfoService;
 import com.mall.modules.coupon.entity.CouponCustomer;
 import com.mall.modules.coupon.service.CouponCustomerService;
-//import com.mall.modules.gift.entity.GiftCustomer;
-//import com.mall.modules.gift.entity.GiftCustomerGoods;
-//import com.mall.modules.gift.entity.GiftExchangeLog;
-//import com.mall.modules.gift.service.GiftCustomerService;
-//import com.mall.modules.gift.service.GiftExchangeLogService;
 import com.mall.modules.coupon.service.CouponMerchantService;
 import com.mall.modules.gift.entity.GiftConfig;
 import com.mall.modules.gift.entity.GiftConfigCoupon;
@@ -135,9 +130,21 @@ public class OrderInfoApi extends BaseController {
                 throw new ServiceException("所选地址不合法");
             }
 
+            // 获取优惠券信息
+            Double couponBalance = 0.00;
+            String couponType = "";
             CouponCustomer couponCustomer = null;
-            if (StringUtils.isNotBlank(couponCode)) {
+            if (StringUtils.isNotBlank(couponCode) && "0".equals(orderType)) {
                 couponCustomer = couponCustomerService.get(couponCode);
+                if (null != couponCustomer) {
+                    if (!"0".equals(couponCustomer.getCouponStatus())) {
+                        throw new ServiceException("优惠券不可使用");
+                    }
+                    couponBalance = couponCustomer.getBalance();
+                    couponType = couponCustomer.getCouponType();
+                } else {
+                    throw new ServiceException("优惠券查询失败");
+                }
             }
 
             // 组装合并订单支付信息
@@ -148,7 +155,6 @@ public class OrderInfoApi extends BaseController {
             Map<String, OrderInfo> orderInfoMap = Maps.newHashMap();
             // 获取前端传来的商品列表
             JSONArray goodsArr;
-            goodsArr = JSON.parseArray(goodsList);
             if ("0".equals(orderType)) {
                 goodsArr = JSON.parseArray(goodsList);
             } else {
@@ -177,6 +183,7 @@ public class OrderInfoApi extends BaseController {
                     goodsJson.put("goodsId", g.getGoodsId());
                     goodsJson.put("goodsCount", g.getGoodsCount());
                     goodsJson.put("goodsStandard", g.getGoodsStandardId());
+                    goodsJson.put("goodsSettlementsAmount", g.getGoodsSettlementPrice());
                     goodsArr.add(goodsJson);
                 }
                 // 是否赠送商户资格
@@ -201,12 +208,13 @@ public class OrderInfoApi extends BaseController {
             // 获取商品信息
             List<OrderGoods> orderGoodsList;
             for (int i = 0; i < goodsArr.size(); i++) {
-
                 JSONObject goodsInfoJson = goodsArr.getJSONObject(i);
                 String goodsId = goodsInfoJson.getString("goodsId");
                 String shoppingCartId = goodsInfoJson.getString("shoppingCartId");
                 Double goodsCount = goodsInfoJson.getDouble("goodsCount");
                 String goodsStandardId = goodsInfoJson.getString("goodsStandard");
+                Double settlementsAmount = goodsInfoJson.getDouble("goodsSettlementsAmount");
+                double goodsDiscountAmount = 0.00;
                 String goodsRecommendId = "";
                 if ("0".equals(orderType) && StringUtils.isBlank(shoppingCartId)) {
                     throw new ServiceException("不合法的订单信息");
@@ -237,6 +245,7 @@ public class OrderInfoApi extends BaseController {
                 double orderGoodsCount;
                 double orderAmountTotal;
                 double settlementsTotal;
+                double orderDiscountAmountTotal;
                 if (orderInfoMap.containsKey(merchantCode)) {
                     orderInfo = orderInfoMap.get(merchantCode);
                     orderGoodsAmountTotal = orderInfo.getGoodsAmountTotal();
@@ -244,6 +253,7 @@ public class OrderInfoApi extends BaseController {
                     orderGoodsList = orderInfo.getOrderGoodsList();
                     orderAmountTotal = orderInfo.getOrderAmountTotal();
                     settlementsTotal = orderInfo.getSettlementsAmount();
+                    orderDiscountAmountTotal = orderInfo.getDiscountAmountTotal();
                 } else {
                     orderNo = String.valueOf(idWorker.getId());
                     orderInfo = new OrderInfo();
@@ -258,6 +268,7 @@ public class OrderInfoApi extends BaseController {
                     orderGoodsList = Lists.newArrayList();
                     orderAmountTotal = 0.00;
                     settlementsTotal = 0.00;
+                    orderDiscountAmountTotal = 0.00;
 
                     // 初始化物流信息
                     OrderLogistics orderLogistics = orderInfoService.genOrderLogistics(orderNo, merchantCode, memberDeliveryAddress);
@@ -270,18 +281,48 @@ public class OrderInfoApi extends BaseController {
                 orderGoodsCount += goodsCount;
                 //商品单价
                 double price = goodsStandard.getPrice();
-                double settlementsAmount = goodsStandard.getSettlementsAmount();
                 double goodsAmountTotal = Double.valueOf(df.format(price * goodsCount));
+                double goodsSubAmountTotal = Double.valueOf(df.format(price * goodsCount));
+                // 计算优惠金额
+                if ("0".equals(orderType)) {
+                    settlementsAmount = goodsStandard.getSettlementsAmount();
+                    if (null != couponCustomer && StringUtils.isNotBlank(couponType)) {
+                        String discountType = goodsInfo.getDiscountType();
+                        if ("0".equals(couponType)) {
+                            if ("3".equals(discountType) || "1".equals(discountType)) {
+                                double discountAmount = goodsAmountTotal * 0.5;
+                                if (couponBalance > discountAmount) {
+                                    goodsDiscountAmount = discountAmount;
+                                } else {
+                                    goodsDiscountAmount = couponBalance;
+                                }
+                            }
+                        } else if ("1".equals(couponType)) {
+                            if ("3".equals(discountType) || "2".equals(discountType)) {
+                                double discountAmount = goodsAmountTotal * 0.3;
+                                if (couponBalance > discountAmount) {
+                                    goodsDiscountAmount = discountAmount;
+                                } else {
+                                    goodsDiscountAmount = couponBalance;
+                                }
+                            }
+                        }
+                        couponBalance = couponBalance - goodsDiscountAmount;
+                    }
+                }
                 //结算总价
                 settlementsTotal += Double.valueOf(df.format(settlementsAmount * goodsCount));
 
-                orderAmountTotal += goodsAmountTotal;
-
+                orderAmountTotal += (goodsSubAmountTotal - goodsDiscountAmount);
                 orderGoodsAmountTotal += goodsAmountTotal;
+                orderDiscountAmountTotal += goodsDiscountAmount;
+
                 orderInfo.setGoodsAmountTotal(orderGoodsAmountTotal);
                 orderInfo.setGoodsCount(orderGoodsCount);
                 orderInfo.setOrderAmountTotal(orderAmountTotal);
                 orderInfo.setSettlementsAmount(settlementsTotal);
+                orderInfo.setDiscountAmountTotal(orderDiscountAmountTotal);
+                orderInfo.setCouponCode(couponCode);
 
                 OrderGoods orderGoods = orderInfoService.genOrderGoods(goodsInfo);
                 orderGoods.setOrderNo(orderInfo.getOrderNo());
@@ -292,6 +333,7 @@ public class OrderInfoApi extends BaseController {
                 orderGoods.setGoodsStandard(goodsStandard.getId());
                 orderGoods.setSettlementsAmount(settlementsAmount);
                 orderGoods.setGoodsRecommendId(goodsRecommendId);
+                orderGoods.setDiscountAmount(goodsDiscountAmount);
                 orderGoodsList.add(orderGoods);
 
                 orderInfo.setOrderGoodsList(orderGoodsList);
@@ -303,49 +345,31 @@ public class OrderInfoApi extends BaseController {
                 orderShoppingCartService.delete(deleteCondition);
             }
 
+            // 订单后续计算 并生成账单信息
             for (OrderInfo orderInfo : orderInfoMap.values()) {
-                double orderDiscountAmountTotal = 0.00;
-                String merchantCode = orderInfo.getMerchantCode();
-                /*if (null != couponCustomer && merchantCode.equals(couponCustomer.getMerchantCode()) && "0".equals(orderType)) {
-                    String couponType = couponCustomer.getCouponType();
-                    if ("1".equals(couponType)) {
-                        orderDiscountAmountTotal = couponCustomer.getDiscountAmount();
-                    } else if ("0".equals(couponType)) {
-                        orderDiscountAmountTotal = Double.valueOf(df.format(couponCustomer.getDiscountRate() * orderInfo.getOrderAmountTotal()));
-                    } else if ("2".equals(couponType)) {
-                        Double limitAmount = couponCustomer.getLimitAmount();
-                        if (orderInfo.getOrderAmountTotal() >= limitAmount) {
-                            orderDiscountAmountTotal = couponCustomer.getDiscountAmount();
-                        } else {
-                            throw new ServiceException("优惠券不可用");
-                        }
-                    } else {
-                        throw new ServiceException("优惠券不可用");
-                    }
-                    orderInfo.setCouponCode(couponCode);
-                    // 修改优惠券为已使用
-                    couponCustomerService.updateCouponUsed(couponCustomer.getId());
-                } else*/
                 if ("1".equals(orderType)) {
                     orderInfo.setPayTime(new Date());
                 }
-                double orderAmountTotal = orderInfo.getOrderAmountTotal() - orderDiscountAmountTotal;
+                double orderAmountTotal = orderInfo.getOrderAmountTotal();
+                // 修正错误金额
                 if (orderAmountTotal < 0) {
                     orderAmountTotal = 0;
                 }
                 amountTotal += orderAmountTotal;
                 orderInfo.setOrderAmountTotal(orderAmountTotal);
-                orderInfo.setDiscountAmountTotal(orderDiscountAmountTotal);
                 orderInfoService.save(orderInfo);
             }
-            // 扣减优惠
-            amountTotal -= discountAmountTotal;
             if ("0".equals(orderType)) {
                 orderPaymentInfo.setAmountTotal(amountTotal);
             } else {
                 orderPaymentInfo.setAmountTotal(0.00);
             }
             orderPaymentInfoService.save(orderPaymentInfo);
+            // 保存优惠券信息
+            if (null != couponCustomer) {
+                couponCustomer.setBalance(couponBalance);
+                couponCustomerService.save(couponCustomer);
+            }
             renderString(response, ResultGenerator.genSuccessResult(orderPaymentInfo));
         } catch (Exception e) {
             renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));

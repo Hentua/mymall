@@ -24,6 +24,8 @@ public class OrderShoppingCart extends DataEntity<OrderShoppingCart> {
 	private String goodsStandard;//商品规格
 	private Double settlementsAmount;//结算金额
 	private String goodsRecommendId; //商品推荐码
+
+	private String goodsStandardName; // 商品规格名称
 	
 	public OrderShoppingCart() {
 		super();
@@ -31,6 +33,14 @@ public class OrderShoppingCart extends DataEntity<OrderShoppingCart> {
 
 	public OrderShoppingCart(String id){
 		super(id);
+	}
+
+	public String getGoodsStandardName() {
+		return goodsStandardName;
+	}
+
+	public void setGoodsStandardName(String goodsStandardName) {
+		this.goodsStandardName = goodsStandardName;
 	}
 
 	public String getGoodsRecommendId() {
