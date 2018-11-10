@@ -96,7 +96,7 @@ public class GiftCustomerApi extends BaseController {
             if (StringUtils.isBlank(giftConfigId)) {
                 throw new ServiceException("未选择礼包");
             }
-            GiftConfig giftConfig = giftConfigService.get(giftConfigId);
+            GiftConfig giftConfig = giftConfigService.getApiDetail(giftConfigId);
             renderString(response, ResultGenerator.genSuccessResult(giftConfig));
         } catch (Exception e) {
             renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));

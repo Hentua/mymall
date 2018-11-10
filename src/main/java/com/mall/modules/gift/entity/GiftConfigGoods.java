@@ -1,5 +1,6 @@
 package com.mall.modules.gift.entity;
 
+import com.mall.common.config.Global;
 import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.NotNull;
 
@@ -22,6 +23,9 @@ public class GiftConfigGoods extends DataEntity<GiftConfigGoods> {
 
 	private String goodsName; // 商品名称
 	private String standardName; // 商品规格名称
+	private Double goodsPrice; // 商品价格
+	private String image; // 商品图片
+	private String showGoodsPrice; // 是否显示商品价格
 	
 	public GiftConfigGoods() {
 		super();
@@ -33,6 +37,30 @@ public class GiftConfigGoods extends DataEntity<GiftConfigGoods> {
 
 	public GiftConfigGoods(GiftConfig giftConfigId){
 		this.giftConfigId = giftConfigId.getId();
+	}
+
+	public String getShowGoodsPrice() {
+		return showGoodsPrice;
+	}
+
+	public void setShowGoodsPrice(String showGoodsPrice) {
+		this.showGoodsPrice = showGoodsPrice;
+	}
+
+	public Double getGoodsPrice() {
+		return goodsPrice;
+	}
+
+	public void setGoodsPrice(Double goodsPrice) {
+		this.goodsPrice = goodsPrice;
+	}
+
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
 	}
 
 	public String getGoodsName() {
@@ -104,5 +132,12 @@ public class GiftConfigGoods extends DataEntity<GiftConfigGoods> {
 	public void setGoodsStandardId(String goodsStandardId) {
 		this.goodsStandardId = goodsStandardId;
 	}
-	
+
+	public String getFullImageUrl() {
+		String fullImageUrl = "";
+		if (null != image) {
+			fullImageUrl = Global.getConfig("userfiles.baseURL") + image;
+		}
+		return fullImageUrl;
+	}
 }

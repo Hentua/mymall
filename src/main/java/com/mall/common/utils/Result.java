@@ -37,6 +37,9 @@ public class Result {
     }
 
     public Object getData() {
+        if (null == this.data) {
+            this.data = new Object();
+        }
         return data;
     }
 
@@ -57,7 +60,7 @@ public class Result {
     private ValueFilter filter = new ValueFilter() {
         @Override
         public Object process(Object obj, String s, Object v) {
-            if(v==null) {
+            if (v == null) {
                 return "";
             }
             return v;

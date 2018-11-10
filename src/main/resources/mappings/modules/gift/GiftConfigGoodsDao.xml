@@ -28,6 +28,32 @@
 		<include refid="giftConfigGoodsJoins"/>
 		WHERE a.id = #{id}
 	</select>
+
+	<select id="findApiList" resultType="GiftConfigGoods">
+		select
+			   a.id AS "id",
+			   a.gift_config_id AS "giftConfigId",
+			   a.goods_id AS "goodsId",
+			   a.goods_count AS "goodsCount",
+			   a.merchant_code AS "merchantCode",
+			   a.del_flag AS "delFlag",
+			   a.goods_standard_id AS "goodsStandardId",
+			   s.name AS "standardName",
+			   g.goods_name AS "goodsName",
+		       <if test="showGoodsPrice != null and showGoodsPrice == '1'">
+				   g.goods_price as "goodsPrice",
+			   </if>
+			   g.image as "image"
+		from gift_config_goods a
+		left join goods_info g on g.id = a.goods_id
+		left join goods_standard s on s.id = a.goods_standard_id
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="giftConfigId != null and giftConfigId != ''">
+				AND a.gift_config_id = #{giftConfigId}
+			</if>
+		</where>
+	</select>
 	
 	<select id="findList" resultType="GiftConfigGoods">
 		SELECT 

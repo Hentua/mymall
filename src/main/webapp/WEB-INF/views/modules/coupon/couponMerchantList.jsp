@@ -18,8 +18,7 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li class="active"><a href="${ctx}/coupon/couponMerchant/">商家优惠券列表</a></li>
-		<shiro:hasPermission name="coupon:couponMerchant:edit"><li><a href="${ctx}/coupon/couponMerchant/form">商家优惠券添加</a></li></shiro:hasPermission>
+		<li class="active"><a href="${ctx}/coupon/couponMerchant/">优惠券列表</a></li>
 	</ul>
 	<form:form id="searchForm" modelAttribute="couponMerchant" action="${ctx}/coupon/couponMerchant/" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
@@ -33,20 +32,38 @@
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
 		<thead>
 			<tr>
-				<th>update_date</th>
-				<shiro:hasPermission name="coupon:couponMerchant:edit"><th>操作</th></shiro:hasPermission>
+				<th>优惠券类型</th>
+				<th>优惠券名称</th>
+				<th>优惠券金额</th>
+				<th>过期时间</th>
+				<th>备注</th>
+				<th>赠送</th>
 			</tr>
 		</thead>
 		<tbody>
 		<c:forEach items="${page.list}" var="couponMerchant">
 			<tr>
-				<td><a href="${ctx}/coupon/couponMerchant/form?id=${couponMerchant.id}">
-					<fmt:formatDate value="${couponMerchant.updateDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
-				</a></td>
-				<shiro:hasPermission name="coupon:couponMerchant:edit"><td>
-    				<a href="${ctx}/coupon/couponMerchant/form?id=${couponMerchant.id}">修改</a>
-					<a href="${ctx}/coupon/couponMerchant/delete?id=${couponMerchant.id}" onclick="return confirmx('确认要删除该商家优惠券吗？', this.href)">删除</a>
-				</td></shiro:hasPermission>
+				<td>
+					<c:choose>
+						<c:when test="${couponMerchant.couponType == '0'}">五折券</c:when>
+						<c:when test="${couponMerchant.couponType == '1'}">七折券</c:when>
+					</c:choose>
+				</td>
+				<td>
+						${couponMerchant.couponName}
+				</td>
+				<td>
+						${couponMerchant.limitAmount}
+				</td>
+				<td>
+					<fmt:formatDate value="${couponMerchant.endDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
+				</td>
+				<td>
+						${couponMerchant.remarks}
+				</td>
+				<td>
+					<a href="${ctx}/coupon/couponMerchant/delete?id=${couponMerchant.id}" onclick="return confirmx('确认要赠送该优惠券吗？', this.href)">赠送</a>
+				</td>
 			</tr>
 		</c:forEach>
 		</tbody>

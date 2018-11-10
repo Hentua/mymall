@@ -36,6 +36,15 @@ public class GiftConfigService extends CrudService<GiftConfigDao, GiftConfig> {
 		giftConfig.setGiftConfigGoodsList(giftConfigGoodsDao.findList(new GiftConfigGoods(giftConfig)));
 		return giftConfig;
 	}
+
+	public GiftConfig getApiDetail(String id) {
+		GiftConfig giftConfig = super.get(id);
+		giftConfig.setGiftConfigCouponList(giftConfigCouponDao.findList(new GiftConfigCoupon(giftConfig)));
+		GiftConfigGoods goodsQueryCondition = new GiftConfigGoods(giftConfig);
+		goodsQueryCondition.setShowGoodsPrice(giftConfig.getShowGoodsPrice());
+		giftConfig.setGiftConfigGoodsList(giftConfigGoodsDao.findApiList(goodsQueryCondition));
+		return giftConfig;
+	}
 	
 	public List<GiftConfig> findList(GiftConfig giftConfig) {
 		return super.findList(giftConfig);

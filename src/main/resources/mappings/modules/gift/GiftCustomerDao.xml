@@ -14,7 +14,9 @@
 		a.update_by AS "updateBy.id",
 		a.update_date AS "updateDate",
 		a.remarks AS "remarks",
-		c.category_name AS "giftConfigCategoryName"
+		c.category_name AS "giftConfigCategoryName",
+		c.gift_price AS "giftPrice",
+		c.merchant_qualification AS "merchantQualification"
 	</sql>
 	
 	<sql id="giftCustomerJoins">

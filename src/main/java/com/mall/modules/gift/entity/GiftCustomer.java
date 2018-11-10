@@ -20,6 +20,8 @@ public class GiftCustomer extends DataEntity<GiftCustomer> {
 	private Integer giftCount;		// 礼包数量
 
 	private String giftConfigCategoryName; // 礼包名称
+	private Double giftPrice; // 礼包价格
+	private String merchantQualification; // 是否赠送商户资格 0-否 1-是
 
 	public GiftCustomer() {
 		super();
@@ -27,6 +29,22 @@ public class GiftCustomer extends DataEntity<GiftCustomer> {
 
 	public GiftCustomer(String id){
 		super(id);
+	}
+
+	public Double getGiftPrice() {
+		return giftPrice;
+	}
+
+	public void setGiftPrice(Double giftPrice) {
+		this.giftPrice = giftPrice;
+	}
+
+	public String getMerchantQualification() {
+		return merchantQualification;
+	}
+
+	public void setMerchantQualification(String merchantQualification) {
+		this.merchantQualification = merchantQualification;
 	}
 
 	public String getGiftConfigCategoryName() {
