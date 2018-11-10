@@ -17,7 +17,8 @@
 		a.nickname AS "nickname",
 		a.sex AS "sex",
 		a.status AS "status",
-		a.remarks AS "remarks"
+		a.remarks AS "remarks",
+		a.commission as "commission"
 	</sql>
 	
 	<sql id="memberInfoJoins">
@@ -108,7 +109,8 @@
 			nickname,
 			sex,
 		    status,
-		    remarks
+		    remarks,
+			commission
 		) VALUES (
 			#{id},
 			#{referee},
@@ -124,7 +126,8 @@
 			#{nickname},
 			#{sex},
 		    #{status},
-		    #{remarks}
+		    #{remarks},
+		    #{commission}
 		)
 	</insert>
 	

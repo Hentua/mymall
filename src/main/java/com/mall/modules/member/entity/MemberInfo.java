@@ -17,6 +17,7 @@ public class MemberInfo extends DataEntity<MemberInfo> {
 	private String referee;		// 自己的推荐码
 	private String refereeId;		// 推荐人ID
 	private Double balance;		// 账户余额
+	private Double commission;  //佣金
 	private String avatar;		// 头像地址
 	private String registerWay;		// 注册途径（0-注册页面自主注册，1-商户管理后台直接添加）
 	private String nickname; // 昵称
@@ -33,12 +34,24 @@ public class MemberInfo extends DataEntity<MemberInfo> {
 	@JsonIgnore
 	private String repeatPassword;
 
+
+
+
 	public MemberInfo() {
 		super();
 	}
 
 	public MemberInfo(String id){
 		super(id);
+	}
+
+
+	public Double getCommission() {
+		return commission;
+	}
+
+	public void setCommission(Double commission) {
+		this.commission = commission;
 	}
 
 	public String getRefereeName() {
