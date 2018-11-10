@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.mall.common.utils.DateUtils;
 import com.mall.modules.coupon.entity.CouponConfig;
+import com.mall.modules.coupon.entity.CouponCustomer;
 import com.mall.modules.gift.entity.GiftConfigCoupon;
 import com.mall.modules.sys.entity.Role;
 import com.mall.modules.sys.entity.User;
@@ -32,6 +33,8 @@ public class CouponMerchantService extends CrudService<CouponMerchantDao, Coupon
 
 	@Autowired
 	private CouponConfigService couponConfigService;
+	@Autowired
+	private CouponCustomerService couponCustomerService;
 
 	public CouponMerchant get(String id) {
 		return super.get(id);
@@ -44,8 +47,8 @@ public class CouponMerchantService extends CrudService<CouponMerchantDao, Coupon
 	public Page<CouponMerchant> findPage(Page<CouponMerchant> page, CouponMerchant couponMerchant) {
 		return super.findPage(page, couponMerchant);
 	}
-	
-	@Transactional(readOnly = false)
+
+	@Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
 	public void save(CouponMerchant couponMerchant) {
 		super.save(couponMerchant);
 	}
@@ -63,21 +66,32 @@ public class CouponMerchantService extends CrudService<CouponMerchantDao, Coupon
 		CouponConfig couponConfig = couponConfigService.get(couponConfigId);
 		CouponMerchant couponMerchant = genCouponMerchant(couponConfig, merchantCode);
 		couponMerchant.setGiftCode(giftCustomerCode);
+		for (int i = 0; i < giftConfigCoupon.getCouponCount(); i++) {
+			this.save(couponMerchant);
+		}
+	}
+
+	@Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+	public void transferCoupon(CouponMerchant couponMerchant) throws Exception {
+		couponCustomerService.saveCouponCustomerByMerchant(couponMerchant);
+		couponMerchant.setCouponStatus("1");
+		couponMerchant.setTransferTime(new Date());
 		this.save(couponMerchant);
 	}
 
 	public CouponMerchant genCouponMerchant(CouponConfig couponConfig, String merchantCode) throws Exception {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date now = new Date();
 		CouponMerchant couponMerchant = new CouponMerchant();
 		couponMerchant.setConfigId(couponConfig.getId());
 		couponMerchant.setCouponType(couponConfig.getCouponType());
 		couponMerchant.setCouponName(couponConfig.getCouponName());
 		Integer transferExpiryTime = couponConfig.getTransferExpiryTime();
-		couponMerchant.setStartDate(DateUtils.getStartOfDay(new Date()));
+		couponMerchant.setStartDate(DateUtils.getStartOfDay(now));
 		if(transferExpiryTime == 0) {
 			couponMerchant.setEndDate(DateUtils.getEndOfDay(simpleDateFormat.parse("9999-12-31 00:00:00")));
 		}else {
-			couponMerchant.setEndDate(DateUtils.getEndOfDay(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * transferExpiryTime)));
+			couponMerchant.setEndDate(DateUtils.getEndOfDay(new Date(now.getTime() + Long.valueOf(transferExpiryTime) * 24 * 60 * 60 * 1000)));
 		}
 		couponMerchant.setLimitAmount(couponConfig.getLimitAmount());
 		couponMerchant.setMerchantCode(merchantCode);
