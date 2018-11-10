@@ -68,6 +68,7 @@ public class GoodsInfoApi extends BaseController {
         GoodsInfo goodsInfo = new GoodsInfo();
         goodsInfo.setGoodsCategoryId(request.getParameter("goodsCategoryId"));
         goodsInfo.setGoodsName(request.getParameter("goodsName"));
+        goodsInfo.setMerchantName(request.getParameter("merchantName"));
         Page<GoodsInfo> page = new Page<GoodsInfo>(request,response);
         //排序类型 1综合排序 2销量排序 3价格排序
         if(StringUtils.isEmpty(sortType) || "1".equals(sortType)){

@@ -95,6 +95,7 @@
 		a.merchant_id as "merchantId",
 		a.discount_Type as "discountType"
 		FROM goods_info a
+		left join member_info m on a.merchant_id = m.id
 		<where>
 			a.status = 3
 			<if test="goodsCategoryId != null and goodsCategoryId != ''">
@@ -102,6 +103,9 @@
 			</if>
 			<if test="goodsName != null and goodsName != ''">
 				AND a.goods_name LIKE CONCAT('%',#{goodsName},'%')
+			</if>
+			<if test="merchantName != null and merchantName != ''">
+				and m.nickname LIKE CONCAT('%',#{merchantName},'%')
 			</if>
 		</where>
 		<choose>

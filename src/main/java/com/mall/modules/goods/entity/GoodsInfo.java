@@ -1,15 +1,13 @@
 package com.mall.modules.goods.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.mall.common.config.Global;
+import com.mall.common.persistence.DataEntity;
 import org.hibernate.validator.constraints.Length;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-
-import com.mall.common.persistence.DataEntity;
 
 /**
  * 商品信息Entity
