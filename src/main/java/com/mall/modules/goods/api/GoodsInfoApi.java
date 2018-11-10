@@ -1,6 +1,5 @@
 package com.mall.modules.goods.api;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.mall.common.persistence.Page;
 import com.mall.common.service.ServiceException;
@@ -19,7 +18,6 @@ import com.mall.modules.sys.entity.UserVo;
 import com.mall.modules.sys.utils.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -103,6 +101,7 @@ public class GoodsInfoApi extends BaseController {
         String goodsRecommendCode = request.getParameter("goodsRecommendCode");
 
         if(!StringUtils.isEmpty(goodsRecommendCode)){
+            goodsRecommendCode = goodsRecommendCode.substring(4,goodsRecommendCode.length());
             GoodsRecommend goodsRecommend= goodsRecommendService.get(goodsRecommendCode);
             if(null == goodsRecommend){
                 throw new ServiceException("无效推荐码");

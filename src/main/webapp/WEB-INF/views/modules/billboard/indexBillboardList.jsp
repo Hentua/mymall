@@ -33,6 +33,7 @@
 					<form:option value="">全部</form:option>
 					<form:option value="1">轮播广告</form:option>
 					<form:option value="2">标题广告</form:option>
+					<form:option value="3"  label="开机广告"/>
 				</form:select>
 			</li>
 			<li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
@@ -70,6 +71,9 @@
 					</c:if>
 					<c:if test="${indexBillboard.type == 2}">
 						标题广告
+					</c:if>
+					<c:if test="${indexBillboard.type == 3}">
+						开机广告
 					</c:if>
 				</td>
 				<td>

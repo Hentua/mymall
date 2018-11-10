@@ -26,7 +26,7 @@
 
 		function showHide(t){
 		    // console.log($(t).val());
-		    if(1 == $(t).val()){
+		    if(1 == $(t).val() || 3 == $(t).val()){
                 $("#selGoods").hide();
 			}else{
                 $("#selGoods").show();
@@ -75,6 +75,7 @@
 				<form:select path="type" onchange="showHide(this)"   class="input-xlarge ">
 					<form:option value="1" label="轮播图广告位"/>
 					<form:option value="2"  label="独立广告位"/>
+					<form:option value="3"  label="开机广告"/>
 				</form:select>
 			</div>
 		</div>
