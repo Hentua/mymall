@@ -225,6 +225,9 @@ public class GoodsInfoController extends BaseController {
 		if(null != goodsInfo.getGoodsStandardsName() && goodsInfo.getGoodsStandardsName().length>0){
 			goodsStandardService.deleteByGoodsId(goodsInfo.getId());
 			for(int i=0;i<goodsInfo.getGoodsStandardsName().length;i++){
+				if(null == goodsInfo.getGoodsPrice() || 0 == goodsInfo.getGoodsPrice()){
+					goodsInfo.setGoodsPrice(goodsInfo.getGoodsStandardsPrice()[i]);
+				}
 				GoodsStandard goodsStandard =new GoodsStandard();
 				goodsStandard.setName(goodsInfo.getGoodsStandardsName()[i]);
 				goodsStandard.setPrice(goodsInfo.getGoodsStandardsPrice()[i]);
@@ -233,6 +236,8 @@ public class GoodsInfoController extends BaseController {
 				goodsStandardService.save(goodsStandard);
 			 }
 		}
+
+		goodsInfoService.save(goodsInfo);
 
 		addMessage(redirectAttributes, "保存商品信息成功");
 		return "redirect:"+Global.getAdminPath()+"/goods/goodsInfo/list/?repage";
