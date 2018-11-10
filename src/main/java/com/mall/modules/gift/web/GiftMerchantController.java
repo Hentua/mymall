@@ -80,13 +80,13 @@ public class GiftMerchantController extends BaseController {
 		String id = giftMerchant.getId();
 		if(StringUtils.isBlank(id)) {
 			addMessage(redirectAttributes, "未选择要赠送的礼包");
-			return "redirect:" + Global.getAdminPath() + "modules/gift/?repage";
+			return "redirect:" + Global.getAdminPath() + "modules/gift/giftMerchant?repage";
 		}
 		String customerMobile = giftMerchant.getCustomerMobile();
 		giftMerchant = this.get(id);
 		if(null == giftMerchant) {
 			addMessage(redirectAttributes, "礼包不存在");
-			return "redirect:" + Global.getAdminPath() + "modules/gift/?repage";
+			return "redirect:" + Global.getAdminPath() + "modules/gift/giftMerchant?repage";
 		}
 		giftMerchant.setGiftConfigCategory(giftConfigCategoryService.get(giftMerchant.getGiftCategory()));
 		giftMerchant.setCustomerMobile(customerMobile);
@@ -109,7 +109,7 @@ public class GiftMerchantController extends BaseController {
 			}
 		}
 		addMessage(redirectAttributes, "赠送成功");
-		return "redirect:" + Global.getAdminPath() + "modules/gift/?repage";
+		return "redirect:" + Global.getAdminPath() + "modules/gift/giftMerchant?repage";
 	}
 
 	@RequiresPermissions("gift:giftMerchant:edit")
