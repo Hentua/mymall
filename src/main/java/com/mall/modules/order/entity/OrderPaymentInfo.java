@@ -26,6 +26,7 @@ public class OrderPaymentInfo extends DataEntity<OrderPaymentInfo> {
 	private String codeUrl;		// 二维码链接
 	private String paymentStatus; // 付款状态 0-未付款 1-付款成功 2-付款失败
 	private String paymentType; // 支付来源类型 0-订单 1-礼包购买
+	private Double discountAmount; // 优惠扣减金额
 	
 	public OrderPaymentInfo() {
 		super();
@@ -33,6 +34,14 @@ public class OrderPaymentInfo extends DataEntity<OrderPaymentInfo> {
 
 	public OrderPaymentInfo(String id){
 		super(id);
+	}
+
+	public Double getDiscountAmount() {
+		return discountAmount;
+	}
+
+	public void setDiscountAmount(Double discountAmount) {
+		this.discountAmount = discountAmount;
 	}
 
 	public String getPaymentStatus() {

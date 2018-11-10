@@ -24,6 +24,8 @@ public class OrderPaymentInfoService extends CrudService<OrderPaymentInfoDao, Or
 	private static IdWorker idWorker = new IdWorker();
 	@Autowired
 	private OrderPaymentInfoDao orderPaymentInfoDao;
+	@Autowired
+	private OrderInfoService orderInfoService;
 
 	public OrderPaymentInfo get(String id) {
 		return super.get(id);
@@ -77,6 +79,18 @@ public class OrderPaymentInfoService extends CrudService<OrderPaymentInfoDao, Or
 	@Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
 	public void modifyPaymentInfoStatus(OrderPaymentInfo orderPaymentInfo) {
 		orderPaymentInfoDao.modifyPaymentInfoStatus(orderPaymentInfo);
+	}
+
+	@Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+	public void normalOrderPaySuccess(OrderPaymentInfo orderPaymentInfo) {
+		String paymentNo = orderPaymentInfo.getPaymentNo();
+
+		// 修改订单状态
+		orderInfoService.paySuccessModifyOrderStatus(paymentNo);
+
+		// 修改支付单状态
+		orderPaymentInfo.setPaymentStatus("1");
+		this.modifyPaymentInfoStatus(orderPaymentInfo);
 	}
 
 }

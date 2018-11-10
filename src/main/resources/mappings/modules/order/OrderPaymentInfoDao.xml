@@ -21,7 +21,8 @@
 		a.update_date AS "updateDate",
 		a.update_by AS "updateBy.id",
 		a.payment_status AS "paymentStatus",
-		a.payment_type AS "paymentType"
+		a.payment_type AS "paymentType",
+		a.discount_amount AS "discountAmount"
 	</sql>
 	
 	<sql id="orderPaymentInfoJoins">
@@ -118,7 +119,8 @@
 			update_date,
 			update_by,
 		    payment_status,
-		    payment_type
+		    payment_type,
+		    discount_amount
 		) VALUES (
 			#{id},
 			#{paymentNo},
@@ -138,7 +140,8 @@
 			#{updateDate},
 			#{updateBy.id},
 		    #{paymentStatus},
-		    #{paymentType}
+		    #{paymentType},
+		    #{discountAmount}
 		)
 	</insert>
 	
@@ -159,7 +162,8 @@
 			update_date = #{updateDate},
 			update_by = #{updateBy.id},
 		  	payment_status = #{paymentStatus},
-		  	payment_type = #{paymentType}
+		  	payment_type = #{paymentType},
+		  	discount_amount = #{discountAmount}
 		WHERE id = #{id}
 	</update>
 

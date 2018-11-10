@@ -102,7 +102,6 @@ public class OrderInfoApi extends BaseController {
         String orderType = request.getParameter("orderType");
         String orderStatus = "0";
         double amountTotal = 0.00;
-        // 初始化优惠数据
         double discountAmountTotal = 0.00;
         // 开始获取表单数据
         String couponCode = request.getParameter("couponCode");
@@ -290,7 +289,7 @@ public class OrderInfoApi extends BaseController {
                         String discountType = goodsInfo.getDiscountType();
                         if ("0".equals(couponType)) {
                             if ("3".equals(discountType) || "1".equals(discountType)) {
-                                double discountAmount = goodsAmountTotal * 0.5;
+                                double discountAmount = Double.valueOf(df.format(goodsAmountTotal * 0.5));
                                 if (couponBalance > discountAmount) {
                                     goodsDiscountAmount = discountAmount;
                                 } else {
@@ -299,7 +298,7 @@ public class OrderInfoApi extends BaseController {
                             }
                         } else if ("1".equals(couponType)) {
                             if ("3".equals(discountType) || "2".equals(discountType)) {
-                                double discountAmount = goodsAmountTotal * 0.3;
+                                double discountAmount = Double.valueOf(df.format(goodsAmountTotal * 0.3));
                                 if (couponBalance > discountAmount) {
                                     goodsDiscountAmount = discountAmount;
                                 } else {
@@ -351,6 +350,8 @@ public class OrderInfoApi extends BaseController {
                     orderInfo.setPayTime(new Date());
                 }
                 double orderAmountTotal = orderInfo.getOrderAmountTotal();
+                double orderDiscountAmount = orderInfo.getDiscountAmountTotal();
+                discountAmountTotal += orderDiscountAmount;
                 // 修正错误金额
                 if (orderAmountTotal < 0) {
                     orderAmountTotal = 0;
@@ -361,14 +362,108 @@ public class OrderInfoApi extends BaseController {
             }
             if ("0".equals(orderType)) {
                 orderPaymentInfo.setAmountTotal(amountTotal);
+                orderPaymentInfo.setDiscountAmount(discountAmountTotal);
             } else {
                 orderPaymentInfo.setAmountTotal(0.00);
+                orderPaymentInfo.setDiscountAmount(0.00);
             }
             orderPaymentInfoService.save(orderPaymentInfo);
             // 保存优惠券信息
             if (null != couponCustomer) {
                 couponCustomer.setBalance(couponBalance);
                 couponCustomerService.save(couponCustomer);
+            }
+            renderString(response, ResultGenerator.genSuccessResult(orderPaymentInfo));
+        } catch (Exception e) {
+            renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
+        }
+    }
+
+    /**
+     * 计算订单金额
+     *
+     * @param request  请求体
+     * @param response 响应体
+     */
+    @RequestMapping(value = "calculationOrderAmount", method = RequestMethod.POST)
+    public void calculationOrderAmount(HttpServletRequest request, HttpServletResponse response) {
+        // 基础数据初始化及基本工具定义
+        DecimalFormat df = new DecimalFormat("#.00");
+        String orderType = request.getParameter("orderType");
+        double amountTotal = 0.00;
+        double discountAmount = 0.00;
+        // 开始获取表单数据
+        String couponCode = request.getParameter("couponCode");
+        String goodsList = request.getParameter("goodsList");
+        try {
+            // 组装合并订单支付信息
+            OrderPaymentInfo orderPaymentInfo = OrderPaymentInfoService.genDefaultPaymentInfo(orderType);
+            CouponCustomer couponCustomer = null;
+            String couponType = "";
+            double couponBalance = 0.00;
+            if (StringUtils.isNotBlank(couponCode)) {
+                couponCustomer = couponCustomerService.get(couponCode);
+                couponBalance = couponCustomer.getBalance();
+                couponType = couponCustomer.getCouponType();
+            }
+            if ("0".equals(orderType)) {
+                JSONArray goodsArr = JSON.parseArray(goodsList);
+                if (null == goodsArr || goodsArr.size() <= 0) {
+                    throw new ServiceException("未选择要购买的商品，请重新选择");
+                }
+                for (int i = 0; i < goodsArr.size(); i++) {
+                    JSONObject goodsInfoJson = goodsArr.getJSONObject(i);
+                    String goodsId = goodsInfoJson.getString("goodsId");
+                    Double goodsCount = goodsInfoJson.getDouble("goodsCount");
+                    String goodsStandardId = goodsInfoJson.getString("goodsStandard");
+                    // 验证数据正确性
+                    if (StringUtils.isBlank(goodsId)) {
+                        throw new ServiceException("所选商品无效");
+                    }
+                    if (goodsCount <= 0) {
+                        throw new ServiceException("商品数量不合法");
+                    }
+                    if (StringUtils.isBlank(goodsStandardId)) {
+                        throw new ServiceException("无效的商品规格");
+                    }
+                    GoodsInfo goodsInfo = goodsInfoService.get(goodsId);
+                    GoodsStandard goodsStandard = goodsStandardService.get(goodsStandardId);
+                    //商品单价
+                    double price = goodsStandard.getPrice();
+                    double goodsAmountTotal = Double.valueOf(df.format(price * goodsCount));
+                    if (null == goodsInfo || !goodsStandard.getGoodsId().equals(goodsInfo.getId())) {
+                        throw new ServiceException("不合法的商品信息");
+                    }
+                    // 计算优惠金额
+                    double goodsDiscountAmount = 0.00;
+                    if (null != couponCustomer && StringUtils.isNotBlank(couponType)) {
+                        String discountType = goodsInfo.getDiscountType();
+                        if ("0".equals(couponType)) {
+                            if ("3".equals(discountType) || "1".equals(discountType)) {
+                                goodsDiscountAmount = Double.valueOf(df.format(goodsAmountTotal * 0.5));
+                                if (couponBalance <= goodsDiscountAmount) {
+                                    goodsDiscountAmount = couponBalance;
+                                }
+                            }
+                        } else if ("1".equals(couponType)) {
+                            if ("3".equals(discountType) || "2".equals(discountType)) {
+                                goodsDiscountAmount = Double.valueOf(df.format(goodsAmountTotal * 0.3));
+                                if (couponBalance <= goodsDiscountAmount) {
+                                    goodsDiscountAmount = couponBalance;
+                                }
+                            }
+                        }
+                        couponBalance = couponBalance - goodsDiscountAmount;
+                    }
+                    goodsAmountTotal -= goodsDiscountAmount;
+                    discountAmount += goodsDiscountAmount;
+                    amountTotal += goodsAmountTotal;
+                }
+                orderPaymentInfo.setAmountTotal(amountTotal);
+                orderPaymentInfo.setDiscountAmount(discountAmount);
+            } else if ("1".equals(orderType)) {
+                orderPaymentInfo.setDiscountAmount(0.00);
+                orderPaymentInfo.setAmountTotal(0.00);
             }
             renderString(response, ResultGenerator.genSuccessResult(orderPaymentInfo));
         } catch (Exception e) {
