@@ -21,7 +21,7 @@
         a.create_date
         AS
         "createDate",
-        s.goods_price
+        s.price
         AS
         "goodsPrice",
         a.goods_standard
