@@ -30,7 +30,7 @@
 		<li><a href="${ctx}/coupon/couponMerchant/">优惠券列表</a></li>
 		<li class="active"><a href="${ctx}/coupon/couponMerchant/form?id=${couponMerchant.id}">优惠券赠送</a></li>
 	</ul><br/>
-	<form:form id="inputForm" modelAttribute="couponMerchant" action="${ctx}/coupon/couponMerchant/save" method="post" class="form-horizontal">
+	<form:form id="inputForm" modelAttribute="couponMerchant" action="${ctx}/coupon/couponMerchant/giftTransfer" method="post" class="form-horizontal">
 		<form:hidden path="id"/>
 		<sys:message content="${message}"/>		
 		<div class="control-group">
@@ -55,6 +55,15 @@
 			</div>
 		</div>
 		<div class="control-group">
+			<label class="control-label">获得渠道：</label>
+			<div class="controls">
+				<c:choose>
+					<c:when test="${couponMerchant.accessChannel == '0'}">礼包兑换</c:when>
+					<c:when test="${couponMerchant.accessChannel == '1'}">平台赠送</c:when>
+				</c:choose>
+			</div>
+		</div>
+		<div class="control-group">
 			<label class="control-label">获得时间：</label>
 			<div class="controls">
 				<fmt:formatDate value="${couponMerchant.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
@@ -63,7 +72,14 @@
 		<div class="control-group">
 			<label class="control-label">过期时间：</label>
 			<div class="controls">
-				<fmt:formatDate value="${couponMerchant.endDate}" pattern="yyyy-MM-dd"/>
+				<fmt:formatDate value="${couponMerchant.endDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">赠送给：</label>
+			<div class="controls">
+				<form:input path="transferCustomerMobile" htmlEscape="false" maxlength="20" class="input-xlarge required"/>
+				<span class="help-inline"><font color="red">* 请填写要赠送会员的手机号</font> </span>
 			</div>
 		</div>
 		<div class="form-actions">

@@ -27,6 +27,8 @@ public class CouponMerchant extends DataEntity<CouponMerchant> {
 	private String transferCustomerCode;		// 赠送会员ID
 	private String accessChannel;		// 获得渠道 0-礼包赠送 1-平台赠送
 	private String giftCode;		// 来源礼包id
+
+	private String transferCustomerMobile; // 赠送会员手机号码
 	
 	public CouponMerchant() {
 		super();
@@ -34,6 +36,14 @@ public class CouponMerchant extends DataEntity<CouponMerchant> {
 
 	public CouponMerchant(String id){
 		super(id);
+	}
+
+	public String getTransferCustomerMobile() {
+		return transferCustomerMobile;
+	}
+
+	public void setTransferCustomerMobile(String transferCustomerMobile) {
+		this.transferCustomerMobile = transferCustomerMobile;
 	}
 
 	@Length(min=1, max=64, message="config_id长度必须介于 1 和 64 之间")
