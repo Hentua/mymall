@@ -20,15 +20,26 @@ import com.mall.modules.coupon.service.CouponCustomerService;
 //import com.mall.modules.gift.entity.GiftExchangeLog;
 //import com.mall.modules.gift.service.GiftCustomerService;
 //import com.mall.modules.gift.service.GiftExchangeLogService;
+import com.mall.modules.coupon.service.CouponMerchantService;
+import com.mall.modules.gift.entity.GiftConfig;
+import com.mall.modules.gift.entity.GiftConfigCoupon;
+import com.mall.modules.gift.entity.GiftConfigGoods;
+import com.mall.modules.gift.entity.GiftCustomer;
+import com.mall.modules.gift.service.GiftConfigService;
+import com.mall.modules.gift.service.GiftCustomerService;
 import com.mall.modules.goods.entity.GoodsInfo;
+import com.mall.modules.goods.entity.GoodsStandard;
 import com.mall.modules.goods.service.GoodsInfoService;
+import com.mall.modules.goods.service.GoodsStandardService;
 import com.mall.modules.member.entity.MemberDeliveryAddress;
 import com.mall.modules.member.service.MemberDeliveryAddressService;
 import com.mall.modules.order.entity.*;
 import com.mall.modules.order.service.OrderInfoService;
 import com.mall.modules.order.service.OrderPaymentInfoService;
 import com.mall.modules.order.service.OrderShoppingCartService;
+import com.mall.modules.sys.entity.Role;
 import com.mall.modules.sys.entity.User;
+import com.mall.modules.sys.service.SystemService;
 import com.mall.modules.sys.utils.UserUtils;
 import com.sohu.idcenter.IdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,13 +79,19 @@ public class OrderInfoApi extends BaseController {
     private OrderShoppingCartService orderShoppingCartService;
     @Autowired
     private CouponCustomerService couponCustomerService;
+    @Autowired
+    private CouponMerchantService couponMerchantService;
 
     @Autowired
     private AccountInfoService accountInfoService;
-//    @Autowired
-//    private GiftCustomerService giftCustomerService;
-//    @Autowired
-//    private GiftExchangeLogService giftExchangeLogService;
+    @Autowired
+    private GiftCustomerService giftCustomerService;
+    @Autowired
+    private GiftConfigService giftConfigService;
+    @Autowired
+    private GoodsStandardService goodsStandardService;
+    @Autowired
+    private SystemService systemService;
 
     /**
      * 提交订单 订单30分钟内需要支付 否则关闭订单
@@ -97,7 +114,9 @@ public class OrderInfoApi extends BaseController {
         String goodsList = request.getParameter("goodsList");
         String addressId = request.getParameter("addressId");
         String giftCustomerId = request.getParameter("giftCustomerId");
-//        GiftCustomer giftCustomer;
+        String giftConfigId = request.getParameter("giftConfigId");
+        GiftCustomer giftCustomer;
+        GiftConfig giftConfig;
         try {
             User currUser = UserUtils.getUser();
             if (null == currUser) {
@@ -105,9 +124,6 @@ public class OrderInfoApi extends BaseController {
             }
             if (StringUtils.isBlank(orderType) || (!"0".equals(orderType) && !"1".equals(orderType))) {
                 throw new ServiceException("订单类型不合法");
-            }
-            if ("1".equals(orderType) && StringUtils.isBlank(giftCustomerId)) {
-                throw new ServiceException("未选择要兑换的礼包");
             }
             if (StringUtils.isBlank(addressId)) {
                 throw new ServiceException("未选择收货地址");
@@ -136,29 +152,48 @@ public class OrderInfoApi extends BaseController {
             if ("0".equals(orderType)) {
                 goodsArr = JSON.parseArray(goodsList);
             } else {
-//                orderStatus = "1";
-//                giftCustomer = giftCustomerService.get(giftCustomerId);
-//                int giftCount = giftCustomer.getGiftCount();
-//                if (giftCount <= 0) {
-//                    throw new ServiceException("礼包数量不合法");
-//                }
-//                if (!customerCode.equals(giftCustomer.getCustomerCode())) {
-//                    throw new ServiceException("礼包不可兑换");
-//                }
-//                giftCustomer.setGiftCount(giftCount - 1);
-//                giftCustomerService.save(giftCustomer);
-//                // 保存礼包兑换记录
-//                GiftExchangeLog giftExchangeLog = new GiftExchangeLog();
-//                giftExchangeLog.setCustomerCode(customerCode);
-//                giftExchangeLog.setGiftCustomerId(giftCustomer.getId());
-//                giftExchangeLogService.save(giftExchangeLog);
-//                goodsArr = new JSONArray();
-//                for (GiftCustomerGoods g : giftCustomer.getGiftCustomerGoodsList()) {
-//                    JSONObject goodsJson = new JSONObject();
-//                    goodsJson.put("goodsId", g.getGoodsId());
-//                    goodsJson.put("goodsCount", g.getGoodsCount());
-//                    goodsArr.add(goodsJson);
-//                }
+                if (StringUtils.isBlank(giftCustomerId)) {
+                    throw new ServiceException("未选择要兑换的礼包");
+                }
+                orderStatus = "1";
+                giftCustomer = giftCustomerService.get(giftCustomerId);
+                giftConfig = giftConfigService.get(giftConfigId);
+                int giftCount = giftCustomer.getGiftCount();
+                if (giftCount <= 0) {
+                    throw new ServiceException("礼包已兑换");
+                }
+                if (!customerCode.equals(giftCustomer.getCustomerCode())) {
+                    throw new ServiceException("礼包不可兑换");
+                }
+                if (!giftConfig.getGiftCategory().equals(giftCustomer.getGiftCategory())) {
+                    throw new ServiceException("所选礼包不合法");
+                }
+                giftCustomer.setGiftCount(giftCount - 1);
+                giftCustomerService.save(giftCustomer);
+                // 获取礼包商品信息
+                goodsArr = new JSONArray();
+                for (GiftConfigGoods g : giftConfig.getGiftConfigGoodsList()) {
+                    JSONObject goodsJson = new JSONObject();
+                    goodsJson.put("goodsId", g.getGoodsId());
+                    goodsJson.put("goodsCount", g.getGoodsCount());
+                    goodsJson.put("goodsStandard", g.getGoodsStandardId());
+                    goodsArr.add(goodsJson);
+                }
+                // 是否赠送商户资格
+                String merchantQualification = giftCustomer.getMerchantQualification();
+                if ("1".equals(merchantQualification)) {
+                    // 赋予用户未审核商户权限
+                    List<Role> roleList = currUser.getRoleList();
+                    roleList.add(new Role("1000"));
+                    systemService.saveUser(currUser);
+                    for (GiftConfigCoupon giftConfigCoupon : giftConfig.getGiftConfigCouponList()) {
+                        couponMerchantService.exchangeGiftGenCoupon(giftConfigCoupon, giftCustomerId);
+                    }
+                } else if ("0".equals(merchantQualification)) {
+                    for (GiftConfigCoupon giftConfigCoupon : giftConfig.getGiftConfigCouponList()) {
+                        couponCustomerService.exchangeGiftGenCoupon(giftConfigCoupon, giftCustomerId);
+                    }
+                }
             }
             if (null == goodsArr || goodsArr.size() <= 0) {
                 throw new ServiceException("未选择要购买的商品，请重新选择");
@@ -170,10 +205,16 @@ public class OrderInfoApi extends BaseController {
                 JSONObject goodsInfoJson = goodsArr.getJSONObject(i);
                 String goodsId = goodsInfoJson.getString("goodsId");
                 String shoppingCartId = goodsInfoJson.getString("shoppingCartId");
-                OrderShoppingCart shoppingCart = new OrderShoppingCart();
-                shoppingCart.setId(shoppingCartId);
-                shoppingCart = orderShoppingCartService.get(shoppingCart);
-                double goodsCount = goodsInfoJson.getDouble("goodsCount");
+                Double goodsCount = goodsInfoJson.getDouble("goodsCount");
+                String goodsStandardId = goodsInfoJson.getString("goodsStandard");
+                String goodsRecommendId = "";
+                if ("0".equals(orderType) && StringUtils.isBlank(shoppingCartId)) {
+                    throw new ServiceException("不合法的订单信息");
+                }
+                if ("0".equals(orderType)) {
+                    OrderShoppingCart orderShoppingCart = orderShoppingCartService.get(shoppingCartId);
+                    goodsRecommendId = orderShoppingCart.getGoodsRecommendId();
+                }
                 // 验证数据正确性
                 if (StringUtils.isBlank(goodsId)) {
                     throw new ServiceException("所选商品无效");
@@ -181,19 +222,28 @@ public class OrderInfoApi extends BaseController {
                 if (goodsCount <= 0) {
                     throw new ServiceException("商品数量不合法");
                 }
+                if (StringUtils.isBlank(goodsStandardId)) {
+                    throw new ServiceException("无效的商品规格");
+                }
                 GoodsInfo goodsInfo = goodsInfoService.get(goodsId);
+                GoodsStandard goodsStandard = goodsStandardService.get(goodsStandardId);
+                if (null == goodsStandard || null == goodsInfo || !goodsStandard.getGoodsId().equals(goodsInfo.getId())) {
+                    throw new ServiceException("不合法的商品信息");
+                }
                 String merchantCode = goodsInfo.getMerchantId();
                 OrderInfo orderInfo;
                 String orderNo;
                 double orderGoodsAmountTotal;
                 double orderGoodsCount;
                 double orderAmountTotal;
+                double settlementsTotal;
                 if (orderInfoMap.containsKey(merchantCode)) {
                     orderInfo = orderInfoMap.get(merchantCode);
                     orderGoodsAmountTotal = orderInfo.getGoodsAmountTotal();
                     orderGoodsCount = orderInfo.getGoodsCount();
                     orderGoodsList = orderInfo.getOrderGoodsList();
                     orderAmountTotal = orderInfo.getOrderAmountTotal();
+                    settlementsTotal = orderInfo.getSettlementsAmount();
                 } else {
                     orderNo = String.valueOf(idWorker.getId());
                     orderInfo = new OrderInfo();
@@ -207,6 +257,7 @@ public class OrderInfoApi extends BaseController {
                     orderGoodsCount = 0.00;
                     orderGoodsList = Lists.newArrayList();
                     orderAmountTotal = 0.00;
+                    settlementsTotal = 0.00;
 
                     // 初始化物流信息
                     OrderLogistics orderLogistics = orderInfoService.genOrderLogistics(orderNo, merchantCode, memberDeliveryAddress);
@@ -218,11 +269,11 @@ public class OrderInfoApi extends BaseController {
                 }
                 orderGoodsCount += goodsCount;
                 //商品单价
-                double price = shoppingCart.getGoodsPrice();
-                double settlementsAmount = shoppingCart.getSettlementsAmount();
+                double price = goodsStandard.getPrice();
+                double settlementsAmount = goodsStandard.getSettlementsAmount();
                 double goodsAmountTotal = Double.valueOf(df.format(price * goodsCount));
                 //结算总价
-                double settlementsTotal = Double.valueOf(df.format(settlementsAmount * goodsCount));
+                settlementsTotal += Double.valueOf(df.format(settlementsAmount * goodsCount));
 
                 orderAmountTotal += goodsAmountTotal;
 
@@ -238,9 +289,9 @@ public class OrderInfoApi extends BaseController {
                 orderGoods.setSubtotal(goodsAmountTotal);
                 orderGoods.setId("");
                 orderGoods.setGoodsPrice(price);
-                orderGoods.setGoodsStandard(shoppingCart.getGoodsStandard());
+                orderGoods.setGoodsStandard(goodsStandard.getId());
                 orderGoods.setSettlementsAmount(settlementsAmount);
-                orderGoods.setGoodsRecommendId(shoppingCart.getGoodsRecommendId());
+                orderGoods.setGoodsRecommendId(goodsRecommendId);
                 orderGoodsList.add(orderGoods);
 
                 orderInfo.setOrderGoodsList(orderGoodsList);
@@ -274,7 +325,8 @@ public class OrderInfoApi extends BaseController {
                     orderInfo.setCouponCode(couponCode);
                     // 修改优惠券为已使用
                     couponCustomerService.updateCouponUsed(couponCustomer.getId());
-                } else*/ if ("1".equals(orderType)) {
+                } else*/
+                if ("1".equals(orderType)) {
                     orderInfo.setPayTime(new Date());
                 }
                 double orderAmountTotal = orderInfo.getOrderAmountTotal() - orderDiscountAmountTotal;

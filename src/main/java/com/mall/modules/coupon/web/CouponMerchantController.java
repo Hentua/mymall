@@ -46,6 +46,7 @@ public class CouponMerchantController extends BaseController {
 	@RequiresPermissions("coupon:couponMerchant:view")
 	@RequestMapping(value = {"list", ""})
 	public String list(CouponMerchant couponMerchant, HttpServletRequest request, HttpServletResponse response, Model model) {
+		couponMerchant.setCouponStatus("0");
 		Page<CouponMerchant> page = couponMerchantService.findPage(new Page<CouponMerchant>(request, response), couponMerchant); 
 		model.addAttribute("page", page);
 		return "modules/coupon/couponMerchantList";

@@ -35,6 +35,7 @@
 				<th>优惠券类型</th>
 				<th>优惠券名称</th>
 				<th>优惠券金额</th>
+				<th>获得时间</th>
 				<th>过期时间</th>
 				<th>备注</th>
 				<th>赠送</th>
@@ -56,7 +57,10 @@
 						${couponMerchant.limitAmount}
 				</td>
 				<td>
-					<fmt:formatDate value="${couponMerchant.endDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
+					<fmt:formatDate value="${couponMerchant.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
+				</td>
+				<td>
+					<fmt:formatDate value="${couponMerchant.endDate}" pattern="yyyy-MM-dd"/>
 				</td>
 				<td>
 						${couponMerchant.remarks}
