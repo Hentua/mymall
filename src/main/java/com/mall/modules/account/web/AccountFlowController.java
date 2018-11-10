@@ -6,6 +6,9 @@ import com.mall.common.utils.StringUtils;
 import com.mall.common.web.BaseController;
 import com.mall.modules.account.entity.AccountFlow;
 import com.mall.modules.account.service.AccountFlowService;
+import com.mall.modules.account.service.AccountService;
+import com.mall.modules.member.entity.MemberInfo;
+import com.mall.modules.member.service.MemberInfoService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,6 +32,12 @@ public class AccountFlowController extends BaseController {
 
 	@Autowired
 	private AccountFlowService accountFlowService;
+
+	@Autowired
+	private MemberInfoService memberInfoService;
+
+	@Autowired
+	private AccountService accountService;
 	
 	@ModelAttribute
 	public AccountFlow get(@RequestParam(required=false) String id) {
@@ -80,9 +89,28 @@ public class AccountFlowController extends BaseController {
 	@RequestMapping(value = "check")
 	public String check(AccountFlow accountFlow, RedirectAttributes redirectAttributes) {
 		AccountFlow ac =  accountFlowService.get(accountFlow);
+		ac.setCheckStatus("2");
+		accountFlowService.save(ac);
+		//新增余额
+		MemberInfo m = new  MemberInfo();
+		m.setId(ac.getUserId());
+		m = memberInfoService.get(m);
+		Double balance = null;
+		//1：充值，2：佣金转余额）支出（3：提现，4：消费）
+		if("1".equals(ac.getMode())){
+			balance = m.getBalance()+ac.getAmount();
+		}
+		if("3".equals(ac.getMode())){
+			if(m.getBalance()<ac.getAmount()){
+				addMessage(redirectAttributes, "审核失败：提现余额不足");
+				return "redirect:"+Global.getAdminPath()+"/account/accountFlow/list?repage";
+			}
+			balance = m.getBalance()-ac.getAmount();
+		}
 
+		accountService.editAccount(balance,null,m.getId());
 		addMessage(redirectAttributes, "审核成功");
-		return "redirect:"+Global.getAdminPath()+"/account/accountFlow/?repage";
+		return "redirect:"+Global.getAdminPath()+"/account/accountFlow/list?repage";
 	}
 
 }

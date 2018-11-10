@@ -48,7 +48,7 @@
 				<th>金额</th>
 				<th>类型</th>
 				<th>创建时间</th>
-				<th>充值类型</th>
+				<th>打款方式</th>
 				<th>银行账户</th>
 				<th>开户人名称</th>
 				<th>开户行</th>
@@ -70,10 +70,11 @@
 				</td>
 				<td>
 					<c:if test="${accountFlow.mode == '1'}">
-						充值
+						<span style="color:#4cab0b">充值</span>
 					</c:if>
 					<c:if test="${accountFlow.mode == '3'}">
-						提现
+
+						<span style="color:#ff0f1e">提现</span>
 					</c:if>
 				</td>
 				<td>
@@ -84,7 +85,7 @@
 						微信
 					</c:if>
 					<c:if test="${accountFlow.incomeExpenditureMode == '2'}">
-						转账
+						银行转账
 					</c:if>
 				</td>
 				<td>
@@ -105,8 +106,9 @@
 					</c:if>
 				</td>
 				<shiro:hasPermission name="account:accountFlow:edit"><td>
-					<a href="${ctx}/account/accountFlow/check?id=${accountFlow.id}" onclick="return confirmx('确认要审核通过该笔记录吗？', this.href)">删除</a>
-
+					<c:if test="${accountFlow.checkStatus == '1'}">
+						<a href="${ctx}/account/accountFlow/check?id=${accountFlow.id}" onclick="return confirmx('确认要审核通过该笔记录吗？', this.href)">审核通过</a>
+					</c:if>
     				<%--<a href="${ctx}/account/accountFlow/form?id=${accountFlow.id}">修改</a>--%>
 					<%--<a href="${ctx}/account/accountFlow/delete?id=${accountFlow.id}" onclick="return confirmx('确认要删除该账户流水吗？', this.href)">删除</a>--%>
 				</td></shiro:hasPermission>
