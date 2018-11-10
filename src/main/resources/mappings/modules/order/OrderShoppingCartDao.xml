@@ -60,6 +60,9 @@
             <result property="goodsName" column="orderShoppingCarts.goodsName"/>
             <result property="image" column="orderShoppingCarts.image"/>
             <result property="unit" column="orderShoppingCarts.unit"/>
+
+            <result property="goodsStandard" column="orderShoppingCarts.goodsStandard"/>
+            <result property="settlementsAmount" column="orderShoppingCarts.settlementsAmount"/>
         </collection>
     </resultMap>
 
