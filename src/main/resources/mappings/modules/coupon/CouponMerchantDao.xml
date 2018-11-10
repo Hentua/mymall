@@ -39,7 +39,16 @@
 		FROM coupon_merchant a
 		<include refid="couponMerchantJoins"/>
 		<where>
-			
+			<if test="couponType != null and couponType != ''">
+				and a.coupon_type = #{couponType}
+			</if>
+			<if test="couponName != null and couponName != ''">
+				and a.coupon_name like concat('%',#{giftName},'%')
+			</if>
+			<if test="merchantCode != null and merchantCode != ''">
+				and a.merchant_code = #{merchantCode}
+			</if>
+			and a.start_date &lt;= now() and a.end_date &gt;= now() and a.coupon_status = '0'
 		</where>
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">

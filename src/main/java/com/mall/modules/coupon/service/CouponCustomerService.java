@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import com.mall.common.utils.DateUtils;
 import com.mall.modules.coupon.entity.CouponConfig;
 import com.mall.modules.gift.entity.GiftConfigCoupon;
 import com.mall.modules.sys.entity.User;
@@ -70,11 +71,11 @@ public class CouponCustomerService extends CrudService<CouponCustomerDao, Coupon
 		couponCustomer.setCouponType(couponConfig.getCouponType());
 		couponCustomer.setCouponName(couponConfig.getCouponName());
 		Integer expiryTime = couponConfig.getExpiryTime();
-		couponCustomer.setStartDate(new Date());
+		couponCustomer.setStartDate(DateUtils.getStartOfDay(new Date()));
 		if(expiryTime == 0) {
-			couponCustomer.setEndDate(simpleDateFormat.parse("9999-12-31 00:00:00"));
+			couponCustomer.setEndDate(DateUtils.getEndOfDay(simpleDateFormat.parse("9999-12-31 00:00:00")));
 		}else {
-			couponCustomer.setEndDate(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * expiryTime));
+			couponCustomer.setEndDate(DateUtils.getEndOfDay(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * expiryTime)));
 		}
 		couponCustomer.setLimitAmount(couponConfig.getLimitAmount());
 		couponCustomer.setCustomerCode(customerCode);

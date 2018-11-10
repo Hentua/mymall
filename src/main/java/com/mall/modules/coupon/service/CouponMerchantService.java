@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import com.mall.common.utils.DateUtils;
 import com.mall.modules.coupon.entity.CouponConfig;
 import com.mall.modules.gift.entity.GiftConfigCoupon;
 import com.mall.modules.sys.entity.Role;
@@ -72,11 +73,11 @@ public class CouponMerchantService extends CrudService<CouponMerchantDao, Coupon
 		couponMerchant.setCouponType(couponConfig.getCouponType());
 		couponMerchant.setCouponName(couponConfig.getCouponName());
 		Integer transferExpiryTime = couponConfig.getTransferExpiryTime();
-		couponMerchant.setStartDate(new Date());
+		couponMerchant.setStartDate(DateUtils.getStartOfDay(new Date()));
 		if(transferExpiryTime == 0) {
-			couponMerchant.setEndDate(simpleDateFormat.parse("9999-12-31 00:00:00"));
+			couponMerchant.setEndDate(DateUtils.getEndOfDay(simpleDateFormat.parse("9999-12-31 00:00:00")));
 		}else {
-			couponMerchant.setEndDate(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * transferExpiryTime));
+			couponMerchant.setEndDate(DateUtils.getEndOfDay(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * transferExpiryTime)));
 		}
 		couponMerchant.setLimitAmount(couponConfig.getLimitAmount());
 		couponMerchant.setMerchantCode(merchantCode);

@@ -112,7 +112,7 @@
 			#{count},
 			#{subtotal},
 			#{goodsStandard},
-			#{settlementsAmount}
+			#{settlementsAmount},
 			#{goodsRecommendId}
 		)
 	</insert>

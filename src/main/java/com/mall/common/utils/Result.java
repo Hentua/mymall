@@ -37,9 +37,6 @@ public class Result {
     }
 
     public Object getData() {
-        if (null == this.data) {
-            this.data = new Object();
-        }
         return data;
     }
 

@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.mall.modules.gift.entity.GiftMerchant;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.mall.common.persistence.Page;
@@ -32,7 +33,7 @@ public class GiftCustomerService extends CrudService<GiftCustomerDao, GiftCustom
 		return super.findPage(page, giftCustomer);
 	}
 	
-	@Transactional(readOnly = false)
+	@Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
 	public void save(GiftCustomer giftCustomer) {
 		super.save(giftCustomer);
 	}

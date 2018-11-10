@@ -24,6 +24,16 @@
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<ul class="ul-form">
+			<li><label>优惠券类型：</label>
+				<form:select path="couponType">
+					<form:option value="" label="全部"/>
+					<form:option value="0" label="五折券"/>
+					<form:option value="1" label="七折券"/>
+				</form:select>
+			</li>
+			<li><label>优惠券名称：</label>
+				<form:input path="couponName" htmlEscape="false" maxlength="20" class="input-medium"/>
+			</li>
 			<li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
 			<li class="clearfix"></li>
 		</ul>
@@ -66,7 +76,7 @@
 						${couponMerchant.remarks}
 				</td>
 				<td>
-					<a href="${ctx}/coupon/couponMerchant/delete?id=${couponMerchant.id}" onclick="return confirmx('确认要赠送该优惠券吗？', this.href)">赠送</a>
+					<a href="${ctx}/coupon/couponMerchant/form?id=${couponMerchant.id}" onclick="return confirmx('确认要赠送该优惠券吗？', this.href)">赠送</a>
 				</td>
 			</tr>
 		</c:forEach>
