@@ -16,5 +16,8 @@ public interface AccountFlowDao extends CrudDao<AccountFlow> {
 
 
     public void editAccount(Map<String,Object> map );
+
+
+    public Map<String,Object> stsFlow(AccountFlow accountFlow);
 	
 }

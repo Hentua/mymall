@@ -1,7 +1,7 @@
 package com.mall.modules.account.api;
 
 import com.alibaba.fastjson.JSONObject;
-import com.mall.common.service.ServiceException;
+import com.mall.common.persistence.Page;
 import com.mall.common.utils.Result;
 import com.mall.common.utils.ResultGenerator;
 import com.mall.common.web.BaseController;
@@ -61,6 +61,34 @@ public class AccountApi extends BaseController {
 		return ResultGenerator.genSuccessResult(result);
 	}
 
+	/**
+	 * 账户余额信息
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "list", method = RequestMethod.POST)
+	public Result list(HttpServletRequest request, HttpServletResponse response) {
+		User user = UserUtils.getUser();
+		MemberInfo m = new MemberInfo();
+		m.setId(user.getId());
+		MemberInfo memberInfo = memberInfoService.get(m);
+		AccountFlow accountFlow = new AccountFlow();
+		accountFlow.setUserId(user.getId());
+		Page<AccountFlow> page = new Page<AccountFlow>(request,response);
+		page= accountFlowService.getAccountFlows(accountFlow,page);
+		JSONObject result = new JSONObject();
+		result.put("balance",memberInfo.getBalance());
+		result.put("commission",memberInfo.getCommission());
+		result.put("list",page.getList());
+		result.put("pageNo",page.getPageNo());
+		result.put("pageSize",page.getPageSize());
+		result.put("count",page.getCount());
+		result.putAll(accountFlowService.stsFlow(accountFlow));
+		return ResultGenerator.genSuccessResult(result);
+	}
+
 
 	/**
 	 * 充值
@@ -105,7 +133,7 @@ public class AccountApi extends BaseController {
 		m.setId(user.getId());
 		MemberInfo memberInfo = memberInfoService.get(m);
 		if(memberInfo.getBalance()<amount){
-			throw new ServiceException("账户余额不足");
+			return ResultGenerator.genFailResult("账户余额不足");
 		}
 		AccountFlow accountFlow = new AccountFlow();
 		accountFlow.setFlowNo(String.valueOf(idWorker.getId()));
@@ -139,7 +167,7 @@ public class AccountApi extends BaseController {
 		String amountStr = request.getParameter("amount");
 		Double amount = Double.valueOf(amountStr);
 		if(memberInfo.getCommission()<amount){
-			throw new ServiceException("佣金余额不足");
+			return ResultGenerator.genFailResult("佣金余额不足");
 		}
 		AccountFlow accountFlow = new AccountFlow();
 		accountFlow.setFlowNo(String.valueOf(idWorker.getId()));
@@ -147,10 +175,10 @@ public class AccountApi extends BaseController {
 		accountFlow.setAmount(amount);
 		accountFlow.setType("1");//收入
 		accountFlow.setMode("2");//佣金转余额
-		accountFlow.setIncomeExpenditureMode(request.getParameter("incomeExpenditureMode"));// 收支方式 1：微信 2：用户转账
-		accountFlow.setBankAccount(request.getParameter("bankAccount"));//银行账户
-		accountFlow.setBankAccountName(request.getParameter("bankAccountName"));//开户人名称
-		accountFlow.setBankName(request.getParameter("bankName"));//开户行
+//		accountFlow.setIncomeExpenditureMode(request.getParameter("incomeExpenditureMode"));// 收支方式 1：微信 2：用户转账
+//		accountFlow.setBankAccount(request.getParameter("bankAccount"));//银行账户
+//		accountFlow.setBankAccountName(request.getParameter("bankAccountName"));//开户人名称
+//		accountFlow.setBankName(request.getParameter("bankName"));//开户行
 		accountFlow.setCheckStatus("1");
 		accountFlowService.save(accountFlow);
 		//操作余额

@@ -54,6 +54,7 @@ public class AccountFlow extends DataEntity<AccountFlow> {
 		this.nickname = nickname;
 	}
 
+
 	@Length(min=0, max=100, message="流水单号长度必须介于 0 和 100 之间")
 	public String getFlowNo() {
 		return flowNo;
@@ -86,6 +87,16 @@ public class AccountFlow extends DataEntity<AccountFlow> {
 		return type;
 	}
 
+	public String getTypeText(){
+		if("1".equals(this.getType())){
+			return "收入";
+		}
+		if("2".equals(this.getType())){
+			return "支出";
+		}
+		return "";
+	}
+
 	public void setType(String type) {
 		this.type = type;
 	}
@@ -93,6 +104,22 @@ public class AccountFlow extends DataEntity<AccountFlow> {
 	@Length(min=0, max=3, message="收入（1：充值，2：佣金转余额）支出（3：提现，4：消费）长度必须介于 0 和 3 之间")
 	public String getMode() {
 		return mode;
+	}
+
+	public String getModeText(){
+		if("1".equals(this.getMode())){
+			return "充值";
+		}
+		if("2".equals(this.getMode())){
+			return "佣金转余额";
+		}
+		if("3".equals(this.getMode())){
+			return "提现";
+		}
+		if("4".equals(this.getMode())){
+			return "消费";
+		}
+		return "";
 	}
 
 	public void setMode(String mode) {
@@ -112,6 +139,18 @@ public class AccountFlow extends DataEntity<AccountFlow> {
 	public String getIncomeExpenditureMode() {
 		return incomeExpenditureMode;
 	}
+
+
+	public String getIncomeExpenditureModeText(){
+		if("1".equals(this.getIncomeExpenditureMode())){
+			return "微信";
+		}
+		if("2".equals(this.getIncomeExpenditureMode())){
+			return "银行转账";
+		}
+		return "";
+	}
+
 
 	public void setIncomeExpenditureMode(String incomeExpenditureMode) {
 		this.incomeExpenditureMode = incomeExpenditureMode;
@@ -149,6 +188,16 @@ public class AccountFlow extends DataEntity<AccountFlow> {
 		return checkStatus;
 	}
 
+
+	public String getCheckStatusText() {
+		if("1".equals(this.getCheckStatus())){
+			return "待审核";
+		}
+		if("2".equals(this.getCheckStatus())){
+			return "已审核";
+		}
+		return checkStatus;
+	}
 	public void setCheckStatus(String checkStatus) {
 		this.checkStatus = checkStatus;
 	}

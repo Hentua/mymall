@@ -79,6 +79,14 @@
 			</otherwise>
 		</choose>
 	</select>
+
+	<select id="stsFlow" resultType="java.util.Map">
+		select
+			   ifnull(sum(case WHEN a.type =1 THEN amount end ),0)	 as "income",
+			   ifnull(sum(case WHEN a.type =2 THEN amount end ),0) as "expenditure"
+		from account_flow a
+		where  user_id = #{userId}
+	</select>
 	
 	<insert id="insert">
 		INSERT INTO account_flow(
@@ -137,10 +145,10 @@
 		update member_info
 		<set>
 			<if test="balance != null">
-				balance = #{balance}
+				balance = #{balance},
 			</if>
 			<if test="commission != null">
-				commission = #{commission}
+				commission = #{commission},
 			</if>
 		</set>
 		<where>
