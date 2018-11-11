@@ -76,7 +76,9 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 	@Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
 	public void consumption(Double amount,String paymentNo,String userId){
 
-		MemberInfo memberInfo = memberInfoDao.get(userId);
+		MemberInfo m = new MemberInfo();
+		m.setId(userId);
+		MemberInfo memberInfo = memberInfoDao.get(m);
 		if(null == memberInfo){
 			throw new ServiceException("账户信息不存在");
 		}
@@ -185,6 +187,8 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 			customerRefereeCommission.setAmount(commissionConfigService.getCommissionAmount("1",orderInfo));
 			customerRefereeCommission.setUnionId(orderInfo.getId());
 			commissionInfoService.save(customerRefereeCommission);
+
+
 
 		}
 		//订单类型（0-平台自主下单，1-礼包兑换）
