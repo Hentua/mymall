@@ -6,6 +6,7 @@ import com.mall.modules.member.entity.MemberInfo;
 
 /**
  * 用户信息DAO接口
+ *
  * @author wankang
  * @version 2018-10-10
  */
@@ -18,5 +19,20 @@ public interface MemberInfoDao extends CrudDao<MemberInfo> {
      * @param memberInfo 会员实体
      */
     void memberCheck(MemberInfo memberInfo);
-	
+
+    /**
+     * 获取支付密码
+     *
+     * @param id 用户ID
+     * @return 支付密码
+     */
+    String getPayPassword(String id);
+
+    /**
+     * 保存支付密码
+     *
+     * @param memberInfo 会员实体
+     */
+    void savePayPassword(MemberInfo memberInfo);
+
 }

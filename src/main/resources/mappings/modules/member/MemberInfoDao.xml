@@ -43,6 +43,14 @@
 		</where>
 	</select>
 	
+	<select id="getPayPassword" resultType="string" parameterType="string">
+		select pay_password from member_info where id = #{id}
+	</select>
+
+	<update id="savePayPassword">
+		update member_info set pay_password = #{payPassword} where id = #{id}
+	</update>
+	
 	<select id="findList" resultType="MemberInfo">
 		SELECT 
 			<include refid="memberInfoColumns"/>,

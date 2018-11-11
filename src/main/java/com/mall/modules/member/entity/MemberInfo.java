@@ -33,9 +33,8 @@ public class MemberInfo extends DataEntity<MemberInfo> {
 	private String password;
 	@JsonIgnore
 	private String repeatPassword;
-
-
-
+	@JsonIgnore
+	private String payPassword; // 支付密码
 
 	public MemberInfo() {
 		super();
@@ -45,6 +44,13 @@ public class MemberInfo extends DataEntity<MemberInfo> {
 		super(id);
 	}
 
+	public String getPayPassword() {
+		return payPassword;
+	}
+
+	public void setPayPassword(String payPassword) {
+		this.payPassword = payPassword;
+	}
 
 	public Double getCommission() {
 		return commission;

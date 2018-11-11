@@ -3,6 +3,7 @@ package com.mall.modules.member.service;
 import com.mall.common.persistence.Page;
 import com.mall.common.service.CrudService;
 import com.mall.common.service.ServiceException;
+import com.mall.common.utils.StringUtils;
 import com.mall.modules.member.dao.MemberFavoriteDao;
 import com.mall.modules.member.dao.MemberFootprintDao;
 import com.mall.modules.member.dao.MemberInfoDao;
@@ -11,6 +12,7 @@ import com.mall.modules.member.entity.MemberFeedback;
 import com.mall.modules.member.entity.MemberFootprint;
 import com.mall.modules.member.entity.MemberInfo;
 import com.mall.modules.member.utils.Base32;
+import com.mall.modules.sys.service.SystemService;
 import com.sohu.idcenter.IdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -78,6 +80,17 @@ public class MemberInfoService extends CrudService<MemberInfoDao, MemberInfo> {
         }
     }
 
+    public static boolean validatePayPasswordFormat(String payPassword) {
+        String regex = "^\\d{6}$";
+        if (payPassword.length() != 6) {
+            return false;
+        } else {
+            Pattern p = Pattern.compile(regex);
+            Matcher m = p.matcher(payPassword);
+            return m.matches();
+        }
+    }
+
     public static String genRefereeId() {
         IdWorker idWorker = new IdWorker();
 
@@ -127,6 +140,29 @@ public class MemberInfoService extends CrudService<MemberInfoDao, MemberInfo> {
 
     public List<MemberFootprint> findList(MemberFootprint memberFootprint) {
         return memberFootprintDao.findList(memberFootprint);
+    }
+
+    public String getPayPassword(String id) {
+        return memberInfoDao.getPayPassword(id);
+    }
+
+    public void savePayPassword(MemberInfo memberInfo) {
+        memberInfoDao.savePayPassword(memberInfo);
+    }
+
+    /**
+     * 验证会员支付密码
+     *
+     * @param payPassword 支付密码
+     * @param memberCode  会员ID
+     * @return 是否成功
+     */
+    public boolean validatePayPassword(String payPassword, String memberCode) {
+        String cipherPayPassword = this.getPayPassword(memberCode);
+        if (StringUtils.isBlank(payPassword) || !validatePayPasswordFormat(payPassword)) {
+            return false;
+        }
+        return cipherPayPassword.equals(SystemService.entryptPassword(payPassword));
     }
 
 }
