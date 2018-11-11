@@ -95,7 +95,7 @@ public class OrderPaymentInfoApi extends BaseController {
                 return;
             }
             if(!memberInfoService.validatePayPassword(payPassword, userId)) {
-                throw new ServletException("支付密码不正确");
+                throw new ServiceException("支付密码不正确");
             }
             if (StringUtils.isBlank(paymentNo)) {
                 throw new ServiceException("未选择支付信息");

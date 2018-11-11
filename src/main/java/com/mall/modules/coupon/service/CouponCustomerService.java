@@ -3,6 +3,7 @@ package com.mall.modules.coupon.service;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import com.mall.common.utils.DateUtils;
 import com.mall.modules.coupon.entity.CouponConfig;
@@ -113,6 +114,10 @@ public class CouponCustomerService extends CrudService<CouponCustomerDao, Coupon
 		couponCustomer.setTransferMerchantCode(currUser.getId());
 		couponCustomer.setBalance(couponMerchant.getLimitAmount());
 		this.save(couponCustomer);
+	}
+
+	public Map<String, String> enabledCouponsCount(String customerCode) {
+		return dao.enabledCouponsCount(customerCode);
 	}
 	
 }

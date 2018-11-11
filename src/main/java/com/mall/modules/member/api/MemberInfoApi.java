@@ -535,10 +535,10 @@ public class MemberInfoApi extends BaseController {
             // 获取订单统计
             Map<String, String> orderCount = orderInfoService.orderCount(customerCode);
             // 获取优惠券统计
-//            Map<String, String> enabledCouponsCount = couponCustomerService.enabledCouponsCount(customerCode);
+            Map<String, String> enabledCouponsCount = couponCustomerService.enabledCouponsCount(customerCode);
 
             memberDataCount.putAll(orderCount);
-//            memberDataCount.putAll(enabledCouponsCount);
+            memberDataCount.putAll(enabledCouponsCount);
             MemberInfo m = new MemberInfo();
             m.setId(currUser.getId());
             m = memberInfoService.get(m);

@@ -32,6 +32,14 @@
 		<include refid="couponCustomerJoins"/>
 		WHERE a.id = #{id}
 	</select>
+
+	<select id="enabledCouponsCount" resultType="Map">
+		select
+			   IFNULL(sum(if(a.coupon_type = 0, 1, 0)),0) as fiveDiscountCoupon,
+			   IFNULL(sum(if(a.coupon_type = 1, 1, 0)),0) as sevenDiscountCoupon
+		from coupon_customer a
+		where a.customer_code = #{customerCode} and (a.start_date &gt;= now() or a.end_date &lt;= now()) and a.coupon_status = '0'
+	</select>
 	
 	<select id="findList" resultType="CouponCustomer">
 		SELECT 
