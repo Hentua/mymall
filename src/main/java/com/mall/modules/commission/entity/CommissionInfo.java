@@ -20,6 +20,7 @@ public class CommissionInfo extends DataEntity<CommissionInfo> {
 	private String unionId;		// 关联订单号 【推荐商家入驻无订单号】
 	private String settlementId;		// 提现结算单ID
 	private String produceUserName; //被推荐人名称
+	private String status;  //清算状态 0未清算 1已清算
 
 	
 	public CommissionInfo() {
@@ -28,6 +29,14 @@ public class CommissionInfo extends DataEntity<CommissionInfo> {
 
 	public CommissionInfo(String id){
 		super(id);
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 	public String getProduceUserName() {

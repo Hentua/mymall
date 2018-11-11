@@ -12,7 +12,8 @@
 		a.union_id AS "unionId",
 		a.settlement_id AS "settlementId",
 		a.create_date AS "createDate",
-		m.nickname as "produceUserName"
+		m.nickname as "produceUserName",
+		a.status as "status"
 
 	</sql>
 	
