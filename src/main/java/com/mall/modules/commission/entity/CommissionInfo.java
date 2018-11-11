@@ -1,8 +1,7 @@
 package com.mall.modules.commission.entity;
 
-import org.hibernate.validator.constraints.Length;
-
 import com.mall.common.persistence.DataEntity;
+import org.hibernate.validator.constraints.Length;
 
 /**
  * 佣金明细Entity
@@ -33,6 +32,14 @@ public class CommissionInfo extends DataEntity<CommissionInfo> {
 
 	public String getStatus() {
 		return status;
+	}
+
+	public String getStatusText(){
+		if("1".equals(this.getStatus())) {
+			return  "已清算";
+		}else{
+			return "未清算";
+		}
 	}
 
 	public void setStatus(String status) {
