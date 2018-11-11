@@ -4,7 +4,9 @@ import com.mall.common.utils.SpringContextHolder;
 import com.mall.modules.commission.entity.CommissionInfo;
 import com.mall.modules.commission.service.CommissionInfoService;
 import com.mall.modules.order.entity.OrderInfo;
+import com.mall.modules.order.entity.OrderSettlement;
 import com.mall.modules.order.service.OrderInfoService;
+import com.mall.modules.order.service.OrderSettlementService;
 import com.mall.modules.sys.utils.DictUtils;
 import groovy.util.logging.Slf4j;
 import org.slf4j.Logger;
@@ -31,6 +33,8 @@ public class CheckAccountTimer {
 
     private CommissionInfoService commissionInfoService;
 
+    private OrderSettlementService orderSettlementService;
+
     private Logger logger =  LoggerFactory.getLogger(CheckAccountTimer.class);
 
     /**
@@ -41,6 +45,7 @@ public class CheckAccountTimer {
         accountInfoService = SpringContextHolder.getBean(AccountInfoService.class);
         orderInfoService = SpringContextHolder.getBean(OrderInfoService.class);
         commissionInfoService = SpringContextHolder.getBean(CommissionInfoService.class);
+        orderSettlementService = SpringContextHolder.getBean(OrderSettlementService.class);
         logger.info("==================执行清算定时器开始========================");
         //查询所有已完成 未清算的订单
         OrderInfo o = new OrderInfo();
@@ -67,6 +72,14 @@ public class CheckAccountTimer {
                     List<CommissionInfo> commissionInfos = commissionInfoService.findList(c);
                     for (CommissionInfo ci: commissionInfos) {
                         commissionInfoService.editStatus(ci);
+                    }
+                    OrderSettlement orderSettlement = new OrderSettlement();
+                    orderSettlement.setOrderId(orderInfo.getId());
+                    List<OrderSettlement> orderSettlements = orderSettlementService.findList(orderSettlement);
+
+                    for (OrderSettlement os: orderSettlements) {
+                        os.setStatus("1");
+                        orderSettlementService.save(os);
                     }
                 }
             }

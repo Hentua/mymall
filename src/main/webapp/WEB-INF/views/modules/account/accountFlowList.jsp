@@ -59,9 +59,9 @@
 		<tbody>
 		<c:forEach items="${page.list}" var="accountFlow">
 			<tr>
-				<td><a href="${ctx}/account/accountFlow/form?id=${accountFlow.id}">
+				<td>
 					${accountFlow.flowNo}
-				</a></td>
+				 </td>
 				<td>
 					${accountFlow.nickname}
 				</td>

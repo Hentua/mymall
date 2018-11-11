@@ -11,6 +11,8 @@ import com.mall.modules.commission.service.CommissionInfoService;
 import com.mall.modules.member.dao.MemberInfoDao;
 import com.mall.modules.member.entity.MemberInfo;
 import com.mall.modules.order.entity.OrderInfo;
+import com.mall.modules.order.entity.OrderSettlement;
+import com.mall.modules.order.service.OrderSettlementService;
 import com.mall.modules.sys.entity.User;
 import com.mall.modules.sys.utils.UserUtils;
 import com.sohu.idcenter.IdWorker;
@@ -43,7 +45,11 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 	@Autowired
 	private CommissionConfigService commissionConfigService;
 
+	@Autowired
 	private CommissionInfoService commissionInfoService;
+
+	@Autowired
+	private OrderSettlementService orderSettlementService;
 
 	/**
 	 * 修改账户余额
@@ -98,12 +104,17 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 		dao.editAccount(paramMap);
 	}
 
+
+
 	/**
 	 * 根据订单信息创建账单流水
 	 * @param orderInfo
 	 */
 	@Transactional(readOnly = false)
 	public void createAccountFlow(OrderInfo orderInfo) throws Exception{
+
+
+
 		User merchantRefereeUser = null ;
 		User customerRefereeUser = null;
 		User merchant = null;
@@ -147,6 +158,12 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 		//1：推荐用户消费返佣 2：推荐商家销售返佣 3：推荐商家入驻返佣 4：推荐商家送出礼包返佣 5：商家送出礼包返佣
 		//订单类型（0-平台自主下单，1-礼包兑换）
 		if("0".equals(orderInfo.getOrderType())){
+			//创建订单结算信息
+			OrderSettlement orderSettlement = new OrderSettlement();
+			orderSettlement.setOrderId(orderInfo.getId());
+			orderSettlement.setSettlementAmount(orderInfo.getSettlementsAmount());
+			orderSettlement.setUserId(orderInfo.getMerchantCode());
+			orderSettlementService.save(orderSettlement);
 			//新增佣金记录
 			//卖家推荐人佣金
 
