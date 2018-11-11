@@ -160,7 +160,7 @@ public class MemberInfoService extends CrudService<MemberInfoDao, MemberInfo> {
      * @return 是否成功
      */
     public boolean validatePayPassword(String payPassword, String memberCode) {
-        String cipherPayPassword = this.getPayPassword(payPassword);
+        String cipherPayPassword = this.getPayPassword(memberCode);
         if (StringUtils.isBlank(payPassword) || !validatePayPasswordFormat(payPassword)) {
             return false;
         }
