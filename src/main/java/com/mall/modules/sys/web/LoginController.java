@@ -87,7 +87,7 @@ public class LoginController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(value = "${adminPath}/api/loginOut", method = RequestMethod.POST)
-	public String apiLoginOut(HttpServletRequest request, HttpServletResponse response, Model model) {
+	public String apiLoginOut(HttpServletRequest request, HttpServletResponse response) {
 		String token = UserUtils.getTokenStr(request);
 		if(StringUtils.isEmpty(token)){
 			return renderString(response,ResultGenerator.genFailResult("未找到登录信息,请先登录"));

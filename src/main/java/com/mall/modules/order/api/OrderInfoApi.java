@@ -197,6 +197,7 @@ public class OrderInfoApi extends BaseController {
                     // 赋予用户未审核商户权限
                     List<Role> roleList = currUser.getRoleList();
                     roleList.add(new Role("1000"));
+                    currUser.setUserType("1");
                     systemService.saveUser(currUser);
                     UserUtils.clearCache();
                     for (GiftConfigCoupon giftConfigCoupon : giftConfig.getGiftConfigCouponList()) {

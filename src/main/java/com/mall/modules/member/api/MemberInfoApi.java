@@ -3,6 +3,7 @@ package com.mall.modules.member.api;
 import com.google.common.collect.Maps;
 import com.mall.common.persistence.Page;
 import com.mall.common.service.ServiceException;
+import com.mall.common.utils.EhCacheUtils;
 import com.mall.common.utils.ResultGenerator;
 import com.mall.common.utils.StringUtils;
 import com.mall.common.utils.api.ApiExceptionHandleUtil;
@@ -21,6 +22,7 @@ import com.mall.modules.sys.entity.User;
 import com.mall.modules.sys.entity.UserVo;
 import com.mall.modules.sys.service.SystemService;
 import com.mall.modules.sys.utils.UserUtils;
+import com.mall.modules.sys.web.LoginController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -254,11 +256,11 @@ public class MemberInfoApi extends BaseController {
         User currUser = UserUtils.getUser();
         try {
             // 验证老支付密码
-            if(!memberInfoService.validatePayPassword(oldPayPassword, currUser.getId())) {
+            if (!memberInfoService.validatePayPassword(oldPayPassword, currUser.getId())) {
                 throw new ServiceException("支付密码错误");
             }
             // 验证新支付密码格式
-            if(!MemberInfoService.validatePayPasswordFormat(newPayPassword)) {
+            if (!MemberInfoService.validatePayPasswordFormat(newPayPassword)) {
                 throw new ServiceException("支付密码格式不正确");
             }
             String cipherPayPassword = SystemService.entryptPassword(newPayPassword);
@@ -266,6 +268,44 @@ public class MemberInfoApi extends BaseController {
             memberInfo.setId(currUser.getId());
             memberInfo.setPayPassword(cipherPayPassword);
             memberInfoService.savePayPassword(memberInfo);
+            renderString(response, ResultGenerator.genSuccessResult());
+        } catch (Exception e) {
+            renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
+        }
+    }
+
+    /**
+     * 修改手机号码
+     *
+     * @param request  请求体
+     * @param response 响应体
+     */
+    @RequestMapping(value = "modifyMemberMobile", method = RequestMethod.POST)
+    public void modifyMemberMobile(HttpServletRequest request, HttpServletResponse response) {
+        String mobile = request.getParameter("mobile");
+        String verifyCode = request.getParameter("verifyCode");
+        User currUser = UserUtils.getUser();
+        try {
+            if(!"0".equals(currUser.getUserType()) && !"1".equals(currUser.getUserType())) {
+                throw new ServiceException("不支持该用户类型");
+            }
+            if (StringUtils.isBlank(mobile)) {
+                throw new ServiceException("手机号不能为空");
+            } else {
+                if (!MemberInfoService.isPhone(mobile)) {
+                    throw new ServiceException("手机号码格式不正确");
+                }
+            }
+            boolean validResult = memberVerifyCodeService.validVerifyCode(mobile, verifyCode, "2");
+            if(!validResult) {
+                throw new ServiceException("验证码错误");
+            }
+            currUser.setMobile(mobile);
+            currUser.setLoginName(mobile);
+            systemService.saveUser(currUser);
+            UserUtils.clearCache();
+            String token = UserUtils.getTokenStr(request);
+            EhCacheUtils.remove(token);
             renderString(response, ResultGenerator.genSuccessResult());
         }catch (Exception e) {
             renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
@@ -503,7 +543,7 @@ public class MemberInfoApi extends BaseController {
             m.setId(currUser.getId());
             m = memberInfoService.get(m);
             memberDataCount.put("balance", m.getBalance() == null ? "0.0" : m.getBalance().toString());
-            memberDataCount.put("commission",m.getCommission() == null ? "0.0" : m.getCommission().toString());
+            memberDataCount.put("commission", m.getCommission() == null ? "0.0" : m.getCommission().toString());
             renderString(response, ResultGenerator.genSuccessResult(memberDataCount));
         } catch (Exception e) {
             renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));

@@ -14,6 +14,7 @@ import com.mall.modules.sys.entity.User;
 import com.mall.modules.sys.utils.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
@@ -55,17 +56,24 @@ public class MemberVerifyCodeService extends CrudService<MemberVerifyCodeDao, Me
         super.delete(memberVerifyCode);
     }
 
-    @Transactional(readOnly = false, rollbackFor = Exception.class)
+    @Transactional(readOnly = false, propagation = Propagation.NOT_SUPPORTED)
     public void sendVerifyCodeSms(String telPhone, String type) throws ClientException, ServiceException {
-        String templateCode = "SMS_147417546";
-        if(StringUtils.isNotBlank(type) && "1".equals(type)) {
+        String templateCode = "SMS_149365075";
+        // 0-注册验证码 1-忘记密码短信验证码 2-修改用户敏感信息验证码
+        if (StringUtils.isBlank(type)) {
+            type = "0";
+        } else if("1".equals(type)) {
             User user = UserUtils.getByLoginName(telPhone);
             if(null == user) {
                 throw new ServiceException("用户不存在");
             }
-            templateCode = "SMS_149390626";
-        }else if (StringUtils.isBlank(type)) {
-            type = "0";
+            templateCode = "SMS_149365074";
+        }else if("2".equals(type)) {
+            User user = UserUtils.getByLoginName(telPhone);
+            if(null == user) {
+                throw new ServiceException("用户不存在");
+            }
+            templateCode = " SMS_149365078";
         }
         //生成短信验证码
         String verifyCode = String.valueOf(new Random().nextInt(899999) + 100000);
