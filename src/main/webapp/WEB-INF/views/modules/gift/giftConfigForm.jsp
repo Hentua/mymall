@@ -283,7 +283,7 @@
 					</script>
 					<script type="text/javascript">
                         $("#addGoodsBtn").click(function(){
-                            top.$.jBox.open("iframe:${ctx}/goods/goodsInfo/selectList", "选择商品", 1200, $(top.document).height()-280, {
+                            top.$.jBox.open("iframe:${ctx}/goods/goodsInfo/selectList?goodsType=2", "选择商品", 1200, $(top.document).height()-280, {
                                 buttons:{"确定":"ok","关闭":true}, submit:function(v, h, f){
                                     if (v=="ok"){
                                         var standardId = h.find("iframe")[0].contentWindow.$("#standardId").val();

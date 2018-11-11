@@ -5,8 +5,14 @@ import com.mall.common.service.ServiceException;
 import com.mall.common.utils.IdGen;
 import com.mall.modules.account.dao.AccountFlowDao;
 import com.mall.modules.account.entity.AccountFlow;
+import com.mall.modules.commission.entity.CommissionInfo;
+import com.mall.modules.commission.service.CommissionConfigService;
+import com.mall.modules.commission.service.CommissionInfoService;
 import com.mall.modules.member.dao.MemberInfoDao;
 import com.mall.modules.member.entity.MemberInfo;
+import com.mall.modules.order.entity.OrderInfo;
+import com.mall.modules.sys.entity.User;
+import com.mall.modules.sys.utils.UserUtils;
 import com.sohu.idcenter.IdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,6 +39,11 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 
 	@Autowired
 	private MemberInfoDao memberInfoDao;
+
+	@Autowired
+	private CommissionConfigService commissionConfigService;
+
+	private CommissionInfoService commissionInfoService;
 
 	/**
 	 * 修改账户余额
@@ -86,4 +97,104 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 		paramMap.put("userId",userId);
 		dao.editAccount(paramMap);
 	}
+
+	/**
+	 * 根据订单信息创建账单流水
+	 * @param orderInfo
+	 */
+	@Transactional(readOnly = false)
+	public void createAccountFlow(OrderInfo orderInfo) throws Exception{
+		User merchantRefereeUser = null ;
+		User customerRefereeUser = null;
+		User merchant = null;
+
+		if(null == orderInfo){
+			logger.error("创建账单流水失败：订单信息为空");
+			return ;
+		}
+//		if(!"2".equals(orderInfo.getOrderStatus())){
+//			logger.error("创建账单流水失败：订单状态无效");
+//			return ;
+//		}
+		//卖家信息
+		merchant = UserUtils.get(orderInfo.getMerchantCode());
+		//买家信息
+		User customer = UserUtils.get(orderInfo.getCustomerCode());
+		if(null == merchant){
+			logger.error("创建账单流水失败：卖家信息为空");
+			return ;
+		}
+		if(null == customer){
+			logger.error("创建账单流水失败：买家信息为空");
+			return ;
+		}
+		//卖家推荐人
+		merchantRefereeUser = UserUtils.get(merchant.getRefereeId());
+		//买家推荐人
+		customerRefereeUser = UserUtils.get(customer.getRefereeId());
+		if(null == merchantRefereeUser){
+			logger.error("创建账单流水失败：卖家推荐人为空");
+			return ;
+		}
+		if(null == customerRefereeUser){
+			logger.error("创建账单流水失败：买家推荐人为空");
+			return ;
+		}
+		if(null == merchantRefereeUser || null == customerRefereeUser
+				|| null == merchant){
+			return;
+		}
+		//订单类型（0-平台自主下单，1-礼包兑换）
+		if("0".equals(orderInfo.getOrderType())){
+			//新增佣金记录
+			//卖家推荐人佣金
+			CommissionInfo merchantRefereeCommission = new CommissionInfo();
+			merchantRefereeCommission.setType("2");
+			merchantRefereeCommission.setUserId(merchantRefereeUser.getId());
+			merchantRefereeCommission.setProduceUserId(merchant.getId());
+			merchantRefereeCommission.setOriginAmount(orderInfo.getGoodsAmountTotal());
+			merchantRefereeCommission.setAmount(commissionConfigService.getCommissionAmount("2",orderInfo.getGoodsAmountTotal()));
+			merchantRefereeCommission.setUnionId(orderInfo.getId());
+			commissionInfoService.save(merchantRefereeCommission);
+
+			//买家推荐人佣金
+			CommissionInfo customerRefereeCommission = new CommissionInfo();
+			customerRefereeCommission.setType("1");
+			customerRefereeCommission.setUserId(merchantRefereeUser.getId());
+			customerRefereeCommission.setProduceUserId(merchant.getId());
+			customerRefereeCommission.setOriginAmount(orderInfo.getGoodsAmountTotal());
+			customerRefereeCommission.setAmount(commissionConfigService.getCommissionAmount("1",orderInfo.getGoodsAmountTotal()));
+			customerRefereeCommission.setUnionId(orderInfo.getId());
+			commissionInfoService.save(customerRefereeCommission);
+
+		}
+		//订单类型（0-平台自主下单，1-礼包兑换）
+		if("1".equals(orderInfo.getOrderType())){
+			//新增佣金记录
+			//卖家推荐人佣金
+			CommissionInfo merchantRefereeCommission = new CommissionInfo();
+			//1：推荐用户消费返佣 2：推荐商家销售返佣 3：推荐商家入驻返佣 4：推荐商家送出礼包返佣 5：商家送出礼包返佣
+			merchantRefereeCommission.setType("4");
+			merchantRefereeCommission.setUserId(merchantRefereeUser.getId());
+			merchantRefereeCommission.setProduceUserId(merchant.getId());
+			merchantRefereeCommission.setOriginAmount(orderInfo.getGoodsAmountTotal());
+			merchantRefereeCommission.setAmount(commissionConfigService.getCommissionAmount("4",orderInfo.getGoodsAmountTotal()));
+			merchantRefereeCommission.setUnionId(orderInfo.getId());
+			commissionInfoService.save(merchantRefereeCommission);
+
+			CommissionInfo merchantCommission = new CommissionInfo();
+			//1：推荐用户消费返佣 2：推荐商家销售返佣 3：推荐商家入驻返佣 4：推荐商家送出礼包返佣 5：商家送出礼包返佣
+			merchantCommission.setType("5");
+			merchantCommission.setUserId(merchant.getId());
+			merchantCommission.setProduceUserId(merchant.getId());
+			merchantCommission.setOriginAmount(orderInfo.getGoodsAmountTotal());
+			merchantCommission.setAmount(commissionConfigService.getCommissionAmount("5",orderInfo.getGoodsAmountTotal()));
+			merchantCommission.setUnionId(orderInfo.getId());
+			commissionInfoService.save(merchantCommission);
+
+		}
+	}
+
+
+
 }

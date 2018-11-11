@@ -107,6 +107,7 @@
 			<if test="merchantName != null and merchantName != ''">
 				and m.nickname LIKE CONCAT('%',#{merchantName},'%')
 			</if>
+			and goods_type = 1
 		</where>
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
@@ -288,7 +289,7 @@
 			update_date,
 			remarks,
 			merchant_id,
-			discount_Type,
+			discount_Type
 		) VALUES (
 			#{id},
 			#{goodsCategoryId},

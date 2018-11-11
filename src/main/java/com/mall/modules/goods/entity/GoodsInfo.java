@@ -22,7 +22,7 @@ public class GoodsInfo extends DataEntity<GoodsInfo> {
     private String goodsName;        // 商品名称
     private String goodsBarcode;        // 商品条码
     private String goodsTitle;        // 商品标题
-    private Integer goodsType;        // 商品类型
+    private Integer goodsType;        // 商品类型 1普通商品  2平台商品
     private Integer status;        // 商品状态 0待提交 1待审核 2已上架
     private String unit;        // 单位
     private Double originalPrice;        // 商品原价

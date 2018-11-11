@@ -45,6 +45,13 @@
 					<form:option value="3" label="已上架"/>
 				</form:select>
 			</li>
+			<li><label>商品类型：</label>
+				<form:select path="goodsType" class="input-medium">
+					<form:option value="" label="全部"/>
+					<form:option value="1" label="普通商品"/>
+					<form:option value="2" label="平台商品"/>
+				</form:select>
+			</li>
 			<li><label>上架时间：</label>
 				<input name="beginOnlinetime" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
 					value="<fmt:formatDate value="${goodsInfo.beginOnlinetime}" pattern="yyyy-MM-dd HH:mm:ss"/>"
@@ -65,6 +72,7 @@
 				<th>商品分类</th>
 				<th>商家名称</th>
 				<th>商品标题</th>
+				<th>商品类型</th>
 				<th>单位</th>
 				<th>商品价格</th>
 				<th>销量</th>
@@ -90,6 +98,14 @@
 				</td>
 				<td>
 					${goodsInfo.goodsTitle}
+				</td>
+				<td>
+					<c:if test="${goodsInfo.goodsType == 1}">
+						普通商品
+					</c:if>
+					<c:if test="${goodsInfo.goodsType == 2}">
+						平台商品
+					</c:if>
 				</td>
 				<td>
 					${goodsInfo.unit}

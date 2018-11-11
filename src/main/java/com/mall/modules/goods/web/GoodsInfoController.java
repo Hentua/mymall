@@ -58,9 +58,20 @@ public class GoodsInfoController extends BaseController {
 	@RequestMapping(value = {"list", ""})
 	public String list(GoodsInfo goodsInfo, HttpServletRequest request, HttpServletResponse response, Model model) {
 		goodsInfo.setMerchantId(UserUtils.getUser().getId());
+		goodsInfo.setGoodsType(1);
 		Page<GoodsInfo> page = goodsInfoService.findPage(new Page<GoodsInfo>(request, response), goodsInfo); 
 		model.addAttribute("page", page);
 		return "modules/goods/goodsInfoList";
+	}
+
+	@RequiresPermissions("goods:goodsInfo:view")
+	@RequestMapping(value = {"platList", ""})
+	public String platList(GoodsInfo goodsInfo, HttpServletRequest request, HttpServletResponse response, Model model) {
+//		goodsInfo.setMerchantId(UserUtils.getUser().getId());
+		goodsInfo.setGoodsType(2);
+		Page<GoodsInfo> page = goodsInfoService.findPage(new Page<GoodsInfo>(request, response), goodsInfo);
+		model.addAttribute("page", page);
+		return "modules/goods/platGoodsInfoList";
 	}
 
 	@RequiresPermissions("goods:goodsInfo:view")
@@ -84,7 +95,6 @@ public class GoodsInfoController extends BaseController {
 	@RequiresPermissions("goods:goodsInfo:view")
 	@RequestMapping(value = "form")
 	public String form(GoodsInfo goodsInfo, Model model) {
-
 //		goodsInfo.getId()
 		if(!StringUtils.isEmpty(goodsInfo.getId())){
 			goodsInfo = get(goodsInfo.getId());
@@ -100,8 +110,32 @@ public class GoodsInfoController extends BaseController {
 			List<GoodsStandard> goodsStandards = goodsStandardService.findList(goodsStandard);
 			goodsInfo.setGoodsStandards(goodsStandards);
 		}
+		goodsInfo.setGoodsType(1);
 		model.addAttribute("goodsInfo", goodsInfo);
 		return "modules/goods/goodsInfoForm";
+	}
+
+	@RequiresPermissions("goods:goodsInfo:view")
+	@RequestMapping(value = "platForm")
+	public String platForm(GoodsInfo goodsInfo, Model model) {
+//		goodsInfo.getId()
+		if(!StringUtils.isEmpty(goodsInfo.getId())){
+			goodsInfo = get(goodsInfo.getId());
+			List<GoodsImage> gms = goodsImageService.findListByGoodsId(goodsInfo.getId());
+			List<String> images = new ArrayList<String>();
+			for (GoodsImage m: gms) {
+				images.add(m.getImageUrl());
+			}
+			goodsInfo.setDespImages(images);
+			//商品规格
+			GoodsStandard goodsStandard = new GoodsStandard();
+			goodsStandard.setGoodsId(goodsInfo.getId());
+			List<GoodsStandard> goodsStandards = goodsStandardService.findList(goodsStandard);
+			goodsInfo.setGoodsStandards(goodsStandards);
+		}
+		goodsInfo.setGoodsType(2);
+		model.addAttribute("goodsInfo", goodsInfo);
+		return "modules/goods/platGoodsInfoForm";
 	}
 
 	@RequiresPermissions("goods:goodsInfo:view")
@@ -164,8 +198,13 @@ public class GoodsInfoController extends BaseController {
 		g.setStatus(goodsInfo.getStatus());
 		goodsInfoService.save(g);
 		addMessage(redirectAttributes, "操作成功");
+		if(2 == goodsInfo.getGoodsType()){
+			return "redirect:"+Global.getAdminPath()+"/goods/goodsInfo/platList?repage";
+		}else{
+			return "redirect:"+Global.getAdminPath()+"/goods/goodsInfo/list?repage";
+		}
 
-		return "redirect:"+Global.getAdminPath()+"/goods/goodsInfo/list?repage";
+
 	}
 
 	@RequiresPermissions("goods:goodsInfo:edit")
@@ -240,7 +279,12 @@ public class GoodsInfoController extends BaseController {
 		goodsInfoService.save(goodsInfo);
 
 		addMessage(redirectAttributes, "保存商品信息成功");
-		return "redirect:"+Global.getAdminPath()+"/goods/goodsInfo/list/?repage";
+		if(2 == goodsInfo.getGoodsType()){
+			return "redirect:"+Global.getAdminPath()+"/goods/goodsInfo/platList/?repage";
+		}else{
+			return "redirect:"+Global.getAdminPath()+"/goods/goodsInfo/list/?repage";
+		}
+
 	}
 
 
@@ -249,7 +293,12 @@ public class GoodsInfoController extends BaseController {
 	public String delete(GoodsInfo goodsInfo, RedirectAttributes redirectAttributes) {
 		goodsInfoService.delete(goodsInfo);
 		addMessage(redirectAttributes, "删除商品信息成功");
-		return "redirect:"+Global.getAdminPath()+"/goods/goodsInfo/list?repage";
+		if(2 == goodsInfo.getGoodsType()){
+			return "redirect:"+Global.getAdminPath()+"/goods/goodsInfo/platList?repage";
+		}else{
+			return "redirect:"+Global.getAdminPath()+"/goods/goodsInfo/list?repage";
+		}
+
 	}
 
 }
