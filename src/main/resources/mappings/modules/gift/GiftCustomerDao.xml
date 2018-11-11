@@ -40,7 +40,7 @@
 			<if test="customerCode != null and customerCode != ''">
 				AND a.customer_code = #{customerCode}
 			</if>
-			<if test="giftCount != null and giftCount != ''">
+			<if test="giftCount != null">
 				AND a.gift_count &gt; #{giftCount}
 			</if>
 		</where>
