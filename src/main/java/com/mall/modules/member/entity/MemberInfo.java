@@ -35,6 +35,8 @@ public class MemberInfo extends DataEntity<MemberInfo> {
 	private String repeatPassword;
 	@JsonIgnore
 	private String payPassword; // 支付密码
+	@JsonIgnore
+	private String verifyCode; // 短信验证码
 
 	public MemberInfo() {
 		super();
@@ -42,6 +44,14 @@ public class MemberInfo extends DataEntity<MemberInfo> {
 
 	public MemberInfo(String id){
 		super(id);
+	}
+
+	public String getVerifyCode() {
+		return verifyCode;
+	}
+
+	public void setVerifyCode(String verifyCode) {
+		this.verifyCode = verifyCode;
 	}
 
 	public String getPayPassword() {

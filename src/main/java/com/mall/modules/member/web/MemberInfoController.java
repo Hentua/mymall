@@ -15,6 +15,7 @@ import com.mall.modules.coupon.service.CouponConfigService;
 import com.mall.modules.coupon.service.CouponCustomerService;
 import com.mall.modules.member.entity.MemberInfo;
 import com.mall.modules.member.service.MemberInfoService;
+import com.mall.modules.member.service.MemberVerifyCodeService;
 import com.mall.modules.sys.entity.Office;
 import com.mall.modules.sys.entity.User;
 import com.mall.modules.sys.service.SystemService;
@@ -45,10 +46,6 @@ public class MemberInfoController extends BaseController {
 	private MemberInfoService memberInfoService;
 	@Autowired
 	private SystemService systemService;
-	@Autowired
-	private CouponConfigService couponConfigService;
-	@Autowired
-	private CouponCustomerService couponCustomerService;
 
 	//佣金详情service
 	@Autowired
@@ -60,7 +57,10 @@ public class MemberInfoController extends BaseController {
 	//佣金配置service
 	@Autowired
 	private CommissionConfigService commissionConfigService;
-	
+
+	@Autowired
+	private MemberVerifyCodeService memberVerifyCodeService;
+
 	@ModelAttribute
 	public MemberInfo get(@RequestParam(required=false) String id) {
 		MemberInfo entity = null;
@@ -163,14 +163,21 @@ public class MemberInfoController extends BaseController {
 		String password = memberInfo.getPassword();
 		String repeatPassword = memberInfo.getRepeatPassword();
 		String nickname = memberInfo.getNickname();
+		String verifyCode = memberInfo.getVerifyCode();
 		String message = "";
 		boolean flag = true;
-		if(!MemberInfoService.isPhone(mobile)) {
+		if(StringUtils.isBlank(verifyCode)) {
+			flag = false;
+			message = "验证码不能为空";
+		} else if(!MemberInfoService.isPhone(mobile)) {
 			flag = false;
 			message = "手机号码格式不正确";
 		}else if (UserUtils.getByLoginName(mobile) != null) {
 			flag = false;
 			message = "用户已存在";
+		}else if(!memberVerifyCodeService.validVerifyCode(message, verifyCode, "0")) {
+			flag = false;
+			message = "验证码不正确";
 		}
 		if(!password.equals(repeatPassword)) {
 			flag = false;

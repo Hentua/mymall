@@ -68,9 +68,10 @@ public class OrderPaymentInfoService extends CrudService<OrderPaymentInfoDao, Or
 	}
 
 	@Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
-	public OrderPaymentInfo genAmountPaymentInfo(String payChannel, String paymentType, Double amountTotal) {
+	public OrderPaymentInfo genAmountPaymentInfo(String payChannel, String paymentType, Double amountTotal, Double discountAmount) {
 		OrderPaymentInfo orderPaymentInfo = genDefaultPaymentInfo(payChannel);
 		orderPaymentInfo.setAmountTotal(amountTotal);
+		orderPaymentInfo.setDiscountAmount(discountAmount);
 		orderPaymentInfo.setPaymentType(paymentType);
 		this.save(orderPaymentInfo);
 		return orderPaymentInfo;

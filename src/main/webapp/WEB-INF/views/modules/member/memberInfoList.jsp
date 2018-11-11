@@ -56,7 +56,6 @@
 				<th>注册时间</th>
 				<th>会员状态</th>
 				<th>备注</th>
-				<shiro:hasPermission name="member:memberInfo:edit"><th>操作</th></shiro:hasPermission>
 			</tr>
 		</thead>
 		<tbody>
@@ -87,12 +86,6 @@
 				<td>
 					${memberInfo.remarks}
 				</td>
-				<shiro:hasPermission name="member:memberInfo:edit"><td>
-    				<c:if test="${memberInfo.status == '1'}">
-						<a href="${ctx}/member/memberInfo/couponDistribution?id=${memberInfo.id}">分配优惠券</a>
-						<a href="${ctx}/member/memberInfo/giveGift?id=${memberInfo.id}">赠送礼包</a>
-					</c:if>
-				</td></shiro:hasPermission>
 			</tr>
 		</c:forEach>
 		</tbody>

@@ -73,7 +73,7 @@ public class GiftConfigCategoryService extends CrudService<GiftConfigCategoryDao
 		Double amountTotal = Double.valueOf(df.format(giftConfigCategory.getBuyCount() * giftConfigCategory.getGiftPrice()));
 		giftPurchaseLog.setGiftAmountTotal(amountTotal);
 		String payChannel = giftConfigCategory.getPayChannel();
-		OrderPaymentInfo orderPaymentInfo = orderPaymentInfoService.genAmountPaymentInfo(payChannel, "1", amountTotal);
+		OrderPaymentInfo orderPaymentInfo = orderPaymentInfoService.genAmountPaymentInfo(payChannel, "1", amountTotal, 0.00);
 		giftPurchaseLog.setPaymentNo(orderPaymentInfo.getPaymentNo());
 		giftPurchaseLog.setStatus("0");
 		giftPurchaseLog.setPayChannel(payChannel);

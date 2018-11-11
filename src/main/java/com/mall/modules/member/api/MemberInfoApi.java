@@ -159,7 +159,7 @@ public class MemberInfoApi extends BaseController {
     @RequestMapping(value = "genVerifyCode", method = RequestMethod.POST)
     public void genVerifyCode(HttpServletRequest request, HttpServletResponse response) {
         String mobile = request.getParameter("mobile");
-        // type 为0时发送注册验证码 为1时发送忘记密码验证码
+        // type 为0时发送注册验证码 为1时发送忘记密码验证码 为2时为修改敏感信息验证码
         String type = request.getParameter("type");
         try {
             if (StringUtils.isBlank(mobile)) {

@@ -41,6 +41,14 @@
 			</div>
 		</div>
 		<div class="control-group">
+			<label class="control-label">短信验证码：</label>
+			<div class="controls">
+				<form:input path="verifyCode" htmlEscape="false" class="input-xlarge required"/>
+				<span class="help-inline"><font color="red">*</font> </span>
+				<input id="btnSendCode" class="btn btn-primary" type="submit" value="获取短信验证码" onclick="sendMessage()"/>
+			</div>
+		</div>
+		<div class="control-group">
 			<label class="control-label">昵称：</label>
 			<div class="controls">
 				<form:input path="nickname" htmlEscape="false" class="input-xlarge required"/>
@@ -82,5 +90,55 @@
 			<input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
 		</div>
 	</form:form>
+
+	<script type="text/javascript">
+
+
+        var InterValObj; //timer变量，控制时间
+        var count = 120; //间隔函数，1秒执行
+        var curCount;//当前剩余秒数
+
+
+        function sendMessage() {
+            var mobile = $('#mobile').val();
+            if(mobile == '') {
+                alertx('请输入手机号码');
+                return;
+			}
+            curCount = count;
+            //设置button效果，开始计时
+            $("#btnSendCode").attr("disabled", "true");
+            $("#btnSendCode").val("请在" + curCount + "秒内输入验证码");
+            InterValObj = window.setInterval(SetRemainTime, 1000); //启动计时器，1秒执行一次
+            //向后台发送处理数据
+            $.ajax({
+                type: "POST", //用POST方式传输
+                dataType: "json", //数据格式:JSON
+                url: '${ctx}/api/genVerifyCode', //目标地址
+                data: "mobile=" + mobile +"&type=0",
+                error: function (XMLHttpRequest, textStatus, errorThrown) { },
+                success: function (data){
+                    if(data.status != '200') {
+                        alertx(data.message);
+                        curCount = 1;
+                    }
+				}
+            });
+        }
+
+
+        //timer处理函数
+        function SetRemainTime() {
+            if (curCount == 0) {
+                window.clearInterval(InterValObj);//停止计时器
+                $("#btnSendCode").removeAttr("disabled");//启用按钮
+                $("#btnSendCode").val("重新发送验证码");
+            }
+            else {
+                curCount--;
+                $("#btnSendCode").val("请在" + curCount + "秒内输入验证码");
+            }
+        }
+	</script>
 </body>
 </html>
