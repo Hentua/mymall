@@ -1,14 +1,13 @@
 package com.mall.modules.commission.service;
 
-import java.util.List;
-
+import com.mall.common.persistence.Page;
+import com.mall.common.service.CrudService;
+import com.mall.modules.commission.dao.CommissionInfoDao;
+import com.mall.modules.commission.entity.CommissionInfo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.mall.common.persistence.Page;
-import com.mall.common.service.CrudService;
-import com.mall.modules.commission.entity.CommissionInfo;
-import com.mall.modules.commission.dao.CommissionInfoDao;
+import java.util.List;
 
 /**
  * 佣金明细Service
@@ -40,5 +39,16 @@ public class CommissionInfoService extends CrudService<CommissionInfoDao, Commis
 	public void delete(CommissionInfo commissionInfo) {
 		super.delete(commissionInfo);
 	}
-	
+
+
+	@Transactional(readOnly = false)
+	public void editStatus(CommissionInfo commissionInfo) {
+		//累加金额
+		dao.accumulation(commissionInfo);
+		//修改状态
+		dao.editStatus(commissionInfo.getId());
+	}
+
+
+
 }

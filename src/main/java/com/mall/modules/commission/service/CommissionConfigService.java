@@ -1,16 +1,22 @@
 package com.mall.modules.commission.service;
 
-import java.util.List;
-
+import com.mall.common.persistence.Page;
+import com.mall.common.service.CrudService;
 import com.mall.common.utils.StringUtils;
-import org.springframework.security.access.method.P;
+import com.mall.modules.commission.dao.CommissionConfigDao;
+import com.mall.modules.commission.entity.CommissionConfig;
+import com.mall.modules.goods.dao.GoodsCategoryDao;
+import com.mall.modules.goods.entity.GoodsCategory;
+import com.mall.modules.order.dao.OrderGoodsDao;
+import com.mall.modules.order.dao.OrderInfoDao;
+import com.mall.modules.order.entity.OrderGoods;
+import com.mall.modules.order.entity.OrderInfo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.mall.common.persistence.Page;
-import com.mall.common.service.CrudService;
-import com.mall.modules.commission.entity.CommissionConfig;
-import com.mall.modules.commission.dao.CommissionConfigDao;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 佣金比例配置信息Service
@@ -45,6 +51,14 @@ public class CommissionConfigService extends CrudService<CommissionConfigDao, Co
 
 	private List<CommissionConfig> configs;
 
+	@Autowired
+	private GoodsCategoryDao goodsCategoryDao;
+
+	@Autowired
+	private OrderInfoDao orderInfoDao;
+
+	@Autowired
+	private OrderGoodsDao orderGoodsDao;
 
 	/**
 	 * 按返佣类型 交易金额 获取交易佣金
@@ -79,6 +93,45 @@ public class CommissionConfigService extends CrudService<CommissionConfigDao, Co
 		logger.info("获取佣金失败：参数无效 type:"+type+" amountTotal"+amountTotal);
 		return  0.0;
 	}
+
+	/**
+	 * 买家推荐人返佣金额计算 按商品类型计算
+	 * @param type
+	 * @param orderInfo
+	 * @return
+	 */
+	public Double getCommissionAmount(String type, OrderInfo orderInfo){
+		if(StringUtils.isEmpty(type)){
+			logger.error("获取佣金失败：参数佣金类型为空");
+			return 0.0;
+		}
+		Double amountTotal = 0.0;
+		List<OrderGoods> list = new ArrayList<>();
+		if(null != orderInfo.getOrderGoodsList()) {
+			list = orderInfo.getOrderGoodsList();
+		}else{
+			list = orderGoodsDao.findList(new OrderGoods(orderInfo.getOrderNo()));
+		}
+
+		for (OrderGoods og: list) {
+			GoodsCategory gc = goodsCategoryDao.get(og.getGoodsCategoryId());
+				//按固定金额计算
+				if("1".equals(gc.getCommissionMode())){
+					amountTotal+= gc.getCommissionNumber();
+				}
+				//按百分比计算
+				if("2".equals(gc.getCommissionMode())){
+					if(null == amountTotal || amountTotal <= 0.0){
+						amountTotal+= 0.0;
+					}
+					//按交易金额 计算百分比
+					amountTotal+= gc.getCommissionNumber()/og.getGoodsPrice()*100;
+				}
+		}
+		logger.info("获取佣金失败：参数无效 type:"+type+" amountTotal"+amountTotal);
+		return  amountTotal;
+	}
+
 
 	public List<CommissionConfig> getConfigs() {
 		return configs;

@@ -11,10 +11,13 @@
 		a.amount AS "amount",
 		a.union_id AS "unionId",
 		a.settlement_id AS "settlementId",
-		a.create_date AS "createDate"
+		a.create_date AS "createDate",
+		m.nickname as "produceUserName"
+
 	</sql>
 	
 	<sql id="commissionInfoJoins">
+		left join member_info m on m.id = a.produce_user_id
 	</sql>
     
 	<select id="get" resultType="CommissionInfo">
@@ -31,7 +34,12 @@
 		FROM commission_info a
 		<include refid="commissionInfoJoins"/>
 		<where>
-			
+			<if test="unionId != null and unionId != ''">
+				and a.union_id = #{unionId}
+			</if>
+			<if test="userId != null and userId != ''">
+				and a.user_id = #{userId}
+			</if>
 		</where>
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
@@ -98,6 +106,19 @@
 	<update id="delete">
 		DELETE FROM commission_info
 		WHERE id = #{id}
+	</update>
+
+	<update id="editStatus" parameterType="java.lang.String">
+		UPDATE commission_info SET status = '1' where id = #{id}
+	</update>
+
+	<update id="editOrderStatus" parameterType="java.lang.String">
+		UPDATE order_info SET set_flag = '1' where id = #{orderId}
+	</update>
+
+	<update id="accumulation" >
+		update member_info set commission = commission+(select amount from commission_info where id = #{id})
+		where id = #{userId}
 	</update>
 	
 </mapper>

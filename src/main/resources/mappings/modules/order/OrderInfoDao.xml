@@ -214,6 +214,9 @@
 			<if test="merchantCode != null and merchantCode != ''">
 				and a.merchant_code = #{merchantCode}
 			</if>
+			<if test="setFlag != null and setFlag != ''">
+				and a.set_flag = #{setFlag}
+			</if>
 		</where>
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">

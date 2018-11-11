@@ -8,6 +8,8 @@ import com.mall.common.web.BaseController;
 import com.mall.modules.account.entity.AccountFlow;
 import com.mall.modules.account.service.AccountFlowService;
 import com.mall.modules.account.service.AccountService;
+import com.mall.modules.commission.entity.CommissionInfo;
+import com.mall.modules.commission.service.CommissionInfoService;
 import com.mall.modules.member.entity.MemberInfo;
 import com.mall.modules.member.service.MemberInfoService;
 import com.mall.modules.sys.entity.User;
@@ -41,6 +43,9 @@ public class AccountApi extends BaseController {
 
 	@Autowired
 	private AccountService accountService;
+
+	@Autowired
+	private CommissionInfoService commissionInfoService;
 
 	/**
 	 * 账户余额信息
@@ -87,6 +92,28 @@ public class AccountApi extends BaseController {
 		result.put("count",page.getCount());
 		result.putAll(accountFlowService.stsFlow(accountFlow));
 		return ResultGenerator.genSuccessResult(result);
+	}
+
+
+
+	/**
+	 * 账户余额信息
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "commissionList", method = RequestMethod.POST)
+	public Result commissionList(HttpServletRequest request, HttpServletResponse response) {
+		User user = UserUtils.getUser();
+		MemberInfo m = new MemberInfo();
+		m.setId(user.getId());
+		MemberInfo memberInfo = memberInfoService.get(m);
+		CommissionInfo c = new CommissionInfo();
+		c.setUserId(memberInfo.getId());
+		Page<CommissionInfo> page = new Page<>(request,response);
+		page =commissionInfoService.findPage(page,c);
+		return ResultGenerator.genSuccessResult(page);
 	}
 
 

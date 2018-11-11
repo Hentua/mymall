@@ -503,6 +503,7 @@ public class MemberInfoApi extends BaseController {
             m.setId(currUser.getId());
             m = memberInfoService.get(m);
             memberDataCount.put("balance", m.getBalance() == null ? "0.0" : m.getBalance().toString());
+            memberDataCount.put("commission",m.getCommission() == null ? "0.0" : m.getCommission().toString());
             renderString(response, ResultGenerator.genSuccessResult(memberDataCount));
         } catch (Exception e) {
             renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));

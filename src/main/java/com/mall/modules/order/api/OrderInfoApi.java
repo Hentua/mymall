@@ -12,7 +12,7 @@ import com.mall.common.utils.StringUtils;
 import com.mall.common.utils.api.ApiExceptionHandleUtil;
 import com.mall.common.utils.api.ApiPageEntityHandleUtil;
 import com.mall.common.web.BaseController;
-import com.mall.modules.account.service.AccountInfoService;
+import com.mall.modules.account.service.AccountService;
 import com.mall.modules.coupon.entity.CouponCustomer;
 import com.mall.modules.coupon.service.CouponCustomerService;
 import com.mall.modules.coupon.service.CouponMerchantService;
@@ -77,8 +77,11 @@ public class OrderInfoApi extends BaseController {
     @Autowired
     private CouponMerchantService couponMerchantService;
 
+//    @Autowired
+//    private AccountInfoService accountInfoService;
+
     @Autowired
-    private AccountInfoService accountInfoService;
+    private AccountService accountService;
     @Autowired
     private GiftCustomerService giftCustomerService;
     @Autowired
@@ -539,7 +542,7 @@ public class OrderInfoApi extends BaseController {
             int result = orderInfoService.orderComplete(updateCondition);
             if (result > 0) {
                 //订单完成生成佣金信息 根据订单信息创建账单流水
-                accountInfoService.createAccountFlow(orderInfo);
+                accountService.createAccountFlow(orderInfo);
                 renderString(response, ResultGenerator.genSuccessResult());
             } else {
                 throw new ServiceException("确认收货失败");

@@ -40,6 +40,7 @@ public class OrderInfo extends DataEntity<OrderInfo> {
 	private Date completedTime; // 交易完成时间
 	private Date autoCompletedTime; // 自动完成交易时间
 	private Double settlementsAmount;//结算金额
+	private String setFlag; //清算标记
 
 	private String merchantName;
 	private String customerName;
@@ -50,6 +51,14 @@ public class OrderInfo extends DataEntity<OrderInfo> {
 
 	public OrderInfo(String id){
 		super(id);
+	}
+
+	public String getSetFlag() {
+		return setFlag;
+	}
+
+	public void setSetFlag(String setFlag) {
+		this.setFlag = setFlag;
 	}
 
 	public Double getSettlementsAmount() {

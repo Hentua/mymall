@@ -109,7 +109,7 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 		User merchant = null;
 
 		if(null == orderInfo){
-			logger.error("创建账单流水失败：订单信息为空");
+			logger.error("创建佣金流水失败：订单信息为空");
 			return ;
 		}
 //		if(!"2".equals(orderInfo.getOrderStatus())){
@@ -121,11 +121,11 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 		//买家信息
 		User customer = UserUtils.get(orderInfo.getCustomerCode());
 		if(null == merchant){
-			logger.error("创建账单流水失败：卖家信息为空");
+			logger.error("创建佣金流水失败：卖家信息为空");
 			return ;
 		}
 		if(null == customer){
-			logger.error("创建账单流水失败：买家信息为空");
+			logger.error("创建佣金流水失败：买家信息为空");
 			return ;
 		}
 		//卖家推荐人
@@ -133,21 +133,23 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 		//买家推荐人
 		customerRefereeUser = UserUtils.get(customer.getRefereeId());
 		if(null == merchantRefereeUser){
-			logger.error("创建账单流水失败：卖家推荐人为空");
+			logger.error("创建佣金流水失败：卖家推荐人为空");
 			return ;
 		}
 		if(null == customerRefereeUser){
-			logger.error("创建账单流水失败：买家推荐人为空");
+			logger.error("创建佣金流水失败：买家推荐人为空");
 			return ;
 		}
 		if(null == merchantRefereeUser || null == customerRefereeUser
 				|| null == merchant){
 			return;
 		}
+		//1：推荐用户消费返佣 2：推荐商家销售返佣 3：推荐商家入驻返佣 4：推荐商家送出礼包返佣 5：商家送出礼包返佣
 		//订单类型（0-平台自主下单，1-礼包兑换）
 		if("0".equals(orderInfo.getOrderType())){
 			//新增佣金记录
 			//卖家推荐人佣金
+
 			CommissionInfo merchantRefereeCommission = new CommissionInfo();
 			merchantRefereeCommission.setType("2");
 			merchantRefereeCommission.setUserId(merchantRefereeUser.getId());
@@ -160,10 +162,10 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 			//买家推荐人佣金
 			CommissionInfo customerRefereeCommission = new CommissionInfo();
 			customerRefereeCommission.setType("1");
-			customerRefereeCommission.setUserId(merchantRefereeUser.getId());
-			customerRefereeCommission.setProduceUserId(merchant.getId());
+			customerRefereeCommission.setUserId(customerRefereeUser.getId());
+			customerRefereeCommission.setProduceUserId(customer.getId());
 			customerRefereeCommission.setOriginAmount(orderInfo.getGoodsAmountTotal());
-			customerRefereeCommission.setAmount(commissionConfigService.getCommissionAmount("1",orderInfo.getGoodsAmountTotal()));
+			customerRefereeCommission.setAmount(commissionConfigService.getCommissionAmount("1",orderInfo));
 			customerRefereeCommission.setUnionId(orderInfo.getId());
 			commissionInfoService.save(customerRefereeCommission);
 
