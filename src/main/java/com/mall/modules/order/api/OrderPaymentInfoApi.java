@@ -100,7 +100,9 @@ public class OrderPaymentInfoApi extends BaseController {
             if (StringUtils.isBlank(paymentNo)) {
                 throw new ServiceException("未选择支付信息");
             }
-            OrderPaymentInfo orderPaymentInfo = orderPaymentInfoService.get(paymentNo);
+            OrderPaymentInfo queryCondition = new OrderPaymentInfo();
+            queryCondition.setPaymentNo(paymentNo);
+            OrderPaymentInfo orderPaymentInfo = orderPaymentInfoService.getByCondition(queryCondition);
             if (null == orderPaymentInfo) {
                 throw new ServiceException("不合法的支付信息");
             }
