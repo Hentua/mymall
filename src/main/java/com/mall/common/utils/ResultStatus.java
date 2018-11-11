@@ -16,7 +16,9 @@ public enum ResultStatus {
     //服务器内部错误
     INTERNAL_SERVER_ERROR(500),
     //无权限
-    ACCESS_DENIED(403);
+    ACCESS_DENIED(403),
+    //未设置支付密码 6-支付相关错误
+    NULL_PAY_PASSWORD(601);
 
 
     private final int status;

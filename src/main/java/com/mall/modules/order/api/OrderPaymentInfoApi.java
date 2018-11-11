@@ -1,11 +1,13 @@
 package com.mall.modules.order.api;
 
 import com.mall.common.service.ServiceException;
+import com.mall.common.utils.ResultStatus;
 import com.mall.common.utils.api.ApiExceptionHandleUtil;
 import com.mall.common.utils.ResultGenerator;
 import com.mall.common.utils.StringUtils;
 import com.mall.common.web.BaseController;
 import com.mall.modules.account.service.AccountService;
+import com.mall.modules.member.service.MemberInfoService;
 import com.mall.modules.order.entity.OrderInfo;
 import com.mall.modules.order.entity.OrderPaymentInfo;
 import com.mall.modules.order.service.OrderInfoService;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -40,6 +43,9 @@ public class OrderPaymentInfoApi extends BaseController {
 
     @Autowired
     private AccountService accountService;
+
+    @Autowired
+    private MemberInfoService memberInfoService;
 
     /**
      * 支付成功回调接口
@@ -79,9 +85,18 @@ public class OrderPaymentInfoApi extends BaseController {
     @RequestMapping(value = "balancePay", method = RequestMethod.POST)
     public void balancePay(HttpServletRequest request, HttpServletResponse response) {
         String paymentNo = request.getParameter("paymentNo");
+        String payPassword = request.getParameter("payPassword");
         User currUser = UserUtils.getUser();
         String userId = currUser.getId();
         try {
+            String cipherPayPassword = memberInfoService.getPayPassword(userId);
+            if(StringUtils.isBlank(cipherPayPassword)) {
+                renderString(response, ResultGenerator.genFailResult("未设置支付密码").setStatus(ResultStatus.NULL_PAY_PASSWORD));
+                return;
+            }
+            if(!memberInfoService.validatePayPassword(payPassword, userId)) {
+                throw new ServletException("支付密码不正确");
+            }
             if (StringUtils.isBlank(paymentNo)) {
                 throw new ServiceException("未选择支付信息");
             }
