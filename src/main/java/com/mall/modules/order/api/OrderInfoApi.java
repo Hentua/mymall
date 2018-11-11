@@ -195,6 +195,7 @@ public class OrderInfoApi extends BaseController {
                     List<Role> roleList = currUser.getRoleList();
                     roleList.add(new Role("1000"));
                     systemService.saveUser(currUser);
+                    UserUtils.clearCache();
                     for (GiftConfigCoupon giftConfigCoupon : giftConfig.getGiftConfigCouponList()) {
                         couponMerchantService.exchangeGiftGenCoupon(giftConfigCoupon, giftCustomerId);
                     }

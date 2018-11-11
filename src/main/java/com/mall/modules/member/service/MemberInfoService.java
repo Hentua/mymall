@@ -16,6 +16,7 @@ import com.mall.modules.sys.service.SystemService;
 import com.sohu.idcenter.IdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -146,6 +147,7 @@ public class MemberInfoService extends CrudService<MemberInfoDao, MemberInfo> {
         return memberInfoDao.getPayPassword(id);
     }
 
+    @Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public void savePayPassword(MemberInfo memberInfo) {
         memberInfoDao.savePayPassword(memberInfo);
     }
