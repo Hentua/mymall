@@ -149,8 +149,8 @@
 		</choose>
 	</update>
 
-	<update id="editGoodsSalesTotal" parameterType="java.lang.String">
-		update goods_info set sales_total = sales_total+1 where id = #{godosId}
+	<update id="editGoodsSalesTotal">
+		update goods_info set sales_total = sales_total+#{count} where id = #{goodsId}
 	</update>
 	
 </mapper>

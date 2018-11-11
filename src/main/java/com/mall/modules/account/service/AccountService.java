@@ -238,7 +238,7 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 					commissionInfo.setUnionId(orderInfo.getId());
 					commissionInfoService.save(commissionInfo);
 				}
-				orderGoodsDao.editGoodsSalesTotal(og.getGoodsId());
+				orderGoodsDao.editGoodsSalesTotal(og);
 			}
 
 		}
