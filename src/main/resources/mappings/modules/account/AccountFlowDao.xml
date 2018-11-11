@@ -40,7 +40,7 @@
 			<if test="nickname != null and nickname != ''">
 				 m.nickname  like CONCAT('%',#{nickname},'%')
 			</if>
-			<if test="org != null and org != '' and org = '13'">
+			<if test="org != null and org != ''">
 				and a.mode in ('1','3') and a.income_expenditure_mode = '2'
 			</if>
 			<if test="checkStatus != null and checkStatus != ''">
@@ -51,6 +51,9 @@
 			</if>
 			<if test="type != null and type != ''">
 				and a.type = #{type}
+			</if>
+			<if test="userId != null and userId != ''">
+				and a.user_id = #{userId}
 			</if>
 		</where>
 		<choose>
