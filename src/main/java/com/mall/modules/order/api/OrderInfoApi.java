@@ -157,12 +157,15 @@ public class OrderInfoApi extends BaseController {
             if ("0".equals(orderType)) {
                 goodsArr = JSON.parseArray(goodsList);
             } else {
-                if (StringUtils.isBlank(giftCustomerId)) {
+                if (StringUtils.isBlank(giftCustomerId) || StringUtils.isBlank(giftConfigId)) {
                     throw new ServiceException("未选择要兑换的礼包");
                 }
                 orderStatus = "1";
                 giftCustomer = giftCustomerService.get(giftCustomerId);
                 giftConfig = giftConfigService.get(giftConfigId);
+                if (null == giftCustomer || null == giftConfig) {
+                    throw new ServiceException("未选择要兑换的礼包");
+                }
                 int giftCount = giftCustomer.getGiftCount();
                 if (giftCount <= 0) {
                     throw new ServiceException("礼包已兑换");
