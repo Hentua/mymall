@@ -164,7 +164,7 @@ public class MemberInfoService extends CrudService<MemberInfoDao, MemberInfo> {
         if (StringUtils.isBlank(payPassword) || !validatePayPasswordFormat(payPassword)) {
             return false;
         }
-        return cipherPayPassword.equals(SystemService.entryptPassword(payPassword));
+        return SystemService.validatePassword(payPassword, cipherPayPassword);
     }
 
 }
