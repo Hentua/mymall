@@ -5,6 +5,7 @@ import com.mall.common.persistence.Page;
 import com.mall.common.service.ServiceException;
 import com.mall.common.utils.EhCacheUtils;
 import com.mall.common.utils.ResultGenerator;
+import com.mall.common.utils.ResultStatus;
 import com.mall.common.utils.StringUtils;
 import com.mall.common.utils.api.ApiExceptionHandleUtil;
 import com.mall.common.utils.api.ApiPageEntityHandleUtil;
@@ -209,6 +210,27 @@ public class MemberInfoApi extends BaseController {
             memberInfoService.save(memberInfo);
             renderString(response, ResultGenerator.genSuccessResult());
         } catch (Exception e) {
+            renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
+        }
+    }
+
+    /**
+     * 判断用户是否创建支付密码 返回状态码200则为创建 返回状态码为601则为未创建
+     * @param request 请求体
+     * @param response 响应体
+     */
+    @RequestMapping(value = "whetherPayPassword", method = RequestMethod.POST)
+    public void whetherPayPassword(HttpServletRequest request, HttpServletResponse response) {
+        User currUser = UserUtils.getUser();
+        String id = currUser.getId();
+        try {
+            String payPassword = memberInfoService.getPayPassword(id);
+            if(StringUtils.isBlank(payPassword)) {
+                renderString(response, ResultGenerator.genFailResult("用户未创建支付密码").setStatus(ResultStatus.NULL_PAY_PASSWORD));
+            }else {
+                renderString(response, ResultGenerator.genSuccessResult());
+            }
+        }catch (Exception e) {
             renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
         }
     }
