@@ -107,6 +107,9 @@
 			<if test="merchantName != null and merchantName != ''">
 				and m.nickname LIKE CONCAT('%',#{merchantName},'%')
 			</if>
+		     <if test="merchantId != null and merchantId != ''">
+				and a.merchant_id = #{merchantId}
+			 </if>
 			and goods_type = 1
 		</where>
 		<choose>
