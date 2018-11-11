@@ -3,13 +3,20 @@ package com.mall.modules.account.service;
 import com.mall.common.service.CrudService;
 import com.mall.common.service.ServiceException;
 import com.mall.common.utils.IdGen;
+import com.mall.common.utils.StringUtils;
 import com.mall.modules.account.dao.AccountFlowDao;
 import com.mall.modules.account.entity.AccountFlow;
 import com.mall.modules.commission.entity.CommissionInfo;
 import com.mall.modules.commission.service.CommissionConfigService;
 import com.mall.modules.commission.service.CommissionInfoService;
+import com.mall.modules.goods.dao.GoodsCategoryDao;
+import com.mall.modules.goods.dao.GoodsRecommendDao;
+import com.mall.modules.goods.entity.GoodsCategory;
+import com.mall.modules.goods.entity.GoodsRecommend;
 import com.mall.modules.member.dao.MemberInfoDao;
 import com.mall.modules.member.entity.MemberInfo;
+import com.mall.modules.order.dao.OrderGoodsDao;
+import com.mall.modules.order.entity.OrderGoods;
 import com.mall.modules.order.entity.OrderInfo;
 import com.mall.modules.order.entity.OrderSettlement;
 import com.mall.modules.order.service.OrderSettlementService;
@@ -21,9 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 账户Service
@@ -50,6 +55,15 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 
 	@Autowired
 	private OrderSettlementService orderSettlementService;
+
+	@Autowired
+	private OrderGoodsDao orderGoodsDao;
+
+	@Autowired
+	private GoodsRecommendDao goodsRecommendDao;
+
+	@Autowired
+	private GoodsCategoryDao goodsCategoryDao;
 
 	/**
 	 * 修改账户余额
@@ -188,7 +202,44 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 			customerRefereeCommission.setUnionId(orderInfo.getId());
 			commissionInfoService.save(customerRefereeCommission);
 
+			List<OrderGoods> list = null;
+			if(null != orderInfo.getOrderGoodsList()) {
+				list = orderInfo.getOrderGoodsList();
+			}else{
+				list = orderGoodsDao.findList(new OrderGoods(orderInfo.getOrderNo()));
+			}
 
+			for (OrderGoods og: list) {
+				if(!StringUtils.isEmpty(og.getGoodsRecommendId())){
+					GoodsCategory gc = goodsCategoryDao.get(og.getGoodsCategoryId());
+					Double amount = 0.0;
+					//按固定金额计算
+					if("1".equals(gc.getCommissionMode())){
+						amount+= gc.getCommissionNumber();
+					}
+					//按百分比计算
+					if("2".equals(gc.getCommissionMode())){
+						if(null == gc.getCommissionNumber() || gc.getCommissionNumber() <= 0.0){
+							amount+= 0.0;
+						}
+						//按交易金额 计算百分比
+						amount+= gc.getCommissionNumber()/og.getGoodsPrice()*100;
+					}
+
+					String goodsRecommendId = og.getGoodsRecommendId();
+					goodsRecommendId= goodsRecommendId.substring(4,goodsRecommendId.length());
+					GoodsRecommend g = goodsRecommendDao.get(goodsRecommendId);
+					CommissionInfo commissionInfo = new CommissionInfo();
+					commissionInfo.setType("1");
+					commissionInfo.setUserId(customerRefereeUser.getId());
+					commissionInfo.setProduceUserId(customer.getId());
+					commissionInfo.setOriginAmount(orderInfo.getGoodsAmountTotal());
+					commissionInfo.setAmount(amount);
+					commissionInfo.setUnionId(orderInfo.getId());
+					commissionInfoService.save(commissionInfo);
+				}
+				orderGoodsDao.editGoodsSalesTotal(og.getGoodsId());
+			}
 
 		}
 		//订单类型（0-平台自主下单，1-礼包兑换）

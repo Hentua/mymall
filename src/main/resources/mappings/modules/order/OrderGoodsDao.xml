@@ -148,5 +148,9 @@
 			</otherwise>
 		</choose>
 	</update>
+
+	<update id="editGoodsSalesTotal" parameterType="java.lang.String">
+		update goods_info set sales_total = sales_total+1 where id = #{godosId}
+	</update>
 	
 </mapper>

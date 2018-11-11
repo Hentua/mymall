@@ -134,7 +134,7 @@ public class CommissionConfigService extends CrudService<CommissionConfigDao, Co
 				}
 				//按百分比计算
 				if("2".equals(gc.getCommissionMode())){
-					if(null == amountTotal || amountTotal <= 0.0){
+					if(null == gc.getCommissionNumber() || gc.getCommissionNumber() <= 0.0){
 						amount+= 0.0;
 					}
 					//按交易金额 计算百分比
