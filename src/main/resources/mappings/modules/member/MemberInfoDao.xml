@@ -18,6 +18,11 @@
 		a.sex AS "sex",
 		a.status AS "status",
 		a.remarks AS "remarks",
+		a.public_account as "publicAccount",
+		a.public_account_name as "publicAccountName",
+		a.public_account_bank as "publicAccountBank",
+		a.business_license_image as "businessLicenseImage",
+		a.product_license as "productLicense",
 		a.commission as "commission"
 	</sql>
 	
@@ -118,7 +123,12 @@
 			sex,
 		    status,
 		    remarks,
-			commission
+			commission,
+			public_account,
+			public_account_bank,
+			public_account_name,
+			business_license_image,
+			product_license
 		) VALUES (
 			#{id},
 			#{referee},
@@ -135,7 +145,12 @@
 			#{sex},
 		    #{status},
 		    #{remarks},
-		    #{commission}
+		    #{commission},
+		    #{publicAccount},
+		    #{publicAccountBank},
+		    #{publicAccountName},
+		    #{businessLicenseImage},
+		    #{productLicense}
 		)
 	</insert>
 	

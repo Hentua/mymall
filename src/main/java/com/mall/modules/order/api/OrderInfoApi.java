@@ -379,6 +379,9 @@ public class OrderInfoApi extends BaseController {
             // 保存优惠券信息
             if (null != couponCustomer) {
                 couponCustomer.setBalance(couponBalance);
+                if (couponBalance <= 0) {
+                    couponCustomer.setCouponStatus("1");
+                }
                 couponCustomerService.save(couponCustomer);
             }
             renderString(response, ResultGenerator.genSuccessResult(orderPaymentInfo));

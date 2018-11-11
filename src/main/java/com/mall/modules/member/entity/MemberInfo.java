@@ -38,12 +38,63 @@ public class MemberInfo extends DataEntity<MemberInfo> {
 	@JsonIgnore
 	private String verifyCode; // 短信验证码
 
+	@JsonIgnore
+	private String publicAccount; // 对公账户
+	@JsonIgnore
+	private String businessLicenseImage; // 营业执照图片
+	@JsonIgnore
+	private String productLicense; // 产品许可证
+	@JsonIgnore
+	private String publicAccountName; // 对公账户名称
+	@JsonIgnore
+	private String publicAccountBank; // 开户行
+
 	public MemberInfo() {
 		super();
 	}
 
 	public MemberInfo(String id){
 		super(id);
+	}
+
+	public String getPublicAccount() {
+		return publicAccount;
+	}
+
+	public void setPublicAccount(String publicAccount) {
+		this.publicAccount = publicAccount;
+	}
+
+	public String getBusinessLicenseImage() {
+		return businessLicenseImage;
+	}
+
+	public void setBusinessLicenseImage(String businessLicenseImage) {
+		this.businessLicenseImage = businessLicenseImage;
+	}
+
+	public String getProductLicense() {
+		return productLicense;
+	}
+
+	public void setProductLicense(String productLicense) {
+		this.productLicense = productLicense;
+	}
+
+	public String getPublicAccountName() {
+		return publicAccountName;
+	}
+
+	public void setPublicAccountName(String publicAccountName) {
+		this.publicAccountName = publicAccountName;
+	}
+
+	public String getPublicAccountBank() {
+		return publicAccountBank;
+	}
+
+	public void setPublicAccountBank(String publicAccountBank) {
+		this.publicAccountBank = publicAccountBank;
 	}
 
 	public String getVerifyCode() {

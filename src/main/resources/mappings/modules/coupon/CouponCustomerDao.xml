@@ -63,6 +63,7 @@
 			<if test="couponStatus != null and couponStatus != ''">
 				AND a.coupon_status = #{couponStatus}
 			</if>
+			and a.balance &gt; 0
 		</where>
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
