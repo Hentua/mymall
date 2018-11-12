@@ -172,12 +172,21 @@
     <div class="control-group">
         <label class="control-label">备注：</label>
         <div class="controls">
-            <form:textarea path="remarks" htmlEscape="false" rows="4" maxlength="500" class="input-xxlarge "/>
+            <c:choose>
+                <c:when test="${memberMerchantCheck.status == '0'}">
+                    <form:textarea path="remarks" htmlEscape="false" rows="4" maxlength="500" class="input-xxlarge "/>
+                </c:when>
+                <c:otherwise>
+                    <form:textarea path="remarks" htmlEscape="false" rows="4" maxlength="500" class="input-xxlarge " readonly="true"/>
+                </c:otherwise>
+            </c:choose>
         </div>
     </div>
     <div class="form-actions">
-        <input id="btnSubmit" class="btn btn-primary" type="submit" value="审核通过" onclick="this.form.action='${ctx}/member/memberMerchantCheck/checkPass';"/>&nbsp;
-        <input id="notPassSubmit" class="btn btn-primary" type="submit" value="审核不通过" onclick="this.form.action='${ctx}/member/memberMerchantCheck/checkReject'"/>&nbsp;
+        <c:if test="${memberMerchantCheck.status == '0'}">
+            <input id="btnSubmit" class="btn btn-primary" type="submit" value="审核通过" onclick="this.form.action='${ctx}/member/memberMerchantCheck/checkPass';"/>&nbsp;
+            <input id="notPassSubmit" class="btn btn-primary" type="submit" value="审核不通过" onclick="this.form.action='${ctx}/member/memberMerchantCheck/checkReject'"/>&nbsp;
+        </c:if>
         <input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
     </div>
 </form:form>

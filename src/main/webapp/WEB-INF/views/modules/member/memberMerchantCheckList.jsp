@@ -99,7 +99,7 @@
 					<fmt:formatDate value="${memberMerchantCheck.checkDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
 				</td>
 				<shiro:hasPermission name="member:memberMerchantCheck:edit"><td>
-    				<a href="${ctx}/member/memberMerchantCheck/form?id=${memberMerchantCheck.id}">审核</a>
+    				<a href="${ctx}/member/memberMerchantCheck/form?id=${memberMerchantCheck.id}">${memberMerchantCheck.status == '0' ? '审核' : '详情'}</a>
 				</td></shiro:hasPermission>
 			</tr>
 		</c:forEach>
