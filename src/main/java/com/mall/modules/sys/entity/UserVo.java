@@ -3,23 +3,7 @@
  */
 package com.mall.modules.sys.entity;
 
-import java.util.Date;
-import java.util.List;
-
-import javax.validation.constraints.NotNull;
-
-import com.mall.common.config.Global;
-import com.mall.common.utils.Collections3;
-import com.mall.common.utils.excel.annotation.ExcelField;
-import com.mall.common.utils.excel.fieldtype.RoleListType;
-import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.Length;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.google.common.collect.Lists;
-import com.mall.common.persistence.DataEntity;
-import com.mall.common.supcan.annotation.treelist.cols.SupCol;
+import com.mall.common.utils.StringUtils;
 
 /**
  * 用户Entity
@@ -58,7 +42,7 @@ public class UserVo {
         this.setPhone(user.getPhone());
         this.setName(user.getName());
         this.setSex(user.getSex());
-        this.setIsPayPassword(user.getPayPassword())
+        this.setIsPayPassword(user.getPayPassword());
     }
 
     public String getSex(){
@@ -72,12 +56,13 @@ public class UserVo {
     }
 
     public String setIsPayPassword(String payPassword){
-        if(StringUtil.isEmpty(payPassword)){
+        if(StringUtils.isEmpty(payPassword)){
             this.isPayPassword = "0";
         }
-        if(!StringUtil.isEmpty(payPassword)){
+        if(!StringUtils.isEmpty(payPassword)){
             this.isPayPassword = "1";
         }
+        return this.isPayPassword;
     }
 
 
