@@ -266,6 +266,35 @@ public class MemberInfoApi extends BaseController {
     }
 
     /**
+     * 验证支付密码
+     *
+     * @param request  请求体
+     * @param response 响应体
+     */
+    @RequestMapping(value = "validatePayPassword", method = RequestMethod.POST)
+    public void validatePayPassword(HttpServletRequest request, HttpServletResponse response) {
+        String payPassword = request.getParameter("payPassword");
+        User currUser = UserUtils.getUser();
+        String userId = currUser.getId();
+        try {
+            String currPayPassword = memberInfoService.getPayPassword(userId);
+            if (StringUtils.isBlank(currPayPassword)) {
+                renderString(response, ResultGenerator.genFailResult("未设置支付密码").setStatus(ResultStatus.NULL_PAY_PASSWORD));
+                return;
+            }
+            if (StringUtils.isBlank(payPassword)) {
+                throw new ServiceException("支付密码不能为空");
+            }
+            if (!memberInfoService.validatePayPassword(payPassword, userId)) {
+                throw new ServiceException("支付密码错误");
+            }
+            renderString(response, ResultGenerator.genSuccessResult());
+        } catch (Exception e) {
+            renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
+        }
+    }
+
+    /**
      * 修改支付密码
      *
      * @param request  请求体
@@ -275,15 +304,24 @@ public class MemberInfoApi extends BaseController {
     public void modifyPayPassword(HttpServletRequest request, HttpServletResponse response) {
         String oldPayPassword = request.getParameter("oldPayPassword");
         String newPayPassword = request.getParameter("payPassword");
+        String repeatPayPassword = request.getParameter("repeatPayPassword");
         User currUser = UserUtils.getUser();
         try {
+            String currPayPassword = memberInfoService.getPayPassword(currUser.getId());
+            if (StringUtils.isBlank(currPayPassword)) {
+                renderString(response, ResultGenerator.genFailResult("未设置支付密码").setStatus(ResultStatus.NULL_PAY_PASSWORD));
+                return;
+            }
             // 验证老支付密码
             if (!memberInfoService.validatePayPassword(oldPayPassword, currUser.getId())) {
                 throw new ServiceException("支付密码错误");
             }
             // 验证新支付密码格式
-            if (!MemberInfoService.validatePayPasswordFormat(newPayPassword)) {
+            if (!MemberInfoService.validatePayPasswordFormat(newPayPassword) || !MemberInfoService.validatePayPasswordFormat(repeatPayPassword)) {
                 throw new ServiceException("支付密码格式不正确");
+            }
+            if (!newPayPassword.equals(repeatPayPassword)) {
+                throw new ServiceException("两次输入密码不一致");
             }
             String cipherPayPassword = SystemService.entryptPassword(newPayPassword);
             MemberInfo memberInfo = new MemberInfo();

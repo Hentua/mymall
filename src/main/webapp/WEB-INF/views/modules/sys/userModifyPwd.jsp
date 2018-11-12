@@ -33,6 +33,9 @@
 <body>
 	<ul class="nav nav-tabs">
 		<li><a href="${ctx}/sys/user/info">个人信息</a></li>
+		<c:if test="${user.userType == '1'}">
+			<li><a href="${ctx}/member/memberInfo/merchantData?id=${user.id}">商户信息</a></li>
+		</c:if>
 		<li class="active"><a href="${ctx}/sys/user/modifyPwd">修改密码</a></li>
 	</ul><br/>
 	<form:form id="inputForm" modelAttribute="user" action="${ctx}/sys/user/modifyPwd" method="post" class="form-horizontal">

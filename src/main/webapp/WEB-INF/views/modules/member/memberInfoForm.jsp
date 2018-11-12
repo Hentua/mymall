@@ -27,7 +27,7 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li><a href="${ctx}/member/memberInfo/">会员列表</a></li>
+		<li><a href="${ctx}/member/memberInfo/merchantMemberInfo">会员列表</a></li>
 		<li class="active"><a href="${ctx}/member/memberInfo/form?id=${memberInfo.id}">会员<shiro:hasPermission name="member:memberInfo:edit">${not empty memberInfo.id?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="member:memberInfo:edit">查看</shiro:lacksPermission></a></li>
 	</ul><br/>
 	<form:form id="inputForm" modelAttribute="memberInfo" action="${ctx}/member/memberInfo/save" method="post" class="form-horizontal">

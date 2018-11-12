@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.modules.member.dao.MemberMerchantCheckDao">
+    
+	<sql id="memberMerchantCheckColumns">
+		a.id AS "id",
+		a.merchant_code AS "merchantCode",
+		a.status AS "status",
+		a.remarks AS "remarks",
+		a.create_date AS "createDate",
+		a.create_by AS "createBy.id",
+		a.update_date AS "updateDate",
+		a.update_by AS "updateBy.id",
+		a.check_by AS "checkBy",
+		a.check_date AS "checkDate",
+		m.nickname AS "merchantName",
+		u.mobile AS "mobile",
+		m.status AS "merchantStatus",
+		m.register_way AS "registerWay",
+		u.user_type AS "memberType"
+	</sql>
+	
+	<sql id="memberMerchantCheckJoins">
+		left join member_info m on m.id = a.merchant_code
+		left join sys_user u on u.id = a.merchant_code
+	</sql>
+    
+	<select id="get" resultType="MemberMerchantCheck">
+		SELECT 
+			<include refid="memberMerchantCheckColumns"/>
+		FROM member_merchant_check a
+		<include refid="memberMerchantCheckJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="MemberMerchantCheck">
+		SELECT 
+			<include refid="memberMerchantCheckColumns"/>
+		FROM member_merchant_check a
+		<include refid="memberMerchantCheckJoins"/>
+		<where>
+			
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="merchantCode != null and merchantCode != ''">
+				AND a.merchant_code = #{merchantCode}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="MemberMerchantCheck">
+		SELECT 
+			<include refid="memberMerchantCheckColumns"/>
+		FROM member_merchant_check a
+		<include refid="memberMerchantCheckJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO member_merchant_check(
+			id,
+			merchant_code,
+			status,
+			remarks,
+			create_date,
+			create_by,
+			update_date,
+			update_by,
+			check_by,
+			check_date
+		) VALUES (
+			#{id},
+			#{merchantCode},
+			#{status},
+			#{remarks},
+			#{createDate},
+			#{createBy.id},
+			#{updateDate},
+			#{updateBy.id},
+			#{checkBy},
+			#{checkDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE member_merchant_check SET 	
+			merchant_code = #{merchantCode},
+			status = #{status},
+			remarks = #{remarks},
+			update_date = #{updateDate},
+			update_by = #{updateBy.id},
+			check_by = #{checkBy},
+			check_date = #{checkDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM member_merchant_check
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

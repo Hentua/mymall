@@ -7,10 +7,7 @@ import com.mall.common.utils.StringUtils;
 import com.mall.modules.member.dao.MemberFavoriteDao;
 import com.mall.modules.member.dao.MemberFootprintDao;
 import com.mall.modules.member.dao.MemberInfoDao;
-import com.mall.modules.member.entity.MemberFavorite;
-import com.mall.modules.member.entity.MemberFeedback;
-import com.mall.modules.member.entity.MemberFootprint;
-import com.mall.modules.member.entity.MemberInfo;
+import com.mall.modules.member.entity.*;
 import com.mall.modules.member.utils.Base32;
 import com.mall.modules.sys.service.SystemService;
 import com.sohu.idcenter.IdWorker;
@@ -42,6 +39,8 @@ public class MemberInfoService extends CrudService<MemberInfoDao, MemberInfo> {
     private MemberFeedbackService memberFeedbackService;
     @Autowired
     private MemberFootprintDao memberFootprintDao;
+    @Autowired
+    private MemberMerchantCheckService memberMerchantCheckService;
 
     public MemberInfo get(String id) {
         return super.get(id);
@@ -83,7 +82,9 @@ public class MemberInfoService extends CrudService<MemberInfoDao, MemberInfo> {
 
     public static boolean validatePayPasswordFormat(String payPassword) {
         String regex = "^\\d{6}$";
-        if (payPassword.length() != 6) {
+        if(StringUtils.isBlank(payPassword)) {
+            return false;
+        } else if (payPassword.length() != 6) {
             return false;
         } else {
             Pattern p = Pattern.compile(regex);
@@ -165,6 +166,16 @@ public class MemberInfoService extends CrudService<MemberInfoDao, MemberInfo> {
             return false;
         }
         return SystemService.validatePassword(payPassword, cipherPayPassword);
+    }
+
+    @Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    public void submitMerchantData(MemberInfo memberInfo) {
+        memberInfo.setStatus("3");
+        memberInfoDao.updateMerchantData(memberInfo);
+        MemberMerchantCheck memberMerchantCheck = new MemberMerchantCheck();
+        memberMerchantCheck.setMerchantCode(memberInfo.getId());
+        memberMerchantCheck.setStatus("0");
+        memberMerchantCheckService.save(memberMerchantCheck);
     }
 
 }

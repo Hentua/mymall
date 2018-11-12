@@ -25,9 +25,11 @@ public class MemberInfo extends DataEntity<MemberInfo> {
 
 	private String mobile; // 手机号码
 
-	private String status; // 会员当前状态 0-审核中， 1-已生效， 2-审核未通过
+	private String status; // 会员当前状态 0-审核中， 1-已生效， 2-审核未通过， 3-审核中
 	private String remarks; // 备注
 	private String refereeName; // 推荐人名称
+
+	private String userType; // 用户类型
 
 	@JsonIgnore
 	private String password;
@@ -39,6 +41,8 @@ public class MemberInfo extends DataEntity<MemberInfo> {
 	private String verifyCode; // 短信验证码
 
 	@JsonIgnore
+	private String companyName; // 公司名称
+	@JsonIgnore
 	private String publicAccount; // 对公账户
 	@JsonIgnore
 	private String businessLicenseImage; // 营业执照图片
@@ -49,12 +53,38 @@ public class MemberInfo extends DataEntity<MemberInfo> {
 	@JsonIgnore
 	private String publicAccountBank; // 开户行
 
+	private String loginFlag;
+
 	public MemberInfo() {
 		super();
 	}
 
 	public MemberInfo(String id){
 		super(id);
+	}
+
+	public String getCompanyName() {
+		return companyName;
+	}
+
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
+	}
+
+	public String getUserType() {
+		return userType;
+	}
+
+	public String getLoginFlag() {
+		return loginFlag;
+	}
+
+	public void setLoginFlag(String loginFlag) {
+		this.loginFlag = loginFlag;
+	}
+
+	public void setUserType(String userType) {
+		this.userType = userType;
 	}
 
 	public String getPublicAccount() {

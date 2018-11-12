@@ -23,17 +23,21 @@
 		a.public_account_bank as "publicAccountBank",
 		a.business_license_image as "businessLicenseImage",
 		a.product_license as "productLicense",
-		a.commission as "commission"
+		a.company_name as "companyName",
+		a.commission as "commission",
+		u.mobile AS "mobile",
+		u.user_type AS "userType",
+		u.login_flag AS "loginFlag"
 	</sql>
 	
 	<sql id="memberInfoJoins">
+		left join sys_user u on u.id = a.id
 	</sql>
     
 	<select id="get" resultType="MemberInfo">
 		SELECT 
 			<include refid="memberInfoColumns"/>
 		FROM member_info a
-		left join sys_user u on u.id = a.id
 		<include refid="memberInfoJoins"/>
 		<where>
 			<if test="id != null and id != ''">
@@ -76,6 +80,9 @@
 		     <if test="registerWay != null and registerWay != ''">
 				 and a.register_way = #{registerWay}
 			 </if>
+			<if test="mobile != null and mobile != ''">
+				and u.login_name = #{mobile}
+			</if>
 			and a.del_flag = #{DEL_FLAG_NORMAL}
 		</where>
 		<choose>
@@ -128,6 +135,7 @@
 			public_account_bank,
 			public_account_name,
 			business_license_image,
+			company_name,
 			product_license
 		) VALUES (
 			#{id},
@@ -150,6 +158,7 @@
 		    #{publicAccountBank},
 		    #{publicAccountName},
 		    #{businessLicenseImage},
+		    #{companyName},
 		    #{productLicense}
 		)
 	</insert>
@@ -158,6 +167,18 @@
 		UPDATE member_info SET 	
 			nickname = #{nickname},
 			sex = #{sex}
+		WHERE id = #{id}
+	</update>
+
+	<update id="updateMerchantData">
+		UPDATE member_info SET
+			company_name = #{companyName},
+			public_account = #{publicAccount},
+			public_account_bank = #{publicAccountBank},
+			public_account_name = #{publicAccountName},
+			business_license_image = #{businessLicenseImage},
+			product_license = #{productLicense},
+			status = #{status}
 		WHERE id = #{id}
 	</update>
 

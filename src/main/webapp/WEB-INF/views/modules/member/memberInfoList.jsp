@@ -19,7 +19,6 @@
 <body>
 	<ul class="nav nav-tabs">
 		<li class="active"><a href="${ctx}/member/memberInfo/">会员列表</a></li>
-		<shiro:hasPermission name="member:memberInfo:edit"><li><a href="${ctx}/member/memberInfo/form">会员添加</a></li></shiro:hasPermission>
 	</ul>
 	<form:form id="searchForm" modelAttribute="memberInfo" action="${ctx}/member/memberInfo/" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
@@ -28,6 +27,9 @@
 			<li><label>昵称：</label>
 				<form:input path="nickname" htmlEscape="false" maxlength="20" class="input-medium"/>
 			</li>
+			<li><label>手机号码：</label>
+				<form:input path="mobile" htmlEscape="false" maxlength="20" class="input-medium"/>
+			</li>
 			<li><label>注册途径：</label>
 				<form:select path="registerWay" class="input-medium">
 					<form:option value="" label="全部"/>
@@ -35,7 +37,7 @@
 					<form:option value="1" label="后台添加"/>
 				</form:select>
 			</li>
-			<li><label>会员状态：</label>
+			<li><label>审核状态：</label>
 				<form:select path="status" class="input-medium">
 					<form:option value="" label="全部"/>
 					<form:option value="0" label="审核中"/>
@@ -52,10 +54,14 @@
 		<thead>
 			<tr>
 				<th>昵称</th>
+				<th>手机号码</th>
+				<th>用户类型</th>
 				<th>注册途径</th>
 				<th>注册时间</th>
-				<th>会员状态</th>
+				<th>商户审核状态</th>
+				<th>登录状态</th>
 				<th>备注</th>
+				<th>操作</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -63,6 +69,22 @@
 			<tr>
 				<td>
 					${memberInfo.nickname}
+				</td>
+				<td>
+					${memberInfo.mobile}
+				</td>
+				<td>
+					<c:choose>
+						<c:when test="${memberInfo.userType == '0'}">
+							普通会员
+						</c:when>
+						<c:when test="${memberInfo.userType == '1'}">
+							商户
+						</c:when>
+						<c:when test="${memberInfo.userType == '2'}">
+							运营
+						</c:when>
+					</c:choose>
 				</td>
 				<td>
 					${memberInfo.registerWay eq '0' ? '自主注册' : '后台添加'}
@@ -73,7 +95,7 @@
 				<td>
 					<c:choose>
 						<c:when test="${memberInfo.status == '0'}">
-							审核中
+							未提交
 						</c:when>
 						<c:when test="${memberInfo.status == '1'}">
 							已生效
@@ -81,10 +103,31 @@
 						<c:when test="${memberInfo.status == '2'}">
 							审核未通过
 						</c:when>
+						<c:when test="${memberInfo.status == '3'}">
+							审核中
+						</c:when>
+					</c:choose>
+				</td>
+				<td>
+					<c:choose>
+						<c:when test="${memberInfo.loginFlag == '0'}">
+							禁止登录
+						</c:when>
+						<c:when test="${memberInfo.loginFlag == '1'}">
+							允许登录
+						</c:when>
 					</c:choose>
 				</td>
 				<td>
 					${memberInfo.remarks}
+				</td>
+				<td>
+					<c:if test="${memberInfo.loginFlag == '0'}">
+						<a href="">允许登录</a>
+					</c:if>
+					<c:if test="${memberInfo.loginFlag == '1'}">
+						<a href="">禁止登录</a>
+					</c:if>
 				</td>
 			</tr>
 		</c:forEach>

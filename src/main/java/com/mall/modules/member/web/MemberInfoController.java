@@ -2,17 +2,8 @@ package com.mall.modules.member.web;
 
 import com.mall.common.config.Global;
 import com.mall.common.persistence.Page;
-import com.mall.common.service.ServiceException;
 import com.mall.common.utils.StringUtils;
 import com.mall.common.web.BaseController;
-import com.mall.modules.account.entity.AccountInfo;
-import com.mall.modules.account.service.AccountInfoService;
-import com.mall.modules.commission.entity.CommissionInfo;
-import com.mall.modules.commission.service.CommissionConfigService;
-import com.mall.modules.commission.service.CommissionInfoService;
-import com.mall.modules.coupon.entity.CouponConfig;
-import com.mall.modules.coupon.service.CouponConfigService;
-import com.mall.modules.coupon.service.CouponCustomerService;
 import com.mall.modules.member.entity.MemberInfo;
 import com.mall.modules.member.service.MemberInfoService;
 import com.mall.modules.member.service.MemberVerifyCodeService;
@@ -31,7 +22,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
 
 /**
  * 用户信息Controller
@@ -47,16 +37,6 @@ public class MemberInfoController extends BaseController {
 	@Autowired
 	private SystemService systemService;
 
-	//佣金详情service
-	@Autowired
-	private CommissionInfoService commissionInfoService;
-
-	@Autowired
-	private AccountInfoService accountInfoService;
-
-	//佣金配置service
-	@Autowired
-	private CommissionConfigService commissionConfigService;
 
 	@Autowired
 	private MemberVerifyCodeService memberVerifyCodeService;
@@ -78,72 +58,20 @@ public class MemberInfoController extends BaseController {
 	@RequiresPermissions("member:memberInfo:view")
 	@RequestMapping(value = {"list", ""})
 	public String list(MemberInfo memberInfo, HttpServletRequest request, HttpServletResponse response, Model model) {
-		User currUser = UserUtils.getUser();
-		String refereeId = currUser.getId();
-		memberInfo.setRefereeId(refereeId);
-		Page<MemberInfo> page = memberInfoService.findPage(new Page<MemberInfo>(request, response), memberInfo); 
+		Page<MemberInfo> page = memberInfoService.findPage(new Page<MemberInfo>(request, response), memberInfo);
 		model.addAttribute("page", page);
 		return "modules/member/memberInfoList";
 	}
 
 	@RequiresPermissions("member:memberInfo:view")
-	@RequestMapping(value = {"memberInfoCheckList"})
-	public String memberInfoCheckList(MemberInfo memberInfo, HttpServletRequest request, HttpServletResponse response, Model model) {
+	@RequestMapping(value = {"merchantMemberInfo"})
+	public String merchantMemberInfo(MemberInfo memberInfo, HttpServletRequest request, HttpServletResponse response, Model model) {
+		User currUser = UserUtils.getUser();
+		String refereeId = currUser.getId();
+		memberInfo.setRefereeId(refereeId);
 		Page<MemberInfo> page = memberInfoService.findPage(new Page<MemberInfo>(request, response), memberInfo);
 		model.addAttribute("page", page);
-		return "modules/member/memberInfoCheckList";
-	}
-
-	@RequiresPermissions("member:memberInfo:edit")
-	@RequestMapping(value = "checkPass")
-	public String checkPass(MemberInfo memberInfo, Model model, RedirectAttributes redirectAttributes) {
-
-		memberInfo.setStatus("1");
-		memberInfoService.memberCheck(memberInfo);
-		UserUtils.clearCache();
-		//  用户注册返佣金
-		//商家信息
-		memberInfo = memberInfoService.get(memberInfo);
-		//推荐人信息
-		User referee = UserUtils.get(memberInfo.getRefereeId());
-		//新增佣金记录
-		//卖家推荐人佣金
-		CommissionInfo commissionInfo = new CommissionInfo();
-		//1：推荐用户消费返佣 2：推荐商家销售返佣 3：推荐商家入驻返佣 4：推荐商家送出礼包返佣 5：商家送出礼包返佣
-		commissionInfo.setType("3");
-		commissionInfo.setUserId(referee.getId());
-		commissionInfo.setProduceUserId(memberInfo.getId());
-		commissionInfo.setOriginAmount(0.0);
-		commissionInfo.setAmount(commissionConfigService.getCommissionAmount("3",0.0));
-		commissionInfo.setUnionId("");
-		commissionInfoService.save(commissionInfo);
-
-
-		//新增账单流水记录
-		//卖家账单流水
-		AccountInfo merchantAccountInfo = new AccountInfo();
-		merchantAccountInfo.setUserId(referee.getId());
-		merchantAccountInfo.setType("1"); //收支类型 1：收入 2：支出
-		merchantAccountInfo.setWay("1");//收支方式（1：佣金收益 2：销售收益） 支出（3：提现 4：结算）
-		merchantAccountInfo.setAmount(commissionInfo.getAmount());
-		merchantAccountInfo.setUnionId(commissionInfo.getId());
-		merchantAccountInfo.setStatus("1");//状态 （1：已到账 2：未到账 3：未提现结算 4：已提现结算 ）
-		merchantAccountInfo.setToAccountDate(new Date());
-		accountInfoService.save(merchantAccountInfo);
-		addMessage(redirectAttributes, "审核成功");
-		return "redirect:"+Global.getAdminPath()+"/member/memberInfo/memberInfoCheckList/?repage";
-	}
-
-	@RequiresPermissions("member:memberInfo:edit")
-	@RequestMapping(value = "checkReject")
-	public String checkReject(MemberInfo memberInfo, Model model, RedirectAttributes redirectAttributes) {
-		memberInfo.setStatus("2");
-		memberInfoService.memberCheck(memberInfo);
-		User user = UserUtils.get(memberInfo.getId());
-		systemService.deleteUser(user);
-		UserUtils.clearCache();
-		addMessage(redirectAttributes, "审核成功");
-		return "redirect:"+Global.getAdminPath()+"/member/memberInfo/memberInfoCheckList/?repage";
+		return "modules/member/merchantMemberInfoList";
 	}
 
 	@RequiresPermissions("member:memberInfo:view")
@@ -151,6 +79,44 @@ public class MemberInfoController extends BaseController {
 	public String form(MemberInfo memberInfo, Model model) {
 		model.addAttribute("memberInfo", memberInfo);
 		return "modules/member/memberInfoForm";
+	}
+
+	@RequestMapping(value = "merchantData")
+	public String merchantData(MemberInfo memberInfo, Model model) {
+		model.addAttribute("memberInfo", memberInfo);
+		return "modules/member/merchantData";
+	}
+
+	@RequestMapping(value = "submitMerchantData")
+	public String submitMerchantData(MemberInfo memberInfo, Model model, RedirectAttributes redirectAttributes) {
+		if(StringUtils.isBlank(memberInfo.getCompanyName())) {
+			model.addAttribute("message", "公司名称不能为空");
+			return merchantData(memberInfo, model);
+		}
+		if(StringUtils.isBlank(memberInfo.getPublicAccount())) {
+			model.addAttribute("message", "对公账户不能为空");
+			return merchantData(memberInfo, model);
+		}
+		if(StringUtils.isBlank(memberInfo.getPublicAccountBank())) {
+			model.addAttribute("message", "对公账户开户行不能为空");
+			return merchantData(memberInfo, model);
+		}
+		if(StringUtils.isBlank(memberInfo.getPublicAccountName())) {
+			model.addAttribute("message", "对公账户名称不能为空");
+			return merchantData(memberInfo, model);
+		}
+		if(StringUtils.isBlank(memberInfo.getProductLicense())) {
+			model.addAttribute("message", "产品许可证不能为空");
+			return merchantData(memberInfo, model);
+		}
+		if(StringUtils.isBlank(memberInfo.getBusinessLicenseImage())) {
+			model.addAttribute("message", "营业执照不能为空");
+			return merchantData(memberInfo, model);
+		}
+		memberInfoService.submitMerchantData(memberInfo);
+		addMessage(redirectAttributes, "提交审核成功");
+		memberInfo = this.get(memberInfo.getId());
+		return merchantData(memberInfo, model);
 	}
 
 	@RequiresPermissions("member:memberInfo:edit")
@@ -222,7 +188,7 @@ public class MemberInfoController extends BaseController {
 		memberInfo.setIsNewRecord(true);
 		memberInfoService.save(memberInfo);
 		addMessage(redirectAttributes, "保存会员信息成功");
-		return "redirect:"+Global.getAdminPath()+"/member/memberInfo/?repage";
+		return "redirect:"+Global.getAdminPath()+"/member/memberInfo/merchantMemberInfo?repage";
 	}
 
 }

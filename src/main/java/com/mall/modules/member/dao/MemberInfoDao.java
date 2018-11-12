@@ -35,4 +35,11 @@ public interface MemberInfoDao extends CrudDao<MemberInfo> {
      */
     void savePayPassword(MemberInfo memberInfo);
 
+    /**
+     * 修改商户信息
+     *
+     * @param memberInfo 会员实体
+     */
+    void updateMerchantData(MemberInfo memberInfo);
+
 }
