@@ -112,7 +112,9 @@
 		mi.referee_id as "refereeId",
 		mi.nickname as "nickname",
 		mi.register_way as "registerWay",
-		mi.status AS "status"
+		mi.status AS "status",
+		mi.sex AS "sex",
+		mi.pay_password AS "payPassword"
     </sql>
     
     <sql id="userJoins">

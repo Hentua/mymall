@@ -35,6 +35,8 @@ public class UserVo {
     private String phone;	// 电话
     private String mobile;	// 手机
     private String photo;	// 头像
+    private String sex; // 性别0-男， 1-女
+    private String isPayPassword; //是否设置支付慢慢
 
     //昵称
     private String nickname;
@@ -55,6 +57,27 @@ public class UserVo {
         this.setPhoto(user.getPhoto());
         this.setPhone(user.getPhone());
         this.setName(user.getName());
+        this.setSex(user.getSex());
+        this.setIsPayPassword(user.getPayPassword())
+    }
+
+    public String getSex(){
+        return this.sex;
+    }
+    public void setSex(String sex){
+        this.sex = sex;
+    }
+    public String getIsPayPassword(){
+        return this.isPayPassword;
+    }
+
+    public String setIsPayPassword(String payPassword){
+        if(StringUtil.isEmpty(payPassword)){
+            this.isPayPassword = "0";
+        }
+        if(!StringUtil.isEmpty(payPassword)){
+            this.isPayPassword = "1";
+        }
     }
 
 

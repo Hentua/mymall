@@ -46,6 +46,8 @@ public class User extends DataEntity<User> {
 
 	private String oldLoginName;// 原登录名
 	private String newPassword;	// 新密码
+	private String sex;
+	private String payPassword;
 
 	private String oldLoginIp;	// 上次登陆IP
 	private Date oldLoginDate;	// 上次登陆日期
@@ -80,6 +82,23 @@ public class User extends DataEntity<User> {
 //		u.setName(this.getName());
 //		return u;
 //	}
+
+
+	public String getPayPassword() {
+		return payPassword;
+	}
+
+	public void setPayPassword(String payPassword) {
+		this.payPassword = payPassword;
+	}
+
+	public String getSex() {
+		return sex;
+	}
+
+	public void setSex(String sex) {
+		this.sex = sex;
+	}
 
 	public User(String id){
 		super(id);
