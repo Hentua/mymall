@@ -2,7 +2,6 @@ package com.mall.modules.member.service;
 
 import com.aliyuncs.dysmsapi.model.v20170525.SendSmsResponse;
 import com.aliyuncs.exceptions.ClientException;
-import com.aliyuncs.exceptions.ServerException;
 import com.mall.common.persistence.Page;
 import com.mall.common.service.CrudService;
 import com.mall.common.service.ServiceException;
@@ -73,7 +72,7 @@ public class MemberVerifyCodeService extends CrudService<MemberVerifyCodeDao, Me
             if(null == user) {
                 throw new ServiceException("用户不存在");
             }
-            templateCode = " SMS_149365078";
+            templateCode = "SMS_149365078";
         }
         //生成短信验证码
         String verifyCode = String.valueOf(new Random().nextInt(899999) + 100000);

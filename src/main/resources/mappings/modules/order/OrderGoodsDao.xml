@@ -21,7 +21,8 @@
 		a.subtotal AS "subtotal",
 		a.goods_standard AS "goodsStandard",
 		a.settlements_amount AS "settlementsAmount",
-		a.goods_recommend_id as "goodsRecommendId"
+		a.goods_recommend_id as "goodsRecommendId",
+		a.goods_standard_name as "goodsStandardName"
 	</sql>
 
 	<sql id="orderGoodsJoins">
@@ -93,7 +94,8 @@
 			subtotal,
 			goods_standard,
 			settlements_amount,
-			goods_recommend_id
+			goods_recommend_id,
+			goods_standard_name
 		) VALUES (
 			#{id},
 			#{goodsId},
@@ -113,7 +115,8 @@
 			#{subtotal},
 			#{goodsStandard},
 			#{settlementsAmount},
-			#{goodsRecommendId}
+			#{goodsRecommendId},
+			#{goodsStandardName}
 		)
 	</insert>
 

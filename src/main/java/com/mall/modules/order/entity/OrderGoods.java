@@ -30,7 +30,8 @@ public class OrderGoods extends DataEntity<OrderGoods> {
 	private String goodsStandard; //商品规格
 	private Double settlementsAmount;//结算金额
 	private String goodsRecommendId; //商品推荐码
-	
+	private String goodsStandardName; //商品规格名称
+
 	public OrderGoods() {
 		super();
 	}
@@ -39,7 +40,15 @@ public class OrderGoods extends DataEntity<OrderGoods> {
 		this.orderNo = orderNo;
 	}
 
-	public String getGoodsRecommendId() {
+    public String getGoodsStandardName() {
+        return goodsStandardName;
+    }
+
+    public void setGoodsStandardName(String goodsStandardName) {
+        this.goodsStandardName = goodsStandardName;
+    }
+
+    public String getGoodsRecommendId() {
 		return goodsRecommendId;
 	}
 

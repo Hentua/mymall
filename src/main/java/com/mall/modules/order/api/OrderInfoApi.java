@@ -338,6 +338,7 @@ public class OrderInfoApi extends BaseController {
                 orderGoods.setId("");
                 orderGoods.setGoodsPrice(price);
                 orderGoods.setGoodsStandard(goodsStandard.getId());
+                orderGoods.setGoodsStandardName(goodsStandard.getName());
                 orderGoods.setSettlementsAmount(settlementsAmount);
                 orderGoods.setGoodsRecommendId(goodsRecommendId);
                 orderGoods.setDiscountAmount(goodsDiscountAmount);

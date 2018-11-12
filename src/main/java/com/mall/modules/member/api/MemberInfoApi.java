@@ -23,7 +23,6 @@ import com.mall.modules.sys.entity.User;
 import com.mall.modules.sys.entity.UserVo;
 import com.mall.modules.sys.service.SystemService;
 import com.mall.modules.sys.utils.UserUtils;
-import com.mall.modules.sys.web.LoginController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -216,7 +215,8 @@ public class MemberInfoApi extends BaseController {
 
     /**
      * 判断用户是否创建支付密码 返回状态码200则为创建 返回状态码为601则为未创建
-     * @param request 请求体
+     *
+     * @param request  请求体
      * @param response 响应体
      */
     @RequestMapping(value = "whetherPayPassword", method = RequestMethod.POST)
@@ -225,12 +225,12 @@ public class MemberInfoApi extends BaseController {
         String id = currUser.getId();
         try {
             String payPassword = memberInfoService.getPayPassword(id);
-            if(StringUtils.isBlank(payPassword)) {
+            if (StringUtils.isBlank(payPassword)) {
                 renderString(response, ResultGenerator.genFailResult("用户未创建支付密码").setStatus(ResultStatus.NULL_PAY_PASSWORD));
-            }else {
+            } else {
                 renderString(response, ResultGenerator.genSuccessResult());
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
         }
     }
@@ -308,7 +308,7 @@ public class MemberInfoApi extends BaseController {
         String verifyCode = request.getParameter("verifyCode");
         User currUser = UserUtils.getUser();
         try {
-            if(!"0".equals(currUser.getUserType()) && !"1".equals(currUser.getUserType())) {
+            if (!"0".equals(currUser.getUserType()) && !"1".equals(currUser.getUserType())) {
                 throw new ServiceException("不支持该用户类型");
             }
             if (StringUtils.isBlank(mobile)) {
@@ -319,8 +319,12 @@ public class MemberInfoApi extends BaseController {
                 }
             }
             boolean validResult = memberVerifyCodeService.validVerifyCode(mobile, verifyCode, "2");
-            if(!validResult) {
+            if (!validResult) {
                 throw new ServiceException("验证码错误");
+            }
+            User user = UserUtils.getByLoginName(mobile);
+            if (null != user) {
+                throw new ServiceException("该用户已存在");
             }
             currUser.setMobile(mobile);
             currUser.setLoginName(mobile);
@@ -329,7 +333,7 @@ public class MemberInfoApi extends BaseController {
             String token = UserUtils.getTokenStr(request);
             EhCacheUtils.remove(token);
             renderString(response, ResultGenerator.genSuccessResult());
-        }catch (Exception e) {
+        } catch (Exception e) {
             renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
         }
     }
