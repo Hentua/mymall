@@ -20,7 +20,7 @@
 	<form:form id="searchForm" modelAttribute="goodsInfo" action="${ctx}/goods/goodsInfo/selectList" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
-		<input id="goodsType" name="goodsType" type="hidden" value="${goodsInfo.goodsType}"/>
+		<%--<input id="goodsType" name="goodsType" type="hidden" value="${goodsInfo.goodsType}"/>--%>
 		<ul class="ul-form">
 			<li><label>商品分类：</label>
 				<sys:treeselect notAllowSelectParent="true" id="goodsCategoryId" name="goodsCategoryId" value="${goodsCategory.parentCategoryId}" labelName="parentCategoryName" labelValue="${goodsCategory.parentCategoryName}"

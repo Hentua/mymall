@@ -41,7 +41,7 @@ public class GoodsInfoController extends BaseController {
 	private GoodsImageService goodsImageService;
 	@Autowired
 	private GoodsStandardService goodsStandardService;
-	
+
 	@ModelAttribute
 	public GoodsInfo get(@RequestParam(required=false) String id) {
 		GoodsInfo entity = null;
@@ -53,13 +53,13 @@ public class GoodsInfoController extends BaseController {
 		}
 		return entity;
 	}
-	
+
 	@RequiresPermissions("goods:goodsInfo:view")
 	@RequestMapping(value = {"list", ""})
 	public String list(GoodsInfo goodsInfo, HttpServletRequest request, HttpServletResponse response, Model model) {
 		goodsInfo.setMerchantId(UserUtils.getUser().getId());
 		goodsInfo.setGoodsType(1);
-		Page<GoodsInfo> page = goodsInfoService.findPage(new Page<GoodsInfo>(request, response), goodsInfo); 
+		Page<GoodsInfo> page = goodsInfoService.findPage(new Page<GoodsInfo>(request, response), goodsInfo);
 		model.addAttribute("page", page);
 		return "modules/goods/goodsInfoList";
 	}
