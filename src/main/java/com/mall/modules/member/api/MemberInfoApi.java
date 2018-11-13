@@ -130,7 +130,7 @@ public class MemberInfoApi extends BaseController {
             user.setUserType("0");
             // 刚刚注册普通会员不赋予角色
             List<Role> roleList = Lists.newArrayList();
-//            roleList.add(new Role("1000"));
+            roleList.add(new Role("2000"));
             user.setRoleList(roleList);
             // 保存用户信息
             systemService.saveUser(user);
