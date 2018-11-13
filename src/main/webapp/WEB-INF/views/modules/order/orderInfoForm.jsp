@@ -83,9 +83,15 @@
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">应付总金额：</label>
+			<label class="control-label">订单金额：</label>
 			<div class="controls">
 					${orderInfo.orderAmountTotal}
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">应收货款：</label>
+			<div class="controls">
+					${orderInfo.settlementsAmount}
 			</div>
 		</div>
 		<div class="control-group">

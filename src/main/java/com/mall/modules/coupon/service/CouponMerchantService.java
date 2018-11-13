@@ -1,6 +1,7 @@
 package com.mall.modules.coupon.service;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -80,7 +81,6 @@ public class CouponMerchantService extends CrudService<CouponMerchantDao, Coupon
 	}
 
 	public CouponMerchant genCouponMerchant(CouponConfig couponConfig, String merchantCode) throws Exception {
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date now = new Date();
 		CouponMerchant couponMerchant = new CouponMerchant();
 		couponMerchant.setConfigId(couponConfig.getId());
@@ -89,9 +89,11 @@ public class CouponMerchantService extends CrudService<CouponMerchantDao, Coupon
 		Integer transferExpiryTime = couponConfig.getTransferExpiryTime();
 		couponMerchant.setStartDate(DateUtils.getStartOfDay(now));
 		if(transferExpiryTime == 0) {
-			couponMerchant.setEndDate(DateUtils.getEndOfDay(simpleDateFormat.parse("9999-12-31 00:00:00")));
+			couponMerchant.setEndDate(DateUtils.parseDate(DateUtils.formatDate(DateUtils.getEndOfDay(DateUtils.parseDate("9999-12-31")), "yyyy-MM-dd HH:mm:ss")));
 		}else {
-			couponMerchant.setEndDate(DateUtils.getEndOfDay(new Date(now.getTime() + Long.valueOf(transferExpiryTime) * 24 * 60 * 60 * 1000)));
+			Calendar calendar = Calendar.getInstance();
+			calendar.add(Calendar.DATE, transferExpiryTime);
+			couponMerchant.setEndDate(DateUtils.parseDate(DateUtils.formatDate(DateUtils.getEndOfDay(calendar.getTime()), "yyyy-MM-dd HH:mm:ss")));
 		}
 		couponMerchant.setLimitAmount(couponConfig.getLimitAmount());
 		couponMerchant.setMerchantCode(merchantCode);

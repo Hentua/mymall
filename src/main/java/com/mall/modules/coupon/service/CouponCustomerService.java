@@ -1,6 +1,7 @@
 package com.mall.modules.coupon.service;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -69,7 +70,6 @@ public class CouponCustomerService extends CrudService<CouponCustomerDao, Coupon
 	}
 
 	public CouponCustomer genCouponCustomerByGift(CouponConfig couponConfig, String customerCode) throws Exception {
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date now = new Date();
 		CouponCustomer couponCustomer = new CouponCustomer();
 		couponCustomer.setConfigId(couponConfig.getId());
@@ -78,9 +78,11 @@ public class CouponCustomerService extends CrudService<CouponCustomerDao, Coupon
 		Integer expiryTime = couponConfig.getExpiryTime();
 		couponCustomer.setStartDate(DateUtils.getStartOfDay(now));
 		if(expiryTime == 0) {
-			couponCustomer.setEndDate(DateUtils.getEndOfDay(simpleDateFormat.parse("9999-12-31 00:00:00")));
+			couponCustomer.setEndDate(DateUtils.parseDate(DateUtils.formatDate(DateUtils.getEndOfDay(DateUtils.parseDate("9999-12-31")), "yyyy-MM-dd HH:mm:ss")));
 		}else {
-			couponCustomer.setEndDate(DateUtils.getEndOfDay(new Date(now.getTime() + Long.valueOf(expiryTime) * 24 * 60 * 60 * 1000)));
+			Calendar calendar = Calendar.getInstance();
+			calendar.add(Calendar.DATE, expiryTime);
+			couponCustomer.setEndDate(DateUtils.parseDate(DateUtils.formatDate(DateUtils.getEndOfDay(calendar.getTime()), "yyyy-MM-dd HH:mm:ss")));
 		}
 		couponCustomer.setLimitAmount(couponConfig.getLimitAmount());
 		couponCustomer.setCustomerCode(customerCode);
@@ -91,7 +93,6 @@ public class CouponCustomerService extends CrudService<CouponCustomerDao, Coupon
 	}
 
 	public void saveCouponCustomerByMerchant(CouponMerchant couponMerchant) throws Exception {
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date now = new Date();
 		User currUser = UserUtils.getUser();
 		String couponConfigId = couponMerchant.getConfigId();
@@ -103,9 +104,11 @@ public class CouponCustomerService extends CrudService<CouponCustomerDao, Coupon
 		couponCustomer.setCouponName(couponMerchant.getCouponName());
 		couponCustomer.setStartDate(now);
 		if(expiryTime == 0) {
-			couponCustomer.setEndDate(DateUtils.getEndOfDay(simpleDateFormat.parse("9999-12-31 00:00:00")));
+			couponCustomer.setEndDate(DateUtils.parseDate(DateUtils.formatDate(DateUtils.getEndOfDay(DateUtils.parseDate("9999-12-31")), "yyyy-MM-dd HH:mm:ss")));
 		}else {
-			couponCustomer.setEndDate(DateUtils.getEndOfDay(new Date(now.getTime() + Long.valueOf(expiryTime) * 24 * 60 * 60 * 1000)));
+			Calendar calendar = Calendar.getInstance();
+			calendar.add(Calendar.DATE, expiryTime);
+			couponCustomer.setEndDate(DateUtils.parseDate(DateUtils.formatDate(DateUtils.getEndOfDay(calendar.getTime()), "yyyy-MM-dd HH:mm:ss")));
 		}
 		couponCustomer.setLimitAmount(couponMerchant.getLimitAmount());
 		couponCustomer.setCustomerCode(couponMerchant.getTransferCustomerCode());

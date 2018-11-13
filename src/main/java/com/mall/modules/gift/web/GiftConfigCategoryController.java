@@ -119,7 +119,7 @@ public class GiftConfigCategoryController extends BaseController {
 		// 打款到财务
 		else {
 			model.addAttribute("message", "提交成功，打款到公司财务账户，并备注订单号："+giftPurchaseLog.getPaymentNo()+"，审核后礼包将会到库");
-			return this.buyList(new GiftConfigCategory(), request, response, model);
+			return buyList(new GiftConfigCategory(), request, response, model);
 		}
 	}
 
