@@ -89,11 +89,11 @@ public class CouponMerchantService extends CrudService<CouponMerchantDao, Coupon
 		Integer transferExpiryTime = couponConfig.getTransferExpiryTime();
 		couponMerchant.setStartDate(DateUtils.getStartOfDay(now));
 		if(transferExpiryTime == 0) {
-			couponMerchant.setEndDate(DateUtils.parseDate(DateUtils.formatDate(DateUtils.getEndOfDay(DateUtils.parseDate("9999-12-31")), "yyyy-MM-dd HH:mm:ss")));
+			couponMerchant.setEndDate(DateUtils.getEndOfDay(DateUtils.parseDate("9999-12-31")));
 		}else {
 			Calendar calendar = Calendar.getInstance();
 			calendar.add(Calendar.DATE, transferExpiryTime);
-			couponMerchant.setEndDate(DateUtils.parseDate(DateUtils.formatDate(DateUtils.getEndOfDay(calendar.getTime()), "yyyy-MM-dd HH:mm:ss")));
+			couponMerchant.setEndDate(DateUtils.getEndOfDay(calendar.getTime()));
 		}
 		couponMerchant.setLimitAmount(couponConfig.getLimitAmount());
 		couponMerchant.setMerchantCode(merchantCode);

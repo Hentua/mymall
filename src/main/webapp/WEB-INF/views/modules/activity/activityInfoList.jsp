@@ -101,9 +101,14 @@
             </td>
             <shiro:hasPermission name="activity:activityInfo:edit">
                 <td>
-                    <a href="${ctx}/activity/activityInfo/form?id=${activityInfo.id}">修改</a>
-                    <a href="${ctx}/activity/activityInfo/delete?id=${activityInfo.id}"
-                       onclick="return confirmx('确认要删除该活动配置吗？', this.href)">删除</a>
+                    <a href="${ctx}/activity/activityInfo/form?id=${activityInfo.id}">详情</a>
+                    <c:if test="${activityInfo.status != '0'}">
+                        <a href="${ctx}/activity/activityInfo/form?id=${activityInfo.id}" onclick="return confirmx('确认要下线该活动吗？', this.href)">下线</a>
+                    </c:if>
+                    <c:if test="${activityInfo.status == '0'}">
+                        <a href="${ctx}/activity/activityInfo/delete?id=${activityInfo.id}"
+                           onclick="return confirmx('确认要删除该活动配置吗？', this.href)">删除</a>
+                    </c:if>
                 </td>
             </shiro:hasPermission>
         </tr>

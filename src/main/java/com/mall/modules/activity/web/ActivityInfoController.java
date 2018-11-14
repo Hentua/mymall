@@ -3,6 +3,7 @@ package com.mall.modules.activity.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.mall.common.utils.DateUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -60,8 +61,14 @@ public class ActivityInfoController extends BaseController {
 
 	@RequiresPermissions("activity:activityInfo:edit")
 	@RequestMapping(value = "save")
-	public String save(ActivityInfo activityInfo, Model model, RedirectAttributes redirectAttributes) {
+	public String save(ActivityInfo activityInfo, Model model, RedirectAttributes redirectAttributes) throws Exception {
 		if (!beanValidator(model, activityInfo)){
+			return form(activityInfo, model);
+		}
+		activityInfo.setEndDate(DateUtils.getEndOfDay(activityInfo.getEndDate()));
+		activityInfo.setStartDate(DateUtils.getStartOfDay(activityInfo.getStartDate()));
+		if(activityInfo.getEndDate().getTime() <= activityInfo.getStartDate().getTime()) {
+			model.addAttribute("message", "结束时间不能小于开始时间");
 			return form(activityInfo, model);
 		}
 		activityInfoService.save(activityInfo);
@@ -72,6 +79,11 @@ public class ActivityInfoController extends BaseController {
 	@RequiresPermissions("activity:activityInfo:edit")
 	@RequestMapping(value = "delete")
 	public String delete(ActivityInfo activityInfo, RedirectAttributes redirectAttributes) {
+		activityInfo = this.get(activityInfo.getId());
+		if(!"0".equals(activityInfo.getStatus())) {
+			addMessage(redirectAttributes, "删除活动配置失败，请先下线活动后删除");
+			return "redirect:"+Global.getAdminPath()+"/activity/activityInfo/?repage";
+		}
 		activityInfoService.delete(activityInfo);
 		addMessage(redirectAttributes, "删除活动配置成功");
 		return "redirect:"+Global.getAdminPath()+"/activity/activityInfo/?repage";

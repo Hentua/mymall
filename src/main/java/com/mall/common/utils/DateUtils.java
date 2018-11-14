@@ -185,10 +185,10 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
      * @param date
      * @return
      */
-    public static Date getEndOfDay(Date date) {
+    public static Date getEndOfDay(Date date) throws Exception {
         LocalDateTime localDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(date.getTime()), ZoneId.systemDefault());
         LocalDateTime endOfDay = localDateTime.with(LocalTime.MAX);
-        return Date.from(endOfDay.atZone(ZoneId.systemDefault()).toInstant());
+        return parseDate(formatDate(Date.from(endOfDay.atZone(ZoneId.systemDefault()).toInstant()), "yyyy-MM-dd HH:mm:ss"));
     }
 
     /** 获得某天最小时间 2017-10-15 00:00:00
@@ -211,8 +211,8 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
 //		System.out.println(getDate("yyyy年MM月dd日 E"));
 //		long time = new Date().getTime()-parseDate("2012-11-19").getTime();
 //		System.out.println(time/(24*60*60*1000));
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DATE, 30);
-        System.out.println(formatDate(getEndOfDay(calendar.getTime()), "yyyy-MM-dd HH:mm:ss"));
+//        Calendar calendar = Calendar.getInstance();
+//        calendar.add(Calendar.DATE, 30);
+//        System.out.println(formatDate(getEndOfDay(calendar.getTime()), "yyyy-MM-dd HH:mm:ss"));
     }
 }

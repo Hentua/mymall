@@ -36,59 +36,110 @@
 		<div class="control-group">
 			<label class="control-label">活动名称：</label>
 			<div class="controls">
-				<form:input path="activityName" htmlEscape="false" maxlength="20" class="input-xlarge required"/>
-				<span class="help-inline"><font color="red">*</font> </span>
+				<c:choose>
+					<c:when test="${empty activityInfo.id}">
+						<form:input path="activityName" htmlEscape="false" maxlength="20" class="input-xlarge required"/>
+						<span class="help-inline"><font color="red">*</font> </span>
+					</c:when>
+					<c:otherwise>
+						${activityInfo.activityName}
+					</c:otherwise>
+				</c:choose>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">活动开始时间：</label>
 			<div class="controls">
-				<input name="startDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate required"
-					value="<fmt:formatDate value="${activityInfo.startDate}" pattern="yyyy-MM-dd"/>"
-					onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});"/>
-				<span class="help-inline"><font color="red">*</font> </span>
+				<c:choose>
+					<c:when test="${empty activityInfo.id}">
+						<input name="startDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate required"
+							   value="<fmt:formatDate value="${activityInfo.startDate}" pattern="yyyy-MM-dd"/>"
+							   onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});"/>
+						<span class="help-inline"><font color="red">*</font> </span>
+					</c:when>
+					<c:otherwise>
+						<fmt:formatDate value="${activityInfo.startDate}" pattern="yyyy-MM-dd"/>
+					</c:otherwise>
+				</c:choose>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">活动结束时间：</label>
 			<div class="controls">
-				<input name="endDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate required"
-					value="<fmt:formatDate value="${activityInfo.endDate}" pattern="yyyy-MM-dd"/>"
-					onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});"/>
-				<span class="help-inline"><font color="red">*</font> </span>
+				<c:choose>
+					<c:when test="${empty activityInfo.id}">
+						<input name="endDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate required"
+							   value="<fmt:formatDate value="${activityInfo.endDate}" pattern="yyyy-MM-dd"/>"
+							   onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});"/>
+						<span class="help-inline"><font color="red">*</font> </span>
+					</c:when>
+					<c:otherwise>
+						<fmt:formatDate value="${activityInfo.endDate}" pattern="yyyy-MM-dd"/>
+					</c:otherwise>
+				</c:choose>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">活动状态：</label>
 			<div class="controls">
-				<form:radiobutton path="status" value="0" label="下线" checked="true"/>
-				<form:radiobutton path="status" value="2" label="预上线 到活动开始时间时自动上线"/>
-				<span class="help-inline"><font color="red">*</font> </span>
+				<c:choose>
+					<c:when test="${empty activityInfo.id}">
+						<form:radiobutton path="status" value="0" label="下线" checked="true"/>
+						<form:radiobutton path="status" value="2" label="预上线 到活动开始时间时自动上线"/>
+						<span class="help-inline"><font color="red">*</font> </span>
+					</c:when>
+					<c:otherwise>
+						<c:choose>
+							<c:when test="${activityInfo.status == '0'}">下线</c:when>
+							<c:when test="${activityInfo.status == '1'}">上线</c:when>
+							<c:when test="${activityInfo.status == '2'}">预上线</c:when>
+						</c:choose>
+					</c:otherwise>
+				</c:choose>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">是否可使用优惠券：</label>
 			<div class="controls">
-				<form:radiobutton path="couponFlag" value="1" label="是" checked="true"/>
-				<form:radiobutton path="couponFlag" value="0" label="否" checked="true"/>
-				<span class="help-inline"><font color="red">*</font> </span>
+				<c:choose>
+					<c:when test="${empty activityInfo.id}">
+						<form:radiobutton path="couponFlag" value="1" label="是" checked="true"/>
+						<form:radiobutton path="couponFlag" value="0" label="否" checked="true"/>
+						<span class="help-inline"><font color="red">*</font> </span>
+					</c:when>
+					<c:otherwise>
+						<c:choose>
+							<c:when test="${activityInfo.couponFlag == '0'}">否</c:when>
+							<c:when test="${activityInfo.couponFlag == '1'}">是</c:when>
+						</c:choose>
+					</c:otherwise>
+				</c:choose>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">折扣比例：</label>
 			<div class="controls">
-				<form:input path="discountRate" htmlEscape="false" class="input-xlarge required number"/>
-				<span class="help-inline"><font color="red">*</font> </span>
+				<c:choose>
+					<c:when test="${empty activityInfo.id}">
+						<form:input path="discountRate" htmlEscape="false" class="input-xlarge required number"/>
+						<span class="help-inline"><font color="red">*</font> </span>
+					</c:when>
+					<c:otherwise>
+						${activityInfo.discountRate}
+					</c:otherwise>
+				</c:choose>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">备注：</label>
 			<div class="controls">
-				<form:textarea path="remarks" htmlEscape="false" rows="4" maxlength="500" class="input-xxlarge "/>
+				<form:textarea path="remarks" htmlEscape="false" rows="4" maxlength="500" class="input-xxlarge " readonly="${empty activityInfo.id}"/>
 			</div>
 		</div>
 		<div class="form-actions">
-			<shiro:hasPermission name="activity:activityInfo:edit"><input id="btnSubmit" class="btn btn-primary" type="submit" value="保 存"/>&nbsp;</shiro:hasPermission>
+			<c:if test="${empty activityInfo.id}">
+				<shiro:hasPermission name="activity:activityInfo:edit"><input id="btnSubmit" class="btn btn-primary" type="submit" value="保 存"/>&nbsp;</shiro:hasPermission>
+			</c:if>
 			<input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
 		</div>
 	</form:form>
