@@ -133,7 +133,7 @@
 		<div class="control-group">
 			<label class="control-label">备注：</label>
 			<div class="controls">
-				<form:textarea path="remarks" htmlEscape="false" rows="4" maxlength="500" class="input-xxlarge " readonly="${empty activityInfo.id}"/>
+				<form:textarea path="remarks" htmlEscape="false" rows="4" maxlength="500" class="input-xxlarge " readonly="${not empty activityInfo.id}"/>
 			</div>
 		</div>
 		<div class="form-actions">

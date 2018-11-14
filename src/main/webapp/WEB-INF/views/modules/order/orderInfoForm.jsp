@@ -77,6 +77,12 @@
 			</div>
 		</div>
 		<div class="control-group">
+			<label class="control-label">活动扣减金额：</label>
+			<div class="controls">
+					${orderInfo.activityDiscountAmount}
+			</div>
+		</div>
+		<div class="control-group">
 			<label class="control-label">运费：</label>
 			<div class="controls">
 					${orderInfo.logisticsFee}
@@ -162,7 +168,7 @@
 						<th>商品单位</th>
 						<th>商品图片</th>
 						<th>商品价格</th>
-						<th>折扣比例</th>
+						<th>优惠金额</th>
 						<th>折扣金额</th>
 						<th>小计金额</th>
 					</tr>
@@ -194,10 +200,10 @@
 								{{row.goodsPrice}}
 							</td>
 							<td>
-								{{row.discountRate}}
+								{{row.discountAmount}}
 							</td>
 							<td>
-								{{row.discountAmount}}
+								{{row.activityDiscountAmount}}
 							</td>
 							<td>
 								{{row.subtotal}}

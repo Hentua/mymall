@@ -13,6 +13,8 @@ import com.mall.common.utils.api.ApiExceptionHandleUtil;
 import com.mall.common.utils.api.ApiPageEntityHandleUtil;
 import com.mall.common.web.BaseController;
 import com.mall.modules.account.service.AccountService;
+import com.mall.modules.activity.entity.ActivityInfo;
+import com.mall.modules.activity.service.ActivityInfoService;
 import com.mall.modules.coupon.entity.CouponCustomer;
 import com.mall.modules.coupon.service.CouponCustomerService;
 import com.mall.modules.coupon.service.CouponMerchantService;
@@ -90,6 +92,8 @@ public class OrderInfoApi extends BaseController {
     private GoodsStandardService goodsStandardService;
     @Autowired
     private SystemService systemService;
+    @Autowired
+    private ActivityInfoService activityInfoService;
 
     /**
      * 提交订单 订单30分钟内需要支付 否则关闭订单
@@ -112,6 +116,8 @@ public class OrderInfoApi extends BaseController {
         String addressId = request.getParameter("addressId");
         String giftCustomerId = request.getParameter("giftCustomerId");
         String giftConfigId = request.getParameter("giftConfigId");
+        // 获取活动数据
+        ActivityInfo activityInfo = activityInfoService.enabledActivityInfo(new ActivityInfo());
         GiftCustomer giftCustomer;
         GiftConfig giftConfig;
         try {
@@ -222,6 +228,7 @@ public class OrderInfoApi extends BaseController {
                 String goodsStandardId = goodsInfoJson.getString("goodsStandard");
                 Double settlementsAmount = goodsInfoJson.getDouble("goodsSettlementsAmount");
                 double goodsDiscountAmount = 0.00;
+                double goodsActivityDiscountAmount = 0.00;
                 String goodsRecommendId = "";
                 if ("0".equals(orderType) && StringUtils.isBlank(shoppingCartId)) {
                     throw new ServiceException("不合法的订单信息");
@@ -253,6 +260,7 @@ public class OrderInfoApi extends BaseController {
                 double orderAmountTotal;
                 double settlementsTotal;
                 double orderDiscountAmountTotal;
+                double orderActivityDiscountAmount;
                 if (orderInfoMap.containsKey(merchantCode)) {
                     orderInfo = orderInfoMap.get(merchantCode);
                     orderGoodsAmountTotal = orderInfo.getGoodsAmountTotal();
@@ -261,6 +269,7 @@ public class OrderInfoApi extends BaseController {
                     orderAmountTotal = orderInfo.getOrderAmountTotal();
                     settlementsTotal = orderInfo.getSettlementsAmount();
                     orderDiscountAmountTotal = orderInfo.getDiscountAmountTotal();
+                    orderActivityDiscountAmount = orderInfo.getActivityDiscountAmount();
                 } else {
                     orderNo = String.valueOf(idWorker.getId());
                     orderInfo = new OrderInfo();
@@ -276,6 +285,7 @@ public class OrderInfoApi extends BaseController {
                     orderAmountTotal = 0.00;
                     settlementsTotal = 0.00;
                     orderDiscountAmountTotal = 0.00;
+                    orderActivityDiscountAmount = 0.00;
 
                     // 初始化物流信息
                     OrderLogistics orderLogistics = orderInfoService.genOrderLogistics(orderNo, merchantCode, memberDeliveryAddress);
@@ -284,6 +294,11 @@ public class OrderInfoApi extends BaseController {
                     // 生成运费信息
                     orderInfo.setLogisticsFee(orderLogistics.getLogisticsFee());
                     orderAmountTotal += orderLogistics.getLogisticsFee();
+
+                    //初始化活动信息
+                    if(null != activityInfo) {
+                        orderInfo.setActivityId(activityInfo.getId());
+                    }
                 }
                 orderGoodsCount += goodsCount;
                 //商品单价
@@ -292,12 +307,25 @@ public class OrderInfoApi extends BaseController {
                 double goodsSubAmountTotal = Double.valueOf(df.format(price * goodsCount));
                 // 计算优惠金额
                 if ("0".equals(orderType)) {
+                    if(null != activityInfo) {
+                        if(null != couponCustomer && StringUtils.isNotBlank(couponType)) {
+                            if("1".equals(activityInfo.getCouponFlag())) {
+                                Double discountRate = activityInfo.getDiscountRate();
+                                goodsActivityDiscountAmount = Double.valueOf(df.format(goodsSubAmountTotal * discountRate));
+                                goodsSubAmountTotal -= goodsActivityDiscountAmount;
+                            }
+                        }else {
+                            Double discountRate = activityInfo.getDiscountRate();
+                            goodsActivityDiscountAmount = Double.valueOf(df.format(goodsSubAmountTotal * discountRate));
+                            goodsSubAmountTotal -= goodsActivityDiscountAmount;
+                        }
+                    }
                     settlementsAmount = goodsStandard.getSettlementsAmount();
                     if (null != couponCustomer && StringUtils.isNotBlank(couponType)) {
                         String discountType = goodsInfo.getDiscountType();
                         if ("0".equals(couponType)) {
                             if ("3".equals(discountType) || "1".equals(discountType)) {
-                                double discountAmount = Double.valueOf(df.format(goodsAmountTotal * 0.5));
+                                double discountAmount = Double.valueOf(df.format(goodsSubAmountTotal * 0.5));
                                 if (couponBalance > discountAmount) {
                                     goodsDiscountAmount = discountAmount;
                                 } else {
@@ -306,7 +334,7 @@ public class OrderInfoApi extends BaseController {
                             }
                         } else if ("1".equals(couponType)) {
                             if ("3".equals(discountType) || "2".equals(discountType)) {
-                                double discountAmount = Double.valueOf(df.format(goodsAmountTotal * 0.3));
+                                double discountAmount = Double.valueOf(df.format(goodsSubAmountTotal * 0.3));
                                 if (couponBalance > discountAmount) {
                                     goodsDiscountAmount = discountAmount;
                                 } else {
@@ -324,6 +352,7 @@ public class OrderInfoApi extends BaseController {
                 orderAmountTotal += goodsSubAmountTotal;
                 orderGoodsAmountTotal += goodsAmountTotal;
                 orderDiscountAmountTotal += goodsDiscountAmount;
+                orderActivityDiscountAmount += goodsActivityDiscountAmount;
 
                 orderInfo.setGoodsAmountTotal(orderGoodsAmountTotal);
                 orderInfo.setGoodsCount(orderGoodsCount);
@@ -331,6 +360,7 @@ public class OrderInfoApi extends BaseController {
                 orderInfo.setSettlementsAmount(settlementsTotal);
                 orderInfo.setDiscountAmountTotal(orderDiscountAmountTotal);
                 orderInfo.setCouponCode(couponCode);
+                orderInfo.setActivityDiscountAmount(orderActivityDiscountAmount);
 
                 OrderGoods orderGoods = orderInfoService.genOrderGoods(goodsInfo);
                 orderGoods.setOrderNo(orderInfo.getOrderNo());
@@ -343,6 +373,7 @@ public class OrderInfoApi extends BaseController {
                 orderGoods.setSettlementsAmount(settlementsAmount);
                 orderGoods.setGoodsRecommendId(goodsRecommendId);
                 orderGoods.setDiscountAmount(goodsDiscountAmount);
+                orderGoods.setActivityDiscountAmount(goodsActivityDiscountAmount);
                 orderGoodsList.add(orderGoods);
 
                 orderInfo.setOrderGoodsList(orderGoodsList);
@@ -362,6 +393,7 @@ public class OrderInfoApi extends BaseController {
                 double orderAmountTotal = orderInfo.getOrderAmountTotal();
                 double orderDiscountAmount = orderInfo.getDiscountAmountTotal();
                 discountAmountTotal += orderDiscountAmount;
+                discountAmountTotal += orderInfo.getActivityDiscountAmount();
                 // 修正错误金额
                 if (orderAmountTotal < 0) {
                     orderAmountTotal = 0;
@@ -408,6 +440,8 @@ public class OrderInfoApi extends BaseController {
         // 开始获取表单数据
         String couponCode = request.getParameter("couponCode");
         String goodsList = request.getParameter("goodsList");
+        // 获取活动数据
+        ActivityInfo activityInfo = activityInfoService.enabledActivityInfo(new ActivityInfo());
         try {
             // 组装合并订单支付信息
             OrderPaymentInfo orderPaymentInfo = OrderPaymentInfoService.genDefaultPaymentInfo(orderType);
@@ -449,27 +483,41 @@ public class OrderInfoApi extends BaseController {
                     }
                     // 计算优惠金额
                     double goodsDiscountAmount = 0.00;
+                    if(null != activityInfo) {
+                        if(null != couponCustomer && StringUtils.isNotBlank(couponType)) {
+                            if("1".equals(activityInfo.getCouponFlag())) {
+                                Double discountRate = activityInfo.getDiscountRate();
+                                goodsDiscountAmount += Double.valueOf(df.format(goodsAmountTotal * discountRate));
+                                goodsAmountTotal -= goodsDiscountAmount;
+                            }
+                        }else {
+                            Double discountRate = activityInfo.getDiscountRate();
+                            goodsDiscountAmount += Double.valueOf(df.format(goodsAmountTotal * discountRate));
+                            goodsAmountTotal -= goodsDiscountAmount;
+                        }
+                    }
+                    double couponDiscountAmount = 0.00;
                     if (null != couponCustomer && StringUtils.isNotBlank(couponType)) {
                         String discountType = goodsInfo.getDiscountType();
                         if ("0".equals(couponType)) {
                             if ("3".equals(discountType) || "1".equals(discountType)) {
-                                goodsDiscountAmount = Double.valueOf(df.format(goodsAmountTotal * 0.5));
-                                if (couponBalance <= goodsDiscountAmount) {
-                                    goodsDiscountAmount = couponBalance;
+                                couponDiscountAmount = Double.valueOf(df.format(goodsAmountTotal * 0.5));
+                                if (couponBalance <= couponDiscountAmount) {
+                                    couponDiscountAmount = couponBalance;
                                 }
                             }
                         } else if ("1".equals(couponType)) {
                             if ("3".equals(discountType) || "2".equals(discountType)) {
-                                goodsDiscountAmount = Double.valueOf(df.format(goodsAmountTotal * 0.3));
-                                if (couponBalance <= goodsDiscountAmount) {
-                                    goodsDiscountAmount = couponBalance;
+                                couponDiscountAmount = Double.valueOf(df.format(goodsAmountTotal * 0.3));
+                                if (couponBalance <= couponDiscountAmount) {
+                                    couponDiscountAmount = couponBalance;
                                 }
                             }
                         }
-                        couponBalance = couponBalance - goodsDiscountAmount;
+                        couponBalance = couponBalance - couponDiscountAmount;
                     }
-                    goodsAmountTotal -= goodsDiscountAmount;
-                    discountAmount += goodsDiscountAmount;
+                    goodsAmountTotal -= couponDiscountAmount;
+                    discountAmount += couponDiscountAmount;
                     amountTotal += goodsAmountTotal;
                 }
                 orderPaymentInfo.setAmountTotal(amountTotal);

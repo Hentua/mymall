@@ -28,6 +28,19 @@
 		<include refid="activityInfoJoins"/>
 		WHERE a.id = #{id}
 	</select>
+
+	<select id="enabledActivityInfo" resultType="ActivityInfo">
+		select <include refid="activityInfoColumns"/>
+		from activity_info a
+		<include refid="activityInfoJoins"/>
+		where now() between a.start_date and a.end_date and a.status != '0' and a.del_flag=#{DEL_FLAG_NORMAL}
+	</select>
+
+	<select id="verifyActivityInfo" resultType="int">
+		select count(0)
+		from activity_info a
+		where (not (a.end_date &lt;= #{startDate} or a.start_date &gt;= #{endDate})) and a.del_flag=#{DEL_FLAG_NORMAL}
+	</select>
 	
 	<select id="findList" resultType="ActivityInfo">
 		SELECT 

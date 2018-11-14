@@ -62,6 +62,7 @@
 			<th>商品总数量</th>
 			<th>商品总金额</th>
 			<th>优惠金额</th>
+			<th>活动扣减金额</th>
 			<th>运费</th>
 			<th>订单金额</th>
 			<th>应收货款</th>
@@ -105,6 +106,9 @@
 				</td>
 				<td>
 						${orderInfo.discountAmountTotal}
+				</td>
+				<td>
+						${orderInfo.activityDiscountAmount}
 				</td>
 				<td>
 						${orderInfo.logisticsFee}

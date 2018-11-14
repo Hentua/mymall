@@ -31,6 +31,7 @@ public class OrderGoods extends DataEntity<OrderGoods> {
 	private Double settlementsAmount;//结算金额
 	private String goodsRecommendId; //商品推荐码
 	private String goodsStandardName; //商品规格名称
+	private Double activityDiscountAmount; //活动减免
 
 	public OrderGoods() {
 		super();
@@ -40,7 +41,15 @@ public class OrderGoods extends DataEntity<OrderGoods> {
 		this.orderNo = orderNo;
 	}
 
-    public String getGoodsStandardName() {
+	public Double getActivityDiscountAmount() {
+		return activityDiscountAmount;
+	}
+
+	public void setActivityDiscountAmount(Double activityDiscountAmount) {
+		this.activityDiscountAmount = activityDiscountAmount;
+	}
+
+	public String getGoodsStandardName() {
         return goodsStandardName;
     }
 

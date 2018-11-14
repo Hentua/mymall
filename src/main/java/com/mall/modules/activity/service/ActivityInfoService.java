@@ -2,6 +2,7 @@ package com.mall.modules.activity.service;
 
 import java.util.List;
 
+import com.mall.modules.act.entity.Act;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,6 +40,14 @@ public class ActivityInfoService extends CrudService<ActivityInfoDao, ActivityIn
 	@Transactional(readOnly = false)
 	public void delete(ActivityInfo activityInfo) {
 		super.delete(activityInfo);
+	}
+
+	public int verifyActivityInfo(ActivityInfo activityInfo) {
+		return dao.verifyActivityInfo(activityInfo);
+	}
+
+	public ActivityInfo enabledActivityInfo(ActivityInfo activityInfo) {
+		return dao.enabledActivityInfo(activityInfo);
 	}
 	
 }

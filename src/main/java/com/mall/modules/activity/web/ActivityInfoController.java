@@ -71,6 +71,14 @@ public class ActivityInfoController extends BaseController {
 			model.addAttribute("message", "结束时间不能小于开始时间");
 			return form(activityInfo, model);
 		}
+		if(activityInfo.getDiscountRate() <= 0) {
+			model.addAttribute("message", "请填写正确的折扣比例");
+			return form(activityInfo, model);
+		}
+		if(activityInfoService.verifyActivityInfo(activityInfo) > 0) {
+			model.addAttribute("message", "活动时间与已存在活动存在重叠，请检查后重新填写");
+			return form(activityInfo, model);
+		}
 		activityInfoService.save(activityInfo);
 		addMessage(redirectAttributes, "保存活动配置成功");
 		return "redirect:"+Global.getAdminPath()+"/activity/activityInfo/?repage";

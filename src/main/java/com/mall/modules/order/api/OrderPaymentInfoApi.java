@@ -156,7 +156,7 @@ public class OrderPaymentInfoApi extends BaseController {
             OrderPaymentInfo orderPaymentInfo = OrderPaymentInfoService.genDefaultPaymentInfo(orderType);
             if ("0".equals(orderType)) {
                 orderPaymentInfo.setAmountTotal(orderInfo.getOrderAmountTotal());
-                orderPaymentInfo.setDiscountAmount(orderInfo.getDiscountAmountTotal());
+                orderPaymentInfo.setDiscountAmount(orderInfo.getDiscountAmountTotal() + orderInfo.getActivityDiscountAmount());
             } else if ("1".equals(orderType)) {
                 orderPaymentInfo.setAmountTotal(0.00);
                 orderPaymentInfo.setDiscountAmount(0.00);

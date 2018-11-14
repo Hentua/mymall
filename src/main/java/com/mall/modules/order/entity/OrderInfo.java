@@ -41,6 +41,8 @@ public class OrderInfo extends DataEntity<OrderInfo> {
 	private Date autoCompletedTime; // 自动完成交易时间
 	private Double settlementsAmount;//结算金额
 	private String setFlag; //清算标记
+	private Double activityDiscountAmount; //活动扣减
+	private String activityId; //活动ID
 
 	private String merchantName;
 	private String customerName;
@@ -51,6 +53,22 @@ public class OrderInfo extends DataEntity<OrderInfo> {
 
 	public OrderInfo(String id){
 		super(id);
+	}
+
+	public Double getActivityDiscountAmount() {
+		return activityDiscountAmount;
+	}
+
+	public void setActivityDiscountAmount(Double activityDiscountAmount) {
+		this.activityDiscountAmount = activityDiscountAmount;
+	}
+
+	public String getActivityId() {
+		return activityId;
+	}
+
+	public void setActivityId(String activityId) {
+		this.activityId = activityId;
 	}
 
 	public String getSetFlag() {

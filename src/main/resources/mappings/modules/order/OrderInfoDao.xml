@@ -27,7 +27,9 @@
 		a.closed_time AS "closedTime",
 		a.auto_closed_time AS "autoClosedTime",
 		a.completed_time AS "completedTime",
-		a.auto_completed_time AS "autoCompletedTime"
+		a.auto_completed_time AS "autoCompletedTime",
+		a.activity_discount_amount AS "activityDiscountAmount",
+		a.activity_id AS "activityId"
 	</sql>
 
 	<resultMap id="OrderInfoDetail" type="OrderInfo">
@@ -57,6 +59,8 @@
 		<result property="completedTime" column="completedTime"/>
 		<result property="merchantName" column="merchantName"/>
 		<result property="autoCompletedTime" column="autoCompletedTime"/>
+		<result property="activityDiscountAmount" column="activityDiscountAmount"/>
+		<result property="activityId" column="activityId"/>
 		<association property="orderLogistics" javaType="OrderLogistics">
 			<id property="id" column="logistics.id"/>
 			<result property="expressNo" column="logistics.expressNo"/>
@@ -90,6 +94,7 @@
 			<result property="discountAmount" column="orderGoodsList.discountAmount"/>
 			<result property="count" column="orderGoodsList.count"/>
 			<result property="subtotal" column="orderGoodsList.subtotal"/>
+			<result property="activityDiscountAmount" column="orderGoodsList.activityDiscountAmount"/>
 		</collection>
 	</resultMap>
 
@@ -119,6 +124,8 @@
 		a.auto_closed_time AS "autoClosedTime",
 		a.completed_time AS "completedTime",
 		a.auto_completed_time AS "autoCompletedTime",
+		a.activity_discount_amount AS "activityDiscountAmount",
+		a.activityId AS "activityId",
 		m.nickname AS "merchantName",
 		l.id AS "logistics.id",
 		l.express_no AS "logistics.expressNo",
@@ -273,7 +280,9 @@
 			auto_closed_time,
 			completed_time,
 		    del_flag,
-		    settlements_amount
+		    settlements_amount,
+		    activity_discount_amount,
+		    activity_id
 		) VALUES (
 			#{id},
 			#{orderNo},
@@ -300,7 +309,9 @@
 			#{autoClosedTime},
 			#{completedTime},
 		    #{delFlag},
-		    #{settlementsAmount}
+		    #{settlementsAmount},
+		    #{activityDiscountAmount},
+		    #{activityId}
 		)
 	</insert>
 
