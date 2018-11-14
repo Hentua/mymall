@@ -20,6 +20,8 @@ import com.mall.common.utils.StringUtils;
 import com.mall.modules.activity.entity.ActivityInfo;
 import com.mall.modules.activity.service.ActivityInfoService;
 
+import java.util.Date;
+
 /**
  * 活动配置Controller
  * @author wankang
@@ -78,6 +80,10 @@ public class ActivityInfoController extends BaseController {
 		if(activityInfoService.verifyActivityInfo(activityInfo) > 0) {
 			model.addAttribute("message", "活动时间与已存在活动存在重叠，请检查后重新填写");
 			return form(activityInfo, model);
+		}
+		long now = (new Date()).getTime();
+		if(activityInfo.getEndDate().getTime() >= now && now >= activityInfo.getStartDate().getTime() && "2".equals(activityInfo.getStatus())) {
+			activityInfo.setStatus("1");
 		}
 		activityInfoService.save(activityInfo);
 		addMessage(redirectAttributes, "保存活动配置成功");

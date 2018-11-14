@@ -116,6 +116,7 @@ public class OrderInfoApi extends BaseController {
         String addressId = request.getParameter("addressId");
         String giftCustomerId = request.getParameter("giftCustomerId");
         String giftConfigId = request.getParameter("giftConfigId");
+        String remarks = request.getParameter("remarks");
         // 获取活动数据
         ActivityInfo activityInfo = activityInfoService.enabledActivityInfo(new ActivityInfo());
         GiftCustomer giftCustomer;
@@ -271,6 +272,7 @@ public class OrderInfoApi extends BaseController {
                     orderDiscountAmountTotal = orderInfo.getDiscountAmountTotal();
                     orderActivityDiscountAmount = orderInfo.getActivityDiscountAmount();
                 } else {
+                    // 初始化订单基础信息
                     orderNo = String.valueOf(idWorker.getId());
                     orderInfo = new OrderInfo();
                     orderInfo.setOrderNo(orderNo);
@@ -279,6 +281,7 @@ public class OrderInfoApi extends BaseController {
                     orderInfo.setOrderType(orderType);
                     orderInfo.setCustomerCode(customerCode);
                     orderInfo.setPaymentNo(paymentNo);
+                    orderInfo.setRemarks(remarks);
                     orderGoodsAmountTotal = 0.00;
                     orderGoodsCount = 0.00;
                     orderGoodsList = Lists.newArrayList();
@@ -518,6 +521,7 @@ public class OrderInfoApi extends BaseController {
                     }
                     goodsAmountTotal -= couponDiscountAmount;
                     discountAmount += couponDiscountAmount;
+                    discountAmount += goodsDiscountAmount;
                     amountTotal += goodsAmountTotal;
                 }
                 orderPaymentInfo.setAmountTotal(amountTotal);

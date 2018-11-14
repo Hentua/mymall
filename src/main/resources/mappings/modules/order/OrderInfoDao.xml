@@ -125,7 +125,7 @@
 		a.completed_time AS "completedTime",
 		a.auto_completed_time AS "autoCompletedTime",
 		a.activity_discount_amount AS "activityDiscountAmount",
-		a.activityId AS "activityId",
+		a.activity_id AS "activityId",
 		m.nickname AS "merchantName",
 		l.id AS "logistics.id",
 		l.express_no AS "logistics.expressNo",

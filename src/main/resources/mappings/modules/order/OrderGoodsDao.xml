@@ -23,7 +23,7 @@
 		a.settlements_amount AS "settlementsAmount",
 		a.goods_recommend_id as "goodsRecommendId",
 		a.goods_standard_name as "goodsStandardName",
-		a.activityDiscountAmount as "activityDiscountAmount"
+		a.activity_discount_amount as "activityDiscountAmount"
 	</sql>
 
 	<sql id="orderGoodsJoins">

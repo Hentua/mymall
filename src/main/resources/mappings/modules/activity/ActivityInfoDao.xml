@@ -39,7 +39,7 @@
 	<select id="verifyActivityInfo" resultType="int">
 		select count(0)
 		from activity_info a
-		where (not (a.end_date &lt;= #{startDate} or a.start_date &gt;= #{endDate})) and a.del_flag=#{DEL_FLAG_NORMAL}
+		where (not (a.end_date &lt;= #{startDate} or a.start_date &gt;= #{endDate})) and a.del_flag=#{DEL_FLAG_NORMAL} and a.status != '0'
 	</select>
 	
 	<select id="findList" resultType="ActivityInfo">
