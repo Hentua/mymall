@@ -320,7 +320,8 @@ public class OrderInfoApi extends BaseController {
                 //结算总价
                 settlementsTotal += Double.valueOf(df.format(settlementsAmount * goodsCount));
 
-                orderAmountTotal += (goodsSubAmountTotal - goodsDiscountAmount);
+                goodsSubAmountTotal -= goodsDiscountAmount;
+                orderAmountTotal += goodsSubAmountTotal;
                 orderGoodsAmountTotal += goodsAmountTotal;
                 orderDiscountAmountTotal += goodsDiscountAmount;
 
@@ -334,7 +335,7 @@ public class OrderInfoApi extends BaseController {
                 OrderGoods orderGoods = orderInfoService.genOrderGoods(goodsInfo);
                 orderGoods.setOrderNo(orderInfo.getOrderNo());
                 orderGoods.setCount(goodsCount);
-                orderGoods.setSubtotal(goodsAmountTotal);
+                orderGoods.setSubtotal(goodsSubAmountTotal);
                 orderGoods.setId("");
                 orderGoods.setGoodsPrice(price);
                 orderGoods.setGoodsStandard(goodsStandard.getId());

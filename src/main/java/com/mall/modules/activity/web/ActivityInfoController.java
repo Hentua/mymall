@@ -1,0 +1,80 @@
+package com.mall.modules.activity.web;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.mall.common.config.Global;
+import com.mall.common.persistence.Page;
+import com.mall.common.web.BaseController;
+import com.mall.common.utils.StringUtils;
+import com.mall.modules.activity.entity.ActivityInfo;
+import com.mall.modules.activity.service.ActivityInfoService;
+
+/**
+ * 活动配置Controller
+ * @author wankang
+ * @version 2018-11-14
+ */
+@Controller
+@RequestMapping(value = "${adminPath}/activity/activityInfo")
+public class ActivityInfoController extends BaseController {
+
+	@Autowired
+	private ActivityInfoService activityInfoService;
+	
+	@ModelAttribute
+	public ActivityInfo get(@RequestParam(required=false) String id) {
+		ActivityInfo entity = null;
+		if (StringUtils.isNotBlank(id)){
+			entity = activityInfoService.get(id);
+		}
+		if (entity == null){
+			entity = new ActivityInfo();
+		}
+		return entity;
+	}
+	
+	@RequiresPermissions("activity:activityInfo:view")
+	@RequestMapping(value = {"list", ""})
+	public String list(ActivityInfo activityInfo, HttpServletRequest request, HttpServletResponse response, Model model) {
+		Page<ActivityInfo> page = activityInfoService.findPage(new Page<ActivityInfo>(request, response), activityInfo); 
+		model.addAttribute("page", page);
+		return "modules/activity/activityInfoList";
+	}
+
+	@RequiresPermissions("activity:activityInfo:view")
+	@RequestMapping(value = "form")
+	public String form(ActivityInfo activityInfo, Model model) {
+		model.addAttribute("activityInfo", activityInfo);
+		return "modules/activity/activityInfoForm";
+	}
+
+	@RequiresPermissions("activity:activityInfo:edit")
+	@RequestMapping(value = "save")
+	public String save(ActivityInfo activityInfo, Model model, RedirectAttributes redirectAttributes) {
+		if (!beanValidator(model, activityInfo)){
+			return form(activityInfo, model);
+		}
+		activityInfoService.save(activityInfo);
+		addMessage(redirectAttributes, "保存活动配置成功");
+		return "redirect:"+Global.getAdminPath()+"/activity/activityInfo/?repage";
+	}
+	
+	@RequiresPermissions("activity:activityInfo:edit")
+	@RequestMapping(value = "delete")
+	public String delete(ActivityInfo activityInfo, RedirectAttributes redirectAttributes) {
+		activityInfoService.delete(activityInfo);
+		addMessage(redirectAttributes, "删除活动配置成功");
+		return "redirect:"+Global.getAdminPath()+"/activity/activityInfo/?repage";
+	}
+
+}

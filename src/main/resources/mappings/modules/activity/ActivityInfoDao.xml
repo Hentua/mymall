@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.modules.activity.dao.ActivityInfoDao">
+    
+	<sql id="activityInfoColumns">
+		a.id AS "id",
+		a.activity_name AS "activityName",
+		a.start_date AS "startDate",
+		a.end_date AS "endDate",
+		a.status AS "status",
+		a.discount_rate AS "discountRate",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.coupon_flag AS "couponFlag"
+	</sql>
+	
+	<sql id="activityInfoJoins">
+	</sql>
+    
+	<select id="get" resultType="ActivityInfo">
+		SELECT 
+			<include refid="activityInfoColumns"/>
+		FROM activity_info a
+		<include refid="activityInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="ActivityInfo">
+		SELECT 
+			<include refid="activityInfoColumns"/>
+		FROM activity_info a
+		<include refid="activityInfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="activityName != null and activityName != ''">
+				AND a.activity_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{activityName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{activityName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{activityName},'%')</if>
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="ActivityInfo">
+		SELECT 
+			<include refid="activityInfoColumns"/>
+		FROM activity_info a
+		<include refid="activityInfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO activity_info(
+			id,
+			activity_name,
+			start_date,
+			end_date,
+			status,
+			discount_rate,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			coupon_flag
+		) VALUES (
+			#{id},
+			#{activityName},
+			#{startDate},
+			#{endDate},
+			#{status},
+			#{discountRate},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{couponFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE activity_info SET 	
+			activity_name = #{activityName},
+			start_date = #{startDate},
+			end_date = #{endDate},
+			status = #{status},
+			discount_rate = #{discountRate},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			coupon_flag = #{couponFlag}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE activity_info SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
