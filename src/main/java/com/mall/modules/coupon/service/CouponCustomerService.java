@@ -115,7 +115,7 @@ public class CouponCustomerService extends CrudService<CouponCustomerDao, Coupon
      * @param amount       总金额
      * @param customerCode 赠送会员ID
      */
-    public void saveCouponCustomerByPlatform(String couponName, String couponType, Integer expiryTime, Double amount, String customerCode) {
+    public void saveCouponCustomerByPlatform(String couponName, String couponType, Integer expiryTime, Double amount, String customerCode) throws Exception {
         CouponCustomer couponCustomer = new CouponCustomer();
         couponCustomer.setCouponName(couponName);
         couponCustomer.setCouponType(couponType);
@@ -130,13 +130,13 @@ public class CouponCustomerService extends CrudService<CouponCustomerDao, Coupon
         this.save(couponCustomer);
     }
 
-    private Date genCouponEndDate(Integer expiryTime) {
+    private Date genCouponEndDate(Integer expiryTime) throws Exception {
         if (expiryTime == 0) {
-            return DateUtils.parseDate(DateUtils.formatDate(DateUtils.getEndOfDay(DateUtils.parseDate("9999-12-31")), "yyyy-MM-dd HH:mm:ss"));
+            return DateUtils.getEndOfDay(DateUtils.parseDate("9999-12-31"));
         } else {
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.DATE, expiryTime);
-            return DateUtils.parseDate(DateUtils.formatDate(DateUtils.getEndOfDay(calendar.getTime()), "yyyy-MM-dd HH:mm:ss"));
+            return DateUtils.getEndOfDay(calendar.getTime());
         }
     }
 
