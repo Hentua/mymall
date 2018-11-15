@@ -2002,7 +2002,7 @@ input[type="range"]::-webkit-slider-thumb{
     color: #fff;
 }
 #jingle_toast{
-    top: 70%;
+    top: 10%;
     font-size: 1em;
     text-align: center;
     width: 100%;;left: 0;
@@ -2023,9 +2023,9 @@ input[type="range"]::-webkit-slider-thumb{
 #jingle_toast.top>a{
     width:90%;
 }
-#jingle_toast.success>a{background-color: #27AE60;!important}
-#jingle_toast.error>a{background-color: #E74C3C;!important}
-#jingle_toast.info>a{background-color: #F1C40F;!important}
+#jingle_toast.success>a{background-color: #7c7c7c;!important}
+#jingle_toast.error>a{background-color: #7c7c7c;!important}
+#jingle_toast.info>a{background-color: #7c7c7c;!important}
 
 #jingle_toast i.icon{
     margin-right: 10px;

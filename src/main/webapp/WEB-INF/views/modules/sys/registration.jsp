@@ -23,16 +23,15 @@
 </div>
 <div id="section_container">
     <section id="login_section" class="active">
-        <header style="background-color: white;">
-            <h1 class="title" style="color: #222;">推荐人：${refereeMember.nickname}</h1>
+        <%--<header style="background-color: white;">--%>
+            <%--<h1 class="title" style="color: #222;"></h1>--%>
 
-        </header>
+        <%--</header>--%>
         <article data-scroll="true" id="login_article">
 	        <div class="indented">
-	            <form id="from1" action="${ctx}/login" method="post">
+	            <form id="from1" action="${ctx}/login" method="post" >
 					<input type="hidden" name="refereeCode" value="${refereeMember.referee}"/>
 					<input type="hidden" name="type" value="0"/>
-
 	            	<div>&nbsp;</div>
 	            	<div class="input-group" style="border: 0px;        -webkit-box-shadow: 0 0px 0px rgba(255, 255, 255, .2), inset 0 0px 0px rgba(0, 0, 0, .1);
     box-shadow: 0 0px 0px rgba(255, 255, 255, .2), inset 0 0px 0px rgba(0, 0, 0, .1);
@@ -40,7 +39,10 @@
     -webkit-user-select: text;
     -webkit-font-smoothing: antialiased;
     -wekbit-box-sizing: border-box;">
-		                <div class="input-row-r">
+						<div class="input-row-r">
+							<input type="text"   style="border: 0px" disabled="disabled"   placeholder="推荐人：${refereeMember.nickname}">
+						</div>
+						<div class="input-row-r">
 		                    <input type="text"  id="nickname" name="nickname" placeholder="请填写您的用户昵称">
 		                </div>
 						<div class="input-row-r">
@@ -54,12 +56,24 @@
 						</div>
 						<div class="input-row-r">
 							<input type="text" name="verifyCode"  style="width:48%;border: 0px;" name="username"
-								   placeholder="请输入验证码"><a id="verifyCode_a" style="color: #ff7600;"  onclick="getVerifyCode()" >获取验证码</a>
+								   placeholder="请输入验证码"><a id="verifyCode_a" style="color: #007cc2;"  onclick="getVerifyCode()" >获取验证码</a>
 						</div>
 		            </div>
 	            	<div>&nbsp;</div>
-	                <button id="btn" class="submit block" style="background-color: #ff7600" >注&nbsp;&nbsp;册</button>
+	                <button id="btn" type="button" onclick="register()" class="block" style="background-color: #007cc2" >注&nbsp;&nbsp;册</button>
 	            </form>
+				<div id="cg_div" style="display: none">
+					<div style="text-align: center;">
+						<img src="${ctxStatic}/images/logo.png" width="40%" /><br/>
+						<span style="font-size: 150%;color: #008fd7">
+							注册成功
+						</span>
+					</div>
+					<br/>
+					<div style="text-align: center;font-size: 120%">
+						请前往AppStore下载《美易优选APP》
+					</div>
+				</div>
 	        </div>
 	    </article>
     </section>
@@ -79,32 +93,32 @@
 <script type="text/javascript">
 var sessionid = '${not empty fns:getPrincipal() ? fns:getPrincipal().sessionid : ""}';
 $('body').delegate('#login_section','pageinit',function(){
-	$("#loginForm").submit(function(){
-		if ($('#username').val() == ''){
-			J.showToast('请填写账号', 'info');
-		}else if ($('#password').val() == ''){
-			J.showToast('请填写密码', 'info');
-		}else if ($('#validateCodeDiv').is(':visible') && $('#validateCode').val() == ''){
-			J.showToast('请填写验证码', 'info');
-		}else{
-			var loginForm = $("#loginForm");
-			$.post(loginForm.attr('action'), loginForm.serializeArray(), function(data){
-				if (data && data.sessionid){
-					sessionid = data.sessionid;
-					J.showToast('登录成功！', 'success');
-					J.Router.goTo('#index_section?index');
-				}else{
-					J.showToast(data.message, 'error');
-					if (data.shiroLoginFailure == 'org.apache.shiro.authc.AuthenticationException'){
-						$('#validateCodeDiv').show();
-					}
-					$('#validateCodeDiv a').click();
-				}
-				//console.log(data);
-			});
-		}
-		return false;
-	});
+	// $("#loginForm").submit(function(){
+	// 	if ($('#username').val() == ''){
+	// 		J.showToast('请填写账号', 'info');
+	// 	}else if ($('#password').val() == ''){
+	// 		J.showToast('请填写密码', 'info');
+	// 	}else if ($('#validateCodeDiv').is(':visible') && $('#validateCode').val() == ''){
+	// 		J.showToast('请填写验证码', 'info');
+	// 	}else{
+	// 		var loginForm = $("#loginForm");
+	// 		$.post(loginForm.attr('action'), loginForm.serializeArray(), function(data){
+	// 			if (data && data.sessionid){
+	// 				sessionid = data.sessionid;
+	// 				J.showToast('登录成功！', 'success');
+	// 				J.Router.goTo('#index_section?index');
+	// 			}else{
+	// 				J.showToast(data.message, 'error');
+	// 				if (data.shiroLoginFailure == 'org.apache.shiro.authc.AuthenticationException'){
+	// 					$('#validateCodeDiv').show();
+	// 				}
+	// 				$('#validateCodeDiv a').click();
+	// 			}
+	// 			//console.log(data);
+	// 		});
+	// 	}
+	// 	return false;
+	// });
 });
 $('body').delegate('#login_section','pageshow',function(){
 	if (sessionid != ''){
@@ -208,11 +222,11 @@ function register() {
             console.log(result);
             if (result.status == 200) {
                 J.showToast('注册成功！', 'success');
-            }
-            if (result.status == 200) {
+                $("#from1").hide();
+                $("#cg_div").show();
+            }else{
                 J.showToast('注册失败['+result.message+']！', 'error');
-            }
-            ;
+			}
         },
         error : function() {
             J.showToast('网络异常！', 'error');

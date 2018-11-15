@@ -79,32 +79,32 @@
 <script type="text/javascript">
 var sessionid = '${not empty fns:getPrincipal() ? fns:getPrincipal().sessionid : ""}';
 $('body').delegate('#login_section','pageinit',function(){
-	$("#loginForm").submit(function(){
-		if ($('#username').val() == ''){
-			J.showToast('请填写账号', 'info');
-		}else if ($('#password').val() == ''){
-			J.showToast('请填写密码', 'info');
-		}else if ($('#validateCodeDiv').is(':visible') && $('#validateCode').val() == ''){
-			J.showToast('请填写验证码', 'info');
-		}else{
-			var loginForm = $("#loginForm");
-			$.post(loginForm.attr('action'), loginForm.serializeArray(), function(data){
-				if (data && data.sessionid){
-					sessionid = data.sessionid;
-					J.showToast('登录成功！', 'success');
-					J.Router.goTo('#index_section?index');
-				}else{
-					J.showToast(data.message, 'error');
-					if (data.shiroLoginFailure == 'org.apache.shiro.authc.AuthenticationException'){
-						$('#validateCodeDiv').show();
-					}
-					$('#validateCodeDiv a').click();
-				}
-				//console.log(data);
-			});
-		}
-		return false;
-	});
+	// $("#loginForm").submit(function(){
+	// 	if ($('#username').val() == ''){
+	// 		J.showToast('请填写账号', 'info');
+	// 	}else if ($('#password').val() == ''){
+	// 		J.showToast('请填写密码', 'info');
+	// 	}else if ($('#validateCodeDiv').is(':visible') && $('#validateCode').val() == ''){
+	// 		J.showToast('请填写验证码', 'info');
+	// 	}else{
+	// 		var loginForm = $("#loginForm");
+	// 		$.post(loginForm.attr('action'), loginForm.serializeArray(), function(data){
+	// 			if (data && data.sessionid){
+	// 				sessionid = data.sessionid;
+	// 				J.showToast('登录成功！', 'success');
+	// 				J.Router.goTo('#index_section?index');
+	// 			}else{
+	// 				J.showToast(data.message, 'error');
+	// 				if (data.shiroLoginFailure == 'org.apache.shiro.authc.AuthenticationException'){
+	// 					$('#validateCodeDiv').show();
+	// 				}
+	// 				$('#validateCodeDiv a').click();
+	// 			}
+	// 			//console.log(data);
+	// 		});
+	// 	}
+	// 	return false;
+	// });
 });
 $('body').delegate('#login_section','pageshow',function(){
 	if (sessionid != ''){
