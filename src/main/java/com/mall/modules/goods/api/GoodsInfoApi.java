@@ -12,6 +12,7 @@ import com.mall.modules.goods.entity.*;
 import com.mall.modules.goods.service.*;
 import com.mall.modules.member.entity.MemberFavorite;
 import com.mall.modules.member.entity.MemberFootprint;
+import com.mall.modules.member.entity.MemberInfo;
 import com.mall.modules.member.service.MemberInfoService;
 import com.mall.modules.sys.entity.User;
 import com.mall.modules.sys.entity.UserVo;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.lang.reflect.Member;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -53,6 +55,28 @@ public class GoodsInfoApi extends BaseController {
 
     @Autowired
     private GoodsRecommendService goodsRecommendService;
+
+
+    /**
+     * 商品商家关键字搜索
+     * @param request
+     * @param response
+     */
+    @ResponseBody
+    @RequestMapping(value = "merchantQuery", method = RequestMethod.POST)
+    public Result goodsMerchantInfoQuery(HttpServletRequest request, HttpServletResponse response) {
+        String keyWord = request.getParameter("keyWord");
+        if(StringUtils.isEmpty(keyWord)){
+            return ResultGenerator.genSuccessResult(new Object());
+        }
+        MemberInfo memberInfo = new MemberInfo();
+        memberInfo.setNickname(request.getParameter("keyWord"));
+        memberInfo.setStatus("1");
+        Page<MemberInfo> page = memberInfoService.findPage(new Page<MemberInfo>(request, response), memberInfo);
+        return ResultGenerator.genSuccessResult(page);
+    }
+
+
 
 
     /**

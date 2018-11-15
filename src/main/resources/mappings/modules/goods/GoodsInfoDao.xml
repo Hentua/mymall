@@ -102,7 +102,7 @@
 				AND a.goods_category_id = #{goodsCategoryId}
 			</if>
 			<if test="keyWord != null and keyWord != '' ">
-				(AND a.goods_name LIKE CONCAT('%',#{keyWord},'%') or m.nickname LIKE CONCAT('%',#{keyWord},'%'))
+				AND a.goods_name LIKE CONCAT('%',#{keyWord},'%')
 			</if>
 			and goods_type = 1
 		</where>

@@ -13,12 +13,15 @@
 		a.settlement_id AS "settlementId",
 		a.create_date AS "createDate",
 		m.nickname as "produceUserName",
-		a.status as "status"
-
+		a.status as "status",
+		u.mobile as "userMobile",
+		pu.mobile as "produceUserMobile"
 	</sql>
 	
 	<sql id="commissionInfoJoins">
 		left join member_info m on m.id = a.produce_user_id
+		left join sys_user u on u.id = a.user_id
+		left join sys_user pu on pu.id = a.produce_user_id
 	</sql>
     
 	<select id="get" resultType="CommissionInfo">
@@ -40,6 +43,15 @@
 			</if>
 			<if test="userId != null and userId != ''">
 				and a.user_id = #{userId}
+			</if>
+			<if test="status != null and  status != ''">
+				and a.status = #{status}
+			</if>
+			<if test="type != null and  type != ''">
+				and a.type = #{type}
+			</if>
+			<if test="userMobile != null and userMobile != ''">
+				and u.mobile = #{userMobile}
 			</if>
 		</where>
 		<choose>

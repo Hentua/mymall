@@ -19,12 +19,31 @@
 <body>
 	<ul class="nav nav-tabs">
 		<li class="active"><a href="${ctx}/commission/commissionInfo/">佣金明细列表</a></li>
-		<shiro:hasPermission name="commission:commissionInfo:edit"><li><a href="${ctx}/commission/commissionInfo/form">佣金明细添加</a></li></shiro:hasPermission>
 	</ul>
 	<form:form id="searchForm" modelAttribute="commissionInfo" action="${ctx}/commission/commissionInfo/" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<ul class="ul-form">
+			<li><label>用户账号：</label>
+				<form:input path="userMobile" htmlEscape="false" maxlength="64" class="input-medium"/>
+			</li>
+			<li><label>类型：</label>
+				<form:select path="type" cssClass="select-multiple" cssStyle="width: 170px">
+					<form:option value="" label="全部" />
+					<form:option value="1" label="推荐用户消费返佣" />
+					<form:option value="2" label="推荐商家销售返佣" />
+					<form:option value="3" label="推荐商家入驻返佣" />
+					<form:option value="4" label="推荐商家送出礼包返佣" />
+					<form:option value="5" label="商家送出礼包返佣" />
+				</form:select>
+			</li>
+			<li><label>状态：</label>
+				<form:select path="status" cssClass="select-multiple" cssStyle="width: 170px">
+					<form:option value="" label="全部" />
+					<form:option value="1" label="已清算" />
+					<form:option value="0" label="未清算" />
+				</form:select>
+			</li>
 			<li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
 			<li class="clearfix"></li>
 		</ul>
@@ -33,16 +52,48 @@
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
 		<thead>
 			<tr>
-				<shiro:hasPermission name="commission:commissionInfo:edit"><th>操作</th></shiro:hasPermission>
+				<th>用户账号</th>
+				<th>产生金额</th>
+				<th>佣金金额</th>
+				<th>佣金类型</th>
+				<th>创建时间</th>
+				<th>生成用户</th>
+				<th>状态</th>
 			</tr>
 		</thead>
 		<tbody>
 		<c:forEach items="${page.list}" var="commissionInfo">
 			<tr>
-				<shiro:hasPermission name="commission:commissionInfo:edit"><td>
-    				<a href="${ctx}/commission/commissionInfo/form?id=${commissionInfo.id}">修改</a>
-					<a href="${ctx}/commission/commissionInfo/delete?id=${commissionInfo.id}" onclick="return confirmx('确认要删除该佣金明细吗？', this.href)">删除</a>
-				</td></shiro:hasPermission>
+				<td>${commissionInfo.userMobile}</td>
+				<td>${commissionInfo.originAmount}</td>
+				<td>${commissionInfo.amount}</td>
+				<td>
+					<c:if test="${commissionInfo.type == '1'}">
+						推荐用户消费返佣
+					</c:if>
+					<c:if test="${commissionInfo.type == '2'}">
+						推荐商家销售返佣
+					</c:if>
+					<c:if test="${commissionInfo.type == '3'}">
+						推荐商家入驻返佣
+					</c:if>
+					<c:if test="${commissionInfo.type == '4'}">
+						推荐商家送出礼包返佣
+					</c:if>
+					<c:if test="${commissionInfo.type == '5'}">
+						商家送出礼包返佣
+					</c:if>
+				</td>
+				<td><fmt:formatDate value="${commissionTakeOut.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
+				<td>${commissionInfo.produceUserMobile}</td>
+				<td>
+					<c:if test="${commissionInfo.status == '1'}">
+						已清算
+					</c:if>
+					<c:if test="${commissionInfo.status == '0'}">
+						未清算
+					</c:if>
+				</td>
 			</tr>
 		</c:forEach>
 		</tbody>

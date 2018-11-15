@@ -9,7 +9,10 @@ import com.mall.modules.account.entity.AccountFlow;
 import com.mall.modules.account.service.AccountFlowService;
 import com.mall.modules.account.service.AccountService;
 import com.mall.modules.commission.entity.CommissionInfo;
+import com.mall.modules.commission.entity.CommissionTakeOut;
 import com.mall.modules.commission.service.CommissionInfoService;
+import com.mall.modules.commission.service.CommissionTakeOutService;
+import com.mall.modules.coupon.service.CouponCustomerService;
 import com.mall.modules.member.entity.MemberInfo;
 import com.mall.modules.member.service.MemberInfoService;
 import com.mall.modules.sys.entity.User;
@@ -46,6 +49,13 @@ public class AccountApi extends BaseController {
 
 	@Autowired
 	private CommissionInfoService commissionInfoService;
+
+
+	@Autowired
+	private CouponCustomerService couponCustomerService;
+
+	@Autowired
+	private CommissionTakeOutService commissionTakeOutService;
 
 	/**
 	 * 账户余额信息
@@ -186,7 +196,7 @@ public class AccountApi extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "CommissionTransferBalance", method = RequestMethod.POST)
-	public Result CommissionTransferBalance(HttpServletRequest request, HttpServletResponse response) {
+	public Result CommissionTransferBalance(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		User user = UserUtils.getUser();
 		MemberInfo m = new MemberInfo();
 		m.setId(user.getId());
@@ -208,8 +218,42 @@ public class AccountApi extends BaseController {
 //		accountFlow.setBankName(request.getParameter("bankName"));//开户行
 		accountFlow.setCheckStatus("1");
 		accountFlowService.save(accountFlow);
+		//送优惠券函数
+		couponCustomerService.saveCouponCustomerByPlatform("佣金转余额优惠券","0",365,amount,user.getId());
 		//操作余额
 		accountService.editAccount(memberInfo.getBalance()+amount,memberInfo.getCommission()-amount,user.getId());
 		return ResultGenerator.genSuccessResult("成功");
 	}
+
+	/**
+	 * 佣金提现
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "commissionTakeOut", method = RequestMethod.POST)
+	public Result CommissionTakeOut(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		User user = UserUtils.getUser();
+		MemberInfo m = new MemberInfo();
+		m.setId(user.getId());
+		MemberInfo memberInfo = memberInfoService.get(m);
+		String amountStr = request.getParameter("amount");
+		Double amount = Double.valueOf(amountStr);
+		if(memberInfo.getCommission()<amount){
+			return ResultGenerator.genFailResult("佣金余额不足");
+		}
+		//新增提现记录
+		CommissionTakeOut commissionTakeOut = new CommissionTakeOut();
+		commissionTakeOut.setAmount(amount);
+		commissionTakeOut.setUserId(user.getId());
+		commissionTakeOut.setBankAccount(request.getParameter("bankAccount"));
+		commissionTakeOut.setBankAccountName(request.getParameter("bankAccountName"));
+		commissionTakeOut.setBankName(request.getParameter("bankName"));
+		commissionTakeOut.setCheckStatus("1");
+		commissionTakeOutService.save(commissionTakeOut);
+		return ResultGenerator.genSuccessResult("成功");
+	}
+
+
 }

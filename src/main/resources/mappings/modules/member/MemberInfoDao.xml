@@ -72,7 +72,7 @@
 				 and a.referee_id = #{refereeId}
 			 </if>
 		     <if test="nickname != null and nickname != ''">
-				 and a.nickname like '%'+#{nickname}+'%'
+				 and a.nickname  LIKE CONCAT('%',#{nickname},'%')
 			 </if>
 			 <if test="status != null and status != ''">
 				 and a.status = #{status}

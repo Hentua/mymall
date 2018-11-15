@@ -68,7 +68,7 @@ public class goodsRecommendApi extends BaseController {
         goodsRecommendService.save(goodsRecommend);
         JSONObject jo =new JSONObject();
         String code = goodsInfo.getGoodsName()+",复制整段信息，打开美易优选,（"+goodsRecommend.getId()+"）";
-        jo.put("goodsRecommendCode",goodsRecommend.getId());
+        jo.put("goodsRecommendCode",code);
         return ResultGenerator.genSuccessResult(jo);
     }
 }

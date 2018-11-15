@@ -20,6 +20,8 @@ public class CommissionInfo extends DataEntity<CommissionInfo> {
 	private String settlementId;		// 提现结算单ID
 	private String produceUserName; //被推荐人名称
 	private String status;  //清算状态 0未清算 1已清算
+	private String userMobile;
+	private String produceUserMobile;
 
 	
 	public CommissionInfo() {
@@ -28,6 +30,22 @@ public class CommissionInfo extends DataEntity<CommissionInfo> {
 
 	public CommissionInfo(String id){
 		super(id);
+	}
+
+	public String getUserMobile() {
+		return userMobile;
+	}
+
+	public void setUserMobile(String userMobile) {
+		this.userMobile = userMobile;
+	}
+
+	public String getProduceUserMobile() {
+		return produceUserMobile;
+	}
+
+	public void setProduceUserMobile(String produceUserMobile) {
+		this.produceUserMobile = produceUserMobile;
 	}
 
 	public String getStatus() {
