@@ -179,7 +179,7 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 			orderSettlement.setOrderId(orderInfo.getId());
 			orderSettlement.setSettlementAmount(orderInfo.getSettlementsAmount());
 			orderSettlement.setUserId(orderInfo.getMerchantCode());
-			orderSettlement.setStatus("0");
+			orderSettlement.setStatus("1");
 			orderSettlementService.save(orderSettlement);
 			//新增佣金记录
 			//卖家推荐人佣金
