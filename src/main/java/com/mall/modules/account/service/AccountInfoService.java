@@ -252,16 +252,13 @@ public class AccountInfoService extends CrudService<AccountInfoDao, AccountInfo>
 	private CommissionInfoDao commissionInfoDao;
 
 	/**
-	 * 根据订单id 修改佣金 收益 记录状态 为到账状态
+	 * 修改订单状态
 	 * @param orderId 订单id
 	 */
 	@Transactional(readOnly = false)
 	public void toAccount(String orderId){
-		//佣金 状态更新
+		//更新订单状态
 		commissionInfoDao.editOrderStatus(orderId);
 		//
-
-//		dao.toAccount(orderId);
-//		dao.createSettlementInfo(orderId);
 	}
 }

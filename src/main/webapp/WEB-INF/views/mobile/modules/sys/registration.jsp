@@ -24,14 +24,15 @@
 <div id="section_container">
     <section id="login_section" class="active">
         <header style="background-color: white;">
-            <h1 class="title" style="color: #222;">注&nbsp;&nbsp;册</h1>
-            <!-- <nav class="right">
-                <a data-target="section" data-icon="info" href="#about_section"></a>
-            </nav> -->
+            <h1 class="title" style="color: #222;">推荐人：${refereeMember.nickname}</h1>
+
         </header>
         <article data-scroll="true" id="login_article">
 	        <div class="indented">
-	            <form id="loginForm" action="${ctx}/login" method="post">
+	            <form id="from1" action="${ctx}/login" method="post">
+					<input type="hidden" name="refereeCode" value="${refereeMember.referee}"/>
+					<input type="hidden" name="type" value="0"/>
+
 	            	<div>&nbsp;</div>
 	            	<div class="input-group" style="border: 0px;        -webkit-box-shadow: 0 0px 0px rgba(255, 255, 255, .2), inset 0 0px 0px rgba(0, 0, 0, .1);
     box-shadow: 0 0px 0px rgba(255, 255, 255, .2), inset 0 0px 0px rgba(0, 0, 0, .1);
@@ -40,23 +41,24 @@
     -webkit-font-smoothing: antialiased;
     -wekbit-box-sizing: border-box;">
 		                <div class="input-row-r">
-		                    <input type="text"   name="username" placeholder="请填写您的用户昵称">
+		                    <input type="text"   name="nickname" placeholder="请填写您的用户昵称">
 		                </div>
 						<div class="input-row-r">
-							<input type="text"   name="username" placeholder="请填写您的手机号码">
+							<input type="text" id="mobile"   name="mobile" placeholder="请填写您的手机号码">
 						</div>
 						<div class="input-row-r">
-							<input type="password"   name="username" placeholder="请填写您密码">
+							<input type="password" id="password"  name="password" placeholder="请填写您密码">
 						</div>
 						<div class="input-row-r">
-							<input type="password"   name="username" placeholder="请确认您的密码">
+							<input type="password" id="repeatPassword"  name="repeatPassword" placeholder="请确认您的密码">
 						</div>
 						<div class="input-row-r">
-							<input type="text"  style="width:72%;border: 0px;" name="username" placeholder="请输入验证码"><a style="color: #ff7600;">获取验证码</a>
+							<input type="text" name="verifyCode"  style="width:72%;border: 0px;" name="username"
+								   placeholder="请输入验证码"><a id="verifyCode_a" style="color: #ff7600;"  onclick="getVerifyCode()" >获取验证码</a>
 						</div>
 		            </div>
 	            	<div>&nbsp;</div>
-	                <button id="btn" class="submit block" style="background-color: #ff7600" >注册</button>
+	                <button id="btn" class="submit block" style="background-color: #ff7600" >注&nbsp;&nbsp;册</button>
 	            </form>
 	        </div>
 	    </article>
@@ -115,6 +117,55 @@ $('body').delegate('#login_section','pageshow',function(){
 		$('#login_article').addClass('active');
 	}
 });
+var x = 0;
+var API_IP = '${API_IP}';
+var timer;
+function getVerifyCode() {
+    console.log(API_IP)
+    if(x != 0){
+		return;
+	}
+	if($("#mobile").val() == ""){
+        J.showToast('请填写手机号码！', 'info');
+        return;
+	}
+    $.ajax({
+        type: "POST",
+        dataType: "json",
+        url: API_IP+"/mymall/api/genVerifyCode" ,
+        data: $('#from1').serialize(),
+        success: function (result) {
+            console.log(result);
+            if (result.resultCode == 200) {
+                J.showToast('短信已发出！', 'success');
+                x=60;
+                timer=setInterval(reloadVerifyCode(),1000);
+            }
+            ;
+        },
+        error : function() {
+            J.showToast('短信发送失败！', 'error');
+        }
+    });
+
+}
+
+function reloadVerifyCode() {
+    x--;
+    if(x>=0){
+        $("#verifyCode_a").text("（"+x+"）重新获取")
+	}else{
+        x=0
+        $("#verifyCode_a").text("获取验证码")
+        clearInterval(timer)
+	}
+
+}
+
+function register() {
+	
+}
+
 </script>
 </body>
 </html>

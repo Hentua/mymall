@@ -13,6 +13,8 @@ import com.mall.modules.goods.entity.GoodsStandard;
 import com.mall.modules.goods.service.GoodsImageService;
 import com.mall.modules.goods.service.GoodsInfoService;
 import com.mall.modules.goods.service.GoodsStandardService;
+import com.mall.modules.member.entity.MemberInfo;
+import com.mall.modules.member.service.MemberInfoService;
 import com.mall.modules.sys.entity.User;
 import com.mall.modules.sys.utils.UserUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -37,9 +39,16 @@ import java.util.List;
 @RequestMapping(value = "${adminPath}/")
 public class RecommendApi extends BaseController {
 
+	@Autowired
+	private MemberInfoService memberInfoService;
+
 	@RequestMapping(value = "registration")
 	public String registration(HttpServletRequest request, Model model) {
-		model.addAttribute("referee", request.getParameter("recommendCode"));
+		MemberInfo m  = new MemberInfo();
+		m.setReferee(request.getParameter("recommendCode"));
+		m = memberInfoService.get(m);
+		model.addAttribute("refereeMember",m);
+		model.addAttribute("API_IP",Global.getConfig("page.baseUrl"));
 		return "modules/sys/registration";
 	}
 

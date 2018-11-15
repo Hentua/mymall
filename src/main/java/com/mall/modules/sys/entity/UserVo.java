@@ -12,6 +12,7 @@ import com.mall.common.utils.StringUtils;
  */
 public class UserVo {
 
+    private String id;
     private String loginName;// 登录名
     private String no;		// 工号
     private String name;	// 姓名
@@ -34,6 +35,7 @@ public class UserVo {
     public UserVo(){}
 
     public UserVo(User user){
+        this.setId(user.getId());
         this.setLoginName(user.getLoginName());
         this.setEmail(user.getEmail());
         this.setMobile(user.getMobile());
@@ -43,6 +45,14 @@ public class UserVo {
         this.setName(user.getName());
         this.setSex(user.getSex());
         this.setIsPayPassword(user.getPayPassword());
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getSex(){
