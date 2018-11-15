@@ -363,6 +363,11 @@
 		where id = #{id}
 	</update>
 
+	<update id="orderSubmitReturns">
+		update order_info set order_status = '5'
+		where id = #{id}
+	</update>
+
 	<update id="deleteByUser">
 		update order_info set del_flag = '1'
 		WHERE id = #{id} and customer_code = #{customerCode}

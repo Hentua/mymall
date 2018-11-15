@@ -101,6 +101,12 @@
 			</div>
 		</div>
 		<div class="control-group">
+			<label class="control-label">支付时间：</label>
+			<div class="controls">
+				<fmt:formatDate value="${orderInfo.payTime}" pattern="yyyy-MM-dd HH:mm:ss"/>
+			</div>
+		</div>
+		<div class="control-group">
 			<label class="control-label">收货人：</label>
 			<div class="controls">
 					${orderInfo.orderLogistics.consigneeRealname}
@@ -143,19 +149,13 @@
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">备注：</label>
+			<label class="control-label">买家留言：</label>
 			<div class="controls">
 					${orderInfo.remarks}
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">支付时间：</label>
-			<div class="controls">
-				<fmt:formatDate value="${orderInfo.payTime}" pattern="yyyy-MM-dd HH:mm:ss"/>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">订单商品表：</label>
+			<label class="control-label">订单商品：</label>
 			<div class="controls">
 				<table id="contentTable" class="table table-striped table-bordered table-condensed">
 					<thead>

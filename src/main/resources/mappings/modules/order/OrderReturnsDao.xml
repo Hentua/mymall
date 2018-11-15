@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.modules.order.dao.OrderReturnsDao">
+    
+	<sql id="orderReturnsColumns">
+		a.id AS "id",
+		a.returns_no AS "returnsNo",
+		a.order_no AS "orderNo",
+		a.express_no AS "expressNo",
+		a.consignee_realname AS "consigneeRealname",
+		a.consignee_telphone AS "consigneeTelphone",
+		a.consignee_address AS "consigneeAddress",
+		a.consignee_zip AS "consigneeZip",
+		a.logistics_type AS "logisticsType",
+		a.returns_type AS "returnsType",
+		a.handling_way AS "handlingWay",
+		a.returns_amount AS "returnsAmount",
+		a.return_submit_time AS "returnSubmitTime",
+		a.handling_time AS "handlingTime",
+		a.status AS "status",
+		a.reason AS "reason",
+		a.reply AS "reply",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.customer_code AS "customerCode",
+		a.orderId AS "orderId"
+	</sql>
+	
+	<sql id="orderReturnsJoins">
+	</sql>
+    
+	<select id="get" resultType="OrderReturns">
+		SELECT 
+			<include refid="orderReturnsColumns"/>
+		FROM order_returns a
+		<include refid="orderReturnsJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="OrderReturns">
+		SELECT 
+			<include refid="orderReturnsColumns"/>
+		FROM order_returns a
+		<include refid="orderReturnsJoins"/>
+		<where>
+			
+			<if test="returnsNo != null and returnsNo != ''">
+				AND a.returns_no = #{returnsNo}
+			</if>
+			<if test="orderNo != null and orderNo != ''">
+				AND a.order_no = #{orderNo}
+			</if>
+			<if test="expressNo != null and expressNo != ''">
+				AND a.express_no = #{expressNo}
+			</if>
+			<if test="returnsType != null and returnsType != ''">
+				AND a.returns_type = #{returnsType}
+			</if>
+			<if test="handlingWay != null and handlingWay != ''">
+				AND a.handling_way = #{handlingWay}
+			</if>
+			<if test="returnSubmitTime != null and returnSubmitTime != ''">
+				AND a.return_submit_time = #{returnSubmitTime}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="orderId != null and orderId != ''">
+				AND a.order_id = #{orderId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="OrderReturns">
+		SELECT 
+			<include refid="orderReturnsColumns"/>
+		FROM order_returns a
+		<include refid="orderReturnsJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO order_returns(
+			id,
+			returns_no,
+			order_no,
+			express_no,
+			consignee_realname,
+			consignee_telphone,
+			consignee_address,
+			consignee_zip,
+			logistics_type,
+			returns_type,
+			handling_way,
+			returns_amount,
+			return_submit_time,
+			handling_time,
+			status,
+			reason,
+			reply,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			customer_code,
+			order_id
+		) VALUES (
+			#{id},
+			#{returnsNo},
+			#{orderNo},
+			#{expressNo},
+			#{consigneeRealname},
+			#{consigneeTelphone},
+			#{consigneeAddress},
+			#{consigneeZip},
+			#{logisticsType},
+			#{returnsType},
+			#{handlingWay},
+			#{returnsAmount},
+			#{returnSubmitTime},
+			#{handlingTime},
+			#{status},
+			#{reason},
+			#{reply},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{customerCode},
+			#{orderId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE order_returns SET 	
+			returns_no = #{returnsNo},
+			order_no = #{orderNo},
+			express_no = #{expressNo},
+			consignee_realname = #{consigneeRealname},
+			consignee_telphone = #{consigneeTelphone},
+			consignee_address = #{consigneeAddress},
+			consignee_zip = #{consigneeZip},
+			logistics_type = #{logisticsType},
+			returns_type = #{returnsType},
+			handling_way = #{handlingWay},
+			returns_amount = #{returnsAmount},
+			return_submit_time = #{returnSubmitTime},
+			handling_time = #{handlingTime},
+			status = #{status},
+			reason = #{reason},
+			reply = #{reply},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			customer_code = #{customerCode}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM order_returns
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

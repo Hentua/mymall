@@ -217,6 +217,11 @@ public class OrderInfoService extends CrudService<OrderInfoDao, OrderInfo> {
     }
 
     @Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    public int orderSubmitReturns(OrderInfo orderInfo) {
+        return orderInfoDao.orderSubmitReturns(orderInfo);
+    }
+
+    @Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public boolean orderDeliverySave(OrderInfo orderInfo) {
         OrderLogistics orderLogistics = orderInfo.getOrderLogistics();
         if(StringUtils.isBlank(orderLogistics.getOrderNo())) {
