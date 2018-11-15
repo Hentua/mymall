@@ -49,10 +49,11 @@
 			<li><label>售后状态：</label>
 				<form:select path="status" class="input-medium">
 					<form:option value="" label="全部"/>
-					<form:option value="" label="待处理"/>
-					<form:option value="" label="审核通过"/>
-					<form:option value="" label="等待退款"/>
-					<form:option value="" label="已完成"/>
+					<form:option value="0" label="待处理"/>
+					<form:option value="1" label="审核通过"/>
+					<form:option value="2" label="等待退款"/>
+					<form:option value="3" label="已完成"/>
+					<form:option value="4" label="审核未通过"/>
 				</form:select>
 			</li>
 			<li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
@@ -63,8 +64,9 @@
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
 		<thead>
 			<tr>
-				<th>退款订单号</th>
+				<th>售后单号</th>
 				<th>原订单号</th>
+				<th>物流方式</th>
 				<th>快递单号</th>
 				<th>处理方式</th>
 				<th>退款金额</th>
