@@ -30,7 +30,8 @@
 		a.auto_completed_time AS "autoCompletedTime",
 		a.activity_discount_amount AS "activityDiscountAmount",
 		a.activity_id AS "activityId",
-		a.settlements_amount as "settlementsAmount"
+		a.settlements_amount as "settlementsAmount",
+		a.set_flag as "setFlag"
 	</sql>
 
 	<resultMap id="OrderInfoDetail" type="OrderInfo">
@@ -63,6 +64,7 @@
 		<result property="activityDiscountAmount" column="activityDiscountAmount"/>
 		<result property="activityId" column="activityId"/>
 		<result property="settlementsAmount" column="settlementsAmount"/>
+		<result property="setFlag" column="setFlag"/>
 		<association property="orderLogistics" javaType="OrderLogistics">
 			<id property="id" column="logistics.id"/>
 			<result property="expressNo" column="logistics.expressNo"/>
@@ -128,6 +130,7 @@
 		a.auto_completed_time AS "autoCompletedTime",
 		a.activity_discount_amount AS "activityDiscountAmount",
 		a.activity_id AS "activityId",
+		a.set_flag AS "setFlag",
 		m.nickname AS "merchantName",
 		l.id AS "logistics.id",
 		l.express_no AS "logistics.expressNo",
@@ -195,6 +198,9 @@
             </if>
             <if test="orderType != null and orderType != ''">
                 and a.order_type = #{orderType}
+            </if>
+            <if test="id != null and id != ''">
+                and a.id = #{id}
             </if>
             and a.del_flag = '0'
         </where>
@@ -365,6 +371,11 @@
 
 	<update id="orderSubmitReturns">
 		update order_info set order_status = '5'
+		where id = #{id}
+	</update>
+
+	<update id="orderCompleteReturns">
+		update order_info set order_status = '6'
 		where id = #{id}
 	</update>
 

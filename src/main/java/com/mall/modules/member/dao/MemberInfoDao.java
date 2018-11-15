@@ -42,4 +42,11 @@ public interface MemberInfoDao extends CrudDao<MemberInfo> {
      */
     void updateMerchantData(MemberInfo memberInfo);
 
+    /**
+     * 修改用户归属运营
+     *
+     * @param memberInfo 会员实体
+     */
+    void modifyMemberOperator(MemberInfo memberInfo);
+
 }

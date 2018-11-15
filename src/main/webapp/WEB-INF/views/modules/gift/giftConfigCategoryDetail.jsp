@@ -45,6 +45,12 @@
 			</div>
 		</div>
 		<div class="control-group">
+			<label class="control-label">礼包赠送返佣：</label>
+			<div class="controls">
+				${giftConfigCategory.commission}
+			</div>
+		</div>
+		<div class="control-group">
 			<label class="control-label">定制礼包商家：</label>
 			<div class="controls">
 				${giftConfigCategory.merchantName}

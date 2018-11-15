@@ -123,7 +123,14 @@ public class MemberMerchantCheckController extends BaseController {
 			addMessage(redirectAttributes, "审核失败，用户不存在");
 			return "redirect:"+Global.getAdminPath()+"/member/memberMerchantCheck/?repage";
 		}
+		if(StringUtils.isBlank(memberMerchantCheck.getMemberInfo().getOperatorCode())) {
+			memberMerchantCheck = this.get(memberMerchantCheck.getId());
+			model.addAttribute("message", "商户归属运营不能为空");
+			return form(memberMerchantCheck, model);
+		}
 		memberInfoService.memberCheck(memberInfo);
+		memberInfo.setOperatorCode(memberMerchantCheck.getMemberInfo().getOperatorCode());
+		memberInfoService.modifyMemberOperator(memberInfo);
 		List<Role> roleList = user.getRoleList();
 		if(null == roleList) {
 			roleList = Lists.newArrayList();

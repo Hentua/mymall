@@ -1,9 +1,11 @@
 package com.mall.modules.order.api;
 
+import com.mall.common.persistence.Page;
 import com.mall.common.service.ServiceException;
 import com.mall.common.utils.ResultGenerator;
 import com.mall.common.utils.StringUtils;
 import com.mall.common.utils.api.ApiExceptionHandleUtil;
+import com.mall.common.utils.api.ApiPageEntityHandleUtil;
 import com.mall.common.web.BaseController;
 import com.mall.modules.member.entity.MemberDeliveryAddress;
 import com.mall.modules.member.service.MemberDeliveryAddressService;
@@ -69,12 +71,12 @@ public class OrderReturnsApi extends BaseController {
             if (StringUtils.isBlank(orderId)) {
                 throw new ServiceException("未选择要申请售后的订单");
             }
-            if(StringUtils.isBlank(handlingWay)) {
+            if (StringUtils.isBlank(handlingWay)) {
                 throw new ServiceException("未选择要申请的服务类型");
             }
-            if("1".equals(handlingWay) && StringUtils.isBlank(addressId)) {
+            if ("1".equals(handlingWay) && StringUtils.isBlank(addressId)) {
                 throw new ServiceException("未选择收货地址");
-            } else if("1".equals(handlingWay)) {
+            } else if ("1".equals(handlingWay)) {
                 MemberDeliveryAddress memberDeliveryAddress = memberDeliveryAddressService.get(addressId);
                 if (null == memberDeliveryAddress) {
                     throw new ServiceException("所选地址不合法");
@@ -104,7 +106,14 @@ public class OrderReturnsApi extends BaseController {
             orderReturns.setReturnsNo(returnsNo);
             orderReturns.setOrderNo(orderInfo.getOrderNo());
             orderReturns.setReturnsType(returnType);
-            orderReturns.setReturnsAmount(orderInfo.getOrderAmountTotal());
+            if ("0".equals(handlingWay)) {
+                orderReturns.setReturnsAmount(orderInfo.getOrderAmountTotal());
+            } else if ("1".equals(handlingWay)) {
+                orderReturns.setReturnsAmount(0.00);
+            } else {
+                throw new ServiceException("所选服务类型不合法");
+            }
+            orderReturns.setHandlingWay(handlingWay);
             orderReturns.setReturnSubmitTime(now);
             orderReturns.setStatus(status);
             orderReturns.setReason(reason);
@@ -117,6 +126,28 @@ public class OrderReturnsApi extends BaseController {
             orderReturnsService.save(orderReturns);
             orderInfoService.orderSubmitReturns(queryCondition);
             renderString(response, ResultGenerator.genSuccessResult());
+        } catch (Exception e) {
+            renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
+        }
+    }
+
+    /**
+     * 获取用户售后记录列表
+     *
+     * @param request  请求体
+     * @param response 响应体
+     */
+    @RequestMapping(value = "orderReturnsList", method = RequestMethod.POST)
+    public void orderReturnsList(HttpServletRequest request, HttpServletResponse response) {
+        String pageNo = request.getParameter("pageNo");
+        String pageSize = request.getParameter("pageSize");
+        User currUser = UserUtils.getUser();
+        String customerCode = currUser.getId();
+        try {
+            Page<OrderReturns> page = ApiPageEntityHandleUtil.packagePage(new Page<OrderReturns>(), pageNo, pageSize);
+            OrderReturns queryCondition = new OrderReturns();
+            queryCondition.setCustomerCode(customerCode);
+            renderString(response, ResultGenerator.genSuccessResult(orderReturnsService.findOrderReturnList(page, queryCondition).getList()));
         } catch (Exception e) {
             renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
         }

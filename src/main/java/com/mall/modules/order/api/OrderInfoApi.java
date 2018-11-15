@@ -215,6 +215,8 @@ public class OrderInfoApi extends BaseController {
                         couponCustomerService.exchangeGiftGenCoupon(giftConfigCoupon, giftCustomerId);
                     }
                 }
+                // 生成礼包佣金
+                accountService.createCommissionInfo(giftCustomer.getTransferMerchantCode(), giftCustomer.getCommission(), giftCustomerId);
             }
             if (null == goodsArr || goodsArr.size() <= 0) {
                 throw new ServiceException("未选择要购买的商品，请重新选择");

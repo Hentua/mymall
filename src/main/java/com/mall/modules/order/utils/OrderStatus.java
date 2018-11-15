@@ -33,10 +33,10 @@ public class OrderStatus {
                 orderStatusZh = "交易关闭";
                 break;
             case "5":
-                orderStatusZh = "退款申请";
+                orderStatusZh = "售后处理中";
                 break;
             case "6":
-                orderStatusZh = "已退款";
+                orderStatusZh = "售后处理完成";
                 break;
             default:
                 ;

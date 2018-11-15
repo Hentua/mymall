@@ -370,4 +370,10 @@ public class UserController extends BaseController {
 //			}
 //		});
 //	}
+
+	@ResponseBody
+	@RequestMapping(value = "operatorTreeData")
+	public List<Map<String, String>> findOperatorTreeData(HttpServletResponse response) {
+		return systemService.findOperatorList();
+	}
 }

@@ -1,5 +1,6 @@
 package com.mall.modules.gift.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.NotNull;
 
@@ -18,6 +19,8 @@ public class GiftCustomer extends DataEntity<GiftCustomer> {
 	private String transferMerchantCode;		// 赠送商户ID
 	private String customerCode;		// 收礼包会员ID
 	private Integer giftCount;		// 礼包数量
+	@JsonIgnore
+	private Double commission; // 返佣金额
 
 	private String giftConfigCategoryName; // 礼包名称
 	private Double giftPrice; // 礼包价格
@@ -29,6 +32,14 @@ public class GiftCustomer extends DataEntity<GiftCustomer> {
 
 	public GiftCustomer(String id){
 		super(id);
+	}
+
+	public Double getCommission() {
+		return commission;
+	}
+
+	public void setCommission(Double commission) {
+		this.commission = commission;
 	}
 
 	public Double getGiftPrice() {

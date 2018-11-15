@@ -26,10 +26,14 @@
 		a.update_date AS "updateDate",
 		a.remarks AS "remarks",
 		a.customer_code AS "customerCode",
-		a.order_id AS "orderId"
+		a.order_id AS "orderId",
+		u.name AS "customerName",
+		u.login_name AS "customerMobile",
+		a.check_time AS "checkTime"
 	</sql>
 	
 	<sql id="orderReturnsJoins">
+		left join sys_user u on u.id = a.customer_code
 	</sql>
     
 	<select id="get" resultType="OrderReturns">
@@ -70,6 +74,9 @@
 			</if>
 			<if test="orderId != null and orderId != ''">
 				AND a.order_id = #{orderId}
+			</if>
+			<if test="customerCode != null and customerCode != ''">
+				AND a.customer_code = #{customerCode}
 			</if>
 		</where>
 		<choose>
@@ -182,6 +189,14 @@
 	<update id="delete">
 		DELETE FROM order_returns
 		WHERE id = #{id}
+	</update>
+
+	<update id="check" parameterType="OrderReturns">
+		update order_returns set status=#{status},check_time=now(),reply=#{reply} where id=#{id}
+	</update>
+
+	<update id="handle" parameterType="OrderReturns">
+		update order_returns set status='3',handling_time=now(),logistics_type=#{logisticsType},express_no=#{expressNo} where id=#{id}
 	</update>
 	
 </mapper>

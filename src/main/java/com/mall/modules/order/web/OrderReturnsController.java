@@ -76,4 +76,97 @@ public class OrderReturnsController extends BaseController {
 		return "redirect:"+Global.getAdminPath()+"/order/orderReturns/?repage";
 	}
 
+	@RequestMapping(value = "checkPass")
+	public String checkPass(OrderReturns orderReturns, RedirectAttributes redirectAttributes, Model model) {
+		orderReturns = this.verifyData(orderReturns, redirectAttributes);
+		if(null == orderReturns) {
+			return "redirect:"+Global.getAdminPath()+"/order/orderReturns/?repage";
+		}
+		if(!"0".equals(orderReturns.getStatus())) {
+			addMessage(redirectAttributes, "请求不合法");
+			return "redirect:"+Global.getAdminPath()+"/order/orderReturns/?repage";
+		}
+		orderReturns.setStatus("1");
+		orderReturnsService.check(orderReturns);
+		addMessage(redirectAttributes, "审核成功");
+		return "redirect:"+Global.getAdminPath()+"/order/orderReturns/?repage";
+	}
+
+	@RequestMapping(value = "checkNotPass")
+	public String checkNotPass(OrderReturns orderReturns, RedirectAttributes redirectAttributes, Model model) {
+		orderReturns = this.verifyData(orderReturns, redirectAttributes);
+		if(null == orderReturns) {
+			return "redirect:"+Global.getAdminPath()+"/order/orderReturns/?repage";
+		}
+		if(!"0".equals(orderReturns.getStatus())) {
+			addMessage(redirectAttributes, "请求不合法");
+			return "redirect:"+Global.getAdminPath()+"/order/orderReturns/?repage";
+		}
+		orderReturns.setStatus("4");
+		orderReturnsService.check(orderReturns);
+		addMessage(redirectAttributes, "审核成功");
+		return "redirect:"+Global.getAdminPath()+"/order/orderReturns/?repage";
+	}
+
+	@RequestMapping(value = "delivery")
+	public String delivery(OrderReturns orderReturns, RedirectAttributes redirectAttributes, Model model) {
+		String logistics = orderReturns.getLogisticsType();
+		String expressNo = orderReturns.getExpressNo();
+		orderReturns = this.verifyData(orderReturns, redirectAttributes);
+		if(null == orderReturns) {
+			return "redirect:"+Global.getAdminPath()+"/order/orderReturns/?repage";
+		}
+		if(!"1".equals(orderReturns.getStatus())) {
+			addMessage(redirectAttributes, "请求不合法");
+			return "redirect:"+Global.getAdminPath()+"/order/orderReturns/?repage";
+		}
+		if(StringUtils.isBlank(logistics) || StringUtils.isBlank(expressNo)) {
+			addMessage(redirectAttributes, "物流信息有误");
+			return "redirect:"+Global.getAdminPath()+"/order/orderReturns/?repage";
+		}
+		orderReturns.setExpressNo(expressNo);
+		orderReturns.setLogisticsType(logistics);
+		orderReturnsService.handle(orderReturns);
+		addMessage(redirectAttributes, "发货成功");
+		return "redirect:"+Global.getAdminPath()+"/order/orderReturns/?repage";
+	}
+
+	@RequestMapping(value = "refund")
+	public String refund(OrderReturns orderReturns, RedirectAttributes redirectAttributes, Model model) {
+		orderReturns = this.verifyData(orderReturns, redirectAttributes);
+		if(null == orderReturns) {
+			return "redirect:"+Global.getAdminPath()+"/order/orderReturns/?repage";
+		}
+		if(!"1".equals(orderReturns.getStatus())) {
+			addMessage(redirectAttributes, "请求不合法");
+			return "redirect:"+Global.getAdminPath()+"/order/orderReturns/?repage";
+		}
+		// todo refund
+		orderReturnsService.handle(orderReturns);
+		addMessage(redirectAttributes, "退款成功");
+		return "redirect:"+Global.getAdminPath()+"/order/orderReturns/?repage";
+	}
+
+	private OrderReturns verifyData(OrderReturns orderReturns, RedirectAttributes redirectAttributes) {
+		String id = orderReturns.getId();
+		String reply = orderReturns.getReply();
+		String remarks = orderReturns.getRemarks();
+		if(StringUtils.isBlank(id)) {
+			addMessage(redirectAttributes, "未选择要审核的售后申请");
+			return null;
+		}
+		if(StringUtils.isBlank(reply)) {
+			addMessage(redirectAttributes, "未填写回复");
+			return null;
+		}
+		if(reply.length() > 500) {
+			addMessage(redirectAttributes, "回复超过最大允许长度，最大500字");
+			return null;
+		}
+		orderReturns = this.get(id);
+		orderReturns.setReply(reply);
+		orderReturns.setRemarks(remarks);
+		return orderReturns;
+	}
+
 }

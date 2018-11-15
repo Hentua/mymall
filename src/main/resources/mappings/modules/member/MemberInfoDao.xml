@@ -27,11 +27,14 @@
 		a.commission as "commission",
 		u.mobile AS "mobile",
 		u.user_type AS "userType",
-		u.login_flag AS "loginFlag"
+		u.login_flag AS "loginFlag",
+		a.operator_code AS "operatorCode",
+		u1.name AS "operatorName"
 	</sql>
 	
 	<sql id="memberInfoJoins">
 		left join sys_user u on u.id = a.id
+		left join sys_user u1 on u1.id = a.operator_code
 	</sql>
     
 	<select id="get" resultType="MemberInfo">
@@ -82,6 +85,12 @@
 			 </if>
 			<if test="mobile != null and mobile != ''">
 				and u.login_name = #{mobile}
+			</if>
+			<if test="operatorCode != null and operatorCode != ''">
+				and a.operator_code = #{operatorCode}
+			</if>
+			<if test="userType != null and userType != ''">
+				and u.user_type = #{userType}
 			</if>
 			and a.del_flag = #{DEL_FLAG_NORMAL}
 		</where>
@@ -135,7 +144,8 @@
 			public_account_name,
 			business_license_image,
 			company_name,
-			product_license
+			product_license,
+			operator_code
 		) VALUES (
 			#{id},
 			#{referee},
@@ -157,7 +167,8 @@
 		    #{publicAccountName},
 		    #{businessLicenseImage},
 		    #{companyName},
-		    #{productLicense}
+		    #{productLicense},
+		    #{operatorCode}
 		)
 	</insert>
 	
@@ -182,6 +193,10 @@
 
 	<update id="memberCheck">
 		update member_info set status = #{status} where id = #{id}
+	</update>
+
+	<update id="modifyMemberOperator">
+		update member_info set operator_code = #{operatorCode} where id = #{id}
 	</update>
 	
 	<update id="delete">

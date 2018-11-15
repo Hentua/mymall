@@ -61,9 +61,20 @@ public class MemberInfoController extends BaseController {
 	@RequiresPermissions("member:memberInfo:view")
 	@RequestMapping(value = {"list", ""})
 	public String list(MemberInfo memberInfo, HttpServletRequest request, HttpServletResponse response, Model model) {
+		memberInfo.setOperatorCode(UserUtils.getUser().getId());
+		memberInfo.setUserType("1");
 		Page<MemberInfo> page = memberInfoService.findPage(new Page<MemberInfo>(request, response), memberInfo);
 		model.addAttribute("page", page);
 		return "modules/member/memberInfoList";
+	}
+
+	@RequiresPermissions("member:memberInfo:view")
+	@RequestMapping(value = {"allList", ""})
+	public String allList(MemberInfo memberInfo, HttpServletRequest request, HttpServletResponse response, Model model) {
+		memberInfo.setUserType("1");
+		Page<MemberInfo> page = memberInfoService.findPage(new Page<MemberInfo>(request, response), memberInfo);
+		model.addAttribute("page", page);
+		return "modules/member/allMemberInfoList";
 	}
 
 	@RequiresPermissions("member:memberInfo:view")
@@ -82,6 +93,34 @@ public class MemberInfoController extends BaseController {
 	public String form(MemberInfo memberInfo, Model model) {
 		model.addAttribute("memberInfo", memberInfo);
 		return "modules/member/memberInfoForm";
+	}
+
+	@RequiresPermissions("member:memberInfo:view")
+	@RequestMapping(value = "allListForm")
+	public String allListForm(MemberInfo memberInfo, Model model) {
+		model.addAttribute("memberInfo", memberInfo);
+		return "modules/member/modifyMemberOperatorForm";
+	}
+
+	@RequiresPermissions("member:memberInfo:edit")
+	@RequestMapping(value = "modifyMemberOperator")
+	public String modifyMemberOperator(MemberInfo memberInfo, Model model, RedirectAttributes redirectAttributes) {
+		if(null == memberInfo) {
+			addMessage(redirectAttributes, "表单信息不合法");
+			return "redirect:"+Global.getAdminPath()+"/member/memberInfo/allList?repage";
+		}
+		if(StringUtils.isBlank(memberInfo.getId())) {
+			addMessage(redirectAttributes, "未选择要编辑的商户");
+			return "redirect:"+Global.getAdminPath()+"/member/memberInfo/allList?repage";
+		}
+		if(StringUtils.isBlank(memberInfo.getOperatorCode())) {
+			model.addAttribute("message", "未选择商户归属的运营");
+			memberInfo = this.get(memberInfo.getId());
+			return allListForm(memberInfo, model);
+		}
+		memberInfoService.modifyMemberOperator(memberInfo);
+		addMessage(redirectAttributes, "操作成功");
+		return "redirect:"+Global.getAdminPath()+"/member/memberInfo/allList?repage";
 	}
 
 	@RequestMapping(value = "merchantData")

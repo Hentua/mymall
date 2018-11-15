@@ -76,6 +76,9 @@ public class SystemService extends BaseService implements InitializingBean {
 		return UserUtils.get(id);
 	}
 
+	public List<Map<String, String>> findOperatorList() {
+		return userDao.findOperatorList();
+	}
 	/**
 	 * 根据登录名获取用户
 	 * @param loginName

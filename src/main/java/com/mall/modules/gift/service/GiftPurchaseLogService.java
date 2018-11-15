@@ -2,7 +2,10 @@ package com.mall.modules.gift.service;
 
 import java.util.List;
 
+import com.mall.modules.gift.dao.GiftConfigCategoryDao;
+import com.mall.modules.gift.entity.GiftConfigCategory;
 import com.mall.modules.gift.entity.GiftMerchant;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +22,9 @@ import com.mall.modules.gift.dao.GiftPurchaseLogDao;
 @Service
 @Transactional(readOnly = true)
 public class GiftPurchaseLogService extends CrudService<GiftPurchaseLogDao, GiftPurchaseLog> {
+
+	@Autowired
+	private GiftConfigCategoryDao giftConfigCategoryDao;
 
 	public GiftPurchaseLog get(String id) {
 		return super.get(id);
@@ -43,12 +49,14 @@ public class GiftPurchaseLogService extends CrudService<GiftPurchaseLogDao, Gift
 	}
 
 	public GiftMerchant genGiftMerchant(GiftPurchaseLog giftPurchaseLog) {
+		GiftConfigCategory giftConfigCategory = giftConfigCategoryDao.get(giftPurchaseLog.getGiftCategory());
 		GiftMerchant giftMerchant = new GiftMerchant();
 		giftMerchant.setGiftCategory(giftPurchaseLog.getGiftCategory());
 		giftMerchant.setGiftCount(giftPurchaseLog.getGiftCount());
 		giftMerchant.setGivenCount(0);
 		giftMerchant.setStock(giftPurchaseLog.getGiftCount());
 		giftMerchant.setMerchantCode(giftPurchaseLog.getMerchantCode());
+		giftMerchant.setCommission(giftConfigCategory.getCommission());
 		return giftMerchant;
 	}
 	

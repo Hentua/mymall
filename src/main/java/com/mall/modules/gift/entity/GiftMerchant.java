@@ -21,6 +21,7 @@ public class GiftMerchant extends DataEntity<GiftMerchant> {
 	private String merchantCode;		// 商户ID
 	private Date beginCreateDate;		// 开始 购买时间
 	private Date endCreateDate;		// 结束 购买时间
+	private Double commission; // 返佣金额
 
 	private String giftConfigCategoryName; // 礼包名称
 
@@ -33,6 +34,14 @@ public class GiftMerchant extends DataEntity<GiftMerchant> {
 
 	public GiftMerchant(String id){
 		super(id);
+	}
+
+	public Double getCommission() {
+		return commission;
+	}
+
+	public void setCommission(Double commission) {
+		this.commission = commission;
 	}
 
 	public String getCustomerMobile() {

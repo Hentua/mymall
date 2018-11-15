@@ -30,6 +30,8 @@ public class MemberInfo extends DataEntity<MemberInfo> {
 	private String refereeName; // 推荐人名称
 
 	private String userType; // 用户类型
+	private String operatorCode; // 归属运营ID
+	private String operatorName; // 归属运营名称
 
 	@JsonIgnore
 	private String password;
@@ -61,6 +63,22 @@ public class MemberInfo extends DataEntity<MemberInfo> {
 
 	public MemberInfo(String id){
 		super(id);
+	}
+
+	public String getOperatorName() {
+		return operatorName;
+	}
+
+	public void setOperatorName(String operatorName) {
+		this.operatorName = operatorName;
+	}
+
+	public String getOperatorCode() {
+		return operatorCode;
+	}
+
+	public void setOperatorCode(String operatorCode) {
+		this.operatorCode = operatorCode;
 	}
 
 	public String getCompanyName() {

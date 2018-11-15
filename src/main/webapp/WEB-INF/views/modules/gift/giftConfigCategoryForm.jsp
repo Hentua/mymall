@@ -62,6 +62,20 @@
 			</div>
 		</div>
 		<div class="control-group">
+			<label class="control-label">礼包赠送返佣：</label>
+			<div class="controls">
+				<c:choose>
+					<c:when test="${empty giftConfigCategory.id }">
+						<form:input path="commission" htmlEscape="false" maxlength="20" class="input-xlarge required number"/>
+						<span class="help-inline"><font color="red">*</font> </span>
+					</c:when>
+					<c:otherwise>
+						${giftConfigCategory.commission}
+					</c:otherwise>
+				</c:choose>
+			</div>
+		</div>
+		<div class="control-group">
 			<label class="control-label">定制礼包商家：</label>
 			<div class="controls">
 				<c:choose>

@@ -16,7 +16,8 @@
 		a.remarks AS "remarks",
 		c.category_name AS "giftConfigCategoryName",
 		c.gift_price AS "giftPrice",
-		c.merchant_qualification AS "merchantQualification"
+		c.merchant_qualification AS "merchantQualification",
+		a.commission AS "commission"
 	</sql>
 	
 	<sql id="giftCustomerJoins">
@@ -84,7 +85,8 @@
 			create_date,
 			update_by,
 			update_date,
-			remarks
+			remarks,
+			commission
 		) VALUES (
 			#{id},
 			#{giftCategory},
@@ -96,7 +98,8 @@
 			#{createDate},
 			#{updateBy.id},
 			#{updateDate},
-			#{remarks}
+			#{remarks},
+			#{commission}
 		)
 	</insert>
 	
@@ -109,7 +112,8 @@
 			gift_count = #{giftCount},
 			update_by = #{updateBy.id},
 			update_date = #{updateDate},
-			remarks = #{remarks}
+			remarks = #{remarks},
+			commission = #{commission}
 		WHERE id = #{id}
 	</update>
 	

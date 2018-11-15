@@ -178,4 +178,9 @@ public class MemberInfoService extends CrudService<MemberInfoDao, MemberInfo> {
         memberMerchantCheckService.save(memberMerchantCheck);
     }
 
+    @Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    public void modifyMemberOperator(MemberInfo memberInfo) {
+        memberInfoDao.modifyMemberOperator(memberInfo);
+    }
+
 }

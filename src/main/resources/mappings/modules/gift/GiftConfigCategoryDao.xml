@@ -15,7 +15,8 @@
 		a.remarks AS "remarks",
 		a.status AS "status",
 		a.merchant_code AS "merchantCode",
-		m.nickname AS "merchantName"
+		m.nickname AS "merchantName",
+		a.commission AS "commission"
 	</sql>
 	
 	<sql id="giftConfigCategoryJoins">
@@ -91,7 +92,8 @@
 			del_flag,
 			remarks,
 			status,
-		    merchant_code
+		    merchant_code,
+			commission
 		) VALUES (
 			#{id},
 			#{categoryName},
@@ -105,6 +107,7 @@
 			#{remarks},
 			#{status},
 			#{merchantCode}
+			#{commission}
 		)
 	</insert>
 	
@@ -117,7 +120,8 @@
 			update_by = #{updateBy.id},
 			remarks = #{remarks},
 			status = #{status},
-			merchant_code = #{merchantCode}
+			merchant_code = #{merchantCode},
+			commission = #{commission}
 		WHERE id = #{id}
 	</update>
 	

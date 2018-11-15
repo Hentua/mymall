@@ -88,4 +88,12 @@ public interface OrderInfoDao extends CrudDao<OrderInfo> {
      */
     int orderSubmitReturns(OrderInfo orderInfo);
 
+    /**
+     * 订单售后完成修改状态
+     *
+     * @param orderInfo 条件
+     * @return 操作条目数
+     */
+    int orderCompleteReturns(OrderInfo orderInfo);
+
 }

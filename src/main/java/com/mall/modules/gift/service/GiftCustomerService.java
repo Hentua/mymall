@@ -49,6 +49,7 @@ public class GiftCustomerService extends CrudService<GiftCustomerDao, GiftCustom
 		giftCustomer.setGiftCategory(giftMerchant.getGiftCategory());
 		giftCustomer.setGiftMerchantId(giftMerchant.getId());
 		giftCustomer.setTransferMerchantCode(giftMerchant.getMerchantCode());
+		giftCustomer.setCommission(giftMerchant.getCommission());
 		return giftCustomer;
 	}
 	

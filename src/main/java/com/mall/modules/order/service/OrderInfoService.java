@@ -14,6 +14,7 @@ import com.mall.modules.order.entity.OrderGoods;
 import com.mall.modules.order.entity.OrderInfo;
 import com.mall.modules.order.entity.OrderLogistics;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -219,6 +220,11 @@ public class OrderInfoService extends CrudService<OrderInfoDao, OrderInfo> {
     @Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public int orderSubmitReturns(OrderInfo orderInfo) {
         return orderInfoDao.orderSubmitReturns(orderInfo);
+    }
+
+    @Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    public int orderCompleteReturns(OrderInfo orderInfo) {
+        return orderInfoDao.orderCompleteReturns(orderInfo);
     }
 
     @Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)

@@ -163,6 +163,12 @@
         </div>
     </div>
     <div class="control-group">
+        <label class="control-label">归属运营：</label>
+        <div class="controls">
+            ${memberMerchantCheck.memberInfo.operatorName}
+        </div>
+    </div>
+    <div class="control-group">
         <label class="control-label">商户备注：</label>
         <div class="controls">
             <form:textarea path="memberInfo.remarks" htmlEscape="false" rows="4" maxlength="500" class="input-xxlarge "

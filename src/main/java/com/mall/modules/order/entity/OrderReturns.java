@@ -33,6 +33,12 @@ public class OrderReturns extends DataEntity<OrderReturns> {
 	private String reply;		// 运营回复
 	private String customerCode;		// 申请人
 	private String orderId;		// 原订单ID
+	private Date checkTime;		// 审核时间
+
+	private String customerName;
+	private String customerMobile;
+
+	private OrderInfo orderInfo;
 
 	public OrderReturns() {
 		super();
@@ -40,6 +46,38 @@ public class OrderReturns extends DataEntity<OrderReturns> {
 
 	public OrderReturns(String id){
 		super(id);
+	}
+
+	public OrderInfo getOrderInfo() {
+		return orderInfo;
+	}
+
+	public void setOrderInfo(OrderInfo orderInfo) {
+		this.orderInfo = orderInfo;
+	}
+
+	public Date getCheckTime() {
+		return checkTime;
+	}
+
+	public void setCheckTime(Date checkTime) {
+		this.checkTime = checkTime;
+	}
+
+	public String getCustomerName() {
+		return customerName;
+	}
+
+	public void setCustomerName(String customerName) {
+		this.customerName = customerName;
+	}
+
+	public String getCustomerMobile() {
+		return customerMobile;
+	}
+
+	public void setCustomerMobile(String customerMobile) {
+		this.customerMobile = customerMobile;
 	}
 
 	public String getOrderId() {
