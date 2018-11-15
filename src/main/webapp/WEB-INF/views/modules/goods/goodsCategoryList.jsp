@@ -61,9 +61,9 @@
 				<th>层级</th>
 				<th>排序</th>
 				<%--<th>状态</th>--%>
-				<th>创建者</th>
-				<th>创建时间</th>
-				<th>更新者</th>
+				<th>返佣方式</th>
+				<th>费用数值</th>
+				<th>更新人</th>
 				<th>更新时间</th>
 				<shiro:hasPermission name="goods:goodsCategory:edit"><th>操作</th></shiro:hasPermission>
 			</tr>
@@ -98,10 +98,23 @@
 					<%--</c:if>--%>
 				<%--</td>--%>
 				<td>
-					${goodsCategory.createBy.name}
+					<c:if test="${goodsCategory.commissionMode == '1'}">
+						固定金额
+					</c:if>
+					<c:if test="${goodsCategory.commissionMode == '2'}">
+						百分比计算
+					</c:if>
+					<c:if test="${empty goodsCategory.commissionMode}">
+						不返佣金
+					</c:if>
 				</td>
 				<td>
-					<fmt:formatDate value="${goodsCategory.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
+					<c:if test="${empty goodsCategory.commissionMode}">
+						不返佣金
+					</c:if>
+					<c:if test="${!empty goodsCategory.commissionMode}">
+						${goodsCategory.commissionNumber}
+					</c:if>
 				</td>
 				<td>
 					${goodsCategory.updateBy.name}
