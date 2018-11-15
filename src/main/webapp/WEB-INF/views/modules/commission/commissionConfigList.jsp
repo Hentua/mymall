@@ -82,7 +82,12 @@
 					${commissionConfig.remarkes}
 				</td>
 				<shiro:hasPermission name="commission:commissionConfig:edit"><td>
-    				<a href="${ctx}/commission/commissionConfig/form?id=${commissionConfig.id}">修改</a>
+					<c:if test="${commissionConfig.type != '1'}">
+						<a href="${ctx}/commission/commissionConfig/form?id=${commissionConfig.id}">修改</a>
+					</c:if>
+					<c:if test="${commissionConfig.type == '1'}">
+						<a href="${ctx}/goods/goodsCategory">修改</a>
+					</c:if>
 				</td></shiro:hasPermission>
 			</tr>
 		</c:forEach>

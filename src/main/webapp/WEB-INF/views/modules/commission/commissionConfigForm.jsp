@@ -64,7 +64,9 @@
 			<label class="control-label">佣金计算方式：</label>
 			<div class="controls">
 				<form:radiobutton title="固定金额" htmlEscape="false" class="required" path="mode" value="1" label="固定金额"/>
-				<form:radiobutton title="百分比" htmlEscape="false" class="required" path="mode" value="2" label="百分比"/>
+				<c:if test="${commissionConfig.type != '3'}">
+					<form:radiobutton title="百分比" htmlEscape="false" class="required" path="mode" value="2" label="百分比"/>
+				</c:if>
 			</div>
 		</div>
 		<div class="control-group">
