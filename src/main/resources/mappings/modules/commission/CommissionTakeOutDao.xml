@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.modules.commission.dao.CommissionTakeOutDao">
+    
+	<sql id="commissionTakeOutColumns">
+		a.id AS "id",
+		a.user_id AS "userId",
+		a.amount AS "amount",
+		a.create_date AS "createDate",
+		a.bank_account AS "bankAccount",
+		a.bank_account_name AS "bankAccountName",
+		a.bank_name AS "bankName",
+		a.check_status AS "checkStatus",
+		m.nickname as "userName",
+		u.mobile as "userMobile"
+	</sql>
+	
+	<sql id="commissionTakeOutJoins">
+		left join member_info m on m.id = a.user_id
+		left join sys_user u on u.id = a.user_id
+	</sql>
+    
+	<select id="get" resultType="CommissionTakeOut">
+		SELECT 
+			<include refid="commissionTakeOutColumns"/>
+		FROM commission_take_out a
+		<include refid="commissionTakeOutJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CommissionTakeOut">
+		SELECT 
+			<include refid="commissionTakeOutColumns"/>
+		FROM commission_take_out a
+		<include refid="commissionTakeOutJoins"/>
+		<where>
+			
+			<if test="userId != null and userId != ''">
+				AND a.user_id = #{userId}
+			</if>
+			<if test="amount != null and amount != ''">
+				AND a.amount = #{amount}
+			</if>
+			<if test="createDate != null and createDate != ''">
+				AND a.create_date = #{createDate}
+			</if>
+			<if test="bankAccount != null and bankAccount != ''">
+				AND a.bank_account = #{bankAccount}
+			</if>
+			<if test="bankAccountName != null and bankAccountName != ''">
+				AND a.bank_account_name = #{bankAccountName}
+			</if>
+			<if test="bankName != null and bankName != ''">
+				AND a.bank_name = #{bankName}
+			</if>
+			<if test="checkStatus != null and checkStatus != ''">
+				AND a.check_status = #{checkStatus}
+			</if>
+            <if test="userMobile != null and userMobile != ''">
+                and u.mobile = #{userMobile}
+            </if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+                ORDER BY a.create_date desc,a.check_status asc
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CommissionTakeOut">
+		SELECT 
+			<include refid="commissionTakeOutColumns"/>
+		FROM commission_take_out a
+		<include refid="commissionTakeOutJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO commission_take_out(
+			id,
+			user_id,
+			amount,
+			create_date,
+			bank_account,
+			bank_account_name,
+			bank_name,
+			check_status
+		) VALUES (
+			#{id},
+			#{userId},
+			#{amount},
+			#{createDate},
+			#{bankAccount},
+			#{bankAccountName},
+			#{bankName},
+			#{checkStatus}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE commission_take_out SET 	
+			user_id = #{userId},
+			amount = #{amount},
+			create_date = #{createDate},
+			bank_account = #{bankAccount},
+			bank_account_name = #{bankAccountName},
+			bank_name = #{bankName},
+			check_status = #{checkStatus}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM commission_take_out
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
