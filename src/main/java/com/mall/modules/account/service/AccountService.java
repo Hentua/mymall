@@ -126,7 +126,7 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 	 * 根据订单信息创建账单流水
 	 * @param orderInfo
 	 */
-	@Transactional(readOnly = false)
+	@Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
 	public void createAccountFlow(OrderInfo orderInfo) throws Exception{
 
 
@@ -242,31 +242,63 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 			}
 
 		}
-		//订单类型（0-平台自主下单，1-礼包兑换）
-		if("1".equals(orderInfo.getOrderType())){
-			//新增佣金记录
-			//卖家推荐人佣金
-			CommissionInfo merchantRefereeCommission = new CommissionInfo();
-			//1：推荐用户消费返佣 2：推荐商家销售返佣 3：推荐商家入驻返佣 4：推荐商家送出礼包返佣 5：商家送出礼包返佣
-			merchantRefereeCommission.setType("4");
-			merchantRefereeCommission.setUserId(merchantRefereeUser.getId());
-			merchantRefereeCommission.setProduceUserId(merchant.getId());
-			merchantRefereeCommission.setOriginAmount(orderInfo.getGoodsAmountTotal());
-			merchantRefereeCommission.setAmount(commissionConfigService.getCommissionAmount("4",orderInfo.getGoodsAmountTotal()));
-			merchantRefereeCommission.setUnionId(orderInfo.getId());
-			commissionInfoService.save(merchantRefereeCommission);
+	}
 
-			CommissionInfo merchantCommission = new CommissionInfo();
-			//1：推荐用户消费返佣 2：推荐商家销售返佣 3：推荐商家入驻返佣 4：推荐商家送出礼包返佣 5：商家送出礼包返佣
-			merchantCommission.setType("5");
-			merchantCommission.setUserId(merchant.getId());
-			merchantCommission.setProduceUserId(merchant.getId());
-			merchantCommission.setOriginAmount(orderInfo.getGoodsAmountTotal());
-			merchantCommission.setAmount(commissionConfigService.getCommissionAmount("5",orderInfo.getGoodsAmountTotal()));
-			merchantCommission.setUnionId(orderInfo.getId());
-			commissionInfoService.save(merchantCommission);
 
+	/**
+	 * 礼包送出创建佣金接口
+	 * @param senUserId 送出用户ID
+	 * @param amount 礼包金额
+	 * @param giftId 礼包ID
+	 * @throws Exception
+	 */
+	@Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+	public void createCommissionInfo(String senUserId,Double amount,String giftId) throws Exception{
+
+		User merchantRefereeUser = null ;
+		User customerRefereeUser = null;
+		User merchant = null;
+
+		//卖家信息
+		merchant = UserUtils.get(senUserId);
+		//买家信息
+		if(null == merchant){
+			logger.error("创建佣金流水失败：卖家信息为空");
+			return ;
 		}
+		//卖家推荐人
+		merchantRefereeUser = UserUtils.get(merchant.getRefereeId());
+		//买家推荐人
+		if(null == merchantRefereeUser){
+			logger.error("创建佣金流水失败：卖家推荐人为空");
+			return ;
+		}
+		if(null == customerRefereeUser){
+			logger.error("创建佣金流水失败：买家推荐人为空");
+			return ;
+		}
+
+		//新增佣金记录
+		//卖家推荐人佣金
+		CommissionInfo merchantRefereeCommission = new CommissionInfo();
+		//1：推荐用户消费返佣 2：推荐商家销售返佣 3：推荐商家入驻返佣 4：推荐商家送出礼包返佣 5：商家送出礼包返佣
+		merchantRefereeCommission.setType("4");
+		merchantRefereeCommission.setUserId(merchantRefereeUser.getId());
+		merchantRefereeCommission.setProduceUserId(merchant.getId());
+		merchantRefereeCommission.setOriginAmount(amount);
+		merchantRefereeCommission.setAmount(commissionConfigService.getCommissionAmount("4",amount));
+		merchantRefereeCommission.setUnionId(giftId);
+		commissionInfoService.save(merchantRefereeCommission);
+
+		CommissionInfo merchantCommission = new CommissionInfo();
+		//1：推荐用户消费返佣 2：推荐商家销售返佣 3：推荐商家入驻返佣 4：推荐商家送出礼包返佣 5：商家送出礼包返佣
+		merchantCommission.setType("5");
+		merchantCommission.setUserId(merchant.getId());
+		merchantCommission.setProduceUserId(merchant.getId());
+		merchantCommission.setOriginAmount(amount);
+		merchantCommission.setAmount(commissionConfigService.getCommissionAmount("5",amount));
+		merchantCommission.setUnionId(giftId);
+		commissionInfoService.save(merchantCommission);
 	}
 
 
