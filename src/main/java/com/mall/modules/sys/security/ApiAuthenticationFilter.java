@@ -6,6 +6,8 @@ package com.mall.modules.sys.security;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+
+import com.alibaba.fastjson.JSONObject;
 import com.mall.common.config.Global;
 import com.mall.common.security.Digests;
 import com.mall.common.utils.*;
@@ -22,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.PrintWriter;
+import java.util.Enumeration;
 
 /**
  * app请求鉴权
@@ -213,6 +216,15 @@ public class ApiAuthenticationFilter extends org.apache.shiro.web.filter.authc.F
     protected boolean onAccessDenied(ServletRequest request,ServletResponse response) throws Exception {
         log.info("==================APP请求鉴权=====================");
         String uri = ((HttpServletRequest) request).getServletPath();
+        Enumeration enu=request.getParameterNames();
+        JSONObject jo =new JSONObject();
+        while(enu.hasMoreElements()){
+            String paraName=(String)enu.nextElement();
+            jo.put(paraName,request.getParameter(paraName));
+//            System.out.println(paraName+": "+request.getParameter(paraName));
+        }
+        log.info("url = "+uri);
+        log.info("jsonparam = "+jo.toJSONString());
         //登录验证
         if (uri.indexOf("/login") != -1 && uri.indexOf("/loginOut") == -1) {
             boolean executeLogin = this.executeLogin(request, response);

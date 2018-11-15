@@ -119,7 +119,7 @@ public class CommissionConfigService extends CrudService<CommissionConfigDao, Co
 		}
 		Double amountTotal = 0.0;
 		List<OrderGoods> list = new ArrayList<>();
-		if(null != orderInfo.getOrderGoodsList()) {
+		if(null != orderInfo.getOrderGoodsList() && orderInfo.getOrderGoodsList().size() != 0) {
 			list = orderInfo.getOrderGoodsList();
 		}else{
 			list = orderGoodsDao.findList(new OrderGoods(orderInfo.getOrderNo()));
@@ -138,27 +138,11 @@ public class CommissionConfigService extends CrudService<CommissionConfigDao, Co
 						amount+= 0.0;
 					}
 					//按交易金额 计算百分比
-					amount+= gc.getCommissionNumber()/og.getGoodsPrice()*100;
+					amount+= gc.getCommissionNumber()/og.getSubtotal()*100;
 				}
 				amountTotal+=amount;
-			if(!StringUtils.isEmpty(og.getGoodsRecommendId())){
-				String goodsRecommendId = og.getGoodsRecommendId();
-				goodsRecommendId= goodsRecommendId.substring(4,goodsRecommendId.length());
-				GoodsRecommend  g = goodsRecommendDao.get(goodsRecommendId);
-				User customer = UserUtils.get(orderInfo.getCustomerCode());
-				User customerRefereeUser = UserUtils.get(g.getUserId());
-				CommissionInfo customerRefereeCommission = new CommissionInfo();
-				customerRefereeCommission.setId(IdGen.uuid());
-				customerRefereeCommission.setType("1");
-				customerRefereeCommission.setUserId(customerRefereeUser.getId());
-				customerRefereeCommission.setProduceUserId(customer.getId());
-				customerRefereeCommission.setOriginAmount(orderInfo.getGoodsAmountTotal());
-				customerRefereeCommission.setAmount(amount);
-				customerRefereeCommission.setUnionId(orderInfo.getId());
-				commissionInfoDao.insert(customerRefereeCommission);
-			}
 		}
-		logger.info("获取佣金失败：参数无效 type:"+type+" amountTotal"+amountTotal);
+		logger.info(" type:"+type+" amountTotal"+amountTotal);
 		return  amountTotal;
 	}
 

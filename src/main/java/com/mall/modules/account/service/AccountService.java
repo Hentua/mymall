@@ -179,6 +179,7 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 			orderSettlement.setOrderId(orderInfo.getId());
 			orderSettlement.setSettlementAmount(orderInfo.getSettlementsAmount());
 			orderSettlement.setUserId(orderInfo.getMerchantCode());
+			orderSettlement.setStatus("0");
 			orderSettlementService.save(orderSettlement);
 			//新增佣金记录
 			//卖家推荐人佣金
@@ -187,8 +188,8 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 			merchantRefereeCommission.setType("2");
 			merchantRefereeCommission.setUserId(merchantRefereeUser.getId());
 			merchantRefereeCommission.setProduceUserId(merchant.getId());
-			merchantRefereeCommission.setOriginAmount(orderInfo.getGoodsAmountTotal());
-			merchantRefereeCommission.setAmount(commissionConfigService.getCommissionAmount("2",orderInfo.getGoodsAmountTotal()));
+			merchantRefereeCommission.setOriginAmount(orderInfo.getOrderAmountTotal());
+			merchantRefereeCommission.setAmount(commissionConfigService.getCommissionAmount("2",orderInfo.getOrderAmountTotal()));
 			merchantRefereeCommission.setUnionId(orderInfo.getId());
 			commissionInfoService.save(merchantRefereeCommission);
 
@@ -197,13 +198,13 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 			customerRefereeCommission.setType("1");
 			customerRefereeCommission.setUserId(customerRefereeUser.getId());
 			customerRefereeCommission.setProduceUserId(customer.getId());
-			customerRefereeCommission.setOriginAmount(orderInfo.getGoodsAmountTotal());
+			customerRefereeCommission.setOriginAmount(orderInfo.getOrderAmountTotal());
 			customerRefereeCommission.setAmount(commissionConfigService.getCommissionAmount("1",orderInfo));
 			customerRefereeCommission.setUnionId(orderInfo.getId());
 			commissionInfoService.save(customerRefereeCommission);
 
 			List<OrderGoods> list = null;
-			if(null != orderInfo.getOrderGoodsList()) {
+			if(null != orderInfo.getOrderGoodsList() && orderInfo.getOrderGoodsList().size()!=0 ) {
 				list = orderInfo.getOrderGoodsList();
 			}else{
 				list = orderGoodsDao.findList(new OrderGoods(orderInfo.getOrderNo()));
@@ -227,13 +228,12 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 					}
 
 					String goodsRecommendId = og.getGoodsRecommendId();
-					goodsRecommendId= goodsRecommendId.substring(4,goodsRecommendId.length());
 					GoodsRecommend g = goodsRecommendDao.get(goodsRecommendId);
 					CommissionInfo commissionInfo = new CommissionInfo();
 					commissionInfo.setType("1");
-					commissionInfo.setUserId(customerRefereeUser.getId());
+					commissionInfo.setUserId(g.getUserId());
 					commissionInfo.setProduceUserId(customer.getId());
-					commissionInfo.setOriginAmount(orderInfo.getGoodsAmountTotal());
+					commissionInfo.setOriginAmount(orderInfo.getOrderAmountTotal());
 					commissionInfo.setAmount(amount);
 					commissionInfo.setUnionId(orderInfo.getId());
 					commissionInfoService.save(commissionInfo);

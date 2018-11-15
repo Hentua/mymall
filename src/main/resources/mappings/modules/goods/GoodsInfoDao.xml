@@ -101,15 +101,9 @@
 			<if test="goodsCategoryId != null and goodsCategoryId != ''">
 				AND a.goods_category_id = #{goodsCategoryId}
 			</if>
-			<if test="goodsName != null and goodsName != ''">
-				AND a.goods_name LIKE CONCAT('%',#{goodsName},'%')
+			<if test="keyWord != null and keyWord != '' ">
+				(AND a.goods_name LIKE CONCAT('%',#{keyWord},'%') or m.nickname LIKE CONCAT('%',#{keyWord},'%'))
 			</if>
-			<if test="merchantName != null and merchantName != ''">
-				and m.nickname LIKE CONCAT('%',#{merchantName},'%')
-			</if>
-		     <if test="merchantId != null and merchantId != ''">
-				and a.merchant_id = #{merchantId}
-			 </if>
 			and goods_type = 1
 		</where>
 		<choose>

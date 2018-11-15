@@ -53,6 +53,7 @@ public class GoodsInfo extends DataEntity<GoodsInfo> {
 
     private String standardId; // 商品规格ID
     private String standardName; // 商品规格名称
+    private String keyWord;
 
     //商品规格
     private List<GoodsStandard> goodsStandards = new ArrayList<GoodsStandard>();
@@ -68,6 +69,14 @@ public class GoodsInfo extends DataEntity<GoodsInfo> {
 
     public GoodsInfo(String id) {
         super(id);
+    }
+
+    public String getKeyWord() {
+        return keyWord;
+    }
+
+    public void setKeyWord(String keyWord) {
+        this.keyWord = keyWord;
     }
 
     public String getStandardId() {

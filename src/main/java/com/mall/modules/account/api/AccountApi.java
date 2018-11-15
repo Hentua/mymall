@@ -140,7 +140,7 @@ public class AccountApi extends BaseController {
 		accountFlow.setBankName(request.getParameter("bankName"));//开户行
 		accountFlow.setCheckStatus("1");
 		accountFlowService.save(accountFlow);
-		return ResultGenerator.genSuccessResult();
+		return ResultGenerator.genSuccessResult("成功");
 	}
 
 
@@ -174,7 +174,7 @@ public class AccountApi extends BaseController {
 		accountFlow.setBankName(request.getParameter("bankName"));//开户行
 		accountFlow.setCheckStatus("1");
 		accountFlowService.save(accountFlow);
-		return ResultGenerator.genSuccessResult();
+		return ResultGenerator.genSuccessResult("成功");
 	}
 
 
@@ -210,6 +210,6 @@ public class AccountApi extends BaseController {
 		accountFlowService.save(accountFlow);
 		//操作余额
 		accountService.editAccount(memberInfo.getBalance()+amount,memberInfo.getCommission()-amount,user.getId());
-		return ResultGenerator.genSuccessResult();
+		return ResultGenerator.genSuccessResult("成功");
 	}
 }

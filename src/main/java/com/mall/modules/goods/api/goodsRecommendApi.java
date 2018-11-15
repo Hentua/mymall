@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.mall.common.utils.Result;
 import com.mall.common.utils.ResultGenerator;
 import com.mall.common.web.BaseController;
+import com.mall.modules.goods.entity.GoodsInfo;
 import com.mall.modules.goods.entity.GoodsRecommend;
 import com.mall.modules.goods.service.*;
 import com.mall.modules.member.service.MemberInfoService;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -53,14 +55,20 @@ public class goodsRecommendApi extends BaseController {
      */
     @ResponseBody
     @RequestMapping(value = "goodsRecommend", method = RequestMethod.POST)
-    public Result goodsRecommend(HttpServletRequest request, HttpServletResponse response) {
+    public Result goodsRecommend(HttpServletRequest request, HttpServletResponse response)throws Exception {
         User user = UserUtils.getUser();
+        String goodsId = request.getParameter("goodsId");
+        GoodsInfo goodsInfo = goodsInfoService.get(goodsId);
+        if(goodsInfo == null){
+            throw new ServletException("无效商品信息");
+        }
         GoodsRecommend goodsRecommend = new GoodsRecommend();
-        goodsRecommend.setGoodsId(request.getParameter("goodsId"));
+        goodsRecommend.setGoodsId(goodsInfo.getId());
         goodsRecommend.setUserId(user.getId());
         goodsRecommendService.save(goodsRecommend);
         JSONObject jo =new JSONObject();
-        jo.put("goodsRecommendCode","myyx"+goodsRecommend.getId());
+        String code = goodsInfo.getGoodsName()+",复制整段信息，打开美易优选,（"+goodsRecommend.getId()+"）";
+        jo.put("goodsRecommendCode",goodsRecommend.getId());
         return ResultGenerator.genSuccessResult(jo);
     }
 }

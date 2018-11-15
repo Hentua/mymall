@@ -29,7 +29,8 @@
 		a.completed_time AS "completedTime",
 		a.auto_completed_time AS "autoCompletedTime",
 		a.activity_discount_amount AS "activityDiscountAmount",
-		a.activity_id AS "activityId"
+		a.activity_id AS "activityId",
+		a.settlements_amount as "settlementsAmount"
 	</sql>
 
 	<resultMap id="OrderInfoDetail" type="OrderInfo">
@@ -61,6 +62,7 @@
 		<result property="autoCompletedTime" column="autoCompletedTime"/>
 		<result property="activityDiscountAmount" column="activityDiscountAmount"/>
 		<result property="activityId" column="activityId"/>
+		<result property="settlementsAmount" column="settlementsAmount"/>
 		<association property="orderLogistics" javaType="OrderLogistics">
 			<id property="id" column="logistics.id"/>
 			<result property="expressNo" column="logistics.expressNo"/>

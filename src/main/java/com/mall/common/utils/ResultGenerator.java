@@ -12,6 +12,7 @@ public class ResultGenerator {
 
     public static Result genSuccessResult() {
         return  new Result()
+                .setData("success")
                 .setStatus(ResultStatus.SUCCESS)
                 .setMessage(DEFAULT_SUCCESS_MESSAGE);
     }

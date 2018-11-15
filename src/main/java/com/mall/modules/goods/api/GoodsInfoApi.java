@@ -65,10 +65,13 @@ public class GoodsInfoApi extends BaseController {
     public Result goodsList(HttpServletRequest request, HttpServletResponse response) {
         String sortType = request.getParameter("sortType");
         String sortWay = request.getParameter("sortWay");
+        String keyWord = request.getParameter("keyWord");
+
         GoodsInfo goodsInfo = new GoodsInfo();
         goodsInfo.setGoodsCategoryId(request.getParameter("goodsCategoryId"));
-        goodsInfo.setGoodsName(request.getParameter("goodsName"));
-        goodsInfo.setMerchantName(request.getParameter("merchantName"));
+        if(!StringUtils.isEmpty(keyWord)){
+            goodsInfo.setKeyWord(keyWord);
+        }
         goodsInfo.setMerchantId(request.getParameter("merchantId"));
         Page<GoodsInfo> page = new Page<GoodsInfo>(request,response);
         //排序类型 1综合排序 2销量排序 3价格排序
@@ -101,9 +104,7 @@ public class GoodsInfoApi extends BaseController {
     public Result goodsDetails(HttpServletRequest request, HttpServletResponse response) {
         GoodsInfo goodsInfo = null;
         String goodsRecommendCode = request.getParameter("goodsRecommendCode");
-
         if(!StringUtils.isEmpty(goodsRecommendCode)){
-            goodsRecommendCode = goodsRecommendCode.substring(4,goodsRecommendCode.length());
             GoodsRecommend goodsRecommend= goodsRecommendService.get(goodsRecommendCode);
             if(null == goodsRecommend){
                 throw new ServiceException("无效推荐码");
@@ -198,7 +199,7 @@ public class GoodsInfoApi extends BaseController {
         goodsEvaluate.setEvaluateUserName(user.getNickname());
         goodsEvaluate.setEvaluateDate(new Date());
         goodsEvaluateService.save(goodsEvaluate);
-        return ResultGenerator.genSuccessResult();
+        return ResultGenerator.genSuccessResult("成功");
     }
 
 
