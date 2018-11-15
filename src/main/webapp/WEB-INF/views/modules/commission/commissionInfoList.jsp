@@ -56,8 +56,8 @@
 				<th>产生金额</th>
 				<th>佣金金额</th>
 				<th>佣金类型</th>
-				<th>创建时间</th>
 				<th>生成用户</th>
+				<th>创建时间</th>
 				<th>状态</th>
 			</tr>
 		</thead>
@@ -84,8 +84,8 @@
 						商家送出礼包返佣
 					</c:if>
 				</td>
-				<td><fmt:formatDate value="${commissionTakeOut.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
 				<td>${commissionInfo.produceUserMobile}</td>
+				<td><fmt:formatDate value="${commissionInfo.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
 				<td>
 					<c:if test="${commissionInfo.status == '1'}">
 						已清算

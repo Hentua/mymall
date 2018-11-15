@@ -29,6 +29,9 @@
         <%--</header>--%>
         <article data-scroll="true" id="login_article">
 	        <div class="indented">
+				<div style="text-align: center;">
+					<img src="${ctxStatic}/images/logo.png" width="30%" /><br/>
+				</div>
 	            <form id="from1" action="${ctx}/login" method="post" >
 					<input type="hidden" name="refereeCode" value="${refereeMember.referee}"/>
 					<input type="hidden" name="type" value="0"/>
@@ -64,14 +67,13 @@
 	            </form>
 				<div id="cg_div" style="display: none">
 					<div style="text-align: center;">
-						<img src="${ctxStatic}/images/logo.png" width="40%" /><br/>
 						<span style="font-size: 150%;color: #008fd7">
 							注册成功
 						</span>
 					</div>
 					<br/>
 					<div style="text-align: center;font-size: 120%">
-						请前往AppStore下载《美易优选APP》
+						请前往AppStore下载《美易优选》APP
 					</div>
 				</div>
 	        </div>
