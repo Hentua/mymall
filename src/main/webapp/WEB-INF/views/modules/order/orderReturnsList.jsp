@@ -25,7 +25,7 @@
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<ul class="ul-form">
-			<li><label>退款订单号：</label>
+			<li><label>售后单号：</label>
 				<form:input path="returnsNo" htmlEscape="false" maxlength="32" class="input-medium"/>
 			</li>
 			<li><label>原订单号：</label>
@@ -34,27 +34,25 @@
 			<li><label>快递单号：</label>
 				<form:input path="expressNo" htmlEscape="false" maxlength="100" class="input-medium"/>
 			</li>
-			<li><label>退货类型：</label>
-				<form:select path="returnsType" class="input-medium">
-					<form:option value="" label=""/>
-					<form:options items="${fns:getDictList('')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
-				</form:select>
-			</li>
 			<li><label>处理方式：</label>
 				<form:select path="handlingWay" class="input-medium">
-					<form:option value="" label=""/>
-					<form:options items="${fns:getDictList('')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
+					<form:option value="" label="全部"/>
+					<form:option value="0" label="退货退款"/>
+					<form:option value="1" label="换新"/>
 				</form:select>
 			</li>
-			<li><label>售后申请时间：</label>
+			<li><label>申请时间：</label>
 				<input name="returnSubmitTime" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
 					value="<fmt:formatDate value="${orderReturns.returnSubmitTime}" pattern="yyyy-MM-dd HH:mm:ss"/>"
 					onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});"/>
 			</li>
 			<li><label>售后状态：</label>
 				<form:select path="status" class="input-medium">
-					<form:option value="" label=""/>
-					<form:options items="${fns:getDictList('')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
+					<form:option value="" label="全部"/>
+					<form:option value="" label="待处理"/>
+					<form:option value="" label="审核通过"/>
+					<form:option value="" label="等待退款"/>
+					<form:option value="" label="已完成"/>
 				</form:select>
 			</li>
 			<li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
@@ -68,7 +66,6 @@
 				<th>退款订单号</th>
 				<th>原订单号</th>
 				<th>快递单号</th>
-				<th>退货类型</th>
 				<th>处理方式</th>
 				<th>退款金额</th>
 				<th>售后申请时间</th>
@@ -91,9 +88,6 @@
 				</td>
 				<td>
 					${orderReturns.expressNo}
-				</td>
-				<td>
-					${fns:getDictLabel(orderReturns.returnsType, '', '')}
 				</td>
 				<td>
 					${fns:getDictLabel(orderReturns.handlingWay, '', '')}

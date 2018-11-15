@@ -26,7 +26,7 @@
 		a.update_date AS "updateDate",
 		a.remarks AS "remarks",
 		a.customer_code AS "customerCode",
-		a.orderId AS "orderId"
+		a.order_id AS "orderId"
 	</sql>
 	
 	<sql id="orderReturnsJoins">
