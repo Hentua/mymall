@@ -302,5 +302,38 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 	}
 
 
+	/**
+	 * 消费退款
+	 * @param userId 退款人
+	 * @param amount 退款金额
+	 * @param refundNo 退款单号（订单号）
+	 */
+	public void createRefund(String userId,Double amount,String refundNo){
+		//创建消费流水
+		MemberInfo m = new MemberInfo();
+		m.setId(userId);
+		MemberInfo memberInfo = memberInfoDao.get(m);
+		if(null == memberInfo){
+			throw new ServiceException("账户不存在");
+		}
+		AccountFlow accountFlow = new AccountFlow();
+		accountFlow.setFlowNo(String.valueOf(idWorker.getId()));
+		accountFlow.setId(IdGen.uuid());
+		accountFlow.setUserId(userId);
+		accountFlow.setAmount(amount);
+		accountFlow.setType("1");//收入
+		accountFlow.setMode("5");//消费
+		accountFlow.setOrderId(refundNo);
+		accountFlow.setCheckStatus("2");
+		accountFlow.setCreateDate(new Date());
+		accountFlowDao.insert(accountFlow);
+		Map<String,Object> paramMap = new HashMap<>();
+		paramMap.put("balance",memberInfo.getBalance() + amount);
+		paramMap.put("commission",null);
+		paramMap.put("userId",userId);
+		dao.editAccount(paramMap);
+	}
+
+
 
 }

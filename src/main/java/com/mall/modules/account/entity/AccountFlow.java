@@ -17,7 +17,7 @@ public class AccountFlow extends DataEntity<AccountFlow> {
 	private String userId;		// 用户id
 	private Double amount;		// 金额
 	private String type;		// 类型：1收入 2支出
-	private String mode;		// 收入（1：充值，2：佣金转余额）支出（3：提现，4：消费）
+	private String mode;		// 收入（1：充值，2：佣金转余额,5退款）支出（3：提现，4：消费）
 	private String orderId;		// 订单id 充值提现记录为空
 	private String incomeExpenditureMode;		// 收支方式 1：微信 2：用户转账
 	private String bankAccount;		// 银行账户
@@ -118,6 +118,9 @@ public class AccountFlow extends DataEntity<AccountFlow> {
 		}
 		if("4".equals(this.getMode())){
 			return "消费";
+		}
+		if("5".equals(this.getMode())){
+			return "退款";
 		}
 		return "";
 	}
