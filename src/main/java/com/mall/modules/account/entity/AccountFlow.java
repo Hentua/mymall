@@ -120,7 +120,7 @@ public class AccountFlow extends DataEntity<AccountFlow> {
 			return "消费";
 		}
 		if("5".equals(this.getMode())){
-			return "退款";
+			return "消费退款";
 		}
 		return "";
 	}
