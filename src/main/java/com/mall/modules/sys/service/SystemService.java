@@ -3,26 +3,16 @@
  */
 package com.mall.modules.sys.service;
 
-import java.util.*;
-
 import com.mall.common.config.Global;
-import com.mall.common.utils.CacheUtils;
-import com.mall.common.utils.Encodes;
-import com.mall.common.utils.StringUtils;
-import com.mall.common.web.Servlets;
-import org.activiti.engine.IdentityService;
-import org.activiti.engine.identity.Group;
-import org.apache.shiro.session.Session;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.mall.common.persistence.Page;
 import com.mall.common.security.Digests;
 import com.mall.common.security.shiro.session.SessionDAO;
 import com.mall.common.service.BaseService;
 import com.mall.common.service.ServiceException;
+import com.mall.common.utils.CacheUtils;
+import com.mall.common.utils.Encodes;
+import com.mall.common.utils.StringUtils;
+import com.mall.common.web.Servlets;
 import com.mall.modules.sys.dao.MenuDao;
 import com.mall.modules.sys.dao.RoleDao;
 import com.mall.modules.sys.dao.UserDao;
@@ -33,6 +23,16 @@ import com.mall.modules.sys.entity.User;
 import com.mall.modules.sys.security.SystemAuthorizingRealm;
 import com.mall.modules.sys.utils.LogUtils;
 import com.mall.modules.sys.utils.UserUtils;
+import org.activiti.engine.IdentityService;
+import org.activiti.engine.identity.Group;
+import org.apache.shiro.session.Session;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.*;
 
 /**
  * 系统管理，安全相关实体的管理类,包括用户、角色、菜单.
@@ -405,6 +405,12 @@ public class SystemService extends BaseService implements InitializingBean {
 //		systemRealm.clearAllCachedAuthorizationInfo();
 		// 清除日志相关缓存
 		CacheUtils.remove(LogUtils.CACHE_MENU_NAME_PATH_MAP);
+	}
+
+	@Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+	public void modifyLoginFlag(User user) {
+		userDao.modifyLoginFlag(user);
+		UserUtils.clearCache(user);
 	}
 	
 	/**

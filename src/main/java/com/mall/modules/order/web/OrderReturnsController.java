@@ -141,7 +141,6 @@ public class OrderReturnsController extends BaseController {
 			addMessage(redirectAttributes, "请求不合法");
 			return "redirect:"+Global.getAdminPath()+"/order/orderReturns/?repage";
 		}
-		// todo refund
 		orderReturnsService.handle(orderReturns);
 		addMessage(redirectAttributes, "退款成功");
 		return "redirect:"+Global.getAdminPath()+"/order/orderReturns/?repage";

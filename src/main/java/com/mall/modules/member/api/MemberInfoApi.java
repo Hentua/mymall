@@ -136,7 +136,7 @@ public class MemberInfoApi extends BaseController {
             systemService.saveUser(user);
             // 清除当前用户缓存
             if (user.getLoginName().equals(UserUtils.getUser().getLoginName())) {
-                UserUtils.clearCache();
+                UserUtils.clearCache(user);
             }
 
             // 初始化会员信息

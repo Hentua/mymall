@@ -18,7 +18,7 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li class="active"><a href="${ctx}/member/memberInfo/">会员列表</a></li>
+		<li class="active"><a href="${ctx}/member/memberInfo/">商户列表</a></li>
 	</ul>
 	<form:form id="searchForm" modelAttribute="memberInfo" action="${ctx}/member/memberInfo/" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
@@ -61,7 +61,6 @@
 				<th>商户审核状态</th>
 				<th>登录状态</th>
 				<th>备注</th>
-				<th>操作</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -120,14 +119,6 @@
 				</td>
 				<td>
 					${memberInfo.remarks}
-				</td>
-				<td>
-					<c:if test="${memberInfo.loginFlag == '0'}">
-						<a href="">允许登录</a>
-					</c:if>
-					<c:if test="${memberInfo.loginFlag == '1'}">
-						<a href="">禁止登录</a>
-					</c:if>
 				</td>
 			</tr>
 		</c:forEach>

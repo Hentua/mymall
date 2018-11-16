@@ -69,7 +69,7 @@ public class MemberInfoController extends BaseController {
 	}
 
 	@RequiresPermissions("member:memberInfo:view")
-	@RequestMapping(value = {"allList", ""})
+	@RequestMapping(value = {"allList"})
 	public String allList(MemberInfo memberInfo, HttpServletRequest request, HttpServletResponse response, Model model) {
 		memberInfo.setUserType("1");
 		Page<MemberInfo> page = memberInfoService.findPage(new Page<MemberInfo>(request, response), memberInfo);
@@ -119,6 +119,50 @@ public class MemberInfoController extends BaseController {
 			return allListForm(memberInfo, model);
 		}
 		memberInfoService.modifyMemberOperator(memberInfo);
+		addMessage(redirectAttributes, "操作成功");
+		return "redirect:"+Global.getAdminPath()+"/member/memberInfo/allList?repage";
+	}
+
+	@RequiresPermissions("member:memberInfo:edit")
+	@RequestMapping(value = "disableUser")
+	public String disableUser(MemberInfo memberInfo, Model model, RedirectAttributes redirectAttributes) {
+		if(null == memberInfo) {
+			addMessage(redirectAttributes, "表单信息不合法");
+			return "redirect:"+Global.getAdminPath()+"/member/memberInfo/allList?repage";
+		}
+		if(StringUtils.isBlank(memberInfo.getId())) {
+			addMessage(redirectAttributes, "未选择要禁止登录的会员");
+			return "redirect:"+Global.getAdminPath()+"/member/memberInfo/allList?repage";
+		}
+		User user = UserUtils.get(memberInfo.getId());
+		if(null == user || "0".equals(user.getLoginFlag())) {
+			addMessage(redirectAttributes, "操作失败，用户信息不合法");
+			return "redirect:"+Global.getAdminPath()+"/member/memberInfo/allList?repage";
+		}
+		user.setLoginFlag("0");
+		systemService.modifyLoginFlag(user);
+		addMessage(redirectAttributes, "操作成功");
+		return "redirect:"+Global.getAdminPath()+"/member/memberInfo/allList?repage";
+	}
+
+	@RequiresPermissions("member:memberInfo:edit")
+	@RequestMapping(value = "enableUser")
+	public String enableUser(MemberInfo memberInfo, Model model, RedirectAttributes redirectAttributes) {
+		if(null == memberInfo) {
+			addMessage(redirectAttributes, "表单信息不合法");
+			return "redirect:"+Global.getAdminPath()+"/member/memberInfo/allList?repage";
+		}
+		if(StringUtils.isBlank(memberInfo.getId())) {
+			addMessage(redirectAttributes, "未选择要允许登录的会员");
+			return "redirect:"+Global.getAdminPath()+"/member/memberInfo/allList?repage";
+		}
+		User user = UserUtils.get(memberInfo.getId());
+		if(null == user || "1".equals(user.getLoginFlag())) {
+			addMessage(redirectAttributes, "操作失败，用户信息不合法");
+			return "redirect:"+Global.getAdminPath()+"/member/memberInfo/allList?repage";
+		}
+		user.setLoginFlag("1");
+		systemService.modifyLoginFlag(user);
 		addMessage(redirectAttributes, "操作成功");
 		return "redirect:"+Global.getAdminPath()+"/member/memberInfo/allList?repage";
 	}
@@ -216,7 +260,7 @@ public class MemberInfoController extends BaseController {
 		systemService.saveUser(user);
 		// 清除当前用户缓存
 		if (user.getLoginName().equals(UserUtils.getUser().getLoginName())) {
-			UserUtils.clearCache();
+			UserUtils.clearCache(user);
 		}
 
 		// 初始化会员信息

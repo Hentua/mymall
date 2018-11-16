@@ -113,15 +113,33 @@
         </div>
     </div>
     <div class="control-group">
+        <label class="control-label">活动扣减金额：</label>
+        <div class="controls">
+                ${orderInfo.activityDiscountAmount}
+        </div>
+    </div>
+    <div class="control-group">
         <label class="control-label">运费：</label>
         <div class="controls">
                 ${orderInfo.logisticsFee}
         </div>
     </div>
     <div class="control-group">
-        <label class="control-label">应付总金额：</label>
+        <label class="control-label">订单金额：</label>
         <div class="controls">
                 ${orderInfo.orderAmountTotal}
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">应收货款：</label>
+        <div class="controls">
+                ${orderInfo.settlementsAmount}
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">支付时间：</label>
+        <div class="controls">
+            <fmt:formatDate value="${orderInfo.payTime}" pattern="yyyy-MM-dd HH:mm:ss"/>
         </div>
     </div>
     <div class="control-group">
@@ -147,7 +165,10 @@
         <div class="controls">
             <c:choose>
                 <c:when test="${orderInfo.orderStatus eq '1'}">
-                    <form:input path="orderLogistics.logisticsType" htmlEscape="false" class="input-xlarge required"/>
+                    <form:select path="orderLogistics.logisticsType" class="input-xlarge ">
+                        <form:options items="${fns:getDictList('express_type')}" itemLabel="label" itemValue="value"
+                                      htmlEscape="false"/>
+                    </form:select>
                 </c:when>
                 <c:otherwise>
                     ${orderInfo.orderLogistics.logisticsType}
@@ -175,19 +196,13 @@
         </div>
     </div>
     <div class="control-group">
-        <label class="control-label">备注：</label>
+        <label class="control-label">买家留言：</label>
         <div class="controls">
                 ${orderInfo.remarks}
         </div>
     </div>
     <div class="control-group">
-        <label class="control-label">支付时间：</label>
-        <div class="controls">
-            <fmt:formatDate value="${orderInfo.payTime}" pattern="yyyy-MM-dd HH:mm:ss"/>
-        </div>
-    </div>
-    <div class="control-group">
-        <label class="control-label">订单商品表：</label>
+        <label class="control-label">订单商品：</label>
         <div class="controls">
             <table id="contentTable" class="table table-striped table-bordered table-condensed">
                 <thead>
@@ -200,7 +215,7 @@
                     <th>商品单位</th>
                     <th>商品图片</th>
                     <th>商品价格</th>
-                    <th>折扣比例</th>
+                    <th>优惠金额</th>
                     <th>折扣金额</th>
                     <th>小计金额</th>
                 </tr>
@@ -232,10 +247,10 @@
 								{{row.goodsPrice}}
 							</td>
 							<td>
-								{{row.discountRate}}
+								{{row.discountAmount}}
 							</td>
 							<td>
-								{{row.discountAmount}}
+								{{row.activityDiscountAmount}}
 							</td>
 							<td>
 								{{row.subtotal}}

@@ -2,11 +2,13 @@ package com.mall.modules.order.service;
 
 import com.mall.common.persistence.Page;
 import com.mall.common.service.CrudService;
+import com.mall.modules.account.service.AccountService;
 import com.mall.modules.order.dao.OrderGoodsDao;
 import com.mall.modules.order.dao.OrderInfoDao;
 import com.mall.modules.order.dao.OrderReturnsDao;
 import com.mall.modules.order.entity.OrderGoods;
 import com.mall.modules.order.entity.OrderInfo;
+import com.mall.modules.order.entity.OrderPaymentInfo;
 import com.mall.modules.order.entity.OrderReturns;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,6 +33,10 @@ public class OrderReturnsService extends CrudService<OrderReturnsDao, OrderRetur
     private OrderGoodsDao orderGoodsDao;
     @Autowired
     private OrderInfoService orderInfoService;
+    @Autowired
+    private OrderPaymentInfoService orderPaymentInfoService;
+    @Autowired
+    private AccountService accountService;
 
     public OrderReturns get(String id) {
         return super.get(id);
@@ -66,6 +72,19 @@ public class OrderReturnsService extends CrudService<OrderReturnsDao, OrderRetur
     @Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public void handle(OrderReturns orderReturns) {
         OrderInfo orderInfo = orderInfoService.get(orderReturns.getOrderId());
+        if("0".equals(orderReturns.getHandlingWay())) {
+            String paymentNo = orderInfo.getPaymentNo();
+            OrderPaymentInfo queryCondition = new OrderPaymentInfo();
+            queryCondition.setPaymentNo(paymentNo);
+            OrderPaymentInfo orderPaymentInfo = orderPaymentInfoService.getByCondition(queryCondition);
+            String payChannel = orderPaymentInfo.getPayChannel();
+            if("0".equals(payChannel)) {
+                // todo 微信支付退款
+            }else if("3".equals(payChannel)) {
+                // 余额支付退款
+                accountService.createRefund(orderReturns.getCustomerCode(), orderReturns.getReturnsAmount(), orderInfo.getOrderNo());
+            }
+        }
         orderInfoService.orderCompleteReturns(orderInfo);
         dao.handle(orderReturns);
     }

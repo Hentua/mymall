@@ -194,7 +194,14 @@
                 and a.customer_code = #{customerCode}
             </if>
             <if test="orderStatus != null and orderStatus != ''">
-                and a.order_status = #{orderStatus}
+                <choose>
+					<when test="orderStatus == '3'">
+						and a.order_status in ('3','5','6')
+					</when>
+                    <otherwise>
+						and a.order_status = #{orderStatus}
+					</otherwise>
+				</choose>
             </if>
             <if test="orderType != null and orderType != ''">
                 and a.order_type = #{orderType}

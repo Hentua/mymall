@@ -18,7 +18,7 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li class="active"><a href="${ctx}/member/memberInfo/">商户列表</a></li>
+		<li class="active"><a href="${ctx}/member/memberInfo/allList">商户列表</a></li>
 	</ul>
 	<form:form id="searchForm" modelAttribute="memberInfo" action="${ctx}/member/memberInfo/" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
@@ -127,10 +127,10 @@
 				</td>
 				<td>
 					<c:if test="${memberInfo.loginFlag == '0'}">
-						<a href="">允许登录</a>
+						<a href="${ctx}/member/memberInfo/enableUser?id=${memberInfo.id}" onclick="return confirmx('确定允许该用户登录吗？', this.href)">允许登录</a>
 					</c:if>
 					<c:if test="${memberInfo.loginFlag == '1'}">
-						<a href="">禁止登录</a>
+						<a href="${ctx}/member/memberInfo/disableUser?id=${memberInfo.id}" onclick="return confirmx('确定禁止该用户登录吗？', this.href)">禁止登录</a>
 					</c:if>
 					<a href="${ctx}/member/memberInfo/allListForm?id=${memberInfo.id}">修改归属运营</a>
 				</td>

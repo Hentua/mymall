@@ -3,12 +3,12 @@
  */
 package com.mall.modules.sys.dao;
 
-import java.util.List;
-import java.util.Map;
-
-import com.mall.modules.sys.entity.User;
 import com.mall.common.persistence.CrudDao;
 import com.mall.common.persistence.annotation.MyBatisDao;
+import com.mall.modules.sys.entity.User;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 用户DAO接口
@@ -96,5 +96,12 @@ public interface UserDao extends CrudDao<User> {
      * @return 运营用户列表
      */
     List<Map<String, String>> findOperatorList();
+
+    /**
+     * 修改用户登录状态
+     *
+     * @param user 用户实体
+     */
+    void modifyLoginFlag(User user);
 
 }
