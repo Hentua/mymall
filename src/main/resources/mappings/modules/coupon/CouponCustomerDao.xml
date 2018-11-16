@@ -38,7 +38,7 @@
 			   IFNULL(sum(if(a.coupon_type = 0, 1, 0)),0) as fiveDiscountCoupon,
 			   IFNULL(sum(if(a.coupon_type = 1, 1, 0)),0) as sevenDiscountCoupon
 		from coupon_customer a
-		where a.customer_code = #{customerCode} and a.start_date &lt;= now() and a.end_date &gt;= now() and a.coupon_status = '0'
+		where a.customer_code = #{customerCode} and a.start_date &lt;= now() and a.end_date &gt;= now() and a.coupon_status = '0' and balance!=0
 	</select>
 	
 	<select id="findList" resultType="CouponCustomer">
