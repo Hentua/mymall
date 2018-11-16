@@ -104,6 +104,9 @@
 			<if test="keyWord != null and keyWord != '' ">
 				AND a.goods_name LIKE CONCAT('%',#{keyWord},'%')
 			</if>
+			<if test="merchantId != null and merchantId != '' ">
+				AND a.merchant_id = #{merchantId}
+			</if>
 			and goods_type = 1
 		</where>
 		<choose>
