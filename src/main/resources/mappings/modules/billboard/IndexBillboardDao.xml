@@ -13,10 +13,14 @@
 		a.create_date AS "createDate",
 		a.update_by AS "updateBy.id",
 		a.update_date AS "updateDate",
-		a.remarks AS "remarks"
+		a.remarks AS "remarks",
+		a.jump_Id as "jumpId",
+		jg.image as "jumpGoodsImage",
+		jg.goods_name as "jumpGoodsName"
 	</sql>
 	
 	<sql id="indexBillboardJoins">
+		left join goods_info jg on jg.id = a.jump_Id
 	</sql>
     
 	<select id="get" resultType="IndexBillboard">
@@ -87,7 +91,8 @@
 			create_date,
 			update_by,
 			update_date,
-			remarks
+			remarks,
+			jump_id
 		) VALUES (
 			#{id},
 			#{title},
@@ -99,7 +104,8 @@
 			#{createDate},
 			#{updateBy.id},
 			#{updateDate},
-			#{remarks}
+			#{remarks},
+			#{jumpId}
 		)
 	</insert>
 
@@ -121,7 +127,8 @@
 			app_flag = #{appFlag},
 			update_by = #{updateBy.id},
 			update_date = #{updateDate},
-			remarks = #{remarks}
+			remarks = #{remarks},
+			jump_Id = #{jumpId}
 		WHERE id = #{id}
 	</update>
 	

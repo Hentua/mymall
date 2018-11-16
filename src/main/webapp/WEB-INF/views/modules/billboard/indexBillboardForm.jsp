@@ -55,8 +55,35 @@
             });
         }
 
+        function selGoodsbyjump(t) {
+            top.$.jBox.open("iframe:${ctx}/goods/goodsInfo/selectList?goodsType=1", "选择商品", 1200, $(top.document).height()-280, {
+                buttons:{"确定":"ok","关闭":true}, submit:function(v, h, f){
+                    if (v=="ok"){
+                        console.log(h.find("iframe")[0].contentWindow)
+                        var goodsInfo = {goodsId: h.find("iframe")[0].contentWindow.$("#goodsId").val(),
+                            goodsName: h.find("iframe")[0].contentWindow.$("#goodsName").val(),
+                            merchantCode: h.find("iframe")[0].contentWindow.$("#merchantCode").val(),
+                            goodsImage: h.find("iframe")[0].contentWindow.$("#goodsImage").val()};
+                        console.log(goodsInfo)
+                        $("#jump_span").text("")
+						var text = "<span><input type=\"hidden\" name=\"jumpId\" value="+goodsInfo.goodsId+" />\n" +
+                            "<img src="+goodsInfo.goodsImage+" width=\"100px\" height=\"100px\">\n" +
+                            "<a href=\"javascript:\" onclick=\"goodsDel(this);\">×</a></span>"
+						console.log(text)
+                        $("#jump_span").append(text);
+                        console.log($("#jump_span").text())
+						$("#selGoods1").hide();
+                    }
+                }, loaded:function(h){
+                    $(".jbox-content", top.document).css("overflow-y","hidden");
+                }
+            });
+        }
+
+
         function goodsDel(t) {
             $(t).parent().remove();
+            $("#selGoods1").show();
         }
 
 	</script>
@@ -74,7 +101,7 @@
 			<div class="controls">
 				<form:select path="type" onchange="showHide(this)"   class="input-xlarge ">
 					<form:option value="1" label="轮播图广告位"/>
-					<form:option value="2"  label="独立广告位"/>
+					<form:option value="2"  label="标题广告"/>
 					<form:option value="3"  label="开机广告"/>
 				</form:select>
 			</div>
@@ -92,8 +119,23 @@
 				<sys:ckfinder input="image" type="images" uploadPath="/billboard/indexBillboard" selectMultiple="false" maxWidth="100" maxHeight="100"/>
 			</div>
 		</div>
+		<div class="control-group">
+			<label class="control-label">广告关联商品：</label>
+			<div class="controls">
+				<span id="jump_span">
+					<span>
+					<c:if test="${!empty indexBillboard.jumpId}">
+						<input type="hidden" name="jumpId" value="${indexBillboard.jumpId}" />
+						<img src="${indexBillboard.jumpGoodsImage}" title="${indexBillboard.jumpGoodsName}" width="100px" height="100px">
+						<a href="javascript:" onclick="goodsDel(this);">×</a>
+					</c:if>
+				</span>
+				</span>
+				<input class="btn" style="display: ${empty indexBillboard.jumpId?'':'none'}" id="selGoods1" type="button" value="选择商品" onclick="selGoodsbyjump(this)">
+			</div>
+		</div>
 		<div class="control-group" id="selGoods" style="${(indexBillboard.type == 2)?'':'display: none'}">
-			<label class="control-label">广告商品：</label>
+			<label class="control-label">标题广告商品列表：</label>
 			<div class="controls">
 				<div style="" id="goodsInfos">
 					<c:forEach items="${indexBillboard.goodsList}" var="g">

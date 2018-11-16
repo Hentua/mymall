@@ -21,6 +21,9 @@ public class IndexBillboard extends DataEntity<IndexBillboard> {
 	private Integer sort;		// 排序
 	private String type;		// 类型：1轮播图广告位 2独立广告位 3开机广告
 	private String appFlag;		// app广告位标识
+	private String jumpId;      //跳转ID
+	private String jumpGoodsImage; //商品图片
+	private String jumpGoodsName;
 	private String[] goodsId;   //form表单商品ID集合
 
 	//广告位关联商品集合
@@ -34,6 +37,29 @@ public class IndexBillboard extends DataEntity<IndexBillboard> {
 		super(id);
 	}
 
+	public String getJumpGoodsName() {
+		return jumpGoodsName;
+	}
+
+	public void setJumpGoodsName(String jumpGoodsName) {
+		this.jumpGoodsName = jumpGoodsName;
+	}
+
+	public String getJumpId() {
+		return jumpId;
+	}
+
+	public void setJumpId(String jumpId) {
+		this.jumpId = jumpId;
+	}
+
+	public String getJumpGoodsImage() {
+		return jumpGoodsImage;
+	}
+
+	public void setJumpGoodsImage(String jumpGoodsImage) {
+		this.jumpGoodsImage = jumpGoodsImage;
+	}
 
 	public String[] getGoodsId() {
 		return goodsId;

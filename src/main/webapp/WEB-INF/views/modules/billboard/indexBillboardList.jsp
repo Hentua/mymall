@@ -45,6 +45,7 @@
 		<thead>
 			<tr>
 				<th>标题</th>
+				<th>关联商品</th>
 				<th>轮播图片</th>
 				<th>排序</th>
 				<th>类型</th>
@@ -56,8 +57,9 @@
 		<tbody>
 		<c:forEach items="${page.list}" var="indexBillboard">
 			<tr>
-				<td><a href="${ctx}/billboard/indexBillboard/form?id=${indexBillboard.id}">
-					${indexBillboard.title}
+				<td>${indexBillboard.title}</td>
+				<td><a href="${ctx}/goods/goodsInfo/goodsDetail?id=${indexBillboard.jumpId}">
+						${indexBillboard.jumpGoodsName}
 				</a></td>
 				<td>
 					<img src="${indexBillboard.image}" width="200px" height="80px">
