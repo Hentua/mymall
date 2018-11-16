@@ -1,6 +1,7 @@
 package com.mall.modules.goods.entity;
 
 import com.mall.common.config.Global;
+import com.mall.common.utils.StringUtils;
 import org.hibernate.validator.constraints.Length;
 
 import com.mall.common.persistence.DataEntity;
@@ -44,11 +45,11 @@ public class GoodsImage extends DataEntity<GoodsImage> {
 //		}
         this.imageUrl = imageUrl;
     }
+    private String fullImageUrl = "";
 
     public String getFullImageUrl() {
-        String fullImageUrl = "";
-        if (null != imageUrl) {
-            fullImageUrl = Global.getConfig("userfiles.baseURL") + imageUrl;
+        if (StringUtils.isEmpty(this.fullImageUrl)) {
+            this.fullImageUrl = Global.getConfig("userfiles.baseURL") + imageUrl;
         }
         return fullImageUrl;
     }

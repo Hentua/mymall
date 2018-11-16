@@ -18,6 +18,7 @@ public class ResultGenerator {
     }
     public static Result genSuccessResult(String message) {
         return  new Result()
+                .setData(message)
                 .setStatus(ResultStatus.SUCCESS)
                 .setMessage(message);
     }
@@ -31,12 +32,14 @@ public class ResultGenerator {
 
     public static Result genFailResult(String message) {
         return new Result()
+                .setData(message)
                 .setStatus(ResultStatus.FAIL)
                 .setMessage(message);
     }
 
     public static Result genFailResult(String message,ResultStatus status ) {
         return new Result()
+                .setData(message)
                 .setStatus(status)
                 .setMessage(message);
     }
