@@ -32,6 +32,10 @@ public class MemberInfo extends DataEntity<MemberInfo> {
 	private String userType; // 用户类型
 	private String operatorCode; // 归属运营ID
 	private String operatorName; // 归属运营名称
+	private String openid; // 普通用户的标识，对当前开发者帐号唯一
+	private String unionid; // 用户统一标识。针对一个微信开放平台帐号下的应用，同一用户的unionid是唯一的。
+	private String wechatNickname; // 微信普通用户昵称
+	private String headimgurl; // 用户头像，最后一个数值代表正方形头像大小（有0、46、64、96、132数值可选，0代表640*640正方形头像），用户没有头像时该项为空
 
 	@JsonIgnore
 	private String password;
@@ -63,6 +67,38 @@ public class MemberInfo extends DataEntity<MemberInfo> {
 
 	public MemberInfo(String id){
 		super(id);
+	}
+
+	public String getOpenid() {
+		return openid;
+	}
+
+	public void setOpenid(String openid) {
+		this.openid = openid;
+	}
+
+	public String getUnionid() {
+		return unionid;
+	}
+
+	public void setUnionid(String unionid) {
+		this.unionid = unionid;
+	}
+
+	public String getWechatNickname() {
+		return wechatNickname;
+	}
+
+	public void setWechatNickname(String wechatNickname) {
+		this.wechatNickname = wechatNickname;
+	}
+
+	public String getHeadimgurl() {
+		return headimgurl;
+	}
+
+	public void setHeadimgurl(String headimgurl) {
+		this.headimgurl = headimgurl;
 	}
 
 	public String getOperatorName() {

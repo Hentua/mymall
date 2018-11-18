@@ -29,7 +29,11 @@
 		u.user_type AS "userType",
 		u.login_flag AS "loginFlag",
 		a.operator_code AS "operatorCode",
-		u1.name AS "operatorName"
+		u1.name AS "operatorName",
+		a.openid AS "openid",
+		a.unionid AS "unionid",
+		a.wechat_nickname AS "wechatNickname",
+		a.headimgurl AS "headimgurl"
 	</sql>
 	
 	<sql id="memberInfoJoins">
@@ -204,5 +208,17 @@
 			del_flag = #{DEL_FLAG_DELETE}
 		WHERE id = #{id}
 	</update>
+
+	<update id="bindWechat">
+		update member_info set openid = #{openid}, unionid = #{unionid}, headimgurl = #{headimgurl}, wechat_nickname = #{wechatNickname} where id = #{id}
+	</update>
+
+	<select id="getMemberWechatInfo" resultType="Map">
+		select
+			ifnull(wechat_nickname, '') as "wechatNickname",
+		  	ifnull(headimgurl, '') as "headimgurl",
+		    case when unionid is null then '0' else '1' end as "weatherWechatBind"
+		from member_info where id = #{id}
+	</select>
 	
 </mapper>

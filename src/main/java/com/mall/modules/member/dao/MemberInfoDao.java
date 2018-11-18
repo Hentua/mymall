@@ -4,6 +4,8 @@ import com.mall.common.persistence.CrudDao;
 import com.mall.common.persistence.annotation.MyBatisDao;
 import com.mall.modules.member.entity.MemberInfo;
 
+import java.util.Map;
+
 /**
  * 用户信息DAO接口
  *
@@ -48,5 +50,20 @@ public interface MemberInfoDao extends CrudDao<MemberInfo> {
      * @param memberInfo 会员实体
      */
     void modifyMemberOperator(MemberInfo memberInfo);
+
+    /**
+     * 用户绑定微信
+     *
+     * @param memberInfo 会员实体
+     */
+    void bindWechat(MemberInfo memberInfo);
+
+    /**
+     * 获取会员绑定微信相关信息
+     *
+     * @param id 会员ID
+     * @return 微信绑定信息
+     */
+    Map<String, String> getMemberWechatInfo(String id);
 
 }

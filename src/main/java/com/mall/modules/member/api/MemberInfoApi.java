@@ -602,7 +602,10 @@ public class MemberInfoApi extends BaseController {
             Map<String, String> orderCount = orderInfoService.orderCount(customerCode);
             // 获取优惠券统计
             Map<String, String> enabledCouponsCount = couponCustomerService.enabledCouponsCount(customerCode);
+            // 获取会员绑定微信信息
+            Map<String, String> memberWechatInfo = memberInfoService.getMemberWechatInfo(customerCode);
 
+            memberDataCount.putAll(memberWechatInfo);
             memberDataCount.putAll(orderCount);
             memberDataCount.putAll(enabledCouponsCount);
             MemberInfo m = new MemberInfo();
@@ -838,6 +841,67 @@ public class MemberInfoApi extends BaseController {
                 throw new ServiceException("两次输入密码不一致");
             }
             systemService.updatePasswordById(user.getId(), user.getLoginName(), password);
+            renderString(response, ResultGenerator.genSuccessResult());
+        } catch (Exception e) {
+            renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
+        }
+    }
+
+    /**
+     * 用户绑定微信
+     *
+     * @param request  请求体
+     * @param response 响应体
+     */
+    @RequestMapping(value = "bindWechat", method = RequestMethod.POST)
+    public void bindWechat(HttpServletRequest request, HttpServletResponse response) {
+        String openid = request.getParameter("openid");
+        String unionid = request.getParameter("unionid");
+        String wechatNickname = request.getParameter("wechatNickname");
+        String headimgurl = request.getParameter("headimgurl");
+        User currUser = UserUtils.getUser();
+        String memberId = currUser.getId();
+        try {
+            if (StringUtils.isBlank(openid) || StringUtils.isBlank(unionid)) {
+                throw new ServiceException("微信绑定失败");
+            }
+            MemberInfo memberInfo = new MemberInfo();
+            memberInfo.setId(memberId);
+            memberInfo.setWechatNickname(wechatNickname);
+            memberInfo.setHeadimgurl(headimgurl);
+            memberInfo.setUnionid(unionid);
+            memberInfoService.bindWechat(memberInfo);
+            renderString(response, ResultGenerator.genSuccessResult());
+        } catch (Exception e) {
+            renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
+        }
+    }
+
+    /**
+     * 用户解绑微信
+     *
+     * @param request  请求体
+     * @param response 响应体
+     */
+    @RequestMapping(value = "unbindWechat", method = RequestMethod.POST)
+    public void unbindWechat(HttpServletRequest request, HttpServletResponse response) {
+        User currUser = UserUtils.getUser();
+        String memberId = currUser.getId();
+        try {
+            MemberInfo queryCondition = new MemberInfo();
+            queryCondition.setId(memberId);
+            MemberInfo memberInfo = memberInfoService.get(queryCondition);
+            if (null == memberInfo) {
+                throw new ServiceException("用户信息不存在");
+            }
+            if (StringUtils.isBlank(memberInfo.getOpenid()) || StringUtils.isBlank(memberInfo.getUnionid())) {
+                throw new ServiceException("用户未绑定微信");
+            }
+            memberInfo.setOpenid(null);
+            memberInfo.setUnionid(null);
+            memberInfo.setWechatNickname(null);
+            memberInfo.setHeadimgurl(null);
+            memberInfoService.bindWechat(memberInfo);
             renderString(response, ResultGenerator.genSuccessResult());
         } catch (Exception e) {
             renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
