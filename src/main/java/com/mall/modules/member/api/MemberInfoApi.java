@@ -870,6 +870,7 @@ public class MemberInfoApi extends BaseController {
             memberInfo.setWechatNickname(wechatNickname);
             memberInfo.setHeadimgurl(headimgurl);
             memberInfo.setUnionid(unionid);
+            memberInfo.setOpenid(openid);
             memberInfoService.bindWechat(memberInfo);
             renderString(response, ResultGenerator.genSuccessResult());
         } catch (Exception e) {

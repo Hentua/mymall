@@ -1,8 +1,5 @@
 package com.mall.common.utils;
 
-import javax.servlet.ServletResponse;
-import java.io.PrintWriter;
-
 /**
  * @author wank
  * 响应结果生成工具
@@ -12,13 +9,12 @@ public class ResultGenerator {
 
     public static Result genSuccessResult() {
         return  new Result()
-                .setData("success")
                 .setStatus(ResultStatus.SUCCESS)
                 .setMessage(DEFAULT_SUCCESS_MESSAGE);
     }
     public static Result genSuccessResult(String message) {
         return  new Result()
-                .setData(message)
+//                .setData(message)
                 .setStatus(ResultStatus.SUCCESS)
                 .setMessage(message);
     }
@@ -32,14 +28,14 @@ public class ResultGenerator {
 
     public static Result genFailResult(String message) {
         return new Result()
-                .setData(message)
+//                .setData(message)
                 .setStatus(ResultStatus.FAIL)
                 .setMessage(message);
     }
 
     public static Result genFailResult(String message,ResultStatus status ) {
         return new Result()
-                .setData(message)
+//                .setData(message)
                 .setStatus(status)
                 .setMessage(message);
     }
