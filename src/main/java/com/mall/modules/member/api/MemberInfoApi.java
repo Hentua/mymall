@@ -30,7 +30,9 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -907,6 +909,16 @@ public class MemberInfoApi extends BaseController {
         } catch (Exception e) {
             renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
         }
+    }
+
+    /**
+     * 用户上传头像
+     *
+     * @param file     表单文件
+     * @param request  请求体
+     * @param response 响应体
+     */
+    public void saveUserPhoto(@RequestParam("userPhoto") MultipartFile file, HttpServletRequest request, HttpServletResponse response) {
     }
 
 }
