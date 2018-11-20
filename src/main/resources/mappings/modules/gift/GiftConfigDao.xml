@@ -14,9 +14,10 @@
 		a.del_flag AS "delFlag",
 		a.remarks AS "remarks",
 		a.gift_category AS "giftCategory",
-		a.coupon_count AS "couponCount",
 		c.category_name AS "giftCategoryName",
-		c.gift_price AS "giftCategoryPrice"
+		c.gift_price AS "giftCategoryPrice",
+		a.half_coupon AS "halfCoupon",
+		a.thirty_coupon AS "thirtyCoupon"
 	</sql>
 	
 	<sql id="giftConfigJoins">
@@ -93,7 +94,8 @@
 			del_flag,
 			remarks,
 			gift_category,
-			coupon_count
+			half_coupon,
+			thirty_coupon
 		) VALUES (
 			#{id},
 			#{giftName},
@@ -106,7 +108,8 @@
 			#{delFlag},
 			#{remarks},
 			#{giftCategory},
-			#{couponCount}
+			#{halfCoupon},
+			#{thirtyCoupon}
 		)
 	</insert>
 	
@@ -119,7 +122,8 @@
 			show_goods_price = #{showGoodsPrice},
 			remarks = #{remarks},
 			gift_category = #{giftCategory},
-			coupon_count = #{couponCount}
+			half_coupon = #{halfCoupon},
+			thirty_coupon = #{thirtyCoupon}
 		WHERE id = #{id}
 	</update>
 	

@@ -13,7 +13,7 @@ import org.hibernate.validator.constraints.NotEmpty;
  */
 public class MemberInfo extends DataEntity<MemberInfo> {
 
-	public final static String USER_PHOTO_BASE_PATH = "userPhoto/";
+	public final static String USER_PHOTO_BASE_PATH = "/userfiles/userPhoto/";
 	
 	private static final long serialVersionUID = 1L;
 	private String referee;		// 自己的推荐码
@@ -38,6 +38,7 @@ public class MemberInfo extends DataEntity<MemberInfo> {
 	private String unionid; // 用户统一标识。针对一个微信开放平台帐号下的应用，同一用户的unionid是唯一的。
 	private String wechatNickname; // 微信普通用户昵称
 	private String headimgurl; // 用户头像，最后一个数值代表正方形头像大小（有0、46、64、96、132数值可选，0代表640*640正方形头像），用户没有头像时该项为空
+	private String merchantRefereeId; // 推荐商户邀请人
 
 	@JsonIgnore
 	private String password;
@@ -69,6 +70,14 @@ public class MemberInfo extends DataEntity<MemberInfo> {
 
 	public MemberInfo(String id){
 		super(id);
+	}
+
+	public String getMerchantRefereeId() {
+		return merchantRefereeId;
+	}
+
+	public void setMerchantRefereeId(String merchantRefereeId) {
+		this.merchantRefereeId = merchantRefereeId;
 	}
 
 	public String getOpenid() {

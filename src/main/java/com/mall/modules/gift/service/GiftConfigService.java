@@ -11,7 +11,6 @@ import com.mall.common.service.CrudService;
 import com.mall.common.utils.StringUtils;
 import com.mall.modules.gift.entity.GiftConfig;
 import com.mall.modules.gift.dao.GiftConfigDao;
-import com.mall.modules.gift.entity.GiftConfigCoupon;
 import com.mall.modules.gift.dao.GiftConfigCouponDao;
 import com.mall.modules.gift.entity.GiftConfigGoods;
 import com.mall.modules.gift.dao.GiftConfigGoodsDao;

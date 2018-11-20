@@ -16,10 +16,11 @@ import com.mall.modules.account.service.AccountService;
 import com.mall.modules.activity.entity.ActivityInfo;
 import com.mall.modules.activity.service.ActivityInfoService;
 import com.mall.modules.coupon.entity.CouponCustomer;
+import com.mall.modules.coupon.entity.CouponLog;
 import com.mall.modules.coupon.service.CouponCustomerService;
+import com.mall.modules.coupon.service.CouponLogService;
 import com.mall.modules.coupon.service.CouponMerchantService;
 import com.mall.modules.gift.entity.GiftConfig;
-import com.mall.modules.gift.entity.GiftConfigCoupon;
 import com.mall.modules.gift.entity.GiftConfigGoods;
 import com.mall.modules.gift.entity.GiftCustomer;
 import com.mall.modules.gift.service.GiftConfigService;
@@ -29,7 +30,9 @@ import com.mall.modules.goods.entity.GoodsStandard;
 import com.mall.modules.goods.service.GoodsInfoService;
 import com.mall.modules.goods.service.GoodsStandardService;
 import com.mall.modules.member.entity.MemberDeliveryAddress;
+import com.mall.modules.member.entity.MemberInfo;
 import com.mall.modules.member.service.MemberDeliveryAddressService;
+import com.mall.modules.member.service.MemberInfoService;
 import com.mall.modules.order.entity.*;
 import com.mall.modules.order.service.OrderInfoService;
 import com.mall.modules.order.service.OrderPaymentInfoService;
@@ -77,10 +80,11 @@ public class OrderInfoApi extends BaseController {
     @Autowired
     private CouponCustomerService couponCustomerService;
     @Autowired
+    private MemberInfoService memberInfoService;
+    @Autowired
+    private CouponLogService couponLogService;
+    @Autowired
     private CouponMerchantService couponMerchantService;
-
-//    @Autowired
-//    private AccountInfoService accountInfoService;
 
     @Autowired
     private AccountService accountService;
@@ -146,13 +150,13 @@ public class OrderInfoApi extends BaseController {
             if (StringUtils.isNotBlank(couponCode) && "0".equals(orderType)) {
                 couponCustomer = couponCustomerService.get(couponCode);
                 if (null != couponCustomer) {
-                    if (!"0".equals(couponCustomer.getCouponStatus())) {
+                    if (couponCustomer.getBalance() <= 0) {
                         throw new ServiceException("优惠券不可使用");
                     }
                     couponBalance = couponCustomer.getBalance();
                     couponType = couponCustomer.getCouponType();
                 } else {
-                    throw new ServiceException("优惠券查询失败");
+                    throw new ServiceException("优惠券余额不足");
                 }
             }
 
@@ -201,22 +205,27 @@ public class OrderInfoApi extends BaseController {
                 // 是否赠送商户资格
                 String merchantQualification = giftCustomer.getMerchantQualification();
                 if ("1".equals(merchantQualification)) {
-                    // 赋予用户未审核商户权限
-                    List<Role> roleList = currUser.getRoleList();
-                    roleList.add(new Role("1000"));
-                    currUser.setUserType("1");
-                    systemService.saveUser(currUser);
-                    UserUtils.clearCache();
-                    for (GiftConfigCoupon giftConfigCoupon : giftConfig.getGiftConfigCouponList()) {
-                        couponMerchantService.exchangeGiftGenCoupon(giftConfigCoupon, giftCustomerId);
+                    // 如果用户当前不是商户 赋予用户未审核商户权限
+                    // todo 该逻辑需要变更到礼包赠送
+                    if ("0".equals(currUser.getUserType())) {
+                        List<Role> roleList = currUser.getRoleList();
+                        roleList.add(new Role("1000"));
+                        currUser.setUserType("1");
+                        systemService.saveUser(currUser);
+                        UserUtils.clearCache();
+                        String merchantRefereeId = giftCustomer.getTransferMerchantCode();
+                        MemberInfo memberInfo = new MemberInfo();
+                        memberInfo.setId(currUser.getId());
+                        memberInfo.setMerchantRefereeId(merchantRefereeId);
+                        memberInfoService.modifyMerchantRefereeId(memberInfo);
                     }
+                    couponMerchantService.exchangeGiftGenCoupon(giftConfig, giftCustomerId, customerCode);
                 } else if ("0".equals(merchantQualification)) {
-                    for (GiftConfigCoupon giftConfigCoupon : giftConfig.getGiftConfigCouponList()) {
-                        couponCustomerService.exchangeGiftGenCoupon(giftConfigCoupon, giftCustomerId);
-                    }
+                    couponCustomerService.exchangeGiftGenCoupon(giftConfig, giftCustomerId, customerCode);
                 }
                 // 生成礼包佣金
-                accountService.createCommissionInfo(giftCustomer.getTransferMerchantCode(), giftCustomer.getCommission(), giftCustomerId);
+                // todo 礼包佣金变更到礼包赠送
+//                accountService.createCommissionInfo(giftCustomer.getTransferMerchantCode(), giftCustomer.getCommission(), giftCustomerId);
             }
             if (null == goodsArr || goodsArr.size() <= 0) {
                 throw new ServiceException("未选择要购买的商品，请重新选择");
@@ -407,6 +416,17 @@ public class OrderInfoApi extends BaseController {
                     }
                     amountTotal += orderAmountTotal;
                     orderInfo.setOrderAmountTotal(orderAmountTotal);
+                    // 保存优惠券使用日志
+                    CouponLog couponLog = new CouponLog();
+                    couponLog.setCouponType(couponType);
+                    couponLog.setRemarks("订单消费使用");
+                    couponLog.setAmount(orderInfo.getDiscountAmountTotal());
+                    couponLog.setProduceChannel("5");
+                    couponLog.setType("1");
+                    couponLog.setCustomerCode(customerCode);
+                    couponLog.setProductAmount(orderInfo.getGoodsAmountTotal());
+                    couponLog.setOrderNo(orderInfo.getOrderNo());
+                    couponLogService.save(couponLog);
                 }
                 orderInfoService.save(orderInfo);
             }
@@ -421,9 +441,6 @@ public class OrderInfoApi extends BaseController {
             // 保存优惠券信息
             if (null != couponCustomer) {
                 couponCustomer.setBalance(couponBalance);
-                if (couponBalance <= 0) {
-                    couponCustomer.setCouponStatus("1");
-                }
                 couponCustomerService.save(couponCustomer);
             }
             renderString(response, ResultGenerator.genSuccessResult(orderPaymentInfo));

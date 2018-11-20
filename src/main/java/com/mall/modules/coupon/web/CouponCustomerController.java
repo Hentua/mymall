@@ -22,7 +22,7 @@ import com.mall.modules.coupon.service.CouponCustomerService;
 /**
  * 用户优惠券Controller
  * @author wankang
- * @version 2018-11-07
+ * @version 2018-11-20
  */
 @Controller
 @RequestMapping(value = "${adminPath}/coupon/couponCustomer")

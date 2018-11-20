@@ -2,14 +2,14 @@ package com.mall.modules.coupon.dao;
 
 import com.mall.common.persistence.CrudDao;
 import com.mall.common.persistence.annotation.MyBatisDao;
-import com.mall.modules.coupon.entity.CouponConfig;
+import com.mall.modules.coupon.entity.CouponLog;
 
 /**
- * 优惠券规则配置DAO接口
+ * 优惠券记录DAO接口
  * @author wankang
- * @version 2018-11-07
+ * @version 2018-11-20
  */
 @MyBatisDao
-public interface CouponConfigDao extends CrudDao<CouponConfig> {
+public interface CouponLogDao extends CrudDao<CouponLog> {
 	
 }

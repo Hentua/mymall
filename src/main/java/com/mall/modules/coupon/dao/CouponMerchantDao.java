@@ -7,7 +7,7 @@ import com.mall.modules.coupon.entity.CouponMerchant;
 /**
  * 商家优惠券DAO接口
  * @author wankang
- * @version 2018-11-07
+ * @version 2018-11-20
  */
 @MyBatisDao
 public interface CouponMerchantDao extends CrudDao<CouponMerchant> {

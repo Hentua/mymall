@@ -1,18 +1,10 @@
 package com.mall.modules.coupon.service;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
-import com.mall.common.utils.DateUtils;
-import com.mall.modules.coupon.entity.CouponConfig;
 import com.mall.modules.coupon.entity.CouponCustomer;
-import com.mall.modules.gift.entity.GiftConfigCoupon;
-import com.mall.modules.sys.entity.Role;
-import com.mall.modules.sys.entity.User;
-import com.mall.modules.sys.service.SystemService;
-import com.mall.modules.sys.utils.UserUtils;
+import com.mall.modules.coupon.entity.CouponLog;
+import com.mall.modules.gift.entity.GiftConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -26,16 +18,14 @@ import com.mall.modules.coupon.dao.CouponMerchantDao;
 /**
  * 商家优惠券Service
  * @author wankang
- * @version 2018-11-07
+ * @version 2018-11-20
  */
 @Service
 @Transactional(readOnly = true)
 public class CouponMerchantService extends CrudService<CouponMerchantDao, CouponMerchant> {
 
 	@Autowired
-	private CouponConfigService couponConfigService;
-	@Autowired
-	private CouponCustomerService couponCustomerService;
+	private CouponLogService couponLogService;
 
 	public CouponMerchant get(String id) {
 		return super.get(id);
@@ -48,8 +38,8 @@ public class CouponMerchantService extends CrudService<CouponMerchantDao, Coupon
 	public Page<CouponMerchant> findPage(Page<CouponMerchant> page, CouponMerchant couponMerchant) {
 		return super.findPage(page, couponMerchant);
 	}
-
-	@Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+	
+	@Transactional(readOnly = false)
 	public void save(CouponMerchant couponMerchant) {
 		super.save(couponMerchant);
 	}
@@ -60,46 +50,53 @@ public class CouponMerchantService extends CrudService<CouponMerchantDao, Coupon
 	}
 
 	@Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
-	public void exchangeGiftGenCoupon(GiftConfigCoupon giftConfigCoupon, String giftCustomerCode) throws Exception {
-		User currUser = UserUtils.getUser();
-		String merchantCode = currUser.getId();
-		String couponConfigId = giftConfigCoupon.getCouponId();
-		CouponConfig couponConfig = couponConfigService.get(couponConfigId);
-		CouponMerchant couponMerchant = genCouponMerchant(couponConfig, merchantCode);
-		couponMerchant.setGiftCode(giftCustomerCode);
-		for (int i = 0; i < giftConfigCoupon.getCouponCount(); i++) {
-			this.save(couponMerchant);
-		}
+	public void exchangeGiftGenCoupon(GiftConfig giftConfig, String giftCustomerId, String merchantCode) {
+		CouponMerchant halfCoupon = new CouponMerchant();
+		// 保存礼包五折券
+		halfCoupon.setCouponType("0");
+		halfCoupon.setMerchantCode(merchantCode);
+		halfCoupon.setBalance(giftConfig.getHalfCoupon());
+		this.saveCoupon(halfCoupon);
+		// 保存五折优惠券日志
+		CouponLog couponLog = new CouponLog();
+		couponLog.setCouponType("0");
+		couponLog.setRemarks("礼包赠送");
+		couponLog.setAmount(giftConfig.getHalfCoupon());
+		couponLog.setProduceChannel("0");
+		couponLog.setType("0");
+		couponLog.setCustomerCode(merchantCode);
+		couponLog.setProductAmount(giftConfig.getHalfCoupon());
+		couponLog.setGiftId(giftCustomerId);
+		couponLogService.save(couponLog);
+		// 保存七折券
+		CouponMerchant thirtyCoupon = new CouponMerchant();
+		thirtyCoupon.setCouponType("1");
+		thirtyCoupon.setMerchantCode(merchantCode);
+		thirtyCoupon.setBalance(giftConfig.getThirtyCoupon());
+		this.saveCoupon(thirtyCoupon);
+		// 保存七折券日志
+		couponLog.setCouponType("1");
+		couponLog.setAmount(giftConfig.getThirtyCoupon());
+		couponLog.setProductAmount(giftConfig.getThirtyCoupon());
+		couponLogService.save(couponLog);
 	}
 
 	@Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
-	public void transferCoupon(CouponMerchant couponMerchant) throws Exception {
-		couponCustomerService.saveCouponCustomerByMerchant(couponMerchant);
-		couponMerchant.setCouponStatus("1");
-		couponMerchant.setTransferTime(new Date());
-		this.save(couponMerchant);
-	}
-
-	public CouponMerchant genCouponMerchant(CouponConfig couponConfig, String merchantCode) throws Exception {
-		Date now = new Date();
-		CouponMerchant couponMerchant = new CouponMerchant();
-		couponMerchant.setConfigId(couponConfig.getId());
-		couponMerchant.setCouponType(couponConfig.getCouponType());
-		couponMerchant.setCouponName(couponConfig.getCouponName());
-		Integer transferExpiryTime = couponConfig.getTransferExpiryTime();
-		couponMerchant.setStartDate(DateUtils.getStartOfDay(now));
-		if(transferExpiryTime == 0) {
-			couponMerchant.setEndDate(DateUtils.getEndOfDay(DateUtils.parseDate("9999-12-31")));
-		}else {
-			Calendar calendar = Calendar.getInstance();
-			calendar.add(Calendar.DATE, transferExpiryTime);
-			couponMerchant.setEndDate(DateUtils.getEndOfDay(calendar.getTime()));
+	public void saveCoupon(CouponMerchant couponMerchant) {
+		CouponMerchant queryCondition = new CouponMerchant();
+		queryCondition.setMerchantCode(couponMerchant.getMerchantCode());
+		queryCondition.setCouponType(couponMerchant.getCouponType());
+		List<CouponMerchant> couponMerchants = this.findList(queryCondition);
+		CouponMerchant currCoupon = null;
+		if (null != couponMerchants && couponMerchants.size() > 0) {
+			currCoupon = couponMerchants.get(0);
 		}
-		couponMerchant.setLimitAmount(couponConfig.getLimitAmount());
-		couponMerchant.setMerchantCode(merchantCode);
-		couponMerchant.setCouponStatus("0");
-		couponMerchant.setAccessChannel("0");
-		return couponMerchant;
+		if (null == currCoupon) {
+			this.save(couponMerchant);
+		} else {
+			couponMerchant.setId(currCoupon.getId());
+			couponMerchant.setBalance(currCoupon.getBalance() + couponMerchant.getBalance());
+			this.save(couponMerchant);
+		}
 	}
-	
 }

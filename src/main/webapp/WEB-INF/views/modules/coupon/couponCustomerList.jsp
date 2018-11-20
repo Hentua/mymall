@@ -25,24 +25,11 @@
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<ul class="ul-form">
-			<li><label>优惠券类型（0-折扣减免，1-金额减免）：</label>
+			<li><label>优惠券类型：</label>
 				<form:input path="couponType" htmlEscape="false" maxlength="2" class="input-medium"/>
 			</li>
-			<li><label>用户ID（可使用人）：</label>
+			<li><label>用户：</label>
 				<form:input path="customerCode" htmlEscape="false" maxlength="64" class="input-medium"/>
-			</li>
-			<li><label>开始时间：</label>
-				<input name="startDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
-					value="<fmt:formatDate value="${couponCustomer.startDate}" pattern="yyyy-MM-dd HH:mm:ss"/>"
-					onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});"/>
-			</li>
-			<li><label>结束时间：</label>
-				<input name="endDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
-					value="<fmt:formatDate value="${couponCustomer.endDate}" pattern="yyyy-MM-dd HH:mm:ss"/>"
-					onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});"/>
-			</li>
-			<li><label>优惠券状态（0-未使用，1-已使用，2-已过期）：</label>
-				<form:input path="couponStatus" htmlEscape="false" maxlength="1" class="input-medium"/>
 			</li>
 			<li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
 			<li class="clearfix"></li>

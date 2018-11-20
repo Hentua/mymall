@@ -4,7 +4,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.mall.modules.gift.entity.GiftConfigCategory;
-import com.mall.modules.gift.entity.GiftConfigCoupon;
 import com.mall.modules.gift.entity.GiftConfigGoods;
 import com.mall.modules.gift.service.GiftConfigCategoryService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;

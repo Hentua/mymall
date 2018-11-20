@@ -34,86 +34,21 @@
 		<form:hidden path="id"/>
 		<sys:message content="${message}"/>		
 		<div class="control-group">
-			<label class="control-label">config_id：</label>
-			<div class="controls">
-				<form:input path="configId" htmlEscape="false" maxlength="64" class="input-xlarge required"/>
-				<span class="help-inline"><font color="red">*</font> </span>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">优惠券类型（0-折扣减免，1-金额减免）：</label>
+			<label class="control-label">优惠券类型：</label>
 			<div class="controls">
 				<form:input path="couponType" htmlEscape="false" maxlength="2" class="input-xlarge required"/>
 				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">优惠券名称：</label>
-			<div class="controls">
-				<form:input path="couponName" htmlEscape="false" maxlength="20" class="input-xlarge required"/>
-				<span class="help-inline"><font color="red">*</font> </span>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">用户ID（可使用人）：</label>
+			<label class="control-label">用户：</label>
 			<div class="controls">
 				<form:input path="customerCode" htmlEscape="false" maxlength="64" class="input-xlarge required"/>
 				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">开始时间：</label>
-			<div class="controls">
-				<input name="startDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate required"
-					value="<fmt:formatDate value="${couponCustomer.startDate}" pattern="yyyy-MM-dd HH:mm:ss"/>"
-					onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});"/>
-				<span class="help-inline"><font color="red">*</font> </span>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">最高折扣限额：</label>
-			<div class="controls">
-				<form:input path="limitAmount" htmlEscape="false" class="input-xlarge required number"/>
-				<span class="help-inline"><font color="red">*</font> </span>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">结束时间：</label>
-			<div class="controls">
-				<input name="endDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate required"
-					value="<fmt:formatDate value="${couponCustomer.endDate}" pattern="yyyy-MM-dd HH:mm:ss"/>"
-					onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});"/>
-				<span class="help-inline"><font color="red">*</font> </span>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">赠送商户ID：</label>
-			<div class="controls">
-				<form:input path="transferMerchantCode" htmlEscape="false" maxlength="64" class="input-xlarge "/>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">获得渠道 0-礼包赠送 1-商户赠送 2-平台赠送：</label>
-			<div class="controls">
-				<form:input path="accessChannel" htmlEscape="false" maxlength="1" class="input-xlarge required"/>
-				<span class="help-inline"><font color="red">*</font> </span>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">来源礼包id：</label>
-			<div class="controls">
-				<form:input path="giftCode" htmlEscape="false" maxlength="64" class="input-xlarge "/>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">优惠券状态（0-未使用，1-已使用，2-已过期）：</label>
-			<div class="controls">
-				<form:input path="couponStatus" htmlEscape="false" maxlength="1" class="input-xlarge required"/>
-				<span class="help-inline"><font color="red">*</font> </span>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">优惠券可用余额：</label>
+			<label class="control-label">可用余额：</label>
 			<div class="controls">
 				<form:input path="balance" htmlEscape="false" class="input-xlarge required number"/>
 				<span class="help-inline"><font color="red">*</font> </span>

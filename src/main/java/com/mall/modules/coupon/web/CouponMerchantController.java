@@ -3,9 +3,6 @@ package com.mall.modules.coupon.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.mall.modules.sys.entity.User;
-import com.mall.modules.sys.utils.UserUtils;
-import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,12 +19,10 @@ import com.mall.common.utils.StringUtils;
 import com.mall.modules.coupon.entity.CouponMerchant;
 import com.mall.modules.coupon.service.CouponMerchantService;
 
-import java.util.Date;
-
 /**
  * 商家优惠券Controller
  * @author wankang
- * @version 2018-11-07
+ * @version 2018-11-20
  */
 @Controller
 @RequestMapping(value = "${adminPath}/coupon/couponMerchant")
@@ -51,9 +46,6 @@ public class CouponMerchantController extends BaseController {
 	@RequiresPermissions("coupon:couponMerchant:view")
 	@RequestMapping(value = {"list", ""})
 	public String list(CouponMerchant couponMerchant, HttpServletRequest request, HttpServletResponse response, Model model) {
-		User currUser = UserUtils.getUser();
-		couponMerchant.setMerchantCode(currUser.getId());
-		couponMerchant.setCouponStatus("0");
 		Page<CouponMerchant> page = couponMerchantService.findPage(new Page<CouponMerchant>(request, response), couponMerchant); 
 		model.addAttribute("page", page);
 		return "modules/coupon/couponMerchantList";
@@ -64,39 +56,6 @@ public class CouponMerchantController extends BaseController {
 	public String form(CouponMerchant couponMerchant, Model model) {
 		model.addAttribute("couponMerchant", couponMerchant);
 		return "modules/coupon/couponMerchantForm";
-	}
-
-	@RequestMapping(value = "giftTransfer")
-	public String giftTransfer(CouponMerchant couponMerchant, Model model, RedirectAttributes redirectAttributes) throws Exception {
-		String id = couponMerchant.getId();
-		String transferCustomerMobile = couponMerchant.getTransferCustomerMobile();
-		User currUser = UserUtils.getUser();
-		if(StringUtils.isBlank(id)) {
-			addMessage(redirectAttributes, "未选择要赠送的优惠券");
-			return "redirect:"+Global.getAdminPath()+"/coupon/couponMerchant/?repage";
-		}
-		if(StringUtils.isBlank(transferCustomerMobile)) {
-			model.addAttribute("message", "未选择要赠送的会员");
-			return form(couponMerchant, model);
-		}
-		User customerUser = UserUtils.getByLoginName(transferCustomerMobile);
-		if(null == customerUser) {
-			model.addAttribute("message", "会员不存在");
-			return form(couponMerchant, model);
-		}
-		couponMerchant = this.get(id);
-		couponMerchant.setTransferCustomerCode(customerUser.getId());
-		if(!couponMerchant.getMerchantCode().equals(currUser.getId())) {
-			addMessage(redirectAttributes, "所选优惠券不合法");
-			return "redirect:"+Global.getAdminPath()+"/coupon/couponMerchant/?repage";
-		}
-		if((new Date()).getTime() > couponMerchant.getEndDate().getTime()) {
-			addMessage(redirectAttributes, "优惠券已过期");
-			return "redirect:"+Global.getAdminPath()+"/coupon/couponMerchant/?repage";
-		}
-		couponMerchantService.transferCoupon(couponMerchant);
-		addMessage(redirectAttributes, "优惠券赠送成功");
-		return "redirect:"+Global.getAdminPath()+"/coupon/couponMerchant/?repage";
 	}
 
 	@RequiresPermissions("coupon:couponMerchant:edit")

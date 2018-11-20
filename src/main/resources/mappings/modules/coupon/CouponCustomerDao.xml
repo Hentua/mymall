@@ -4,21 +4,12 @@
     
 	<sql id="couponCustomerColumns">
 		a.id AS "id",
-		a.config_id AS "configId",
 		a.coupon_type AS "couponType",
-		a.coupon_name AS "couponName",
 		a.customer_code AS "customerCode",
-		a.start_date AS "startDate",
-		a.limit_amount AS "limitAmount",
-		a.end_date AS "endDate",
-		a.transfer_merchant_code AS "transferMerchantCode",
 		a.create_date AS "createDate",
 		a.create_by AS "createBy.id",
 		a.update_date AS "updateDate",
 		a.update_by AS "updateBy.id",
-		a.access_channel AS "accessChannel",
-		a.gift_code AS "giftCode",
-		a.coupon_status AS "couponStatus",
 		a.balance AS "balance"
 	</sql>
 	
@@ -31,14 +22,6 @@
 		FROM coupon_customer a
 		<include refid="couponCustomerJoins"/>
 		WHERE a.id = #{id}
-	</select>
-
-	<select id="enabledCouponsCount" resultType="Map">
-		select
-			   IFNULL(sum(if(a.coupon_type = 0, 1, 0)),0) as fiveDiscountCoupon,
-			   IFNULL(sum(if(a.coupon_type = 1, 1, 0)),0) as sevenDiscountCoupon
-		from coupon_customer a
-		where a.customer_code = #{customerCode} and a.start_date &lt;= now() and a.end_date &gt;= now() and a.coupon_status = '0' and balance!=0
 	</select>
 	
 	<select id="findList" resultType="CouponCustomer">
@@ -54,16 +37,6 @@
 			<if test="customerCode != null and customerCode != ''">
 				AND a.customer_code = #{customerCode}
 			</if>
-			<if test="startDate != null and startDate != ''">
-				AND a.start_date &gt;= #{startDate}
-			</if>
-			<if test="endDate != null and endDate != ''">
-				AND a.end_date &lt;= #{endDate}
-			</if>
-			<if test="couponStatus != null and couponStatus != ''">
-				AND a.coupon_status = #{couponStatus}
-			</if>
-			and a.balance &gt; 0
 		</where>
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
@@ -73,6 +46,11 @@
 				ORDER BY a.update_date DESC
 			</otherwise>
 		</choose>
+	</select>
+
+	<select id="enabledCouponsCount" resultType="Map">
+		select ifnull(sum(if(coupon_type = '0', balance, 0)), 0) as "fiveDiscountCoupon", ifnull(sum(if(coupon_type = '1', balance, 0)), 0) as "sevenDiscountCoupon" from coupon_customer
+		where customer_code = #{customerCode}
 	</select>
 	
 	<select id="findAllList" resultType="CouponCustomer">
@@ -96,58 +74,31 @@
 	<insert id="insert">
 		INSERT INTO coupon_customer(
 			id,
-			config_id,
 			coupon_type,
-			coupon_name,
 			customer_code,
-			start_date,
-			limit_amount,
-			end_date,
-			transfer_merchant_code,
 			create_date,
 			create_by,
 			update_date,
 			update_by,
-			access_channel,
-			gift_code,
-			coupon_status,
 			balance
 		) VALUES (
 			#{id},
-			#{configId},
 			#{couponType},
-			#{couponName},
 			#{customerCode},
-			#{startDate},
-			#{limitAmount},
-			#{endDate},
-			#{transferMerchantCode},
 			#{createDate},
 			#{createBy.id},
 			#{updateDate},
 			#{updateBy.id},
-			#{accessChannel},
-			#{giftCode},
-			#{couponStatus},
 			#{balance}
 		)
 	</insert>
 	
 	<update id="update">
 		UPDATE coupon_customer SET 	
-			config_id = #{configId},
 			coupon_type = #{couponType},
-			coupon_name = #{couponName},
 			customer_code = #{customerCode},
-			start_date = #{startDate},
-			limit_amount = #{limitAmount},
-			end_date = #{endDate},
-			transfer_merchant_code = #{transferMerchantCode},
 			update_date = #{updateDate},
 			update_by = #{updateBy.id},
-			access_channel = #{accessChannel},
-			gift_code = #{giftCode},
-			coupon_status = #{couponStatus},
 			balance = #{balance}
 		WHERE id = #{id}
 	</update>

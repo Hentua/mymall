@@ -26,7 +26,8 @@ public class GiftConfig extends DataEntity<GiftConfig> {
 	private Date beginCreateDate;		// 开始 create_date
 	@JsonIgnore
 	private Date endCreateDate;		// 结束 create_date
-	private List<GiftConfigCoupon> giftConfigCouponList = Lists.newArrayList();		// 子表列表
+	private Double halfCoupon;		// 五折优惠券金额
+	private Double thirtyCoupon;		// 七折优惠券金额
 	private List<GiftConfigGoods> giftConfigGoodsList = Lists.newArrayList();		// 子表列表
 
 	private String giftCategoryName;
@@ -38,6 +39,22 @@ public class GiftConfig extends DataEntity<GiftConfig> {
 
 	public GiftConfig(String id){
 		super(id);
+	}
+
+	public Double getHalfCoupon() {
+		return halfCoupon;
+	}
+
+	public void setHalfCoupon(Double halfCoupon) {
+		this.halfCoupon = halfCoupon;
+	}
+
+	public Double getThirtyCoupon() {
+		return thirtyCoupon;
+	}
+
+	public void setThirtyCoupon(Double thirtyCoupon) {
+		this.thirtyCoupon = thirtyCoupon;
 	}
 
 	public String getGiftCategoryName() {
@@ -115,14 +132,6 @@ public class GiftConfig extends DataEntity<GiftConfig> {
 
 	public void setEndCreateDate(Date endCreateDate) {
 		this.endCreateDate = endCreateDate;
-	}
-		
-	public List<GiftConfigCoupon> getGiftConfigCouponList() {
-		return giftConfigCouponList;
-	}
-
-	public void setGiftConfigCouponList(List<GiftConfigCoupon> giftConfigCouponList) {
-		this.giftConfigCouponList = giftConfigCouponList;
 	}
 	public List<GiftConfigGoods> getGiftConfigGoodsList() {
 		return giftConfigGoodsList;

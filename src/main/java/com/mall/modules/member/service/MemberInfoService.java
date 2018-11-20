@@ -192,4 +192,9 @@ public class MemberInfoService extends CrudService<MemberInfoDao, MemberInfo> {
     public void modifyAvatar(MemberInfo memberInfo) {
         memberInfoDao.modifyAvatar(memberInfo);
     }
+
+    @Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    public void modifyMerchantRefereeId(MemberInfo memberInfo) {
+        memberInfoDao.modifyMerchantRefereeId(memberInfo);
+    }
 }

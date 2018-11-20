@@ -83,14 +83,6 @@ public interface UserDao extends CrudDao<User> {
     public int updateUserInfo(User user);
 
     /**
-     * 验证用户密码
-     *
-     * @param user 验证用户实体
-     * @return 结果
-     */
-    public Map<String, String> validatePassword(User user);
-
-    /**
      * 查询运营树状结构数据
      *
      * @return 运营用户列表

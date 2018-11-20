@@ -353,10 +353,6 @@
 			del_flag = #{DEL_FLAG_DELETE}
 		WHERE id = #{id}
 	</update>
-	
-	<select id="validatePassword" resultType="Map">
-		select count(0) as "result" from sys_user where id=#{id} and password=#{password} and del_flag=#{DEL_FLAG_NORMAL}
-	</select>
 
 	<update id="modifyLoginFlag">
 		update sys_user set login_flag = #{loginFlag} where id = #{id}

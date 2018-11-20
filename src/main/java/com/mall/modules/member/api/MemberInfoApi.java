@@ -798,12 +798,7 @@ public class MemberInfoApi extends BaseController {
             if (StringUtils.isBlank(repeatPassword)) {
                 throw new ServiceException("请确认新密码");
             }
-            String entryptOldPassword = SystemService.entryptPassword(oldPassword);
-            User validateUser = new User();
-            validateUser.setId(userId);
-            validateUser.setPassword(entryptOldPassword);
-            boolean flag = systemService.validatePassword(validateUser);
-            if (!flag) {
+            if(!SystemService.validatePassword(oldPassword, currUser.getPassword())) {
                 throw new ServiceException("用户密码错误");
             }
             if (!newPassword.equals(repeatPassword)) {

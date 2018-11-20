@@ -63,4 +63,11 @@ public interface MemberInfoDao extends CrudDao<MemberInfo> {
      */
     void modifyAvatar(MemberInfo memberInfo);
 
+    /**
+     * 修改用户推荐商户
+     *
+     * @param memberInfo 会员实体
+     */
+    void modifyMerchantRefereeId(MemberInfo memberInfo);
+
 }

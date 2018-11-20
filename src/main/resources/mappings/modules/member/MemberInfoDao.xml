@@ -33,7 +33,8 @@
 		a.openid AS "openid",
 		a.unionid AS "unionid",
 		a.wechat_nickname AS "wechatNickname",
-		a.headimgurl AS "headimgurl"
+		a.headimgurl AS "headimgurl",
+		a.merchant_referee_id AS "merchantRefereeId"
 	</sql>
 	
 	<sql id="memberInfoJoins">
@@ -96,6 +97,9 @@
 			<if test="userType != null and userType != ''">
 				and u.user_type = #{userType}
 			</if>
+			<if test="merchantRefereeId != null and merchantRefereeId != ''">
+				and a.merchant_referee_id = #{merchantRefereeId}
+			</if>
 			and a.del_flag = #{DEL_FLAG_NORMAL}
 		</where>
 		<choose>
@@ -149,7 +153,8 @@
 			business_license_image,
 			company_name,
 			product_license,
-			operator_code
+			operator_code,
+			merchant_referee_id
 		) VALUES (
 			#{id},
 			#{referee},
@@ -172,7 +177,8 @@
 		    #{businessLicenseImage},
 		    #{companyName},
 		    #{productLicense},
-		    #{operatorCode}
+		    #{operatorCode},
+		    #{merchant_referee_id}
 		)
 	</insert>
 	
@@ -215,6 +221,10 @@
 
 	<update id="modifyAvatar">
 		update member_info set avatar = #{avatar} where id = #{id}
+	</update>
+
+	<update id="modifyMerchantRefereeId">
+		update member_info set merchant_referee_id = #{merchantRefereeId} where id = #{id} and merchant_referee_id is null
 	</update>
 	
 </mapper>

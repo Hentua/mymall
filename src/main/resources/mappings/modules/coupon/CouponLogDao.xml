@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.modules.coupon.dao.CouponLogDao">
+    
+	<sql id="couponLogColumns">
+		a.id AS "id",
+		a.coupon_type AS "couponType",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.amount AS "amount",
+		a.produce_channel AS "produceChannel",
+		a.type AS "type",
+		a.gift_id AS "giftId",
+		a.merchant_code AS "merchantCode",
+		a.customer_code AS "customerCode",
+		a.product_amount AS "produceAmount",
+		a.order_no AS "orderNo"
+	</sql>
+	
+	<sql id="couponLogJoins">
+	</sql>
+    
+	<select id="get" resultType="CouponLog">
+		SELECT 
+			<include refid="couponLogColumns"/>
+		FROM coupon_log a
+		<include refid="couponLogJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CouponLog">
+		SELECT 
+			<include refid="couponLogColumns"/>
+		FROM coupon_log a
+		<include refid="couponLogJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CouponLog">
+		SELECT 
+			<include refid="couponLogColumns"/>
+		FROM coupon_log a
+		<include refid="couponLogJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO coupon_log(
+			id,
+			coupon_type,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			amount,
+			produce_channel,
+			type,
+			gift_id,
+			merchant_code,
+			customer_code,
+			produce_amount,
+			order_no
+		) VALUES (
+			#{id},
+			#{couponType},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{amount},
+			#{produceChannel},
+			#{type},
+			#{giftId},
+			#{merchantCode},
+			#{customerCode},
+			#{productAmount},
+			#{orderNo}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE coupon_log SET 	
+			coupon_type = #{couponType},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			amount = #{amount},
+			produce_channel = #{produceChannel},
+			type = #{type},
+			gift_id = #{giftId},
+			merchant_code = #{merchantCode},
+			customer_code = #{customerCode}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM coupon_log
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

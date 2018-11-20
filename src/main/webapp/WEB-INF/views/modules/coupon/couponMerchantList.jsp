@@ -18,22 +18,13 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li class="active"><a href="${ctx}/coupon/couponMerchant/">优惠券列表</a></li>
+		<li class="active"><a href="${ctx}/coupon/couponMerchant/">商家优惠券列表</a></li>
+		<shiro:hasPermission name="coupon:couponMerchant:edit"><li><a href="${ctx}/coupon/couponMerchant/form">商家优惠券添加</a></li></shiro:hasPermission>
 	</ul>
 	<form:form id="searchForm" modelAttribute="couponMerchant" action="${ctx}/coupon/couponMerchant/" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<ul class="ul-form">
-			<li><label>优惠券类型：</label>
-				<form:select path="couponType" cssStyle="width: 100px;">
-					<form:option value="" label="全部"/>
-					<form:option value="0" label="五折券"/>
-					<form:option value="1" label="七折券"/>
-				</form:select>
-			</li>
-			<li><label>优惠券名称：</label>
-				<form:input path="couponName" htmlEscape="false" maxlength="20" class="input-medium"/>
-			</li>
 			<li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
 			<li class="clearfix"></li>
 		</ul>
@@ -43,48 +34,31 @@
 		<thead>
 			<tr>
 				<th>优惠券类型</th>
-				<th>优惠券名称</th>
-				<th>优惠券金额</th>
-				<th>获得时间</th>
-				<th>获得渠道</th>
-				<th>过期时间</th>
-				<th>备注</th>
-				<th>赠送</th>
+				<th>商户ID</th>
+				<th>可用余额</th>
+				<th>update_date</th>
+				<shiro:hasPermission name="coupon:couponMerchant:edit"><th>操作</th></shiro:hasPermission>
 			</tr>
 		</thead>
 		<tbody>
 		<c:forEach items="${page.list}" var="couponMerchant">
 			<tr>
+				<td><a href="${ctx}/coupon/couponMerchant/form?id=${couponMerchant.id}">
+					${couponMerchant.couponType}
+				</a></td>
 				<td>
-					<c:choose>
-						<c:when test="${couponMerchant.couponType == '0'}">五折券</c:when>
-						<c:when test="${couponMerchant.couponType == '1'}">七折券</c:when>
-					</c:choose>
+					${couponMerchant.merchantCode}
 				</td>
 				<td>
-						${couponMerchant.couponName}
+					${couponMerchant.balance}
 				</td>
 				<td>
-						${couponMerchant.limitAmount}
+					<fmt:formatDate value="${couponMerchant.updateDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
 				</td>
-				<td>
-					<fmt:formatDate value="${couponMerchant.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
-				</td>
-				<td>
-					<fmt:formatDate value="${couponMerchant.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
-				</td>
-				<td>
-					<c:choose>
-						<c:when test="${couponMerchant.accessChannel == '0'}">礼包兑换</c:when>
-						<c:when test="${couponMerchant.accessChannel == '1'}">平台赠送</c:when>
-					</c:choose>
-				</td>
-				<td>
-						${couponMerchant.remarks}
-				</td>
-				<td>
-					<a href="${ctx}/coupon/couponMerchant/form?id=${couponMerchant.id}" onclick="return confirmx('确认要赠送该优惠券吗？', this.href)">赠送</a>
-				</td>
+				<shiro:hasPermission name="coupon:couponMerchant:edit"><td>
+    				<a href="${ctx}/coupon/couponMerchant/form?id=${couponMerchant.id}">修改</a>
+					<a href="${ctx}/coupon/couponMerchant/delete?id=${couponMerchant.id}" onclick="return confirmx('确认要删除该商家优惠券吗？', this.href)">删除</a>
+				</td></shiro:hasPermission>
 			</tr>
 		</c:forEach>
 		</tbody>
