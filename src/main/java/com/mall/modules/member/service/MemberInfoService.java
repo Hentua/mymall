@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -189,7 +188,8 @@ public class MemberInfoService extends CrudService<MemberInfoDao, MemberInfo> {
         memberInfoDao.bindWechat(memberInfo);
     }
 
-    public Map<String, String> getMemberWechatInfo(String id) {
-        return memberInfoDao.getMemberWechatInfo(id);
+    @Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    public void modifyAvatar(MemberInfo memberInfo) {
+        memberInfoDao.modifyAvatar(memberInfo);
     }
 }

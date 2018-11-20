@@ -213,12 +213,8 @@
 		update member_info set openid = #{openid}, unionid = #{unionid}, headimgurl = #{headimgurl}, wechat_nickname = #{wechatNickname} where id = #{id}
 	</update>
 
-	<select id="getMemberWechatInfo" resultType="Map">
-		select
-			ifnull(wechat_nickname, '') as "wechatNickname",
-		  	ifnull(headimgurl, '') as "headimgurl",
-		    case when unionid is null then '0' else '1' end as "weatherWechatBind"
-		from member_info where id = #{id}
-	</select>
+	<update id="modifyAvatar">
+		update member_info set avatar = #{avatar} where id = #{id}
+	</update>
 	
 </mapper>

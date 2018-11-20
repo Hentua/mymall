@@ -2,6 +2,7 @@ package com.mall.modules.member.api;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.mall.common.config.Global;
 import com.mall.common.persistence.Page;
 import com.mall.common.service.ServiceException;
 import com.mall.common.utils.EhCacheUtils;
@@ -25,6 +26,7 @@ import com.mall.modules.sys.entity.User;
 import com.mall.modules.sys.entity.UserVo;
 import com.mall.modules.sys.service.SystemService;
 import com.mall.modules.sys.utils.UserUtils;
+import com.sohu.idcenter.SidWorker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +38,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
@@ -599,15 +602,24 @@ public class MemberInfoApi extends BaseController {
         User currUser = UserUtils.getUser();
         String customerCode = currUser.getId();
         try {
+            MemberInfo queryCondition = new MemberInfo();
+            queryCondition.setId(customerCode);
+            MemberInfo memberInfo = memberInfoService.get(queryCondition);
             Map<String, String> memberDataCount = Maps.newHashMap();
             // 获取订单统计
             Map<String, String> orderCount = orderInfoService.orderCount(customerCode);
             // 获取优惠券统计
             Map<String, String> enabledCouponsCount = couponCustomerService.enabledCouponsCount(customerCode);
-            // 获取会员绑定微信信息
-            Map<String, String> memberWechatInfo = memberInfoService.getMemberWechatInfo(customerCode);
+            // 获取会员基础信息 包括绑定微信信息
+            Map<String, String> memberBaseInfo = Maps.newHashMap();
+            memberBaseInfo.put("headimgurl", memberInfo.getHeadimgurl());
+            memberBaseInfo.put("wechatNickname", memberInfo.getWechatNickname());
+            memberBaseInfo.put("weatherWechatBind", StringUtils.isBlank(memberInfo.getUnionid()) ? "0" : "1");
+            memberBaseInfo.put("avatar", Global.getUserfilesBaseDir() + memberInfo.getAvatar());
+            memberBaseInfo.put("mobile", memberInfo.getMobile());
+            memberBaseInfo.put("referee", memberInfo.getReferee());
 
-            memberDataCount.putAll(memberWechatInfo);
+            memberDataCount.putAll(memberBaseInfo);
             memberDataCount.putAll(orderCount);
             memberDataCount.putAll(enabledCouponsCount);
             MemberInfo m = new MemberInfo();
@@ -918,7 +930,36 @@ public class MemberInfoApi extends BaseController {
      * @param request  请求体
      * @param response 响应体
      */
-    public void saveUserPhoto(@RequestParam("userPhoto") MultipartFile file, HttpServletRequest request, HttpServletResponse response) {
+    @RequestMapping(value = "saveUserPhoto", method = RequestMethod.POST)
+    public void saveUserPhoto(@RequestParam("avatar") MultipartFile file, HttpServletRequest request, HttpServletResponse response) {
+        String fileName = String.valueOf(SidWorker.nextSid());
+        String basePath = Global.getUserfilesBaseDir();
+        User currUser = UserUtils.getUser();
+        String userId = currUser.getId();
+        try {
+            if (null == file) {
+                throw new ServiceException("未选择要上传的文件");
+            }
+            String originFileName = file.getOriginalFilename();
+            String fileType = originFileName.substring(originFileName.lastIndexOf("."), originFileName.length());
+            fileName = MemberInfo.USER_PHOTO_BASE_PATH + fileName + fileType;
+            File uploadFile = new File(basePath + fileName);
+            File dir = new File(Global.getUserfilesBaseDir() + MemberInfo.USER_PHOTO_BASE_PATH);
+            if(!dir.exists()) {
+                dir.mkdirs();
+            }
+            if(!uploadFile.exists()) {
+                uploadFile.createNewFile();
+            }
+            file.transferTo(uploadFile);
+            MemberInfo memberInfo = new MemberInfo();
+            memberInfo.setId(userId);
+            memberInfo.setAvatar(fileName);
+            memberInfoService.modifyAvatar(memberInfo);
+            renderString(response, ResultGenerator.genSuccessResult());
+        } catch (Exception e) {
+            renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
+        }
     }
 
 }

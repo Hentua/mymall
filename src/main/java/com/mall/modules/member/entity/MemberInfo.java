@@ -12,6 +12,8 @@ import org.hibernate.validator.constraints.NotEmpty;
  * @version 2018-10-10
  */
 public class MemberInfo extends DataEntity<MemberInfo> {
+
+	public final static String USER_PHOTO_BASE_PATH = "userPhoto/";
 	
 	private static final long serialVersionUID = 1L;
 	private String referee;		// 自己的推荐码
