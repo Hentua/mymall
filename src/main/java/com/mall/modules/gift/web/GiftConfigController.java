@@ -73,7 +73,6 @@ public class GiftConfigController extends BaseController {
 	@RequestMapping(value = "save")
 	public String save(GiftConfig giftConfig, Model model, RedirectAttributes redirectAttributes) {
 		List<GiftConfigGoods> giftConfigGoods = giftConfig.getGiftConfigGoodsList();
-		List<GiftConfigCoupon> giftConfigCoupons = giftConfig.getGiftConfigCouponList();
 		int goodsCount = 0;
 		int couponCount = 0;
 		if(null != giftConfigGoods && giftConfigGoods.size() > 0) {
@@ -82,14 +81,6 @@ public class GiftConfigController extends BaseController {
 			}
 		}else {
 			model.addAttribute("message", "未选择商品");
-			return form(giftConfig, model);
-		}
-		if(null != giftConfigCoupons && giftConfigCoupons.size() > 0) {
-			for (GiftConfigCoupon giftConfigCoupon : giftConfigCoupons) {
-				couponCount += giftConfigCoupon.getCouponCount();
-			}
-		}else {
-			model.addAttribute("message", "未选择优惠券");
 			return form(giftConfig, model);
 		}
 		giftConfig.setGoodsCount(goodsCount);
