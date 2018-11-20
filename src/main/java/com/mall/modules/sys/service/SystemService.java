@@ -195,7 +195,7 @@ public class SystemService extends BaseService implements InitializingBean {
 	@Transactional(readOnly = false, rollbackFor = Exception.class)
 	public boolean validatePassword(User user) {
 		Map<String, String> resultMap = userDao.validatePassword(user);
-		String result = resultMap.get("result");
+		String result = String.valueOf(resultMap.get("result"));
 		int validateResult = Integer.valueOf(result);
 		if(validateResult <= 0) {
 			return false;

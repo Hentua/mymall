@@ -615,7 +615,7 @@ public class MemberInfoApi extends BaseController {
             memberBaseInfo.put("headimgurl", memberInfo.getHeadimgurl());
             memberBaseInfo.put("wechatNickname", memberInfo.getWechatNickname());
             memberBaseInfo.put("weatherWechatBind", StringUtils.isBlank(memberInfo.getUnionid()) ? "0" : "1");
-            memberBaseInfo.put("avatar", Global.getUserfilesBaseDir() + memberInfo.getAvatar());
+            memberBaseInfo.put("avatar", Global.getConfig("userfiles.baseURL") + memberInfo.getAvatar());
             memberBaseInfo.put("mobile", memberInfo.getMobile());
             memberBaseInfo.put("referee", memberInfo.getReferee());
 
