@@ -424,7 +424,7 @@ public class OrderInfoApi extends BaseController {
                     couponLog.setProduceChannel("5");
                     couponLog.setType("1");
                     couponLog.setCustomerCode(customerCode);
-                    couponLog.setProductAmount(orderInfo.getGoodsAmountTotal());
+                    couponLog.setProduceAmount(orderInfo.getGoodsAmountTotal());
                     couponLog.setOrderNo(orderInfo.getOrderNo());
                     couponLogService.save(couponLog);
                 }

@@ -8,6 +8,8 @@ import com.mall.common.web.BaseController;
 import com.mall.modules.gift.entity.GiftMerchant;
 import com.mall.modules.gift.service.GiftConfigCategoryService;
 import com.mall.modules.gift.service.GiftMerchantService;
+import com.mall.modules.member.entity.MemberInfo;
+import com.mall.modules.member.service.MemberInfoService;
 import com.mall.modules.sys.entity.User;
 import com.mall.modules.sys.utils.UserUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -35,6 +37,8 @@ public class GiftMerchantController extends BaseController {
 	private GiftMerchantService giftMerchantService;
 	@Autowired
 	private GiftConfigCategoryService giftConfigCategoryService;
+	@Autowired
+	private MemberInfoService memberInfoService;
 	
 	@ModelAttribute
 	public GiftMerchant get(@RequestParam(required=false) String id) {
@@ -94,9 +98,11 @@ public class GiftMerchantController extends BaseController {
 			model.addAttribute("message", "请输入要赠送会员的手机号");
 			return giftTransferForm(giftMerchant, model);
 		}
-		User customerUser = UserUtils.getByLoginName(customerMobile);
-		if(null == customerUser) {
-			model.addAttribute("message", "会员不存在");
+		MemberInfo queryCondition = new MemberInfo();
+		queryCondition.setReferee(customerMobile);
+		MemberInfo memberInfo = memberInfoService.get(queryCondition);
+		if(null == memberInfo) {
+			model.addAttribute("message", "请填写正确的会员手机号或ID号");
 			return giftTransferForm(giftMerchant, model);
 		}
 		try {

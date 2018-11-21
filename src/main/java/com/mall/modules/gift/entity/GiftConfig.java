@@ -21,7 +21,6 @@ public class GiftConfig extends DataEntity<GiftConfig> {
 	private Integer goodsCount;		// 商品总数量
 	private String showGoodsPrice;		// 是否在APP显示商品价格 0-否 1-是
 	private String giftCategory;		// 对应分类ID
-	private Integer couponCount;		// 优惠券数量
 	@JsonIgnore
 	private Date beginCreateDate;		// 开始 create_date
 	@JsonIgnore
@@ -108,16 +107,7 @@ public class GiftConfig extends DataEntity<GiftConfig> {
 	public void setGiftCategory(String giftCategory) {
 		this.giftCategory = giftCategory;
 	}
-	
-	@NotNull(message="优惠券数量不能为空")
-	public Integer getCouponCount() {
-		return couponCount;
-	}
 
-	public void setCouponCount(Integer couponCount) {
-		this.couponCount = couponCount;
-	}
-	
 	public Date getBeginCreateDate() {
 		return beginCreateDate;
 	}

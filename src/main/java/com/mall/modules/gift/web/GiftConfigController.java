@@ -84,7 +84,6 @@ public class GiftConfigController extends BaseController {
 			return form(giftConfig, model);
 		}
 		giftConfig.setGoodsCount(goodsCount);
-		giftConfig.setCouponCount(couponCount);
 		if (!beanValidator(model, giftConfig)){
 			return form(giftConfig, model);
 		}

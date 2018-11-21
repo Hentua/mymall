@@ -1,5 +1,6 @@
 package com.mall.modules.coupon.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.Length;
 
 import com.mall.common.persistence.DataEntity;
@@ -15,6 +16,11 @@ public class CouponMerchant extends DataEntity<CouponMerchant> {
 	private String couponType;		// 优惠券类型
 	private String merchantCode;		// 商户ID
 	private Double balance;		// 可用余额
+
+	@JsonIgnore
+	private String customerReferee; // 获赠会员
+	@JsonIgnore
+	private Double transferAmount; // 赠送金额
 	
 	public CouponMerchant() {
 		super();
@@ -22,6 +28,22 @@ public class CouponMerchant extends DataEntity<CouponMerchant> {
 
 	public CouponMerchant(String id){
 		super(id);
+	}
+
+	public Double getTransferAmount() {
+		return transferAmount;
+	}
+
+	public void setTransferAmount(Double transferAmount) {
+		this.transferAmount = transferAmount;
+	}
+
+	public String getCustomerReferee() {
+		return customerReferee;
+	}
+
+	public void setCustomerReferee(String customerReferee) {
+		this.customerReferee = customerReferee;
 	}
 
 	@Length(min=1, max=1, message="优惠券类型长度必须介于 1 和 1 之间")

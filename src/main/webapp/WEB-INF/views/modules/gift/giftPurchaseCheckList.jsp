@@ -48,7 +48,7 @@
 				<th>购买时间</th>
 				<th>支付时间</th>
 				<th>购买状态</th>
-				<shiro:hasPermission name="gift:giftPurchaseLog:edit"><th>操作</th></shiro:hasPermission>
+				<%--<shiro:hasPermission name="gift:giftPurchaseLog:edit"><th>操作</th></shiro:hasPermission>--%>
 			</tr>
 		</thead>
 		<tbody>
@@ -84,12 +84,12 @@
 				<td>
 					${giftPurchaseLog.statusZh}
 				</td>
-				<shiro:hasPermission name="gift:giftPurchaseLog:edit"><td>
-					<c:if test="${giftPurchaseLog.status == '0' && giftPurchaseLog.payChannel == '2'}">
-						<a href="${ctx}/gift/giftPurchaseLog/checkPass?id=${giftPurchaseLog.id}">审核通过</a>
-						<a href="${ctx}/gift/giftPurchaseLog/checkNotPass?id=${giftPurchaseLog.id}">审核不通过</a>
-					</c:if>
-				</td></shiro:hasPermission>
+				<%--<shiro:hasPermission name="gift:giftPurchaseLog:edit"><td>--%>
+					<%--<c:if test="${giftPurchaseLog.status == '0' && giftPurchaseLog.payChannel == '2'}">--%>
+						<%--<a href="${ctx}/gift/giftPurchaseLog/checkPass?id=${giftPurchaseLog.id}">审核通过</a>--%>
+						<%--<a href="${ctx}/gift/giftPurchaseLog/checkNotPass?id=${giftPurchaseLog.id}">审核不通过</a>--%>
+					<%--</c:if>--%>
+				<%--</td></shiro:hasPermission>--%>
 			</tr>
 		</c:forEach>
 		</tbody>

@@ -16,7 +16,7 @@
 		a.gift_id AS "giftId",
 		a.merchant_code AS "merchantCode",
 		a.customer_code AS "customerCode",
-		a.product_amount AS "produceAmount",
+		a.produce_amount AS "produceAmount",
 		a.order_no AS "orderNo"
 	</sql>
 	
@@ -37,7 +37,15 @@
 		FROM coupon_log a
 		<include refid="couponLogJoins"/>
 		<where>
-			
+			<if test="couponType != null and couponType != ''">
+				and a.coupon_type = #{couponType}
+			</if>
+			<if test="customerCode != null and customerCode != ''">
+				and a.customer_code = #{customerCode}
+			</if>
+			<if test="type != null and type != ''">
+				and a.type = #{type}
+			</if>
 		</where>
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
@@ -98,7 +106,7 @@
 			#{giftId},
 			#{merchantCode},
 			#{customerCode},
-			#{productAmount},
+			#{produceAmount},
 			#{orderNo}
 		)
 	</insert>

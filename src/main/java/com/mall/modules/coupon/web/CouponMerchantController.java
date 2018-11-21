@@ -3,6 +3,8 @@ package com.mall.modules.coupon.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.mall.modules.sys.entity.User;
+import com.mall.modules.sys.utils.UserUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,6 +20,8 @@ import com.mall.common.web.BaseController;
 import com.mall.common.utils.StringUtils;
 import com.mall.modules.coupon.entity.CouponMerchant;
 import com.mall.modules.coupon.service.CouponMerchantService;
+
+import java.util.List;
 
 /**
  * 商家优惠券Controller
@@ -46,8 +50,12 @@ public class CouponMerchantController extends BaseController {
 	@RequiresPermissions("coupon:couponMerchant:view")
 	@RequestMapping(value = {"list", ""})
 	public String list(CouponMerchant couponMerchant, HttpServletRequest request, HttpServletResponse response, Model model) {
-		Page<CouponMerchant> page = couponMerchantService.findPage(new Page<CouponMerchant>(request, response), couponMerchant); 
-		model.addAttribute("page", page);
+		User currUser = UserUtils.getUser();
+		String merchantCode = currUser.getId();
+		CouponMerchant queryCondition = new CouponMerchant();
+		queryCondition.setMerchantCode(merchantCode);
+		List<CouponMerchant> merchantList = couponMerchantService.findList(queryCondition);
+		model.addAttribute("list", merchantList);
 		return "modules/coupon/couponMerchantList";
 	}
 
@@ -75,6 +83,11 @@ public class CouponMerchantController extends BaseController {
 		couponMerchantService.delete(couponMerchant);
 		addMessage(redirectAttributes, "删除商家优惠券成功");
 		return "redirect:"+Global.getAdminPath()+"/coupon/couponMerchant/?repage";
+	}
+
+	public String transfer(CouponMerchant couponMerchant, RedirectAttributes redirectAttributes) {
+		// todo 优惠券赠送
+		return null;
 	}
 
 }

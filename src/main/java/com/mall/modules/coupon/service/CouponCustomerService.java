@@ -70,9 +70,11 @@ public class CouponCustomerService extends CrudService<CouponCustomerDao, Coupon
         couponLog.setProduceChannel("0");
         couponLog.setType("1");
         couponLog.setCustomerCode(customerCode);
-        couponLog.setProductAmount(giftConfig.getHalfCoupon());
+        couponLog.setProduceAmount(giftConfig.getHalfCoupon());
         couponLog.setGiftId(giftCustomerId);
-        couponLogService.save(couponLog);
+        if (halfCoupon.getBalance() > 0) {
+            couponLogService.save(couponLog);
+        }
         // 保存七折券
         CouponCustomer thirtyCoupon = new CouponCustomer();
         thirtyCoupon.setCouponType("1");
@@ -80,14 +82,24 @@ public class CouponCustomerService extends CrudService<CouponCustomerDao, Coupon
         thirtyCoupon.setBalance(giftConfig.getThirtyCoupon());
         this.saveCoupon(thirtyCoupon);
         // 保存七折券日志
+        couponLog = new CouponLog();
+        couponLog.setProduceChannel("0");
+        couponLog.setType("1");
+        couponLog.setCustomerCode(customerCode);
+        couponLog.setGiftId(giftCustomerId);
         couponLog.setCouponType("1");
         couponLog.setAmount(giftConfig.getThirtyCoupon());
-        couponLog.setProductAmount(giftConfig.getThirtyCoupon());
-        couponLogService.save(couponLog);
+        couponLog.setProduceAmount(giftConfig.getThirtyCoupon());
+        if (thirtyCoupon.getBalance() > 0) {
+            couponLogService.save(couponLog);
+        }
     }
 
     @Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public void saveCoupon(CouponCustomer couponCustomer) {
+        if(couponCustomer.getBalance() <= 0) {
+            return;
+        }
         CouponCustomer queryCondition = new CouponCustomer();
         queryCondition.setCustomerCode(couponCustomer.getCustomerCode());
         queryCondition.setCouponType(couponCustomer.getCouponType());

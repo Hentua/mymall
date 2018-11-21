@@ -92,7 +92,7 @@
 			<div class="controls">
 				<c:if test="${giftConfigCategory.giftPrice <= 10000}"><span id="WeChatPay"><form:radiobutton path="payChannel" label="微信支付" value="0" /></span></c:if>
 				<form:radiobutton path="payChannel" label="余额支付" value="3" checked="true"/>
-				<form:radiobutton path="payChannel" label="打款到财务" value="2"/>
+				<%--<form:radiobutton path="payChannel" label="打款到财务" value="2"/>--%>
 			</div>
 		</div>
 		<div class="form-actions">

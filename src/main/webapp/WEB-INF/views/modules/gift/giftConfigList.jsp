@@ -53,7 +53,8 @@
 				<th>礼包名称</th>
 				<th>礼包分类</th>
 				<th>礼包价格</th>
-				<th>优惠券数量</th>
+				<th>五折优惠券</th>
+				<th>七折优惠券</th>
 				<th>商品总数量</th>
 				<th>是否在APP显示商品价格</th>
 				<th>创建时间</th>
@@ -75,7 +76,10 @@
 					${giftConfig.giftCategoryPrice}
 				</td>
 				<td>
-					${giftConfig.couponCount}
+					${giftConfig.halfCoupon}
+				</td>
+				<td>
+					${giftConfig.thirtyCoupon}
 				</td>
 				<td>
 					${giftConfig.goodsCount}
