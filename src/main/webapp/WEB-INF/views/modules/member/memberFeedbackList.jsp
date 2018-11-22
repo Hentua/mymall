@@ -36,8 +36,11 @@
 		<thead>
 			<tr>
 				<th>会员昵称</th>
+				<th>会员账号</th>
 				<th>反馈信息</th>
 				<th>创建时间</th>
+				<th>是否回复</th>
+				<th>详情</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -47,10 +50,26 @@
 					${memberFeedback.customerName}
 				</td>
 				<td>
+					${memberFeedback.mobile}
+				</td>
+				<td>
 					${memberFeedback.feedbackDetail}
 				</td>
 				<td>
 					<fmt:formatDate value="${memberFeedback.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
+				</td>
+				<td>
+					<c:choose>
+						<c:when test="${empty memberFeedback.reply}">
+							否
+						</c:when>
+						<c:otherwise>
+							是
+						</c:otherwise>
+					</c:choose>
+				</td>
+				<td>
+					<a href="${ctx}/member/memberFeedback/form?id=${memberFeedback.id}">详情</a>
 				</td>
 			</tr>
 		</c:forEach>

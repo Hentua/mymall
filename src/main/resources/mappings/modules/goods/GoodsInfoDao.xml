@@ -108,6 +108,7 @@
 				AND a.merchant_id = #{merchantId}
 			</if>
 			and goods_type = 1
+			and del_flag = #{DEL_FLAG_NORMAL}
 		</where>
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
@@ -171,6 +172,7 @@
 			<if test="merchantId != null and merchantId != ''">
 				and a.merchant_id = #{merchantId}
 			</if>
+			and del_flag = #{DEL_FLAG_NORMAL}
 		</where>
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
@@ -340,8 +342,7 @@
 	</update>
 	
 	<update id="delete">
-		DELETE FROM goods_info
-		WHERE id = #{id}
+		update goods_info set del_flag = #{DEL_FLAG_DELETE} where id = #{id}
 	</update>
 	
 </mapper>

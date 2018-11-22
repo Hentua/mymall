@@ -15,13 +15,32 @@ public class MemberFeedback extends DataEntity<MemberFeedback> {
 	private String customerCode;		// 会员ID
 	private String feedbackDetail;		// 反馈信息
 	private String customerName; // 会员昵称
-	
+	private String reply; // 运营反馈
+	private String mobile; // 会员账号
+
 	public MemberFeedback() {
 		super();
 	}
 
 	public MemberFeedback(String id){
 		super(id);
+	}
+
+	public String getMobile() {
+		return mobile;
+	}
+
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
+
+	@Length(min=1, max=500, message="反馈信息长度必须介于 1 和 500 之间")
+	public String getReply() {
+		return reply;
+	}
+
+	public void setReply(String reply) {
+		this.reply = reply;
 	}
 
 	public String getCustomerName() {
@@ -32,7 +51,6 @@ public class MemberFeedback extends DataEntity<MemberFeedback> {
 		this.customerName = customerName;
 	}
 
-	@Length(min=1, max=64, message="会员ID长度必须介于 1 和 64 之间")
 	public String getCustomerCode() {
 		return customerCode;
 	}
@@ -40,8 +58,7 @@ public class MemberFeedback extends DataEntity<MemberFeedback> {
 	public void setCustomerCode(String customerCode) {
 		this.customerCode = customerCode;
 	}
-	
-	@Length(min=1, max=500, message="反馈信息长度必须介于 1 和 500 之间")
+
 	public String getFeedbackDetail() {
 		return feedbackDetail;
 	}

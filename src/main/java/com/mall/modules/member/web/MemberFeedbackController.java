@@ -67,6 +67,16 @@ public class MemberFeedbackController extends BaseController {
 		addMessage(redirectAttributes, "保存会员反馈信息成功");
 		return "redirect:"+Global.getAdminPath()+"/member/memberFeedback/?repage";
 	}
+
+	@RequestMapping(value = "reply")
+	public String reply(MemberFeedback memberFeedback, Model model, RedirectAttributes redirectAttributes) {
+		if (!beanValidator(model, memberFeedback)){
+			return form(memberFeedback, model);
+		}
+		memberFeedbackService.save(memberFeedback);
+		addMessage(redirectAttributes, "回复成功");
+		return "redirect:"+Global.getAdminPath()+"/member/memberFeedback/?repage";
+	}
 	
 	@RequiresPermissions("member:memberFeedback:edit")
 	@RequestMapping(value = "delete")
