@@ -10,9 +10,11 @@ import com.mall.modules.member.service.MemberLogisticsFeeService;
 import com.mall.modules.order.dao.OrderGoodsDao;
 import com.mall.modules.order.dao.OrderInfoDao;
 import com.mall.modules.order.dao.OrderLogisticsDao;
+import com.mall.modules.order.dao.OrderLogisticsInfoDao;
 import com.mall.modules.order.entity.OrderGoods;
 import com.mall.modules.order.entity.OrderInfo;
 import com.mall.modules.order.entity.OrderLogistics;
+import com.mall.modules.order.entity.OrderLogisticsInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
@@ -40,6 +42,8 @@ public class OrderInfoService extends CrudService<OrderInfoDao, OrderInfo> {
     private MemberLogisticsFeeService memberLogisticsFeeService;
     @Autowired
     private OrderInfoDao orderInfoDao;
+    @Autowired
+    private OrderLogisticsInfoDao orderLogisticsInfoDao;
 
     @Override
     public OrderInfo get(String id) {
@@ -239,6 +243,38 @@ public class OrderInfoService extends CrudService<OrderInfoDao, OrderInfo> {
         }
         orderLogisticsDao.orderDeliverySave(orderLogistics);
         return true;
+    }
+
+    public OrderLogistics getOrderLogistics(String orderNo) {
+        OrderLogistics queryCondition = new OrderLogistics();
+        queryCondition.setOrderNo(orderNo);
+        return orderLogisticsDao.get(queryCondition);
+    }
+
+    public OrderLogisticsInfo getOrderLogisticsInfo(String expressType, String expressNo) {
+        OrderLogisticsInfo queryCondition = new OrderLogisticsInfo();
+        queryCondition.setExpressNo(expressNo);
+        queryCondition.setExpressType(expressType);
+        List<OrderLogisticsInfo> orderLogisticsInfos = orderLogisticsInfoDao.findList(queryCondition);
+        if(null == orderLogisticsInfos || orderLogisticsInfos.size() <= 0) {
+            return null;
+        }else {
+            return orderLogisticsInfos.get(0);
+        }
+    }
+
+    @Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    public void saveOrderLogisticsInfo(OrderLogisticsInfo orderLogisticsInfo) {
+        OrderLogisticsInfo logisticsInfo = this.getOrderLogisticsInfo(orderLogisticsInfo.getExpressType(), orderLogisticsInfo.getExpressNo());
+        if(null != logisticsInfo) {
+            logisticsInfo.setLastResult(orderLogisticsInfo.getLastResult());
+            logisticsInfo.setLastResultAll(orderLogisticsInfo.getLastResultAll());
+            logisticsInfo.preUpdate();
+            orderLogisticsInfoDao.update(logisticsInfo);
+        }else {
+            orderLogisticsInfo.preInsert();
+            orderLogisticsInfoDao.insert(orderLogisticsInfo);
+        }
     }
 
 }

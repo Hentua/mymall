@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.modules.order.dao.OrderLogisticsInfoDao">
+    
+	<sql id="orderLogisticsInfoColumns">
+		a.id AS "id",
+		a.express_type AS "expressType",
+		a.express_no AS "expressNo",
+		a.last_result AS "lastResult",
+		a.last_result_all AS "lastResultAll",
+		a.create_date AS "createDate",
+		a.update_date AS "updateDate"
+	</sql>
+	
+	<sql id="orderLogisticsInfoJoins">
+	</sql>
+    
+	<select id="get" resultType="OrderLogisticsInfo">
+		SELECT 
+			<include refid="orderLogisticsInfoColumns"/>
+		FROM order_logistics_info a
+		<include refid="orderLogisticsInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="OrderLogisticsInfo">
+		SELECT 
+			<include refid="orderLogisticsInfoColumns"/>
+		FROM order_logistics_info a
+		<include refid="orderLogisticsInfoJoins"/>
+		<where>
+			
+			<if test="expressType != null and expressType != ''">
+				AND a.express_type = #{expressType}
+			</if>
+			<if test="expressNo != null and expressNo != ''">
+				AND a.express_no = #{expressNo}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="OrderLogisticsInfo">
+		SELECT 
+			<include refid="orderLogisticsInfoColumns"/>
+		FROM order_logistics_info a
+		<include refid="orderLogisticsInfoJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO order_logistics_info(
+			id,
+			express_type,
+			express_no,
+			last_result,
+			last_result_all,
+			create_date,
+			update_date
+		) VALUES (
+			#{id},
+			#{expressType},
+			#{expressNo},
+			#{lastResult},
+			#{lastResultAll},
+			#{createDate},
+			#{updateDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE order_logistics_info SET 	
+			express_type = #{expressType},
+			express_no = #{expressNo},
+			last_result = #{lastResult},
+			last_result_all = #{lastResultAll},
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM order_logistics_info
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

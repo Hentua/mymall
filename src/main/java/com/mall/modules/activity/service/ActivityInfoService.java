@@ -2,7 +2,6 @@ package com.mall.modules.activity.service;
 
 import java.util.List;
 
-import com.mall.modules.act.entity.Act;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

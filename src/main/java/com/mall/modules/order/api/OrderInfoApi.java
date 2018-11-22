@@ -36,15 +36,18 @@ import com.mall.modules.member.service.MemberInfoService;
 import com.mall.modules.order.entity.*;
 import com.mall.modules.order.service.OrderInfoService;
 import com.mall.modules.order.service.OrderPaymentInfoService;
+import com.mall.modules.order.service.OrderReturnsService;
 import com.mall.modules.order.service.OrderShoppingCartService;
 import com.mall.modules.sys.entity.Role;
 import com.mall.modules.sys.entity.User;
 import com.mall.modules.sys.service.SystemService;
+import com.mall.modules.sys.utils.DictUtils;
 import com.mall.modules.sys.utils.UserUtils;
 import com.sohu.idcenter.IdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -85,6 +88,8 @@ public class OrderInfoApi extends BaseController {
     private CouponLogService couponLogService;
     @Autowired
     private CouponMerchantService couponMerchantService;
+    @Autowired
+    private OrderReturnsService orderReturnsService;
 
     @Autowired
     private AccountService accountService;
@@ -707,14 +712,74 @@ public class OrderInfoApi extends BaseController {
      */
     @RequestMapping(value = "logisticsInfo", method = RequestMethod.POST)
     public void logisticsInfo(HttpServletRequest request, HttpServletResponse response) {
-        String orderId = request.getParameter("orderId");
+        // 订单编号或售后单编号
+        String orderNo = request.getParameter("orderNo");
+        // 订单物流类型 0-订单 1-售后单
+        String logisticsType = request.getParameter("logisticsType");
         try {
-            if (StringUtils.isBlank(orderId)) {
+            if (StringUtils.isBlank(orderNo)) {
                 throw new ServiceException("未选择要查询的订单");
             }
-            // todo logistics info query
+            String expressNo = null;
+            String expressType = null;
+            if (StringUtils.isBlank(logisticsType) || "0".equals(logisticsType)) {
+                OrderLogistics orderLogistics = orderInfoService.getOrderLogistics(orderNo);
+                if (null != orderLogistics) {
+                    expressNo = orderLogistics.getExpressNo();
+                    expressType = orderLogistics.getLogisticsType();
+                }
+            } else {
+                OrderReturns queryCondition = new OrderReturns();
+                queryCondition.setReturnsNo(orderNo);
+                List<OrderReturns> orderReturnsList = orderReturnsService.findList(queryCondition);
+                if (null != orderReturnsList && orderReturnsList.size() > 0) {
+                    OrderReturns orderReturns = orderReturnsList.get(0);
+                    expressNo = orderReturns.getExpressNo();
+                    expressType = orderReturns.getLogisticsType();
+                }
+            }
+            OrderLogisticsInfo orderLogisticsInfo = null;
+            if (StringUtils.isNotBlank(expressNo) && StringUtils.isNotBlank(expressType)) {
+                orderLogisticsInfo = orderInfoService.getOrderLogisticsInfo(expressType, expressNo);
+            }
+            if (null != orderLogisticsInfo) {
+                JSONObject jsonObject = JSON.parseObject(orderLogisticsInfo.getLastResult());
+                jsonObject.put("expressName", DictUtils.getDictLabel(jsonObject.getString("com"), "express_type", ""));
+                renderString(response, ResultGenerator.genSuccessResult(jsonObject));
+            } else {
+                renderString(response, ResultGenerator.genSuccessResult(new JSONArray()));
+            }
         } catch (Exception e) {
             renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
         }
+    }
+
+    /**
+     * 快递100推送服务回调接口
+     *
+     * @param request  请求体
+     * @param response 响应体
+     */
+    @RequestMapping(value = "kuaidi100Callback")
+    public void kuaidi100Callback(HttpServletRequest request, HttpServletResponse response) {
+        String jsonStr = request.getParameter("param");
+        JSONObject jsonObject = JSON.parseObject(jsonStr);
+        JSONObject returnResult = new JSONObject();
+        OrderLogisticsInfo orderLogisticsInfo = new OrderLogisticsInfo();
+        JSONObject lastResult = jsonObject.getJSONObject("lastResult");
+        String expressNo = lastResult.getString("nu");
+        String expressType = lastResult.getString("com");
+        String lastResultAll = jsonObject.toJSONString();
+        String lastResultStr = lastResult.toJSONString();
+        orderLogisticsInfo.setExpressType(expressType);
+        orderLogisticsInfo.setExpressNo(expressNo);
+        orderLogisticsInfo.setLastResultAll(lastResultAll);
+        orderLogisticsInfo.setLastResult(lastResultStr);
+        orderInfoService.saveOrderLogisticsInfo(orderLogisticsInfo);
+        returnResult.put("result", true);
+        returnResult.put("returnCode", "200");
+        returnResult.put("message", "成功");
+        renderString(response, returnResult);
+
     }
 }
