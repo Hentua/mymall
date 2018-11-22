@@ -1,8 +1,12 @@
 package com.mall.modules.coupon.web;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.mall.common.config.Global;
+import com.mall.common.utils.StringUtils;
+import com.mall.common.web.BaseController;
+import com.mall.modules.coupon.entity.CouponMerchant;
+import com.mall.modules.coupon.service.CouponMerchantService;
+import com.mall.modules.member.entity.MemberInfo;
+import com.mall.modules.member.service.MemberInfoService;
 import com.mall.modules.sys.entity.User;
 import com.mall.modules.sys.utils.UserUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -14,13 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.mall.common.config.Global;
-import com.mall.common.persistence.Page;
-import com.mall.common.web.BaseController;
-import com.mall.common.utils.StringUtils;
-import com.mall.modules.coupon.entity.CouponMerchant;
-import com.mall.modules.coupon.service.CouponMerchantService;
-
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -34,6 +33,8 @@ public class CouponMerchantController extends BaseController {
 
 	@Autowired
 	private CouponMerchantService couponMerchantService;
+	@Autowired
+	private MemberInfoService memberInfoService;
 	
 	@ModelAttribute
 	public CouponMerchant get(@RequestParam(required=false) String id) {
@@ -85,9 +86,41 @@ public class CouponMerchantController extends BaseController {
 		return "redirect:"+Global.getAdminPath()+"/coupon/couponMerchant/?repage";
 	}
 
-	public String transfer(CouponMerchant couponMerchant, RedirectAttributes redirectAttributes) {
-		// todo 优惠券赠送
-		return null;
+	@RequestMapping(value = "transfer")
+	public String transfer(CouponMerchant couponMerchant, Model model, RedirectAttributes redirectAttributes) {
+		String id = couponMerchant.getId();
+		if(StringUtils.isBlank(id)) {
+			addMessage(redirectAttributes, "赠送失败，未选择要赠送的优惠券");
+			return "redirect:"+Global.getAdminPath()+"/coupon/couponMerchant/?repage";
+		}
+		Double transferAmount = couponMerchant.getTransferAmount();
+		CouponMerchant merchant = this.get(id);
+		String customerReferee = couponMerchant.getCustomerReferee();
+		if(null == transferAmount || transferAmount <= 0) {
+			model.addAttribute("message", "赠送失败，赠送金额不得为空或小于1");
+			return form(merchant, model);
+		}
+		if(StringUtils.isBlank(customerReferee)) {
+			model.addAttribute("message", "赠送失败，未选择要赠送的会员");
+			return form(merchant, model);
+		}
+		MemberInfo queryCondition = new MemberInfo();
+		queryCondition.setReferee(customerReferee);
+		MemberInfo memberInfo = memberInfoService.get(queryCondition);
+		if(null == memberInfo) {
+			model.addAttribute("message", "请填写正确的会员手机号或ID号");
+			return form(merchant, model);
+		}
+		Double balance = merchant.getBalance();
+		if(transferAmount > balance) {
+			model.addAttribute("message", "赠送失败，余额不足");
+			return form(merchant, model);
+		}
+		String customerCode = memberInfo.getId();
+		merchant.setBalance(transferAmount);
+		couponMerchantService.couponTransfer(merchant, customerCode);
+		addMessage(redirectAttributes, "赠送成功");
+		return "redirect:"+Global.getAdminPath()+"/coupon/couponMerchant/?repage";
 	}
 
 }

@@ -1,19 +1,18 @@
 package com.mall.modules.coupon.service;
 
-import java.util.List;
-
+import com.mall.common.persistence.Page;
+import com.mall.common.service.CrudService;
+import com.mall.modules.coupon.dao.CouponMerchantDao;
 import com.mall.modules.coupon.entity.CouponCustomer;
 import com.mall.modules.coupon.entity.CouponLog;
+import com.mall.modules.coupon.entity.CouponMerchant;
 import com.mall.modules.gift.entity.GiftConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.mall.common.persistence.Page;
-import com.mall.common.service.CrudService;
-import com.mall.modules.coupon.entity.CouponMerchant;
-import com.mall.modules.coupon.dao.CouponMerchantDao;
+import java.util.List;
 
 /**
  * 商家优惠券Service
@@ -27,6 +26,8 @@ public class CouponMerchantService extends CrudService<CouponMerchantDao, Coupon
 
     @Autowired
     private CouponLogService couponLogService;
+    @Autowired
+    private CouponCustomerService couponCustomerService;
 
     public CouponMerchant get(String id) {
         return super.get(id);
@@ -61,7 +62,7 @@ public class CouponMerchantService extends CrudService<CouponMerchantDao, Coupon
         // 保存五折优惠券日志
         CouponLog couponLog = new CouponLog();
         couponLog.setCouponType("0");
-        couponLog.setRemarks("礼包赠送");
+        couponLog.setRemarks("礼包兑换");
         couponLog.setAmount(giftConfig.getHalfCoupon());
         couponLog.setProduceChannel("0");
         couponLog.setType("0");
@@ -79,7 +80,7 @@ public class CouponMerchantService extends CrudService<CouponMerchantDao, Coupon
         this.saveCoupon(thirtyCoupon);
         // 保存七折券日志
         couponLog = new CouponLog();
-        couponLog.setRemarks("礼包赠送");
+        couponLog.setRemarks("礼包兑换");
         couponLog.setProduceChannel("0");
         couponLog.setType("0");
         couponLog.setCustomerCode(merchantCode);
@@ -94,7 +95,7 @@ public class CouponMerchantService extends CrudService<CouponMerchantDao, Coupon
 
     @Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public void saveCoupon(CouponMerchant couponMerchant) {
-        if (couponMerchant.getBalance() <= 0) {
+        if (couponMerchant.getBalance() == 0) {
             return;
         }
         CouponMerchant queryCondition = new CouponMerchant();
@@ -112,5 +113,40 @@ public class CouponMerchantService extends CrudService<CouponMerchantDao, Coupon
             couponMerchant.setBalance(currCoupon.getBalance() + couponMerchant.getBalance());
             this.save(couponMerchant);
         }
+    }
+
+    @Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    public void couponTransfer(CouponMerchant couponMerchant, String customerCode) {
+        CouponCustomer couponCustomer = couponCustomerService.genCouponCustomerByMerchant(couponMerchant, customerCode);
+        couponCustomer.setBalance(couponMerchant.getBalance());
+        // 给获赠会员消费优惠券增加余额
+        couponCustomerService.saveCoupon(couponCustomer);
+        // 保存会员消费券日志
+        CouponLog couponLog = new CouponLog();
+        couponLog.setCouponType(couponMerchant.getCouponType());
+        couponLog.setRemarks("商家赠送");
+        couponLog.setAmount(couponMerchant.getBalance());
+        couponLog.setProduceChannel("1");
+        couponLog.setType("1");
+        couponLog.setCustomerCode(customerCode);
+        couponLog.setProduceAmount(couponMerchant.getBalance());
+        couponLog.setMerchantCode(couponMerchant.getMerchantCode());
+        if (couponMerchant.getBalance() > 0) {
+            couponLogService.save(couponLog);
+        }
+        // 从商户优惠券扣减余额
+        couponMerchant.setBalance(0 - couponMerchant.getBalance());
+        this.saveCoupon(couponMerchant);
+        // 保存商家优惠券日志
+        CouponLog merchantCouponLog = new CouponLog();
+        merchantCouponLog.setCouponType(couponMerchant.getCouponType());
+        merchantCouponLog.setRemarks("赠送支出");
+        merchantCouponLog.setAmount(couponMerchant.getBalance());
+        merchantCouponLog.setProduceChannel("6");
+        merchantCouponLog.setType("0");
+        merchantCouponLog.setCustomerCode(customerCode);
+        merchantCouponLog.setProduceAmount(couponMerchant.getBalance());
+        merchantCouponLog.setMerchantCode(couponMerchant.getMerchantCode());
+        couponLogService.save(merchantCouponLog);
     }
 }

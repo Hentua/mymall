@@ -115,7 +115,7 @@ public class GiftMerchantController extends BaseController {
 			}
 		}
 		addMessage(redirectAttributes, "赠送成功");
-		return "redirect:" + Global.getAdminPath() + "modules/gift/giftMerchant?repage";
+		return "redirect:" + Global.getAdminPath() + "/gift/giftMerchant?repage";
 	}
 
 	@RequiresPermissions("gift:giftMerchant:edit")

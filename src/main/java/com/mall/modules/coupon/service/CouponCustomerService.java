@@ -1,19 +1,19 @@
 package com.mall.modules.coupon.service;
 
-import java.util.List;
-import java.util.Map;
-
+import com.mall.common.persistence.Page;
+import com.mall.common.service.CrudService;
+import com.mall.modules.coupon.dao.CouponCustomerDao;
+import com.mall.modules.coupon.entity.CouponCustomer;
 import com.mall.modules.coupon.entity.CouponLog;
+import com.mall.modules.coupon.entity.CouponMerchant;
 import com.mall.modules.gift.entity.GiftConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.mall.common.persistence.Page;
-import com.mall.common.service.CrudService;
-import com.mall.modules.coupon.entity.CouponCustomer;
-import com.mall.modules.coupon.dao.CouponCustomerDao;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 用户优惠券Service
@@ -65,7 +65,7 @@ public class CouponCustomerService extends CrudService<CouponCustomerDao, Coupon
         // 保存五折优惠券日志
         CouponLog couponLog = new CouponLog();
         couponLog.setCouponType("0");
-        couponLog.setRemarks("礼包赠送");
+        couponLog.setRemarks("礼包兑换");
         couponLog.setAmount(giftConfig.getHalfCoupon());
         couponLog.setProduceChannel("0");
         couponLog.setType("1");
@@ -84,6 +84,7 @@ public class CouponCustomerService extends CrudService<CouponCustomerDao, Coupon
         // 保存七折券日志
         couponLog = new CouponLog();
         couponLog.setProduceChannel("0");
+        couponLog.setRemarks("礼包兑换");
         couponLog.setType("1");
         couponLog.setCustomerCode(customerCode);
         couponLog.setGiftId(giftCustomerId);
@@ -97,7 +98,7 @@ public class CouponCustomerService extends CrudService<CouponCustomerDao, Coupon
 
     @Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public void saveCoupon(CouponCustomer couponCustomer) {
-        if(couponCustomer.getBalance() <= 0) {
+        if(couponCustomer.getBalance() == 0) {
             return;
         }
         CouponCustomer queryCondition = new CouponCustomer();
@@ -115,6 +116,14 @@ public class CouponCustomerService extends CrudService<CouponCustomerDao, Coupon
             couponCustomer.setBalance(currCoupon.getBalance() + couponCustomer.getBalance());
             this.save(couponCustomer);
         }
+    }
+
+    public CouponCustomer genCouponCustomerByMerchant(CouponMerchant couponMerchant, String customerCode) {
+        CouponCustomer couponCustomer = new CouponCustomer();
+        couponCustomer.setCouponType(couponMerchant.getCouponType());
+        couponCustomer.setCustomerCode(customerCode);
+        couponCustomer.setBalance(0.00);
+        return couponCustomer;
     }
 
 }
