@@ -5,10 +5,7 @@ import com.google.common.collect.Maps;
 import com.mall.common.config.Global;
 import com.mall.common.persistence.Page;
 import com.mall.common.service.ServiceException;
-import com.mall.common.utils.EhCacheUtils;
-import com.mall.common.utils.ResultGenerator;
-import com.mall.common.utils.ResultStatus;
-import com.mall.common.utils.StringUtils;
+import com.mall.common.utils.*;
 import com.mall.common.utils.api.ApiExceptionHandleUtil;
 import com.mall.common.utils.api.ApiPageEntityHandleUtil;
 import com.mall.common.web.BaseController;
@@ -376,7 +373,7 @@ public class MemberInfoApi extends BaseController {
             systemService.saveUser(currUser);
             UserUtils.clearCache();
             String token = UserUtils.getTokenStr(request);
-            EhCacheUtils.remove(token);
+            JedisUtils.delObject(token);
             renderString(response, ResultGenerator.genSuccessResult());
         } catch (Exception e) {
             renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));

@@ -178,7 +178,7 @@
 		    #{companyName},
 		    #{productLicense},
 		    #{operatorCode},
-		    #{merchant_referee_id}
+		    #{merchantRefereeId}
 		)
 	</insert>
 	

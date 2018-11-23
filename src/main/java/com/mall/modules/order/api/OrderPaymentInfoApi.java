@@ -1,10 +1,13 @@
 package com.mall.modules.order.api;
 
+import com.github.binarywang.wxpay.bean.request.BaseWxPayRequest;
+import com.github.binarywang.wxpay.bean.request.WxPayUnifiedOrderRequest;
+import com.github.binarywang.wxpay.constant.WxPayConstants;
+import com.github.binarywang.wxpay.service.WxPayService;
+import com.mall.common.config.Global;
 import com.mall.common.service.ServiceException;
-import com.mall.common.utils.ResultStatus;
+import com.mall.common.utils.*;
 import com.mall.common.utils.api.ApiExceptionHandleUtil;
-import com.mall.common.utils.ResultGenerator;
-import com.mall.common.utils.StringUtils;
 import com.mall.common.web.BaseController;
 import com.mall.modules.account.service.AccountService;
 import com.mall.modules.member.service.MemberInfoService;
@@ -21,9 +24,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * 订单支付API
@@ -46,6 +50,9 @@ public class OrderPaymentInfoApi extends BaseController {
 
     @Autowired
     private MemberInfoService memberInfoService;
+
+    @Autowired
+    private WxPayService wxPayService;
 
     /**
      * 支付成功回调接口
@@ -77,6 +84,59 @@ public class OrderPaymentInfoApi extends BaseController {
     }
 
     /**
+     * APP微信统一下单
+     *
+     * @param request  请求体
+     * @param response 响应体
+     */
+    @RequestMapping(value = "wxPayCreateOrder", method = RequestMethod.POST)
+    @Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    public void wxPayCreateOrder(HttpServletRequest request, HttpServletResponse response) {
+        String paymentNo = request.getParameter("paymentNo");
+        String openid = request.getParameter("openid");
+        Date now = new Date();
+        try {
+            if(StringUtils.isBlank(paymentNo)) {
+                throw new ServiceException("支付单号不能为空");
+            }else if(StringUtils.isBlank(openid)) {
+                throw new ServiceException("未获取用户信息");
+            }
+            OrderPaymentInfo queryCondition = new OrderPaymentInfo();
+            queryCondition.setPaymentNo(paymentNo);
+            OrderPaymentInfo orderPaymentInfo = orderPaymentInfoService.getByCondition(queryCondition);
+            if(null == orderPaymentInfo) {
+                throw new ServiceException("获取支付信息失败");
+            }
+            if(!"0".equals(orderPaymentInfo.getPaymentStatus())) {
+                throw new ServiceException("支付信息不合法");
+            }
+            // 调用微信统一下单
+            WxPayUnifiedOrderRequest orderRequest = new WxPayUnifiedOrderRequest();
+            orderRequest.setBody("美易优选-支付单号" + paymentNo);
+            orderRequest.setOutTradeNo(paymentNo);
+            orderRequest.setTotalFee(BaseWxPayRequest.yuanToFen(String.valueOf(orderPaymentInfo.getAmountTotal())));
+            orderRequest.setOpenid(openid);
+            orderRequest.setSpbillCreateIp(IpUtil.getIpAddress(request));
+            orderRequest.setTimeStart(DateUtils.formatDate(now, "yyyyMMddHHmmss"));
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(now);
+            calendar.add(Calendar.MINUTE, 20);
+            orderRequest.setTimeExpire(DateUtils.formatDate(calendar.getTime(), "yyyyMMddHHmmss"));
+            orderRequest.setNotifyUrl(Global.getConfig("server.baseUrl") + Global.getConfig("adminPath") + "/api/paySuccessCallback");
+            orderRequest.setTradeType(WxPayConstants.TradeType.APP);
+            if(wxPayService.getConfig().isUseSandboxEnv()) {
+                orderRequest.setSignType(WxPayConstants.SignType.MD5);
+                orderRequest.setSign(wxPayService.getSandboxSignKey());
+            }
+            orderPaymentInfo.setPayChannel("0");
+            orderPaymentInfoService.modifyPaymentInfoStatus(orderPaymentInfo);
+            renderString(response, ResultGenerator.genSuccessResult((Object) wxPayService.createOrder(orderRequest)));
+        }catch (Exception e) {
+            renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
+        }
+    }
+
+    /**
      * 余额支付
      *
      * @param request  请求体
@@ -90,11 +150,11 @@ public class OrderPaymentInfoApi extends BaseController {
         String userId = currUser.getId();
         try {
             String cipherPayPassword = memberInfoService.getPayPassword(userId);
-            if(StringUtils.isBlank(cipherPayPassword)) {
+            if (StringUtils.isBlank(cipherPayPassword)) {
                 renderString(response, ResultGenerator.genFailResult("未设置支付密码").setStatus(ResultStatus.NULL_PAY_PASSWORD));
                 return;
             }
-            if(!memberInfoService.validatePayPassword(payPassword, userId)) {
+            if (!memberInfoService.validatePayPassword(payPassword, userId)) {
                 throw new ServiceException("支付密码不正确");
             }
             if (StringUtils.isBlank(paymentNo)) {
@@ -108,6 +168,7 @@ public class OrderPaymentInfoApi extends BaseController {
             }
             Double amountTotal = orderPaymentInfo.getAmountTotal();
             accountService.consumption(amountTotal, paymentNo, userId);
+            orderPaymentInfo.setPayChannel("3");
             // 支付成功
             orderPaymentInfoService.normalOrderPaySuccess(orderPaymentInfo);
             renderString(response, ResultGenerator.genSuccessResult());

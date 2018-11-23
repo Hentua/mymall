@@ -1,5 +1,6 @@
 package com.mall.common.utils.api;
 
+import com.github.binarywang.wxpay.exception.WxPayException;
 import com.mall.common.service.ServiceException;
 import com.mall.common.utils.Result;
 import com.mall.common.utils.ResultGenerator;
@@ -21,6 +22,9 @@ public class ApiExceptionHandleUtil {
             return ResultGenerator.genFailResult(e.getMessage());
         }else if(e instanceof ConstraintViolationException){
             return ResultGenerator.genFailResult("参数错误");
+        }else if(e instanceof WxPayException) {
+            e.printStackTrace();
+            return ResultGenerator.genFailResult("支付失败，请稍后重试");
         }else {
             e.printStackTrace();
             return ResultGenerator.genFailResult("服务内部错误", ResultStatus.INTERNAL_SERVER_ERROR);

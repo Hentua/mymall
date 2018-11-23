@@ -3,26 +3,23 @@
  */
 package com.mall.modules.sys.security;
 
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-
 import com.alibaba.fastjson.JSONObject;
 import com.mall.common.config.Global;
-import com.mall.common.security.Digests;
 import com.mall.common.utils.*;
-import com.mall.modules.sys.entity.User;
 import com.mall.modules.sys.service.SystemService;
 import com.mall.modules.sys.utils.UserUtils;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.shiro.authc.*;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.subject.Subject;
-import org.apache.shiro.util.ByteSource;
 import org.apache.shiro.web.util.WebUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 import java.io.PrintWriter;
 import java.util.Enumeration;
 
@@ -159,7 +156,7 @@ public class ApiAuthenticationFilter extends org.apache.shiro.web.filter.authc.F
     protected boolean onLoginSuccess(AuthenticationToken token,
                                      Subject subject, ServletRequest request, ServletResponse response) {
         String tokenStr = getToken(subject);
-        EhCacheUtils.put(tokenStr,subject.getPrincipal());
+        JedisUtils.setObject(tokenStr,subject.getPrincipal(), 0);
         request.setAttribute("token",tokenStr);
         return true;
     }

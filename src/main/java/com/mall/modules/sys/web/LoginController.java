@@ -10,7 +10,6 @@ import com.mall.common.security.shiro.session.SessionDAO;
 import com.mall.common.servlet.ValidateCodeServlet;
 import com.mall.common.utils.*;
 import com.mall.common.web.BaseController;
-import com.mall.modules.member.entity.MemberInfo;
 import com.mall.modules.sys.entity.User;
 import com.mall.modules.sys.entity.UserVo;
 import com.mall.modules.sys.security.FormAuthenticationFilter;
@@ -92,7 +91,7 @@ public class LoginController extends BaseController {
 		if(StringUtils.isEmpty(token)){
 			return renderString(response,ResultGenerator.genFailResult("未找到登录信息,请先登录"));
 		}
-		EhCacheUtils.remove(token);
+		JedisUtils.delObject(token);
 		return renderString(response,ResultGenerator.genSuccessResult("退出登录成功"));
 	}
 

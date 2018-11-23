@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context" xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+		http://www.springframework.org/schema/context  http://www.springframework.org/schema/context/spring-context-4.1.xsd"
+	default-lazy-init="true">
+
+	<description>微信支付配置</description>
+
+    <!-- 加载配置属性文件 -->
+	<context:property-placeholder ignore-unresolvable="true" location="classpath:jeesite.properties" file-encoding="UTF-8" />
+	
+	<bean id="wxPayConfiguration" class="com.github.binarywang.wxpay.config.WxPayConfig">
+		<property name="appId" value="${wx.pay.appid}" /><!-- 微信平台appid -->
+		<property name="mchId" value="${wx.pay.mchId}" /><!-- 商户号 -->
+		<property name="mchKey" value="${wx.pay.mchKey}" /><!-- 商户密钥 -->
+		<property name="keyPath" value="${wx.pay.keyPath}" /><!-- p12证书文件位置 -->
+		<property name="useSandboxEnv" value="${wx.pay.useSandboxEnv}" /><!-- 是否使用沙箱环境 -->
+	</bean>
+
+	<bean id="wxPayService" class="com.github.binarywang.wxpay.service.impl.WxPayServiceImpl">
+		<property name="config" ref="wxPayConfiguration"/>
+	</bean>
+
+</beans>

@@ -47,7 +47,6 @@ import com.sohu.idcenter.IdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -747,7 +746,7 @@ public class OrderInfoApi extends BaseController {
                 jsonObject.put("expressName", DictUtils.getDictLabel(jsonObject.getString("com"), "express_type", ""));
                 renderString(response, ResultGenerator.genSuccessResult(jsonObject));
             } else {
-                renderString(response, ResultGenerator.genSuccessResult(new JSONArray()));
+                renderString(response, ResultGenerator.genSuccessResult(new JSONObject()));
             }
         } catch (Exception e) {
             renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));

@@ -57,13 +57,12 @@ public class OrderPaymentInfoService extends CrudService<OrderPaymentInfoDao, Or
 		String paymentNo = String.valueOf(idWorker.getId());
 		OrderPaymentInfo orderPaymentInfo = new OrderPaymentInfo();
 		orderPaymentInfo.setPaymentNo(paymentNo);
-		orderPaymentInfo.setPayChannel(orderType);
 		if("0".equals(orderType)) {
 			orderPaymentInfo.setPaymentStatus("0");
 		}else if("1".equals(orderType)) {
 			orderPaymentInfo.setPaymentStatus("1");
 		}
-		orderPaymentInfo.setPaymentType("0");
+		orderPaymentInfo.setPaymentType(orderType);
 		return orderPaymentInfo;
 	}
 

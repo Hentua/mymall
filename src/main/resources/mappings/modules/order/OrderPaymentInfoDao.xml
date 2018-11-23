@@ -168,7 +168,7 @@
 	</update>
 
 	<update id="modifyPaymentInfoStatus">
-		update order_payment_info set payment_status = #{paymentStatus} where payment_no = #{paymentNo}
+		update order_payment_info set payment_status = #{paymentStatus}, pay_channel = #{payChannel} where payment_no = #{paymentNo}
 	</update>
 	
 	<update id="delete">
