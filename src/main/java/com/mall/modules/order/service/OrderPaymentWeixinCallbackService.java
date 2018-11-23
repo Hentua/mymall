@@ -110,6 +110,7 @@ public class OrderPaymentWeixinCallbackService extends CrudService<OrderPaymentW
 			orderPaymentWeixinCallbackCoupon.setCouponType(c.getCouponType());
 			orderPaymentWeixinCallbackCoupons.add(orderPaymentWeixinCallbackCoupon);
 		}
+		orderPaymentWeixinCallback.setOrderPaymentWeixinCallbackCouponList(orderPaymentWeixinCallbackCoupons);
 		this.save(orderPaymentWeixinCallback);
 	}
 	
