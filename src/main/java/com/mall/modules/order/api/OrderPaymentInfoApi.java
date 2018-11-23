@@ -1,7 +1,13 @@
 package com.mall.modules.order.api;
 
+import com.alibaba.fastjson.JSONObject;
+import com.github.binarywang.wxpay.bean.notify.WxPayNotifyResponse;
+import com.github.binarywang.wxpay.bean.notify.WxPayOrderNotifyResult;
+import com.github.binarywang.wxpay.bean.order.WxPayAppOrderResult;
 import com.github.binarywang.wxpay.bean.request.BaseWxPayRequest;
 import com.github.binarywang.wxpay.bean.request.WxPayUnifiedOrderRequest;
+import com.github.binarywang.wxpay.bean.result.BaseWxPayResult;
+import com.github.binarywang.wxpay.bean.result.WxPayUnifiedOrderResult;
 import com.github.binarywang.wxpay.constant.WxPayConstants;
 import com.github.binarywang.wxpay.service.WxPayService;
 import com.mall.common.config.Global;
@@ -15,11 +21,13 @@ import com.mall.modules.order.entity.OrderInfo;
 import com.mall.modules.order.entity.OrderPaymentInfo;
 import com.mall.modules.order.service.OrderInfoService;
 import com.mall.modules.order.service.OrderPaymentInfoService;
+import com.mall.modules.order.service.OrderPaymentWeixinCallbackService;
 import com.mall.modules.sys.entity.User;
 import com.mall.modules.sys.utils.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -54,18 +62,18 @@ public class OrderPaymentInfoApi extends BaseController {
     @Autowired
     private WxPayService wxPayService;
 
+    @Autowired
+    private OrderPaymentWeixinCallbackService orderPaymentWeixinCallbackService;
+
     /**
      * 支付成功回调接口
-     *
-     * @param request  请求体
-     * @param response 响应体
      */
     @RequestMapping(value = "paySuccessCallback")
     @Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
-    public void successCallback(HttpServletRequest request, HttpServletResponse response) {
-        // todo pay success callback function
-        String paymentNo = request.getParameter("paymentNo");
+    public String successCallback(@RequestBody String xmlData) {
         try {
+            final WxPayOrderNotifyResult notifyResult = wxPayService.parseOrderNotifyResult(xmlData);
+            String paymentNo = notifyResult.getOutTradeNo();
             if (StringUtils.isBlank(paymentNo)) {
                 throw new ServiceException("支付单号不能为空");
             }
@@ -74,12 +82,42 @@ public class OrderPaymentInfoApi extends BaseController {
             OrderPaymentInfo orderPaymentInfo = orderPaymentInfoService.getByCondition(queryCondition);
             if (null == orderPaymentInfo) {
                 throw new ServiceException("获取支付信息失败");
+            }else if(!"0".equals(orderPaymentInfo.getPaymentStatus())) {
+                wxPayService.closeOrder(paymentNo);
             }
-            // 支付成功
-            orderPaymentInfoService.normalOrderPaySuccess(orderPaymentInfo);
-            renderString(response, ResultGenerator.genSuccessResult());
+            int totalAmount = notifyResult.getTotalFee();
+            if(!BaseWxPayResult.fenToYuan(totalAmount).equals(String.valueOf(orderPaymentInfo.getAmountTotal()))) {
+                wxPayService.closeOrder(paymentNo);
+                orderPaymentInfo.setPaymentStatus("2");
+                orderPaymentInfoService.modifyPaymentInfoStatus(orderPaymentInfo);
+                return WxPayNotifyResponse.fail("失败");
+            }
+            if(!"SUCCESS".equalsIgnoreCase(notifyResult.getReturnCode()) || !"SUCCESS".equalsIgnoreCase(notifyResult.getResultCode())) {
+                orderPaymentInfo.setPaymentStatus("2");
+                orderPaymentInfoService.modifyPaymentInfoStatus(orderPaymentInfo);
+            }else {
+                orderPaymentInfo.setPaymentStatus("1");
+            }
+            orderPaymentInfo.setDeviceInfo(notifyResult.getDeviceInfo());
+            orderPaymentInfo.setReturnCode(notifyResult.getReturnCode());
+            orderPaymentInfo.setReturnMsg(notifyResult.getReturnMsg());
+            orderPaymentInfo.setErrCode(notifyResult.getErrCode());
+            orderPaymentInfo.setErrCodeDes(notifyResult.getErrCodeDes());
+            orderPaymentInfo.setTradeType(notifyResult.getTradeType());
+            orderPaymentInfo.setResultCode(notifyResult.getResultCode());
+            orderPaymentInfoService.weixinPayResult(orderPaymentInfo);
+            // 保存回调信息
+            orderPaymentWeixinCallbackService.save(notifyResult);
+            if("1".equalsIgnoreCase(orderPaymentInfo.getPaymentStatus())) {
+                // 支付成功
+                orderPaymentInfoService.normalOrderPaySuccess(orderPaymentInfo, DateUtils.parseDate(notifyResult.getTimeEnd(), "yyyyMMddHHmmss"));
+                return WxPayNotifyResponse.success("成功");
+            }else {
+                return WxPayNotifyResponse.fail("失败");
+            }
         } catch (Exception e) {
-            renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
+            e.printStackTrace();
+            return WxPayNotifyResponse.fail("失败");
         }
     }
 
@@ -93,13 +131,10 @@ public class OrderPaymentInfoApi extends BaseController {
     @Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public void wxPayCreateOrder(HttpServletRequest request, HttpServletResponse response) {
         String paymentNo = request.getParameter("paymentNo");
-        String openid = request.getParameter("openid");
         Date now = new Date();
         try {
             if(StringUtils.isBlank(paymentNo)) {
                 throw new ServiceException("支付单号不能为空");
-            }else if(StringUtils.isBlank(openid)) {
-                throw new ServiceException("未获取用户信息");
             }
             OrderPaymentInfo queryCondition = new OrderPaymentInfo();
             queryCondition.setPaymentNo(paymentNo);
@@ -108,14 +143,13 @@ public class OrderPaymentInfoApi extends BaseController {
                 throw new ServiceException("获取支付信息失败");
             }
             if(!"0".equals(orderPaymentInfo.getPaymentStatus())) {
-                throw new ServiceException("支付信息不合法");
+                throw new ServiceException("支付信息不合法，订单已支付或关闭");
             }
             // 调用微信统一下单
             WxPayUnifiedOrderRequest orderRequest = new WxPayUnifiedOrderRequest();
             orderRequest.setBody("美易优选-支付单号" + paymentNo);
             orderRequest.setOutTradeNo(paymentNo);
             orderRequest.setTotalFee(BaseWxPayRequest.yuanToFen(String.valueOf(orderPaymentInfo.getAmountTotal())));
-            orderRequest.setOpenid(openid);
             orderRequest.setSpbillCreateIp(IpUtil.getIpAddress(request));
             orderRequest.setTimeStart(DateUtils.formatDate(now, "yyyyMMddHHmmss"));
             Calendar calendar = Calendar.getInstance();
@@ -128,9 +162,11 @@ public class OrderPaymentInfoApi extends BaseController {
                 orderRequest.setSignType(WxPayConstants.SignType.MD5);
                 orderRequest.setSign(wxPayService.getSandboxSignKey());
             }
+            WxPayAppOrderResult result = wxPayService.createOrder(orderRequest);
             orderPaymentInfo.setPayChannel("0");
+            orderPaymentInfo.setPrepayId(result.getPrepayId());
             orderPaymentInfoService.modifyPaymentInfoStatus(orderPaymentInfo);
-            renderString(response, ResultGenerator.genSuccessResult((Object) wxPayService.createOrder(orderRequest)));
+            renderString(response, ResultGenerator.genSuccessResult(result));
         }catch (Exception e) {
             renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
         }
@@ -170,7 +206,7 @@ public class OrderPaymentInfoApi extends BaseController {
             accountService.consumption(amountTotal, paymentNo, userId);
             orderPaymentInfo.setPayChannel("3");
             // 支付成功
-            orderPaymentInfoService.normalOrderPaySuccess(orderPaymentInfo);
+            orderPaymentInfoService.normalOrderPaySuccess(orderPaymentInfo, new Date());
             renderString(response, ResultGenerator.genSuccessResult());
         } catch (Exception e) {
             renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));

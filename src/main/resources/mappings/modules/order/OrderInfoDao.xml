@@ -357,7 +357,7 @@
 	</update>
 
     <update id="paySuccessModifyOrderStatus">
-        update order_info set order_status = '1', pay_time = now()
+        update order_info set order_status = '1', pay_time = now(), pay_channel_time = #{payChannelTime}
         where payment_no = #{paymentNo}
     </update>
 

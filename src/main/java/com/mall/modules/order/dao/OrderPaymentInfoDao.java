@@ -6,6 +6,7 @@ import com.mall.modules.order.entity.OrderPaymentInfo;
 
 /**
  * 支付信息DAO接口
+ *
  * @author wankang
  * @version 2018-10-19
  */
@@ -27,5 +28,12 @@ public interface OrderPaymentInfoDao extends CrudDao<OrderPaymentInfo> {
      * @return 修改条目数
      */
     int modifyPaymentInfoStatus(OrderPaymentInfo orderPaymentInfo);
-	
+
+    /**
+     * 支付完成修改微信支付信息
+     *
+     * @param orderPaymentInfo 支付信息实体
+     */
+    void weixinPayResult(OrderPaymentInfo orderPaymentInfo);
+
 }

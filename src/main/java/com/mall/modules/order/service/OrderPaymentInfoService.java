@@ -3,6 +3,7 @@ package com.mall.modules.order.service;
 import com.mall.common.persistence.Page;
 import com.mall.common.service.CrudService;
 import com.mall.modules.order.dao.OrderPaymentInfoDao;
+import com.mall.modules.order.entity.OrderInfo;
 import com.mall.modules.order.entity.OrderPaymentInfo;
 import com.sohu.idcenter.IdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -82,15 +84,23 @@ public class OrderPaymentInfoService extends CrudService<OrderPaymentInfoDao, Or
 	}
 
 	@Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
-	public void normalOrderPaySuccess(OrderPaymentInfo orderPaymentInfo) {
+	public void normalOrderPaySuccess(OrderPaymentInfo orderPaymentInfo, Date payChannelTime) {
 		String paymentNo = orderPaymentInfo.getPaymentNo();
 
+		OrderInfo orderInfo = new OrderInfo();
+		orderInfo.setPaymentNo(paymentNo);
+		orderInfo.setPayChannelTime(payChannelTime);
 		// 修改订单状态
-		orderInfoService.paySuccessModifyOrderStatus(paymentNo);
+		orderInfoService.paySuccessModifyOrderStatus(orderInfo);
 
 		// 修改支付单状态
 		orderPaymentInfo.setPaymentStatus("1");
 		this.modifyPaymentInfoStatus(orderPaymentInfo);
+	}
+
+	@Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+	public void weixinPayResult(OrderPaymentInfo orderPaymentInfo) {
+		orderPaymentInfoDao.weixinPayResult(orderPaymentInfo);
 	}
 
 }

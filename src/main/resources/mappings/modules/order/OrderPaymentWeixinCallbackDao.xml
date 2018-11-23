@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.modules.order.dao.OrderPaymentWeixinCallbackDao">
+    
+	<sql id="orderPaymentWeixinCallbackColumns">
+		a.id AS "id",
+		a.return_code AS "returnCode",
+		a.return_msg AS "returnMsg",
+		a.appid AS "appid",
+		a.mch_id AS "mchId",
+		a.device_info AS "deviceInfo",
+		a.nonce_str AS "nonceStr",
+		a.sign AS "sign",
+		a.result_code AS "resultCode",
+		a.err_code AS "errCode",
+		a.err_code_des AS "errCodeDes",
+		a.openid AS "openid",
+		a.is_subscribe AS "isSubscribe",
+		a.trade_type AS "tradeType",
+		a.bank_type AS "bankType",
+		a.total_fee AS "totalFee",
+		a.fee_type AS "feeType",
+		a.cash_fee AS "cashFee",
+		a.cash_fee_type AS "cashFeeType",
+		a.coupon_fee AS "couponFee",
+		a.coupon_count AS "couponCount",
+		a.transaction_id AS "transactionId",
+		a.out_trade_no AS "outTradeNo",
+		a.attach AS "attach",
+		a.time_end AS "timeEnd",
+		a.promotion_detail AS "promotionDetail",
+		a.version AS "version",
+		a.settlement_total_fee AS "settlementTotalFee",
+		a.create_date AS "createDate",
+		a.update_date AS "updateDate"
+	</sql>
+	
+	<sql id="orderPaymentWeixinCallbackJoins">
+	</sql>
+    
+	<select id="get" resultType="OrderPaymentWeixinCallback">
+		SELECT 
+			<include refid="orderPaymentWeixinCallbackColumns"/>
+		FROM order_payment_weixin_callback a
+		<include refid="orderPaymentWeixinCallbackJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="OrderPaymentWeixinCallback">
+		SELECT 
+			<include refid="orderPaymentWeixinCallbackColumns"/>
+		FROM order_payment_weixin_callback a
+		<include refid="orderPaymentWeixinCallbackJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="OrderPaymentWeixinCallback">
+		SELECT 
+			<include refid="orderPaymentWeixinCallbackColumns"/>
+		FROM order_payment_weixin_callback a
+		<include refid="orderPaymentWeixinCallbackJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO order_payment_weixin_callback(
+			id,
+			return_code,
+			return_msg,
+			appid,
+			mch_id,
+			device_info,
+			nonce_str,
+			sign,
+			result_code,
+			err_code,
+			err_code_des,
+			openid,
+			is_subscribe,
+			trade_type,
+			bank_type,
+			total_fee,
+			fee_type,
+			cash_fee,
+			cash_fee_type,
+			coupon_fee,
+			coupon_count,
+			transaction_id,
+			out_trade_no,
+			attach,
+			time_end,
+			promotion_detail,
+			version,
+			settlement_total_fee,
+			create_date,
+			update_date
+		) VALUES (
+			#{id},
+			#{returnCode},
+			#{returnMsg},
+			#{appid},
+			#{mchId},
+			#{deviceInfo},
+			#{nonceStr},
+			#{sign},
+			#{resultCode},
+			#{errCode},
+			#{errCodeDes},
+			#{openid},
+			#{isSubscribe},
+			#{tradeType},
+			#{bankType},
+			#{totalFee},
+			#{feeType},
+			#{cashFee},
+			#{cashFeeType},
+			#{couponFee},
+			#{couponCount},
+			#{transactionId},
+			#{outTradeNo},
+			#{attach},
+			#{timeEnd},
+			#{promotionDetail},
+			#{version},
+			#{settlementTotalFee},
+			#{createDate},
+			#{updateDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE order_payment_weixin_callback SET 	
+			return_code = #{returnCode},
+			return_msg = #{returnMsg},
+			appid = #{appid},
+			mch_id = #{mchId},
+			device_info = #{deviceInfo},
+			nonce_str = #{nonceStr},
+			sign = #{sign},
+			result_code = #{resultCode},
+			err_code = #{errCode},
+			err_code_des = #{errCodeDes},
+			openid = #{openid},
+			is_subscribe = #{isSubscribe},
+			trade_type = #{tradeType},
+			bank_type = #{bankType},
+			total_fee = #{totalFee},
+			fee_type = #{feeType},
+			cash_fee = #{cashFee},
+			cash_fee_type = #{cashFeeType},
+			coupon_fee = #{couponFee},
+			coupon_count = #{couponCount},
+			transaction_id = #{transactionId},
+			out_trade_no = #{outTradeNo},
+			attach = #{attach},
+			time_end = #{timeEnd},
+			promotion_detail = #{promotionDetail},
+			version = #{version},
+			settlement_total_fee = #{settlementTotalFee},
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM order_payment_weixin_callback
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

@@ -168,7 +168,20 @@
 	</update>
 
 	<update id="modifyPaymentInfoStatus">
-		update order_payment_info set payment_status = #{paymentStatus}, pay_channel = #{payChannel} where payment_no = #{paymentNo}
+		update order_payment_info set payment_status = #{paymentStatus}, pay_channel = #{payChannel}, prepay_id = #{prepayId} where payment_no = #{paymentNo}
+	</update>
+
+	<update id="weixinPayResult">
+		update order_payment_info set payment_status = #{paymentStatus},
+		                              pay_channel = #{payChannel},
+		                              prepay_id = #{prepayId},
+		                              device_info = #{deviceInfo},
+		                              return_code = #{returnCode},
+		                              return_msg = #{returnMsg},
+		                              err_code = #{errCode},
+		                              err_code_des = #{errCodeDes},
+		                              trade_type = #{tradeType}
+		where payment_no = #{paymentNo}
 	</update>
 	
 	<update id="delete">

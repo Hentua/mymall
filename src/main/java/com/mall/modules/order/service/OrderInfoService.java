@@ -203,12 +203,12 @@ public class OrderInfoService extends CrudService<OrderInfoDao, OrderInfo> {
     /**
      * 支付成功后修改订单状态 条件为支付单号
      *
-     * @param paymentNo 支付单号
+     * @param orderInfo 支付单号
      * @return 修改条目数
      */
     @Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
-    public int paySuccessModifyOrderStatus(String paymentNo) {
-        return orderInfoDao.paySuccessModifyOrderStatus(paymentNo);
+    public int paySuccessModifyOrderStatus(OrderInfo orderInfo) {
+        return orderInfoDao.paySuccessModifyOrderStatus(orderInfo);
     }
 
     @Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)

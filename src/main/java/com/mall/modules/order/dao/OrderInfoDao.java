@@ -51,10 +51,10 @@ public interface OrderInfoDao extends CrudDao<OrderInfo> {
     /**
      * 支付成功后修改订单状态 条件为支付单号
      *
-     * @param paymentNo 支付单号
+     * @param orderInfo 支付单号
      * @return 修改条目数
      */
-    int paySuccessModifyOrderStatus(String paymentNo);
+    int paySuccessModifyOrderStatus(OrderInfo orderInfo);
 
     /**
      * 用户主动取消订单

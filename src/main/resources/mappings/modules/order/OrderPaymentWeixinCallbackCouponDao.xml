@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.modules.order.dao.OrderPaymentWeixinCallbackCouponDao">
+    
+	<sql id="orderPaymentWeixinCallbackCouponColumns">
+		a.id AS "id",
+		a.callback_id AS "callbackId",
+		a.coupon_fee AS "couponFee",
+		a.coupon_id AS "couponId",
+		a.coupon_type AS "couponType"
+	</sql>
+	
+	<sql id="orderPaymentWeixinCallbackCouponJoins">
+		LEFT JOIN order_payment_weixin_callback b ON b.id = a.callback_id
+	</sql>
+    
+	<select id="get" resultType="OrderPaymentWeixinCallbackCoupon">
+		SELECT 
+			<include refid="orderPaymentWeixinCallbackCouponColumns"/>
+		FROM order_payment_weixin_callback_coupon a
+		<include refid="orderPaymentWeixinCallbackCouponJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="OrderPaymentWeixinCallbackCoupon">
+		SELECT 
+			<include refid="orderPaymentWeixinCallbackCouponColumns"/>
+		FROM order_payment_weixin_callback_coupon a
+		<include refid="orderPaymentWeixinCallbackCouponJoins"/>
+		<where>
+			
+			<if test="callbackId != null and callbackId != ''">
+				AND a.callback_id = #{callbackId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="OrderPaymentWeixinCallbackCoupon">
+		SELECT 
+			<include refid="orderPaymentWeixinCallbackCouponColumns"/>
+		FROM order_payment_weixin_callback_coupon a
+		<include refid="orderPaymentWeixinCallbackCouponJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO order_payment_weixin_callback_coupon(
+			id,
+			callback_id,
+			coupon_fee,
+			coupon_id,
+			coupon_type
+		) VALUES (
+			#{id},
+			#{callbackId},
+			#{couponFee},
+			#{couponId},
+			#{couponType}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE order_payment_weixin_callback_coupon SET 	
+			callback_id = #{callbackId},
+			coupon_fee = #{couponFee},
+			coupon_id = #{couponId},
+			coupon_type = #{couponType}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM order_payment_weixin_callback_coupon
+		<choose>
+			<when test="id !=null and id != ''">
+				WHERE id = #{id}
+			</when>
+			<otherwise>
+				WHERE callback_id = #{callbackId}
+			</otherwise>
+		</choose>
+	</update>
+	
+</mapper>
