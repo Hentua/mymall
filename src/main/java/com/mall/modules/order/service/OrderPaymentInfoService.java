@@ -127,7 +127,7 @@ public class OrderPaymentInfoService extends CrudService<OrderPaymentInfoDao, Or
 		queryCondition.setId(accountFlow.getUserId());
 		MemberInfo memberInfo = memberInfoService.get(queryCondition);
 		Double balance = memberInfo.getBalance() + orderPaymentInfo.getAmountTotal();
-		accountService.editAccount(balance, 0.00, memberInfo.getId());
+		accountService.editAccount(balance, null, memberInfo.getId());
 	}
 
 }
