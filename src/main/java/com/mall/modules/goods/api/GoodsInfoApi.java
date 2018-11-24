@@ -1,5 +1,7 @@
 package com.mall.modules.goods.api;
 
+import com.alibaba.druid.support.json.JSONUtils;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.mall.common.persistence.Page;
 import com.mall.common.service.ServiceException;
@@ -141,7 +143,9 @@ public class GoodsInfoApi extends BaseController {
         if(null == goodsInfo){
             return  ResultGenerator.genFailResult("商品信息未找到");
         }
-        User merchant = UserUtils.get(goodsInfo.getMerchantId());
+        MemberInfo m = new MemberInfo();
+        m.setId(goodsInfo.getMerchantId());
+        m = memberInfoService.get(m);
         List<GoodsImage> goodsImages = goodsImageService.findListByGoodsId(goodsInfo.getId());
         goodsInfo.setGoodsImages(goodsImages);
 
@@ -183,8 +187,14 @@ public class GoodsInfoApi extends BaseController {
         JSONObject recommend = new JSONObject();
         recommend.put("goodsRecommendCode",goodsRecommendCode);
         JSONObject result = new JSONObject();
+        JSONObject merchant = new JSONObject();
+        merchant.put("id",m.getId());
+        merchant.put("photo",m.getAvatar());
+        merchant.put("avatar",m.getAvatar());
+        merchant.put("nickname",m.getNickname());
+        merchant.putAll(goodsInfoService.monthSalesTotal(m.getId()));
         result.put("goodsInfo",goodsInfo);
-        result.put("merchant",new UserVo(merchant));
+        result.put("merchant",merchant);
         result.put("evaluate",evaluate);
         result.put("recommend",recommend);
         return ResultGenerator.genSuccessResult(result);

@@ -103,6 +103,20 @@ public class CommissionConfigService extends CrudService<CommissionConfigDao, Co
 		logger.info("获取佣金失败：参数无效 type:"+type+" amountTotal"+amountTotal);
 		return  0.0;
 	}
+
+	public CommissionConfig getConfig(String type){
+		if(null == this.getConfigs()){
+			this.setConfigs(this.findList(new CommissionConfig()));
+		}
+		for (CommissionConfig config: this.getConfigs()) {
+			if(type.equals(config.getType())){
+				//按固定金额计算
+				return config;
+			}
+		}
+		return new CommissionConfig();
+	}
+
 	@Autowired
 	private GoodsRecommendDao goodsRecommendDao;
 

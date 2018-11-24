@@ -3,6 +3,7 @@ package com.mall.modules.goods.dao;
 import com.mall.common.persistence.CrudDao;
 import com.mall.common.persistence.annotation.MyBatisDao;
 import com.mall.modules.goods.entity.GoodsCategory;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -15,4 +16,6 @@ import java.util.List;
 public interface GoodsCategoryDao extends CrudDao<GoodsCategory> {
 
     public List<GoodsCategory> findListByApi(GoodsCategory goodsCategory);
+
+    public List<GoodsCategory> findMerchantList(@Param("merchantId") String merchantId);
 }

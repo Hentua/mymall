@@ -6,6 +6,7 @@ import com.mall.common.utils.IdGen;
 import com.mall.common.utils.StringUtils;
 import com.mall.modules.account.dao.AccountFlowDao;
 import com.mall.modules.account.entity.AccountFlow;
+import com.mall.modules.commission.entity.CommissionConfig;
 import com.mall.modules.commission.entity.CommissionInfo;
 import com.mall.modules.commission.service.CommissionConfigService;
 import com.mall.modules.commission.service.CommissionInfoService;
@@ -156,7 +157,7 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 			return ;
 		}
 		//卖家推荐人
-		merchantRefereeUser = UserUtils.get(merchant.getRefereeId());
+		merchantRefereeUser = UserUtils.get(merchant.getMerchantRefereeId());
 		//买家推荐人
 		customerRefereeUser = UserUtils.get(customer.getRefereeId());
 		if(null == merchantRefereeUser){
@@ -179,7 +180,7 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 			orderSettlementService.save(orderSettlement);
 			//新增佣金记录
 			//卖家推荐人佣金
-
+			CommissionConfig config = commissionConfigService.getConfig("2");
 			CommissionInfo merchantRefereeCommission = new CommissionInfo();
 			merchantRefereeCommission.setType("2");
 			merchantRefereeCommission.setUserId(merchantRefereeUser.getId());
@@ -187,9 +188,12 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 			merchantRefereeCommission.setOriginAmount(orderInfo.getOrderAmountTotal());
 			merchantRefereeCommission.setAmount(commissionConfigService.getCommissionAmount("2",orderInfo.getOrderAmountTotal()));
 			merchantRefereeCommission.setUnionId(orderInfo.getId());
+			merchantRefereeCommission.setMode(config.getMode());
+			merchantRefereeCommission.setNumber(config.getNumber());
 			commissionInfoService.save(merchantRefereeCommission);
 
 			//买家推荐人佣金
+			config = commissionConfigService.getConfig("1");
 			CommissionInfo customerRefereeCommission = new CommissionInfo();
 			customerRefereeCommission.setType("1");
 			customerRefereeCommission.setUserId(customerRefereeUser.getId());
@@ -197,6 +201,8 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 			customerRefereeCommission.setOriginAmount(orderInfo.getOrderAmountTotal());
 			customerRefereeCommission.setAmount(commissionConfigService.getCommissionAmount("1",orderInfo));
 			customerRefereeCommission.setUnionId(orderInfo.getId());
+			customerRefereeCommission.setMode(config.getMode());
+			customerRefereeCommission.setNumber(config.getNumber());
 			commissionInfoService.save(customerRefereeCommission);
 
 			List<OrderGoods> list = null;
@@ -231,12 +237,14 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 					commissionInfo.setProduceUserId(customer.getId());
 					commissionInfo.setOriginAmount(orderInfo.getOrderAmountTotal());
 					commissionInfo.setAmount(amount);
+					commissionInfo.setMode(gc.getCommissionMode());
+					commissionInfo.setNumber(gc.getCommissionNumber());
 					commissionInfo.setUnionId(orderInfo.getId());
 					commissionInfoService.save(commissionInfo);
 				}
 				orderGoodsDao.editGoodsSalesTotal(og);
 			}
-
+			commissionConfigService.setConfigs(null);
 		}
 	}
 
@@ -263,7 +271,7 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 			return ;
 		}
 		//卖家推荐人
-		merchantRefereeUser = UserUtils.get(merchant.getRefereeId());
+		merchantRefereeUser = UserUtils.get(merchant.getMerchantRefereeId());
 		//买家推荐人
 		if(null == merchantRefereeUser){
 			logger.error("创建佣金流水失败：卖家推荐人为空");
@@ -295,6 +303,7 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 		merchantCommission.setAmount(commissionConfigService.getCommissionAmount("5",amount));
 		merchantCommission.setUnionId(giftId);
 		commissionInfoService.save(merchantCommission);
+        commissionConfigService.setConfigs(null);
 	}
 
 

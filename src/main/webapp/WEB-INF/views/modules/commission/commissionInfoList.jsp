@@ -52,19 +52,29 @@
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
 		<thead>
 			<tr>
-				<th>用户账号</th>
+				<th>所属用户</th>
+				<th>生成用户</th>
+				<th>生成规则</th>
 				<th>产生金额</th>
 				<th>佣金金额</th>
 				<th>佣金类型</th>
-				<th>生成用户</th>
-				<th>创建时间</th>
-				<th>状态</th>
+				<th>产生时间</th>
+				<%--<th>状态</th>--%>
 			</tr>
 		</thead>
 		<tbody>
 		<c:forEach items="${page.list}" var="commissionInfo">
 			<tr>
-				<td>${commissionInfo.userMobile}</td>
+				<td>${commissionInfo.userMobile}（${commissionInfo.userName}）</td>
+				<td>${commissionInfo.produceUserMobile}（${commissionInfo.produceUserName}）</td>
+				<td>
+					<c:if test="${commissionInfo.mode == '1'}">
+						固定金额-${commissionInfo.number}
+					</c:if>
+					<c:if test="${commissionInfo.mode == '2'}">
+						总额百分比-${commissionInfo.number}%
+					</c:if>
+				</td>
 				<td>${commissionInfo.originAmount}</td>
 				<td>${commissionInfo.amount}</td>
 				<td>
@@ -84,16 +94,15 @@
 						商家送出礼包返佣
 					</c:if>
 				</td>
-				<td>${commissionInfo.produceUserMobile}</td>
 				<td><fmt:formatDate value="${commissionInfo.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
-				<td>
-					<c:if test="${commissionInfo.status == '1'}">
-						已清算
-					</c:if>
-					<c:if test="${commissionInfo.status == '0'}">
-						未清算
-					</c:if>
-				</td>
+				<%--<td>--%>
+					<%--<c:if test="${commissionInfo.status == '1'}">--%>
+						<%--已清算--%>
+					<%--</c:if>--%>
+					<%--<c:if test="${commissionInfo.status == '0'}">--%>
+						<%--未清算--%>
+					<%--</c:if>--%>
+				<%--</td>--%>
 			</tr>
 		</c:forEach>
 		</tbody>

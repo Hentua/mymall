@@ -34,7 +34,9 @@
 		a.unionid AS "unionid",
 		a.wechat_nickname AS "wechatNickname",
 		a.headimgurl AS "headimgurl",
-		a.merchant_referee_id AS "merchantRefereeId"
+		a.merchant_referee_id AS "merchantRefereeId",
+		a.merchant_Head_Img as "merchantHeadImg",
+		a.merchant_Service_Phone as "merchantServicePhone"
 	</sql>
 	
 	<sql id="memberInfoJoins">

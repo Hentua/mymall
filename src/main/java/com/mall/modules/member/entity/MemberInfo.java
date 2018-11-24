@@ -64,6 +64,28 @@ public class MemberInfo extends DataEntity<MemberInfo> {
 
 	private String loginFlag;
 
+	//店铺头图
+	private String merchantHeadImg;
+
+	//店铺联系电话
+	private String merchantServicePhone;
+
+	public String getMerchantServicePhone() {
+		return merchantServicePhone;
+	}
+
+	public void setMerchantServicePhone(String merchantServicePhone) {
+		this.merchantServicePhone = merchantServicePhone;
+	}
+
+	public String getMerchantHeadImg() {
+		return merchantHeadImg;
+	}
+
+	public void setMerchantHeadImg(String merchantHeadImg) {
+		this.merchantHeadImg = merchantHeadImg;
+	}
+
 	public MemberInfo() {
 		super();
 	}

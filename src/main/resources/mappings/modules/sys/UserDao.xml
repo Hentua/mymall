@@ -114,7 +114,8 @@
 		mi.register_way as "registerWay",
 		mi.status AS "status",
 		mi.sex AS "sex",
-		mi.pay_password AS "payPassword"
+		mi.merchant_referee_id AS "merchantRefereeId",
+		mi.headimgurl AS "headimgurl"
     </sql>
     
     <sql id="userJoins">

@@ -4,9 +4,11 @@ import com.mall.common.persistence.CrudDao;
 import com.mall.common.persistence.annotation.MyBatisDao;
 import com.mall.modules.goods.entity.BillboardGoods;
 import com.mall.modules.goods.entity.GoodsInfo;
+import org.apache.ibatis.annotations.Param;
 import org.apache.poi.ss.formula.functions.T;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 商品信息DAO接口
@@ -21,4 +23,8 @@ public interface GoodsInfoDao extends CrudDao<GoodsInfo> {
     public List<GoodsInfo> findListByBillboard(BillboardGoods billboardGoods);
 
     public List<GoodsInfo> findSelectList(GoodsInfo goodsInfo);
+
+    public Map<String,Object> merchantCountt(@Param("userId") String userId);
+    public Map<String,Object> monthSalesTotal(@Param("userId") String userId);
+
 }

@@ -28,6 +28,7 @@
 				${adminPath}/api/paySuccessCallback = anon
 				${adminPath}/api/goods/** = anon
 				${adminPath}/api/billboard/** = anon
+				${adminPath}/api/merchant/** = anon
 				${adminPath}/cas = cas
 				${adminPath}/login = authc
 				${adminPath}/logout = logout

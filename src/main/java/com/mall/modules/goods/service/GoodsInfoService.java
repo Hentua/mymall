@@ -1,6 +1,7 @@
 package com.mall.modules.goods.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.mall.modules.billboard.entity.IndexBillboard;
 import com.mall.modules.goods.entity.BillboardGoods;
@@ -71,5 +72,13 @@ public class GoodsInfoService extends CrudService<GoodsInfoDao, GoodsInfo> {
 	public void delete(GoodsInfo goodsInfo) {
 		super.delete(goodsInfo);
 	}
-	
+
+
+	public Map<String,Object> monthSalesTotal(String userId){
+		return dao.monthSalesTotal(userId);
+	}
+
+	public Map<String,Object> merchantCountt(String userId){
+		return dao.merchantCountt(userId);
+	}
 }

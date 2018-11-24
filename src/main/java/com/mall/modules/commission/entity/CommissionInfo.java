@@ -21,9 +21,35 @@ public class CommissionInfo extends DataEntity<CommissionInfo> {
 	private String produceUserName; //被推荐人名称
 	private String status;  //清算状态 0未清算 1已清算
 	private String userMobile;
+	private String userName;
 	private String produceUserMobile;
+	private String mode;		// 佣金计算方式（1固定金额 2百分比金额）
+	private Double number;		// 数值
 
-	
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getMode() {
+		return mode;
+	}
+
+	public void setMode(String mode) {
+		this.mode = mode;
+	}
+
+	public Double getNumber() {
+		return number;
+	}
+
+	public void setNumber(Double number) {
+		this.number = number;
+	}
+
 	public CommissionInfo() {
 		super();
 	}

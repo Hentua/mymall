@@ -66,6 +66,12 @@ public class User extends DataEntity<User> {
 	//会员状态
 	private String status;
 
+	//推荐商户入驻邀请人
+	private String merchantRefereeId;
+
+	//店铺头像
+	private String headimgurl;
+
 	public User() {
 		super();
 		this.loginFlag = Global.YES;
@@ -83,6 +89,22 @@ public class User extends DataEntity<User> {
 //		return u;
 //	}
 
+
+	public String getHeadimgurl() {
+		return headimgurl;
+	}
+
+	public void setHeadimgurl(String headimgurl) {
+		this.headimgurl = headimgurl;
+	}
+
+	public String getMerchantRefereeId() {
+		return merchantRefereeId;
+	}
+
+	public void setMerchantRefereeId(String merchantRefereeId) {
+		this.merchantRefereeId = merchantRefereeId;
+	}
 
 	public String getPayPassword() {
 		return payPassword;

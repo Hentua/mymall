@@ -12,14 +12,18 @@
 		a.union_id AS "unionId",
 		a.settlement_id AS "settlementId",
 		a.create_date AS "createDate",
-		m.nickname as "produceUserName",
+		mpu.nickname as "produceUserName",
 		a.status as "status",
 		u.mobile as "userMobile",
+		mu.nickname as "userName",
+		a.mode AS "mode",
+		a.number AS "number",
 		pu.mobile as "produceUserMobile"
 	</sql>
 	
 	<sql id="commissionInfoJoins">
-		left join member_info m on m.id = a.produce_user_id
+		left join member_info mpu on mpu.id = a.produce_user_id
+		left join member_info mu on mu.id = a.user_id
 		left join sys_user u on u.id = a.user_id
 		left join sys_user pu on pu.id = a.produce_user_id
 	</sql>
@@ -91,6 +95,8 @@
 			amount,
 			union_id,
 			settlement_id,
+			mode,
+			number,
 			create_date
 		) VALUES (
 			#{id},
@@ -99,6 +105,8 @@
 			#{produceUserId},
 			#{originAmount},
 			#{amount},
+			#{mode},
+			#{number},
 			#{unionId},
 			#{settlementId},
 			#{createDate}

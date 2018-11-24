@@ -34,6 +34,10 @@ public class GoodsCategoryService extends CrudService<GoodsCategoryDao, GoodsCat
 	public List<GoodsCategory> findListByApi(GoodsCategory goodsCategory){
 		return dao.findListByApi(goodsCategory);
 	}
+
+	public List<GoodsCategory> findMerchantList(String merchantId){
+		return dao.findMerchantList(merchantId);
+	}
 	
 	@Transactional(readOnly = false)
 	public void save(GoodsCategory goodsCategory) {
