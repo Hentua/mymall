@@ -56,5 +56,9 @@ public class AccountFlowService extends CrudService<AccountFlowDao, AccountFlow>
 	public Map<String,Object> stsFlow(AccountFlow accountFlow){
 		return dao.stsFlow(accountFlow);
 	}
-	
+
+	public AccountFlow getByFlowNo(String flowNo) {
+		return dao.getByFlowNo(flowNo);
+	}
+
 }

@@ -25,7 +25,7 @@ public class OrderPaymentInfo extends DataEntity<OrderPaymentInfo> {
 	private String prepayId;		// 预支付交易会话标识
 	private String codeUrl;		// 二维码链接
 	private String paymentStatus; // 付款状态 0-未付款 1-付款成功 2-付款失败
-	private String paymentType; // 支付来源类型 0-订单 1-礼包购买
+	private String paymentType; // 支付来源类型 0-订单 1-礼包购买 2-充值
 	private Double discountAmount; // 优惠扣减金额
 	
 	public OrderPaymentInfo() {

@@ -89,12 +89,9 @@ public class OrderPaymentInfoApi extends BaseController {
             if(!BaseWxPayResult.fenToYuan(totalAmount).equals(String.valueOf(orderPaymentInfo.getAmountTotal()))) {
                 wxPayService.closeOrder(paymentNo);
                 orderPaymentInfo.setPaymentStatus("2");
-                orderPaymentInfoService.modifyPaymentInfoStatus(orderPaymentInfo);
-                return WxPayNotifyResponse.fail("失败");
             }
             if(!"SUCCESS".equalsIgnoreCase(notifyResult.getReturnCode()) || !"SUCCESS".equalsIgnoreCase(notifyResult.getResultCode())) {
                 orderPaymentInfo.setPaymentStatus("2");
-                orderPaymentInfoService.modifyPaymentInfoStatus(orderPaymentInfo);
             }else {
                 orderPaymentInfo.setPaymentStatus("1");
             }
@@ -108,13 +105,19 @@ public class OrderPaymentInfoApi extends BaseController {
             orderPaymentInfoService.weixinPayResult(orderPaymentInfo);
             // 保存回调信息
             orderPaymentWeixinCallbackService.save(notifyResult);
+            // 支付成功
             if("1".equalsIgnoreCase(orderPaymentInfo.getPaymentStatus())) {
-                // 支付成功
-                orderPaymentInfoService.normalOrderPaySuccess(orderPaymentInfo, DateUtils.parseDate(notifyResult.getTimeEnd(), "yyyyMMddHHmmss"));
-                return WxPayNotifyResponse.success("成功");
-            }else {
-                return WxPayNotifyResponse.fail("失败");
+                String paymentType = orderPaymentInfo.getPaymentType();
+                // 普通订单
+                if("0".equalsIgnoreCase(paymentType)) {
+                    orderPaymentInfoService.normalOrderPaySuccess(orderPaymentInfo, DateUtils.parseDate(notifyResult.getTimeEnd(), "yyyyMMddHHmmss"));
+                }
+                // 充值订单
+                else if("2".equalsIgnoreCase(paymentType)) {
+                    orderPaymentInfoService.rechargeOrderPaySuccess(orderPaymentInfo);
+                }
             }
+            return WxPayNotifyResponse.success("成功");
         } catch (Exception e) {
             e.printStackTrace();
             return WxPayNotifyResponse.fail("失败");

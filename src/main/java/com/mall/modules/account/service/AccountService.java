@@ -167,10 +167,6 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 			logger.error("创建佣金流水失败：买家推荐人为空");
 			return ;
 		}
-		if(null == merchantRefereeUser || null == customerRefereeUser
-				|| null == merchant){
-			return;
-		}
 		//1：推荐用户消费返佣 2：推荐商家销售返佣 3：推荐商家入驻返佣 4：推荐商家送出礼包返佣 5：商家送出礼包返佣
 		//订单类型（0-平台自主下单，1-礼包兑换）
 		if("0".equals(orderInfo.getOrderType())){

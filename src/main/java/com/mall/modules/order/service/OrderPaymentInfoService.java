@@ -2,6 +2,11 @@ package com.mall.modules.order.service;
 
 import com.mall.common.persistence.Page;
 import com.mall.common.service.CrudService;
+import com.mall.modules.account.entity.AccountFlow;
+import com.mall.modules.account.service.AccountFlowService;
+import com.mall.modules.account.service.AccountService;
+import com.mall.modules.member.entity.MemberInfo;
+import com.mall.modules.member.service.MemberInfoService;
 import com.mall.modules.order.dao.OrderPaymentInfoDao;
 import com.mall.modules.order.entity.OrderInfo;
 import com.mall.modules.order.entity.OrderPaymentInfo;
@@ -28,6 +33,12 @@ public class OrderPaymentInfoService extends CrudService<OrderPaymentInfoDao, Or
 	private OrderPaymentInfoDao orderPaymentInfoDao;
 	@Autowired
 	private OrderInfoService orderInfoService;
+	@Autowired
+	private AccountService accountService;
+	@Autowired
+	private MemberInfoService memberInfoService;
+	@Autowired
+	private AccountFlowService accountFlowService;
 
 	public OrderPaymentInfo get(String id) {
 		return super.get(id);
@@ -59,10 +70,10 @@ public class OrderPaymentInfoService extends CrudService<OrderPaymentInfoDao, Or
 		String paymentNo = String.valueOf(idWorker.getId());
 		OrderPaymentInfo orderPaymentInfo = new OrderPaymentInfo();
 		orderPaymentInfo.setPaymentNo(paymentNo);
-		if("0".equals(orderType)) {
-			orderPaymentInfo.setPaymentStatus("0");
-		}else if("1".equals(orderType)) {
+		if("1".equals(orderType)) {
 			orderPaymentInfo.setPaymentStatus("1");
+		}else {
+			orderPaymentInfo.setPaymentStatus("0");
 		}
 		orderPaymentInfo.setPaymentType(orderType);
 		return orderPaymentInfo;
@@ -101,6 +112,22 @@ public class OrderPaymentInfoService extends CrudService<OrderPaymentInfoDao, Or
 	@Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
 	public void weixinPayResult(OrderPaymentInfo orderPaymentInfo) {
 		orderPaymentInfoDao.weixinPayResult(orderPaymentInfo);
+	}
+
+	@Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+	public void rechargeOrderPaySuccess(OrderPaymentInfo orderPaymentInfo) {
+		String paymentNo = orderPaymentInfo.getPaymentNo();
+
+		// 修改支付流水状态
+		AccountFlow accountFlow = accountFlowService.getByFlowNo(paymentNo);
+		accountFlow.setCheckStatus("2");
+		accountFlowService.save(accountFlow);
+		// 新增余额
+		MemberInfo queryCondition = new MemberInfo();
+		queryCondition.setId(accountFlow.getUserId());
+		MemberInfo memberInfo = memberInfoService.get(queryCondition);
+		Double balance = memberInfo.getBalance() + orderPaymentInfo.getAmountTotal();
+		accountService.editAccount(balance, 0.00, memberInfo.getId());
 	}
 
 }

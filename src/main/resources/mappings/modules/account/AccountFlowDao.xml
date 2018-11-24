@@ -30,6 +30,14 @@
 		<include refid="accountFlowJoins"/>
 		WHERE a.id = #{id}
 	</select>
+
+	<select id="getByFlowNo" resultType="AccountFlow">
+		SELECT
+			<include refid="accountFlowColumns"/>
+		FROM account_flow a
+		<include refid="accountFlowJoins"/>
+		WHERE a.flow_no = #{flowNo}
+	</select>
 	
 	<select id="findList" resultType="AccountFlow">
 		SELECT 
