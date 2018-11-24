@@ -295,6 +295,35 @@ public class UserController extends BaseController {
 	}
 
 	/**
+	 * 用户信息显示及保存
+	 * @param user
+	 * @param model
+	 * @return
+	 */
+	@RequiresPermissions("user")
+	@RequestMapping(value = "merchantInfo")
+	public String merchantInfo(User user, HttpServletResponse response, Model model) {
+		User currentUser = UserUtils.getUser();
+		if (StringUtils.isNotBlank(user.getName())){
+			if(Global.isDemoMode()){
+				model.addAttribute("message", "演示模式，不允许操作！");
+				return "modules/sys/merchantInfo";
+			}
+			currentUser.setEmail(user.getEmail());
+			currentUser.setPhone(user.getPhone());
+			currentUser.setMobile(user.getMobile());
+			currentUser.setRemarks(user.getRemarks());
+			currentUser.setPhoto(user.getPhoto());
+			systemService.updateUserInfo(currentUser);
+			model.addAttribute("message", "保存用户信息成功");
+		}
+		model.addAttribute("user", currentUser);
+		//修改Global 没有私有构造函数，实现懒汉式单例模式.在第一次调用的时候实例化自己！
+		model.addAttribute("Global", Global.getInstance());
+		return "modules/sys/merchantInfo";
+	}
+
+	/**
 	 * 返回用户信息
 	 * @return
 	 */
