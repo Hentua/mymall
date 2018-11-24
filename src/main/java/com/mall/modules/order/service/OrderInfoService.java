@@ -277,4 +277,9 @@ public class OrderInfoService extends CrudService<OrderInfoDao, OrderInfo> {
         }
     }
 
+    @Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    public void remind(String orderId) {
+        dao.remind(orderId);
+    }
+
 }

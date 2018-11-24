@@ -96,4 +96,11 @@ public interface OrderInfoDao extends CrudDao<OrderInfo> {
      */
     int orderCompleteReturns(OrderInfo orderInfo);
 
+    /**
+     * 发货提醒
+     *
+     * @param id 订单ID
+     */
+    void remind(String id);
+
 }

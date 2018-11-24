@@ -54,6 +54,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.DecimalFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -339,7 +340,7 @@ public class OrderInfoApi extends BaseController {
                         }
                     }
                     settlementsAmount = goodsStandard.getSettlementsAmount();
-                    if (null != couponCustomer && StringUtils.isNotBlank(couponType)) {
+                    if (null != couponCustomer && StringUtils.isNotBlank(couponType) && goodsSubAmountTotal > 0.01) {
                         String discountType = goodsInfo.getDiscountType();
                         if ("0".equals(couponType)) {
                             if ("3".equals(discountType) || "1".equals(discountType)) {
@@ -526,7 +527,7 @@ public class OrderInfoApi extends BaseController {
                         }
                     }
                     double couponDiscountAmount = 0.00;
-                    if (null != couponCustomer && StringUtils.isNotBlank(couponType)) {
+                    if (null != couponCustomer && StringUtils.isNotBlank(couponType) && goodsAmountTotal > 0.01) {
                         String discountType = goodsInfo.getDiscountType();
                         if ("0".equals(couponType)) {
                             if ("3".equals(discountType) || "1".equals(discountType)) {
@@ -754,6 +755,40 @@ public class OrderInfoApi extends BaseController {
     }
 
     /**
+     * 发货提醒
+     *
+     * @param request  请求体
+     * @param response 响应体
+     */
+    @RequestMapping(value = "remind", method = RequestMethod.POST)
+    public void remind(HttpServletRequest request, HttpServletResponse response) {
+        String orderId = request.getParameter("orderId");
+        try {
+            if (StringUtils.isBlank(orderId)) {
+                throw new ServiceException("未选择订单");
+            }
+            OrderInfo orderInfo = orderInfoService.get(orderId);
+            if (null == orderInfo) {
+                throw new ServiceException("不合法的订单信息");
+            }
+            Date createDate = orderInfo.getCreateDate();
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(createDate);
+            calendar.add(Calendar.HOUR, 24);
+            if (System.currentTimeMillis() <= calendar.getTimeInMillis()) {
+                throw new ServiceException("订单超过24小时未发货才可提醒发货");
+            }
+            if (!"1".equalsIgnoreCase(orderInfo.getOrderStatus()) || !"0".equalsIgnoreCase(orderInfo.getRemindFlag())) {
+                throw new ServiceException("该订单不可提醒发货");
+            }
+            orderInfoService.remind(orderId);
+            renderString(response, ResultGenerator.genSuccessResult());
+        } catch (Exception e) {
+            renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
+        }
+    }
+
+    /**
      * 快递100推送服务回调接口
      *
      * @param request  请求体
@@ -779,6 +814,6 @@ public class OrderInfoApi extends BaseController {
         returnResult.put("returnCode", "200");
         returnResult.put("message", "成功");
         renderString(response, returnResult);
-
     }
+
 }

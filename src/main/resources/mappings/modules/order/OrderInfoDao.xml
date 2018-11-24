@@ -31,7 +31,8 @@
 		a.activity_discount_amount AS "activityDiscountAmount",
 		a.activity_id AS "activityId",
 		a.settlements_amount as "settlementsAmount",
-		a.set_flag as "setFlag"
+		a.set_flag as "setFlag",
+		a.remind_flag as "remindFlag"
 	</sql>
 
 	<resultMap id="OrderInfoDetail" type="OrderInfo">
@@ -65,6 +66,7 @@
 		<result property="activityId" column="activityId"/>
 		<result property="settlementsAmount" column="settlementsAmount"/>
 		<result property="setFlag" column="setFlag"/>
+		<result property="remindFlag" column="remindFlag"/>
 		<association property="orderLogistics" javaType="OrderLogistics">
 			<id property="id" column="logistics.id"/>
 			<result property="expressNo" column="logistics.expressNo"/>
@@ -131,6 +133,7 @@
 		a.activity_discount_amount AS "activityDiscountAmount",
 		a.activity_id AS "activityId",
 		a.set_flag AS "setFlag",
+		a.remind_flag AS "remindFlag",
 		m.nickname AS "merchantName",
 		l.id AS "logistics.id",
 		l.express_no AS "logistics.expressNo",
@@ -389,6 +392,10 @@
 	<update id="deleteByUser">
 		update order_info set del_flag = '1'
 		WHERE id = #{id} and customer_code = #{customerCode}
+	</update>
+
+	<update id="remind">
+		update order_info set remind_flag = '1' where id = #{id}
 	</update>
 
 </mapper>
