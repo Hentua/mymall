@@ -4,6 +4,11 @@
 <head>
 	<title>个人信息</title>
 	<meta name="decorator" content="default"/>
+
+	<script type="text/javascript" src="${ctxStatic}/jquery/jquery-1.9.1.min.js"></script>
+	<script type="text/javascript" src="${ctxStatic}/jquery/jquery.bxslider.js"></script>
+	<link href="${ctxStatic}/jquery/jquery.bxslider.css" rel="stylesheet" type="text/css">
+
 	<style type="text/css">
 		body{
 			font-size: 17px;
@@ -18,7 +23,7 @@
 			width: 23.5%;
 			min-height: 65px;
 			padding-top: 7px;
-			border: 1px solid red;
+			border: 1px solid #008fd7;
 			margin-left: 1%;
 		}
 		.mr_sts_title{
@@ -28,16 +33,17 @@
 			font-size: 22px;
 			font-weight: bold;
 			padding-top: 10px;
+			color: black;
 		}
 		.mr_ad{
-			border: 1px solid red;
+			border: 1px solid #008fd7;
 			height: 300px;
 			margin-left: 1%;
 			width: 65%;
 			float: left;
 		}
 		.mr_notice{
-			border: 1px solid red;
+			border: 1px solid #008fd7;
 			height: 187px;
 			margin-left: 1%;
 			width: 65%;
@@ -45,7 +51,7 @@
 			margin-top: -188px;
 		}
 		.mr_info{
-			border: 1px solid red;
+			border: 1px solid #008fd7;
 			width: 29.3%;
 			margin-left: 1%;
 			float: left;
@@ -63,6 +69,23 @@
 			font-size: 15px;
 			font-weight: bold;
 			width: 120px;
+		}
+		.mr_ad img{
+			max-height: 255px;
+		}
+		.mr_notice table{
+			margin-left: 10px;
+			width: 98%;
+		}
+		.mr_notice table tr td{
+			font-size: 14px;
+			padding-top: 12px;
+			border-bottom: 1px solid #008fd7;
+			cursor:pointer;
+			color: black;
+		}
+		.mr_notice table tr td:hover{
+			font-weight: bold;
 		}
 
 	</style>
@@ -88,7 +111,21 @@
 			</div>
 		</div>
 		<div class="mr_ad">
-
+			<div class="slider6">
+				<div class="slide"><img src="${ctxStatic}/images/a1.png" width="100%"></div>
+				<div class="slide"><img src="${ctxStatic}/images/a2.png" width="100%"></div>
+				<div class="slide"><img src="${ctxStatic}/images/a3.png" width="100%"></div>
+				<div class="slide"><img src="${ctxStatic}/images/a4.png" width="100%"></div>
+			</div>
+			<script type="text/javascript">
+                $(document).ready(function(){
+                    $('.slider6').bxSlider({
+                        mode: 'fade',
+                        slideWidth: 843,
+                        slideMargin: 10
+                    });
+                });
+			</script>
 		</div>
 
 		<div class="mr_info">
@@ -134,8 +171,23 @@
 				</tr>
 			</table>
 		</div>
+		<!-- 公告 -->
 		<div class="mr_notice">
-
+			<div style="margin-left: 10px;font-weight: bold;margin-top: 20px">公告：</div>
+			<table>
+				<tr>
+					<td  nowrap="nowrap" >请在竞价前，仔细阅读公告，了解拍品请在竞价前，仔细阅读公告，了解拍品</td>
+				</tr>
+				<tr>
+					<td nowrap="nowrap">请在竞价前，仔细阅读公告，了解拍品请在竞价前，仔细阅读公告，了解拍品</td>
+				</tr>
+				<tr>
+					<td nowrap="nowrap">请在竞价前，仔细阅读公告，了解拍品请在您可以在海关拍卖频道的公告页和拍品详情页查看相应拍品的公告</td>
+				</tr>
+				<tr>
+					<td nowrap="nowrap">请在竞价前，仔细阅读公告，了解拍品请在您可以在海关拍卖频道的公告页和拍品详情页查看相应拍品的公告</td>
+				</tr>
+			</table>
 		</div>
 	</div>
 </body>
