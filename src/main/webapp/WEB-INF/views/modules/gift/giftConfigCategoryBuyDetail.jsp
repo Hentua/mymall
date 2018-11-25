@@ -95,7 +95,7 @@
 			</div>
 		</div>
 		<div class="form-actions">
-			<input id="btnSubmit" class="btn btn-primary" type="submit" value="购 买" data-loading-text="正在提交，请稍候..."/>&nbsp;
+			<input id="btnSubmit" class="btn btn-primary" type="submit" value="购 买" loading="正在提交，请稍候..."/>&nbsp;
 			<input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
 		</div>
 	</form:form>

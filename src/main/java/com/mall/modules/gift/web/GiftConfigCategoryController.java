@@ -111,7 +111,7 @@ public class GiftConfigCategoryController extends BaseController {
 		}
 		// 余额支付
 		else if("3".equals(payChannel)) {
-			return "modules/order/wechatPay";
+			return "redirect:" + Global.getAdminPath() + "/payment/balancePayForm?paymentNo=" + giftPurchaseLog.getPaymentNo() + "&callbackUrl=" + Global.getAdminPath() + "/gift/giftPurchaseLog";
 		}
 		// 打款到财务
 		else {

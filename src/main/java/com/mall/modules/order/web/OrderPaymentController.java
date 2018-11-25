@@ -86,6 +86,31 @@ public class OrderPaymentController extends BaseController {
         return "modules/order/wechatPay";
     }
 
+    @RequestMapping(value = "balancePayForm")
+    public String balancePayForm(OrderPaymentInfo orderPaymentInfo, HttpServletRequest request, Model model, RedirectAttributes redirectAttributes) throws Exception {
+        Date now = new Date();
+        String paymentNo = orderPaymentInfo.getPaymentNo();
+        String callbackUrl = request.getParameter("callbackUrl");
+
+        if (StringUtils.isBlank(paymentNo)) {
+            throw new ServiceException("支付单号不能为空");
+        }
+        OrderPaymentInfo queryCondition = new OrderPaymentInfo();
+        queryCondition.setPaymentNo(paymentNo);
+        orderPaymentInfo = orderPaymentInfoService.getByCondition(queryCondition);
+        if (null == orderPaymentInfo) {
+            throw new ServiceException("获取支付信息失败");
+        }
+        if (!"0".equals(orderPaymentInfo.getPaymentStatus())) {
+            throw new ServiceException("支付信息不合法，订单已支付或关闭");
+        }
+        orderPaymentInfo.setPayChannel("3");
+        orderPaymentInfoService.modifyPaymentInfoStatus(orderPaymentInfo);
+        model.addAttribute("orderPaymentInfo", orderPaymentInfo);
+        model.addAttribute("callbackUrl", callbackUrl);
+        return "modules/order/balancePay";
+    }
+
     @RequestMapping(value = "genQRCode")
     public void genQRCode(HttpServletRequest request, HttpServletResponse response) {
         String codeUrl = request.getParameter("codeUrl");

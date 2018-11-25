@@ -213,7 +213,15 @@ public class OrderPaymentInfoApi extends BaseController {
             accountService.consumption(amountTotal, paymentNo, userId);
             orderPaymentInfo.setPayChannel("3");
             // 支付成功
-            orderPaymentInfoService.normalOrderPaySuccess(orderPaymentInfo, new Date());
+            String paymentType = orderPaymentInfo.getPaymentType();
+            // 普通订单
+            if("0".equalsIgnoreCase(paymentType)) {
+                orderPaymentInfoService.normalOrderPaySuccess(orderPaymentInfo, new Date());
+            }
+            // 礼包购买
+            else if("1".equalsIgnoreCase(paymentType)) {
+                orderPaymentInfoService.giftOrderPaySuccess(orderPaymentInfo);
+            }
             renderString(response, ResultGenerator.genSuccessResult());
         } catch (Exception e) {
             renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));

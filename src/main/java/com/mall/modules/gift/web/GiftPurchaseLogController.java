@@ -58,6 +58,7 @@ public class GiftPurchaseLogController extends BaseController {
 	public String list(GiftPurchaseLog giftPurchaseLog, HttpServletRequest request, HttpServletResponse response, Model model) {
 		User currUser = UserUtils.getUser();
 		giftPurchaseLog.setMerchantCode(currUser.getId());
+		giftPurchaseLog.setStatus("1");
 		Page<GiftPurchaseLog> page = giftPurchaseLogService.findPage(new Page<GiftPurchaseLog>(request, response), giftPurchaseLog);
 		model.addAttribute("page", page);
 		return "modules/gift/giftPurchaseLogList";
