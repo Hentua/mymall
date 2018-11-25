@@ -98,7 +98,7 @@ public class CouponCustomerService extends CrudService<CouponCustomerDao, Coupon
 
     @Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public void saveCoupon(CouponCustomer couponCustomer) {
-        if(couponCustomer.getBalance() == 0) {
+        if (couponCustomer.getBalance() == 0) {
             return;
         }
         CouponCustomer queryCondition = new CouponCustomer();
@@ -124,6 +124,38 @@ public class CouponCustomerService extends CrudService<CouponCustomerDao, Coupon
         couponCustomer.setCustomerCode(customerCode);
         couponCustomer.setBalance(0.00);
         return couponCustomer;
+    }
+
+    /**
+     * 平台赠送优惠券
+     *
+     * @param amount         赠送金额
+     * @param couponType     优惠券类型 0-五折券 1-七折券
+     * @param customerCode   会员ID
+     * @param remarks        赠送说明
+     * @param produceChannel 产生渠道 0-礼包 1-商家赠送 2-平台赠送 3-佣金转余额 4-充值 5-订单支出 6-赠送支出 7-退单返回
+     */
+    @Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    public void saveCouponCustomerByPlatform(Double amount, String couponType, String customerCode, String remarks, String produceChannel) {
+        // 优惠券实体
+        CouponCustomer couponCustomer = new CouponCustomer();
+        couponCustomer.setBalance(amount);
+        couponCustomer.setCustomerCode(customerCode);
+        couponCustomer.setCouponType(couponType);
+        // 保存优惠券日志
+        CouponLog couponLog = new CouponLog();
+        couponLog.setCouponType(couponType);
+        couponLog.setRemarks(remarks);
+        couponLog.setAmount(amount);
+        couponLog.setProduceChannel(produceChannel);
+        couponLog.setType("1");
+        couponLog.setCustomerCode(customerCode);
+        couponLog.setProduceAmount(amount);
+        couponLog.setMerchantCode("0");
+        if (amount > 0) {
+            couponLogService.save(couponLog);
+            this.saveCoupon(couponCustomer);
+        }
     }
 
 }

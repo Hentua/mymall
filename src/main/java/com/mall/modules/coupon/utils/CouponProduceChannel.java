@@ -38,6 +38,9 @@ public class CouponProduceChannel {
             case "6":
                 produceChannelZh = "赠送";
                 break;
+            case "7":
+                produceChannelZh = "退单返还";
+                break;
             default:
                 ;
         }

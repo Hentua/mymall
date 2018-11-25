@@ -1,8 +1,16 @@
 package com.mall.modules.order.service;
 
+import com.github.binarywang.wxpay.bean.request.BaseWxPayRequest;
+import com.github.binarywang.wxpay.bean.request.WxPayRefundRequest;
+import com.github.binarywang.wxpay.bean.result.WxPayRefundResult;
+import com.github.binarywang.wxpay.exception.WxPayException;
+import com.github.binarywang.wxpay.service.WxPayService;
 import com.mall.common.persistence.Page;
 import com.mall.common.service.CrudService;
+import com.mall.common.utils.StringUtils;
 import com.mall.modules.account.service.AccountService;
+import com.mall.modules.coupon.entity.CouponCustomer;
+import com.mall.modules.coupon.service.CouponCustomerService;
 import com.mall.modules.order.dao.OrderGoodsDao;
 import com.mall.modules.order.dao.OrderInfoDao;
 import com.mall.modules.order.dao.OrderReturnsDao;
@@ -37,6 +45,12 @@ public class OrderReturnsService extends CrudService<OrderReturnsDao, OrderRetur
     private OrderPaymentInfoService orderPaymentInfoService;
     @Autowired
     private AccountService accountService;
+    @Autowired
+    private WxPayService wxPayService;
+    @Autowired
+    private OrderWeixinReturnResultService orderWeixinReturnResultService;
+    @Autowired
+    private CouponCustomerService couponCustomerService;
 
     public OrderReturns get(String id) {
         return super.get(id);
@@ -70,7 +84,7 @@ public class OrderReturnsService extends CrudService<OrderReturnsDao, OrderRetur
     }
 
     @Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
-    public void handle(OrderReturns orderReturns) {
+    public void handle(OrderReturns orderReturns) throws Exception {
         OrderInfo orderInfo = orderInfoService.get(orderReturns.getOrderId());
         if("0".equals(orderReturns.getHandlingWay())) {
             String paymentNo = orderInfo.getPaymentNo();
@@ -79,10 +93,24 @@ public class OrderReturnsService extends CrudService<OrderReturnsDao, OrderRetur
             OrderPaymentInfo orderPaymentInfo = orderPaymentInfoService.getByCondition(queryCondition);
             String payChannel = orderPaymentInfo.getPayChannel();
             if("0".equals(payChannel)) {
-                // todo 微信支付退款
+                WxPayRefundRequest wxPayRefundRequest = new WxPayRefundRequest();
+                wxPayRefundRequest.setOutTradeNo(paymentNo);
+                wxPayRefundRequest.setOutRefundNo(orderReturns.getReturnsNo());
+                wxPayRefundRequest.setTotalFee(BaseWxPayRequest.yuanToFen(String.valueOf(orderPaymentInfo.getAmountTotal())));
+                wxPayRefundRequest.setRefundFee(BaseWxPayRequest.yuanToFen(String.valueOf(orderReturns.getReturnsAmount())));
+                WxPayRefundResult wxPayRefundResult = wxPayService.refund(wxPayRefundRequest);
+                orderWeixinReturnResultService.save(wxPayRefundResult);
+                if(!"SUCCESS".equalsIgnoreCase(wxPayRefundResult.getReturnCode()) || !"SUCCESS".equalsIgnoreCase(wxPayRefundResult.getResultCode())) {
+                    throw new WxPayException("微信退款失败：" + wxPayRefundResult.getReturnMsg());
+                }
             }else if("3".equals(payChannel)) {
                 // 余额支付退款
                 accountService.createRefund(orderReturns.getCustomerCode(), orderReturns.getReturnsAmount(), orderInfo.getOrderNo());
+            }
+            // 退还优惠券
+            if(StringUtils.isNotBlank(orderInfo.getCouponCode()) && orderInfo.getDiscountAmountTotal() > 0) {
+                CouponCustomer couponCustomer = couponCustomerService.get(orderInfo.getCouponCode());
+                couponCustomerService.saveCouponCustomerByPlatform(orderInfo.getDiscountAmountTotal(), couponCustomer.getCouponType(), orderInfo.getCustomerCode(), "退款返还", "7");
             }
         }
         orderInfoService.orderCompleteReturns(orderInfo);

@@ -15,6 +15,7 @@ import com.mall.modules.commission.entity.CommissionInfo;
 import com.mall.modules.commission.entity.CommissionTakeOut;
 import com.mall.modules.commission.service.CommissionInfoService;
 import com.mall.modules.commission.service.CommissionTakeOutService;
+import com.mall.modules.coupon.service.CouponCustomerService;
 import com.mall.modules.member.entity.MemberInfo;
 import com.mall.modules.member.service.MemberInfoService;
 import com.mall.modules.order.entity.OrderPaymentInfo;
@@ -65,6 +66,9 @@ public class AccountApi extends BaseController {
 
     @Autowired
     private OrderPaymentInfoService orderPaymentInfoService;
+
+    @Autowired
+    private CouponCustomerService couponCustomerService;
 
     /**
      * 账户余额信息
@@ -276,8 +280,7 @@ public class AccountApi extends BaseController {
         accountFlow.setCheckStatus("1");
         accountFlowService.save(accountFlow);
         //送优惠券函数
-        // todo 送优惠券
-//		couponCustomerService.saveCouponCustomerByPlatform("佣金转余额优惠券","0",365,amount,user.getId());
+        couponCustomerService.saveCouponCustomerByPlatform(amount, "0", user.getId(), "佣金转余额优惠券", "3");
         //操作余额
         accountService.editAccount(memberInfo.getBalance() + amount, memberInfo.getCommission() - amount, user.getId());
         return ResultGenerator.genSuccessResult("成功");

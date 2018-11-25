@@ -1,5 +1,6 @@
 package com.mall.modules.order.web;
 
+import com.github.binarywang.wxpay.exception.WxPayException;
 import com.mall.common.config.Global;
 import com.mall.common.persistence.Page;
 import com.mall.common.utils.StringUtils;
@@ -126,7 +127,13 @@ public class OrderReturnsController extends BaseController {
 		}
 		orderReturns.setExpressNo(expressNo);
 		orderReturns.setLogisticsType(logistics);
-		orderReturnsService.handle(orderReturns);
+		try {
+			orderReturnsService.handle(orderReturns);
+		}catch (Exception e) {
+			e.printStackTrace();
+			addMessage(redirectAttributes, "发货失败");
+			return "redirect:"+Global.getAdminPath()+"/order/orderReturns/?repage";
+		}
 		addMessage(redirectAttributes, "发货成功");
 		return "redirect:"+Global.getAdminPath()+"/order/orderReturns/?repage";
 	}
@@ -141,9 +148,19 @@ public class OrderReturnsController extends BaseController {
 			addMessage(redirectAttributes, "请求不合法");
 			return "redirect:"+Global.getAdminPath()+"/order/orderReturns/?repage";
 		}
-		orderReturnsService.handle(orderReturns);
-		addMessage(redirectAttributes, "退款成功");
-		return "redirect:"+Global.getAdminPath()+"/order/orderReturns/?repage";
+		try {
+			orderReturnsService.handle(orderReturns);
+			addMessage(redirectAttributes, "退款成功");
+			return "redirect:"+Global.getAdminPath()+"/order/orderReturns/?repage";
+		}catch (WxPayException e) {
+			e.printStackTrace();
+			addMessage(redirectAttributes, "退款失败：" + e.getMessage());
+			return "redirect:"+Global.getAdminPath()+"/order/orderReturns/?repage";
+		}catch (Exception e) {
+			e.printStackTrace();
+			addMessage(redirectAttributes, "退款失败，请稍后重试");
+			return "redirect:"+Global.getAdminPath()+"/order/orderReturns/?repage";
+		}
 	}
 
 	private OrderReturns verifyData(OrderReturns orderReturns, RedirectAttributes redirectAttributes) {

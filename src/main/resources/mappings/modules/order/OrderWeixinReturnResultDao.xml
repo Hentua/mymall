@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.modules.order.dao.OrderWeixinReturnResultDao">
+    
+	<sql id="orderWeixinReturnResultColumns">
+		a.id AS "id",
+		a.return_code AS "returnCode",
+		a.return_msg AS "returnMsg",
+		a.result_code AS "resultCode",
+		a.err_code AS "errCode",
+		a.err_code_des AS "errCodeDes",
+		a.appid AS "appid",
+		a.mch_id AS "mchId",
+		a.nonce_str AS "nonceStr",
+		a.sign AS "sign",
+		a.transaction_id AS "transactionId",
+		a.out_trade_no AS "outTradeNo",
+		a.out_refund_no AS "outRefundNo",
+		a.refund_id AS "refundId",
+		a.refund_fee AS "refundFee",
+		a.settlement_refund_fee AS "settlementRefundFee",
+		a.total_fee AS "totalFee",
+		a.fee_type AS "feeType",
+		a.settlement_total_fee AS "settlementTotalFee",
+		a.cash_fee AS "cashFee",
+		a.cash_fee_type AS "cashFeeType",
+		a.cash_refund_fee AS "cashRefundFee",
+		a.coupon_refund_fee AS "couponRefundFee",
+		a.coupon_refund_count AS "couponRefundCount",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate"
+	</sql>
+	
+	<sql id="orderWeixinReturnResultJoins">
+	</sql>
+    
+	<select id="get" resultType="OrderWeixinReturnResult">
+		SELECT 
+			<include refid="orderWeixinReturnResultColumns"/>
+		FROM order_weixin_return_result a
+		<include refid="orderWeixinReturnResultJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="OrderWeixinReturnResult">
+		SELECT 
+			<include refid="orderWeixinReturnResultColumns"/>
+		FROM order_weixin_return_result a
+		<include refid="orderWeixinReturnResultJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="OrderWeixinReturnResult">
+		SELECT 
+			<include refid="orderWeixinReturnResultColumns"/>
+		FROM order_weixin_return_result a
+		<include refid="orderWeixinReturnResultJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO order_weixin_return_result(
+			id,
+			return_code,
+			return_msg,
+			result_code,
+			err_code,
+			err_code_des,
+			appid,
+			mch_id,
+			nonce_str,
+			sign,
+			transaction_id,
+			out_trade_no,
+			out_refund_no,
+			refund_id,
+			refund_fee,
+			settlement_refund_fee,
+			total_fee,
+			fee_type,
+			settlement_total_fee,
+			cash_fee,
+			cash_fee_type,
+			cash_refund_fee,
+			coupon_refund_fee,
+			coupon_refund_count,
+			create_by,
+			create_date,
+			update_by,
+			update_date
+		) VALUES (
+			#{id},
+			#{returnCode},
+			#{returnMsg},
+			#{resultCode},
+			#{errCode},
+			#{errCodeDes},
+			#{appid},
+			#{mchId},
+			#{nonceStr},
+			#{sign},
+			#{transactionId},
+			#{outTradeNo},
+			#{outRefundNo},
+			#{refundId},
+			#{refundFee},
+			#{settlementRefundFee},
+			#{totalFee},
+			#{feeType},
+			#{settlementTotalFee},
+			#{cashFee},
+			#{cashFeeType},
+			#{cashRefundFee},
+			#{couponRefundFee},
+			#{couponRefundCount},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE order_weixin_return_result SET 	
+			return_code = #{returnCode},
+			return_msg = #{returnMsg},
+			result_code = #{resultCode},
+			err_code = #{errCode},
+			err_code_des = #{errCodeDes},
+			appid = #{appid},
+			mch_id = #{mchId},
+			nonce_str = #{nonceStr},
+			sign = #{sign},
+			transaction_id = #{transactionId},
+			out_trade_no = #{outTradeNo},
+			out_refund_no = #{outRefundNo},
+			refund_id = #{refundId},
+			refund_fee = #{refundFee},
+			settlement_refund_fee = #{settlementRefundFee},
+			total_fee = #{totalFee},
+			fee_type = #{feeType},
+			settlement_total_fee = #{settlementTotalFee},
+			cash_fee = #{cashFee},
+			cash_fee_type = #{cashFeeType},
+			cash_refund_fee = #{cashRefundFee},
+			coupon_refund_fee = #{couponRefundFee},
+			coupon_refund_count = #{couponRefundCount},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM order_weixin_return_result
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
