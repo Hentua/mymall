@@ -1,12 +1,16 @@
 package com.mall.modules.order.web;
 
+import com.alibaba.fastjson.JSON;
 import com.github.binarywang.wxpay.exception.WxPayException;
 import com.mall.common.config.Global;
 import com.mall.common.persistence.Page;
 import com.mall.common.utils.StringUtils;
 import com.mall.common.web.BaseController;
 import com.mall.modules.order.entity.OrderReturns;
+import com.mall.modules.order.entity.TaskRequest;
+import com.mall.modules.order.entity.TaskResponse;
 import com.mall.modules.order.service.OrderReturnsService;
+import com.mall.modules.order.utils.HttpRequest;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,6 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
 
 /**
  * 订单售后申请Controller
@@ -127,15 +132,33 @@ public class OrderReturnsController extends BaseController {
 		}
 		orderReturns.setExpressNo(expressNo);
 		orderReturns.setLogisticsType(logistics);
+		TaskRequest req = new TaskRequest();
+		req.setCompany(orderReturns.getLogisticsType());
+		// todo 填写发货地址
+		req.setFrom("发货地址");
+		req.setTo(orderReturns.getConsigneeAddress());
+		req.setNumber(orderReturns.getExpressNo());
+		req.getParameters().put("callbackurl", Global.getConfig("server.baseUrl") + Global.getConfig("adminPath") + "/api/kuaidi100Callback");
+		req.setKey(Global.getConfig("kuaidi.key"));
+		HashMap<String, String> p = new HashMap<String, String>();
+		p.put("schema", "json");
+		p.put("param", req.toString());
 		try {
-			orderReturnsService.handle(orderReturns);
+			String ret = HttpRequest.postData("http://www.kuaidi100.com/poll", p, "UTF-8");
+			TaskResponse resp = JSON.parseObject(ret, TaskResponse.class);
+			if(resp.getResult()) {
+				orderReturnsService.handle(orderReturns);
+				addMessage(redirectAttributes, "发货成功");
+				return "redirect:"+Global.getAdminPath()+"/order/orderReturns/?repage";
+			}else {
+				model.addAttribute("message", "发货失败，物流信息有误");
+				return "redirect:"+Global.getAdminPath()+"/order/orderReturns/?repage";
+			}
 		}catch (Exception e) {
 			e.printStackTrace();
 			addMessage(redirectAttributes, "发货失败");
 			return "redirect:"+Global.getAdminPath()+"/order/orderReturns/?repage";
 		}
-		addMessage(redirectAttributes, "发货成功");
-		return "redirect:"+Global.getAdminPath()+"/order/orderReturns/?repage";
 	}
 
 	@RequestMapping(value = "refund")

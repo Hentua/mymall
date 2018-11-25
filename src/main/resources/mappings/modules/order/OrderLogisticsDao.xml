@@ -110,7 +110,11 @@
 			logistics_pay_channel,
 			logistics_pay_no,
 			reconciliation_status,
-			reconciliation_time
+			reconciliation_time,
+			country_name,
+			province_name,
+			area_name,
+			city_name
 		) VALUES (
 			#{id},
 			#{orderNo},
@@ -135,7 +139,11 @@
 			#{logisticsPayChannel},
 			#{logisticsPayNo},
 			#{reconciliationStatus},
-			#{reconciliationTime}
+			#{reconciliationTime},
+			#{countryName},
+			#{provinceName},
+			#{areaName},
+			#{cityName}
 		)
 	</insert>
 	

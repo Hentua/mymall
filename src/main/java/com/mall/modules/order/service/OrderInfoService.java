@@ -15,6 +15,8 @@ import com.mall.modules.order.entity.OrderGoods;
 import com.mall.modules.order.entity.OrderInfo;
 import com.mall.modules.order.entity.OrderLogistics;
 import com.mall.modules.order.entity.OrderLogisticsInfo;
+import com.mall.modules.sys.service.AreaService;
+import com.mall.modules.sys.utils.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
@@ -44,6 +46,8 @@ public class OrderInfoService extends CrudService<OrderInfoDao, OrderInfo> {
     private OrderInfoDao orderInfoDao;
     @Autowired
     private OrderLogisticsInfoDao orderLogisticsInfoDao;
+    @Autowired
+    private AreaService areaService;
 
     @Override
     public OrderInfo get(String id) {
@@ -176,6 +180,10 @@ public class OrderInfoService extends CrudService<OrderInfoDao, OrderInfo> {
         orderLogistics.setConsigneeTelphoneBackup(memberDeliveryAddress.getTelphoneBak());
         orderLogistics.setConsigneeRealname(memberDeliveryAddress.getRealname());
         orderLogistics.setConsigneeZip(memberDeliveryAddress.getZip());
+        orderLogistics.setCountryName((areaService.get(memberDeliveryAddress.getCountry())).getName());
+        orderLogistics.setProvinceName(memberDeliveryAddress.getProvinceName());
+        orderLogistics.setCityName(memberDeliveryAddress.getCityName());
+        orderLogistics.setAreaName(memberDeliveryAddress.getAreaName());
         return orderLogistics;
     }
 

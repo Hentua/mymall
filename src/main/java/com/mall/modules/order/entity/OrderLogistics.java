@@ -37,13 +37,49 @@ public class OrderLogistics extends DataEntity<OrderLogistics> {
 	private String logisticsPayNo;		// 物流支付单号
 	private String reconciliationStatus;		// 物流公司对账状态（0-未对账，1-已对账）
 	private Date reconciliationTime;		// 物流公司对账时间
-	
+	private String provinceName;		// 省名称
+	private String countryName;		// 国家名称
+	private String areaName;		// 区域名称
+	private String cityName;		// 城市名称
+
 	public OrderLogistics() {
 		super();
 	}
 
 	public OrderLogistics(String orderNo){
 		this.orderNo = orderNo;
+	}
+
+	public String getProvinceName() {
+		return provinceName;
+	}
+
+	public void setProvinceName(String provinceName) {
+		this.provinceName = provinceName;
+	}
+
+	public String getCountryName() {
+		return countryName;
+	}
+
+	public void setCountryName(String countryName) {
+		this.countryName = countryName;
+	}
+
+	public String getAreaName() {
+		return areaName;
+	}
+
+	public void setAreaName(String areaName) {
+		this.areaName = areaName;
+	}
+
+	public String getCityName() {
+		return cityName;
+	}
+
+	public void setCityName(String cityName) {
+		this.cityName = cityName;
 	}
 
 	@Length(min=1, max=32, message="订单号长度必须介于 1 和 32 之间")
