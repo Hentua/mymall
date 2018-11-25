@@ -778,11 +778,14 @@ public class OrderInfoApi extends BaseController {
             if (System.currentTimeMillis() <= calendar.getTimeInMillis()) {
                 throw new ServiceException("订单超过24小时未发货才可提醒发货");
             }
-            if (!"1".equalsIgnoreCase(orderInfo.getOrderStatus()) || !"0".equalsIgnoreCase(orderInfo.getRemindFlag())) {
-                throw new ServiceException("该订单不可提醒发货");
+            if (!"1".equalsIgnoreCase(orderInfo.getOrderStatus())) {
+                throw new ServiceException("未发货订单才能提醒发货");
+            }
+            if (!"0".equalsIgnoreCase(orderInfo.getRemindFlag())) {
+                throw new ServiceException("已经提醒过商家发货了");
             }
             orderInfoService.remind(orderId);
-            renderString(response, ResultGenerator.genSuccessResult());
+            renderString(response, ResultGenerator.genSuccessResult("提醒成功"));
         } catch (Exception e) {
             renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
         }
