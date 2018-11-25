@@ -93,8 +93,8 @@ public class MerchantApi extends BaseController {
 	public Result goodsCategory(HttpServletRequest request, HttpServletResponse response) {
 		String merchantId = request.getParameter("merchantId");
 		List<GoodsCategory> list = goodsCategoryService.findMerchantList(merchantId);
-		TreeNode<GoodsCategory> tree=new TreeNode<GoodsCategory>(list);
-		return ResultGenerator.genSuccessResult(tree.TreeFormat());
+//		TreeNode<GoodsCategory> tree=new TreeNode<GoodsCategory>(list);
+		return ResultGenerator.genSuccessResult(list);
 	}
 
 	/**

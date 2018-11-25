@@ -19,7 +19,7 @@ public class IndexBillboard extends DataEntity<IndexBillboard> {
 	private String title;		// 标题
 	private String image;		// 轮播图片
 	private Integer sort;		// 排序
-	private String type;		// 类型：1轮播图广告位 2独立广告位 3开机广告
+	private String type;		// 类型：1轮播图广告位 2独立广告位 3开机广告 4后台首页广告
 	private String appFlag;		// app广告位标识
 	private String jumpId;      //跳转ID
 	private String jumpGoodsImage; //商品图片

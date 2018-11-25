@@ -84,6 +84,38 @@
 			</otherwise>
 		</choose>
 	</select>
+
+
+	<select id="merchantIndexSts" resultType="java.util.Map" parameterType="java.lang.String">
+		SELECT
+			ROUND(ifnull(
+			(
+		SELECT
+			sum( o.order_amount_total )
+		FROM
+			order_info o
+		WHERE
+			o.merchant_code = #{userId}
+			AND o.order_status = 3
+			AND DATE_FORMAT( o.create_date, '%Y-%m-%d' ) = DATE_FORMAT( now( ), '%Y-%m-%d' )
+			),
+			0
+			),2) AS "dayOrderAmountTotal",
+			ROUND(ifnull(
+			(
+		SELECT
+			sum( o.order_amount_total )
+		FROM
+			order_info o
+		WHERE
+			o.merchant_code = #{userId}
+			AND o.order_status = 3
+			AND DATE_FORMAT( o.create_date, '%Y-%m' ) = DATE_FORMAT( now( ), '%Y-%m' )
+			),
+			0
+			),2) AS "monthOrderAmountTotal",
+			ROUND(ifnull( ( SELECT sum( a.amount ) FROM commission_info a WHERE a.user_id = #{userId} ), 0 ),2) AS "commissionTotal"
+	</select>
 	
 	<insert id="insert">
 		INSERT INTO commission_info(
