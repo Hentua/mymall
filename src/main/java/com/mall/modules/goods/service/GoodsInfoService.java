@@ -7,6 +7,7 @@ import com.mall.modules.billboard.entity.IndexBillboard;
 import com.mall.modules.goods.entity.BillboardGoods;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.mall.common.persistence.Page;
@@ -80,5 +81,10 @@ public class GoodsInfoService extends CrudService<GoodsInfoDao, GoodsInfo> {
 
 	public Map<String,Object> merchantCountt(String userId){
 		return dao.merchantCountt(userId);
+	}
+
+	@Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+	public void uncheckMerchant(String merchantId) {
+		dao.uncheckMerchant(merchantId);
 	}
 }

@@ -76,4 +76,11 @@ public interface MemberInfoDao extends CrudDao<MemberInfo> {
 
     List<MemberInfo> findCollectionList(MemberInfo memberInfo);
 
+    /**
+     * 修改用户状态为未审核
+     *
+     * @param id 会员ID
+     */
+    void uncheckStatus(String id);
+
 }

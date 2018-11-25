@@ -36,7 +36,14 @@
 		a.headimgurl AS "headimgurl",
 		a.merchant_referee_id AS "merchantRefereeId",
 		a.merchant_Head_Img as "merchantHeadImg",
-		a.merchant_Service_Phone as "merchantServicePhone"
+		a.merchant_Service_Phone as "merchantServicePhone",
+		a.person_account as "personAccount",
+		a.person_account_name as "personAccountName",
+		a.person_account_bank as "personAccountBank",
+		a.merchant_type as "merchantType",
+		a.idcard_front as "idcardFront",
+		a.idcard_back as "idcardBack",
+		a.special_qualification as "specialQualification"
 	</sql>
 	
 	<sql id="memberInfoJoins">
@@ -209,8 +216,19 @@
 			public_account_name = #{publicAccountName},
 			business_license_image = #{businessLicenseImage},
 			product_license = #{productLicense},
+			person_account = #{personAccount},
+			person_account_name = #{personAccountName},
+			person_account_bank = #{personAccountBank},
+			merchant_type = #{merchantType},
+			idcard_front = #{idcardFront},
+			idcard_back = #{idcardBack},
+			special_qualification = #{specialQualification},
 			status = #{status}
 		WHERE id = #{id}
+	</update>
+
+	<update id="uncheckStatus">
+		update member_info set status = '0' where id = #{id}
 	</update>
 
 	<update id="memberCheck">

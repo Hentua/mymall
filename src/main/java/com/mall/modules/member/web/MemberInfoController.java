@@ -3,11 +3,13 @@ package com.mall.modules.member.web;
 import com.google.common.collect.Lists;
 import com.mall.common.config.Global;
 import com.mall.common.persistence.Page;
+import com.mall.common.service.ServiceException;
 import com.mall.common.utils.StringUtils;
 import com.mall.common.web.BaseController;
 import com.mall.modules.member.entity.MemberInfo;
 import com.mall.modules.member.service.MemberInfoService;
 import com.mall.modules.member.service.MemberVerifyCodeService;
+import com.mall.modules.order.entity.OrderPaymentInfo;
 import com.mall.modules.sys.entity.Office;
 import com.mall.modules.sys.entity.Role;
 import com.mall.modules.sys.entity.User;
@@ -23,8 +25,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.jws.WebParam;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -104,6 +108,13 @@ public class MemberInfoController extends BaseController {
         return "modules/member/modifyMemberOperatorForm";
     }
 
+    @RequestMapping(value = "uncheckMerchant")
+    public String uncheckMerchant(MemberInfo memberInfo, Model model) {
+        memberInfoService.uncheckStatus(memberInfo.getId());
+        model.addAttribute("message", "取消商户审核成功");
+        return "redirect:" + Global.getAdminPath() + "/member/memberInfo/allList?repage";
+    }
+
     @RequiresPermissions("member:memberInfo:edit")
     @RequestMapping(value = "modifyMemberOperator")
     public String modifyMemberOperator(MemberInfo memberInfo, Model model, RedirectAttributes redirectAttributes) {
@@ -175,31 +186,54 @@ public class MemberInfoController extends BaseController {
         return "modules/member/merchantData";
     }
 
+    @RequestMapping(value = "modifyMerchantType")
+    public String modifyMerchantType(MemberInfo memberInfo, Model model) {
+        memberInfoService.uncheckStatus(memberInfo.getId());
+        memberInfo = memberInfoService.get(memberInfo);
+        model.addAttribute("memberInfo", memberInfo);
+        return merchantData(memberInfo, model);
+    }
+
     @RequestMapping(value = "submitMerchantData")
     public String submitMerchantData(MemberInfo memberInfo, Model model, RedirectAttributes redirectAttributes) {
-        if (StringUtils.isBlank(memberInfo.getCompanyName())) {
-            model.addAttribute("message", "公司名称不能为空");
-            return merchantData(memberInfo, model);
-        }
-        if (StringUtils.isBlank(memberInfo.getPublicAccount())) {
-            model.addAttribute("message", "对公账户不能为空");
-            return merchantData(memberInfo, model);
-        }
-        if (StringUtils.isBlank(memberInfo.getPublicAccountBank())) {
-            model.addAttribute("message", "对公账户开户行不能为空");
-            return merchantData(memberInfo, model);
-        }
-        if (StringUtils.isBlank(memberInfo.getPublicAccountName())) {
-            model.addAttribute("message", "对公账户名称不能为空");
-            return merchantData(memberInfo, model);
-        }
-        if (StringUtils.isBlank(memberInfo.getProductLicense())) {
-            model.addAttribute("message", "产品许可证不能为空");
-            return merchantData(memberInfo, model);
-        }
-        if (StringUtils.isBlank(memberInfo.getBusinessLicenseImage())) {
-            model.addAttribute("message", "营业执照不能为空");
-            return merchantData(memberInfo, model);
+        if("1".equals(memberInfo.getMerchantType())) {
+            if (StringUtils.isBlank(memberInfo.getCompanyName())) {
+                model.addAttribute("message", "公司名称不能为空");
+                return merchantData(memberInfo, model);
+            }
+            if (StringUtils.isBlank(memberInfo.getPublicAccount())) {
+                model.addAttribute("message", "对公账户不能为空");
+                return merchantData(memberInfo, model);
+            }
+            if (StringUtils.isBlank(memberInfo.getPublicAccountBank())) {
+                model.addAttribute("message", "对公账户开户行不能为空");
+                return merchantData(memberInfo, model);
+            }
+            if (StringUtils.isBlank(memberInfo.getPublicAccountName())) {
+                model.addAttribute("message", "对公账户名称不能为空");
+                return merchantData(memberInfo, model);
+            }
+            if (StringUtils.isBlank(memberInfo.getProductLicense())) {
+                model.addAttribute("message", "产品许可证不能为空");
+                return merchantData(memberInfo, model);
+            }
+            if (StringUtils.isBlank(memberInfo.getBusinessLicenseImage())) {
+                model.addAttribute("message", "营业执照不能为空");
+                return merchantData(memberInfo, model);
+            }
+        }else{
+            if (StringUtils.isBlank(memberInfo.getPersonAccount())) {
+                model.addAttribute("message", "个人银行账户不能为空");
+                return merchantData(memberInfo, model);
+            }
+            if (StringUtils.isBlank(memberInfo.getPersonAccountBank())) {
+                model.addAttribute("message", "个人银行账户开户行不能为空");
+                return merchantData(memberInfo, model);
+            }
+            if (StringUtils.isBlank(memberInfo.getPersonAccountName())) {
+                model.addAttribute("message", "个人银行账户名称不能为空");
+                return merchantData(memberInfo, model);
+            }
         }
         memberInfoService.submitMerchantData(memberInfo);
         addMessage(redirectAttributes, "提交审核成功");
@@ -293,6 +327,21 @@ public class MemberInfoController extends BaseController {
         queryCondition.setReferee(referee);
         MemberInfo memberInfo = memberInfoService.get(queryCondition);
         renderString(response, memberInfo);
+    }
+
+    @RequestMapping(value = "checkPayPasswordForm")
+    public String checkPayPasswordForm(MemberInfo memberInfo, HttpServletRequest request, Model model, HttpServletResponse response) {
+        String failedCallbackUrl = request.getParameter("failedCallbackUrl");
+        String successCallbackUrl = request.getParameter("successCallbackUrl");
+
+        MemberInfo memberInfoData = memberInfoService.get(memberInfo);
+        if (null == memberInfoData) {
+            throw new ServiceException("获取会员信息失败");
+        }
+        model.addAttribute("memberInfo", memberInfoData);
+        model.addAttribute("failedCallbackUrl", failedCallbackUrl);
+        model.addAttribute("successCallbackUrl", successCallbackUrl);
+        return "modules/member/checkPayPassword";
     }
 
 }

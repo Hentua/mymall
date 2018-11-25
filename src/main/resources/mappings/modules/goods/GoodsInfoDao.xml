@@ -366,5 +366,9 @@
 	<update id="delete">
 		update goods_info set del_flag = #{DEL_FLAG_DELETE} where id = #{id}
 	</update>
+
+	<update id="uncheckMerchant">
+		update goods_info set status = '0' where merchant_id = #{merchantId}
+	</update>
 	
 </mapper>

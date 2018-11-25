@@ -131,14 +131,16 @@ public class MemberMerchantCheckController extends BaseController {
 		memberInfoService.memberCheck(memberInfo);
 		memberInfo.setOperatorCode(memberMerchantCheck.getMemberInfo().getOperatorCode());
 		memberInfoService.modifyMemberOperator(memberInfo);
-		List<Role> roleList = user.getRoleList();
-		if(null == roleList) {
-			roleList = Lists.newArrayList();
+		if("1".equals(memberInfo.getMerchantType())) {
+			List<Role> roleList = user.getRoleList();
+			if(null == roleList) {
+				roleList = Lists.newArrayList();
+			}
+			roleList.add(new Role("1001"));
+			user.setRoleList(roleList);
+			systemService.saveUser(user);
+			UserUtils.clearCache();
 		}
-		roleList.add(new Role("1001"));
-		user.setRoleList(roleList);
-		systemService.saveUser(user);
-		UserUtils.clearCache();
 		User currUser = UserUtils.getUser();
 		memberMerchantCheck.setCheckBy(currUser.getId());
 		memberMerchantCheck.setCheckDate(new Date());

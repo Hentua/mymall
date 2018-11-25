@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/views/include/taglib.jsp" %>
 <html>
 <head>
-    <title>余额支付</title>
+    <title>验证支付密码</title>
     <meta name="decorator" content="default"/>
     <style>
         .wrap{
@@ -81,14 +81,15 @@
     </script>
 </head>
 <body style="overflow-x: hidden;">
-<div style="height: 40px;margin-top: 10px;"><span style="font-size: 30px;">余额支付</span></div>
+<div style="height: 40px;margin-top: 10px;"><span style="font-size: 30px;">美易验证</span></div>
 <div style="background-color: #CCCCCC; width: 90%;padding-left: 30px;padding-top: 20px;padding-bottom: 20px;">
-    订单编号：${orderPaymentInfo.paymentNo}<br/>
-    应付金额：${orderPaymentInfo.amountTotal}
+    会员名称：${memberInfo.nickname}<br/>
+    会员账号：${memberInfo.mobile}<br/>
+    会员ID：${memberInfo.referee}
 </div>
 <div style="width: 90%; align-items: center; margin-top: 20px;" align="center">
     <div class="wrap">
-        <span style="">请输入支付密码：</span>
+        <span style="">请输入您的支付密码：</span>
         <div class="inputBoxContainer" id="inputBoxContainer">
             <input type="text" class="realInput"/>
             <div class="bogusInput">
@@ -154,23 +155,22 @@
     });
     document.getElementById("confirmButton").onclick = function(){
 
-        loading('提交中，请稍候...')
-        $.post("${ctx}/api/balancePay", {
-            paymentNo: '${orderPaymentInfo.paymentNo}',
+        loading('提交中，请稍候...');
+        $.post("${ctx}/api/validatePayPassword", {
             payPassword: boxInput.getBoxInputValue()
         }, function (data) {
             closeLoading();
             var status = data.status;
             if (status != '200') {
-                alertx('支付失败：' + data.message + "，点击确定将跳转页面", function() {
+                alertx('验证失败：' + data.message + "，点击确定将跳转页面", function() {
                     setTimeout(function () {
-                        location.href = '${callbackUrl}';
+                        location.href = '${failedCallbackUrl}';
                     }, 5000);
                 });
             }else {
-                $('body').html('付款成功，即将跳转页面');
+                $('body').html('验证成功，即将跳转页面');
                 setTimeout(function () {
-                    location.href = '${callbackUrl}';
+                    location.href = '${successCallbackUrl}';
                 }, 5000);
             }
         });

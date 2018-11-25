@@ -12,6 +12,7 @@ import java.util.Map;
 
 /**
  * 商品信息DAO接口
+ *
  * @author hub
  * @version 2018-10-12
  */
@@ -24,7 +25,15 @@ public interface GoodsInfoDao extends CrudDao<GoodsInfo> {
 
     public List<GoodsInfo> findSelectList(GoodsInfo goodsInfo);
 
-    public Map<String,Object> merchantCountt(@Param("userId") String userId);
-    public Map<String,Object> monthSalesTotal(@Param("userId") String userId);
+    public Map<String, Object> merchantCountt(@Param("userId") String userId);
+
+    public Map<String, Object> monthSalesTotal(@Param("userId") String userId);
+
+    /**
+     * 下架商户所有商品
+     *
+     * @param merchantId 商户ID
+     */
+    void uncheckMerchant(String merchantId);
 
 }

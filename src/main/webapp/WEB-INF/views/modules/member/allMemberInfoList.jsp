@@ -132,6 +132,9 @@
 					<c:if test="${memberInfo.loginFlag == '1'}">
 						<a href="${ctx}/member/memberInfo/disableUser?id=${memberInfo.id}" onclick="return confirmx('确定禁止该用户登录吗？', this.href)">禁止登录</a>
 					</c:if>
+					<c:if test="${memberInfo.status == '1'}">
+						<a href="${ctx}/member/memberInfo/uncheckMerchant?id=${memberInfo.id}" onclick="return confirmx('确定要取消该商户审核状态吗？如果类型为商户，将下架该商户的所有商品', this.href)">取消审核</a>
+					</c:if>
 					<a href="${ctx}/member/memberInfo/allListForm?id=${memberInfo.id}">修改归属运营</a>
 				</td>
 			</tr>

@@ -62,6 +62,20 @@ public class MemberInfo extends DataEntity<MemberInfo> {
 	private String publicAccountName; // 对公账户名称
 	@JsonIgnore
 	private String publicAccountBank; // 开户行
+	@JsonIgnore
+	private String personAccount; // 个人银行账户
+	@JsonIgnore
+	private String personAccountName; // 个人银行账户名称
+	@JsonIgnore
+	private String personAccountBank; // 个人银行账户开户行
+	@JsonIgnore
+	private String merchantType; // 商户标识 0-推广者 1-商户
+	@JsonIgnore
+	private String idcardFront; // 法人身份证正面
+	@JsonIgnore
+	private String idcardBack; // 法人身份证反面
+	@JsonIgnore
+	private String specialQualification; // 特殊资质
 
 	private String loginFlag;
 
@@ -70,6 +84,62 @@ public class MemberInfo extends DataEntity<MemberInfo> {
 
 	//店铺联系电话
 	private String merchantServicePhone;
+
+	public String getPersonAccount() {
+		return personAccount;
+	}
+
+	public void setPersonAccount(String personAccount) {
+		this.personAccount = personAccount;
+	}
+
+	public String getPersonAccountName() {
+		return personAccountName;
+	}
+
+	public void setPersonAccountName(String personAccountName) {
+		this.personAccountName = personAccountName;
+	}
+
+	public String getPersonAccountBank() {
+		return personAccountBank;
+	}
+
+	public void setPersonAccountBank(String personAccountBank) {
+		this.personAccountBank = personAccountBank;
+	}
+
+	public String getMerchantType() {
+		return merchantType;
+	}
+
+	public void setMerchantType(String merchantType) {
+		this.merchantType = merchantType;
+	}
+
+	public String getIdcardFront() {
+		return idcardFront;
+	}
+
+	public void setIdcardFront(String idcardFront) {
+		this.idcardFront = idcardFront;
+	}
+
+	public String getIdcardBack() {
+		return idcardBack;
+	}
+
+	public void setIdcardBack(String idcardBack) {
+		this.idcardBack = idcardBack;
+	}
+
+	public String getSpecialQualification() {
+		return specialQualification;
+	}
+
+	public void setSpecialQualification(String specialQualification) {
+		this.specialQualification = specialQualification;
+	}
 
 	public String getMerchantServicePhone() {
 		return merchantServicePhone;

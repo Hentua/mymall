@@ -23,6 +23,10 @@
                 }
             });
         });
+
+        function showImage(imageUrl) {
+            window.open(imageUrl);
+        }
     </script>
 </head>
 <body>
@@ -76,6 +80,19 @@
         </div>
     </div>
     <div class="control-group">
+        <label class="control-label">商户类型：</label>
+        <div class="controls">
+            <c:choose>
+                <c:when test="${memberMerchantCheck.memberInfo.merchantType == '0'}">
+                    推广者
+                </c:when>
+                <c:when test="${memberMerchantCheck.memberInfo.merchantType == '1'}">
+                    商户
+                </c:when>
+            </c:choose>
+        </div>
+    </div>
+    <div class="control-group">
         <label class="control-label">商户状态：</label>
         <div class="controls">
             <c:choose>
@@ -123,45 +140,82 @@
             </c:choose>
         </div>
     </div>
-    <div class="control-group">
-        <label class="control-label">公司名称：</label>
-        <div class="controls">
-            ${memberMerchantCheck.memberInfo.companyName}
+    <c:if test="${memberMerchantCheck.memberInfo.merchantType == '1'}">
+        <div class="control-group">
+            <label class="control-label">公司名称：</label>
+            <div class="controls">
+                    ${memberMerchantCheck.memberInfo.companyName}
+            </div>
         </div>
-    </div>
-    <div class="control-group">
-        <label class="control-label">对公账户：</label>
-        <div class="controls">
-                ${memberMerchantCheck.memberInfo.publicAccount}
+        <div class="control-group">
+            <label class="control-label">对公账户：</label>
+            <div class="controls">
+                    ${memberMerchantCheck.memberInfo.publicAccount}
+            </div>
         </div>
-    </div>
-    <div class="control-group">
-        <label class="control-label">对公账户名称：</label>
-        <div class="controls">
-                ${memberMerchantCheck.memberInfo.publicAccountName}
+        <div class="control-group">
+            <label class="control-label">对公账户名称：</label>
+            <div class="controls">
+                    ${memberMerchantCheck.memberInfo.publicAccountName}
+            </div>
         </div>
-    </div>
-    <div class="control-group">
-        <label class="control-label">对公账户银行：</label>
-        <div class="controls">
-                ${memberMerchantCheck.memberInfo.publicAccountBank}
+        <div class="control-group">
+            <label class="control-label">对公账户银行：</label>
+            <div class="controls">
+                    ${memberMerchantCheck.memberInfo.publicAccountBank}
+            </div>
         </div>
-    </div>
-    <div class="control-group">
-        <label class="control-label">产品许可证：</label>
-        <div class="controls">
-                ${memberMerchantCheck.memberInfo.productLicense}
+        <div class="control-group">
+            <label class="control-label">产品许可证：</label>
+            <div class="controls">
+                    ${memberMerchantCheck.memberInfo.productLicense}
+            </div>
         </div>
-    </div>
-    <div class="control-group">
-        <label class="control-label">营业执照图片：</label>
-        <div class="controls">
-            <form:hidden id="businessLicenseImage" path="memberInfo.businessLicenseImage" htmlEscape="false" maxlength="255"
-                         class="input-xlarge required"/>
-            <sys:ckfinder input="businessLicenseImage" type="images" uploadPath="/merchant"
-                          selectMultiple="false" maxWidth="100" maxHeight="100" readonly="true"/>
+        <div class="control-group">
+            <label class="control-label">营业执照图片：</label>
+            <div class="controls">
+                <img src="${memberMerchantCheck.memberInfo.businessLicenseImage}" alt="营业执照图片" width="400" onclick="showImage('${memberMerchantCheck.memberInfo.businessLicenseImage}')"/>
+            </div>
         </div>
-    </div>
+        <div class="control-group">
+            <label class="control-label">法人身份证正面：</label>
+            <div class="controls">
+                <img src="${memberMerchantCheck.memberInfo.idcardFront}" alt="法人身份证正面" width="400" onclick="showImage('${memberMerchantCheck.memberInfo.idcardFront}')"/>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label">法人身份证反面：</label>
+            <div class="controls">
+                <img src="${memberMerchantCheck.memberInfo.idcardBack}" alt="法人身份证反面" width="400" onclick="showImage('${memberMerchantCheck.memberInfo.idcardBack}')"/>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label">特殊资质：</label>
+            <div class="controls">
+                <img src="${memberMerchantCheck.memberInfo.specialQualification}" alt="特殊资质" width="400" onclick="showImage('${memberMerchantCheck.memberInfo.specialQualification}')"/>
+            </div>
+        </div>
+    </c:if>
+    <c:if test="${memberMerchantCheck.memberInfo.merchantType == '0'}">
+        <div class="control-group">
+            <label class="control-label">个人银行账户：</label>
+            <div class="controls">
+                ${memberMerchantCheck.memberInfo.personAccount}
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label">个人银行账户名称：</label>
+            <div class="controls">
+                    ${memberMerchantCheck.memberInfo.personAccountName}
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label">个人银行账户开户行：</label>
+            <div class="controls">
+                    ${memberMerchantCheck.memberInfo.personAccountBank}
+            </div>
+        </div>
+    </c:if>
     <div class="control-group">
         <label class="control-label">归属运营：</label>
         <div class="controls">

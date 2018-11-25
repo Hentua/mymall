@@ -4,6 +4,7 @@ import com.mall.common.persistence.Page;
 import com.mall.common.service.CrudService;
 import com.mall.common.service.ServiceException;
 import com.mall.common.utils.StringUtils;
+import com.mall.modules.goods.service.GoodsInfoService;
 import com.mall.modules.member.dao.MemberFavoriteDao;
 import com.mall.modules.member.dao.MemberFootprintDao;
 import com.mall.modules.member.dao.MemberInfoDao;
@@ -44,6 +45,8 @@ public class MemberInfoService extends CrudService<MemberInfoDao, MemberInfo> {
     private MemberMerchantCheckService memberMerchantCheckService;
     @Autowired
     private MemberRefereeIdMaxDao memberRefereeIdMaxDao;
+    @Autowired
+    private GoodsInfoService goodsInfoService;
 
     public MemberInfo get(String id) {
         return super.get(id);
@@ -91,7 +94,7 @@ public class MemberInfoService extends CrudService<MemberInfoDao, MemberInfo> {
 
     public static boolean validatePayPasswordFormat(String payPassword) {
         String regex = "^\\d{6}$";
-        if(StringUtils.isBlank(payPassword)) {
+        if (StringUtils.isBlank(payPassword)) {
             return false;
         } else if (payPassword.length() != 6) {
             return false;
@@ -106,13 +109,13 @@ public class MemberInfoService extends CrudService<MemberInfoDao, MemberInfo> {
         List<MemberRefereeIdMax> memberRefereeIdMaxes = memberRefereeIdMaxDao.findList(new MemberRefereeIdMax());
         Integer maxId = 0;
         MemberRefereeIdMax memberRefereeIdMax;
-        if(null == memberRefereeIdMaxes || memberRefereeIdMaxes.size() <= 0) {
+        if (null == memberRefereeIdMaxes || memberRefereeIdMaxes.size() <= 0) {
             maxId = ++maxId;
             memberRefereeIdMax = new MemberRefereeIdMax();
             memberRefereeIdMax.setMaxRefereeId(maxId);
             memberRefereeIdMax.preInsert();
             memberRefereeIdMaxDao.insert(memberRefereeIdMax);
-        }else {
+        } else {
             memberRefereeIdMax = memberRefereeIdMaxes.get(0);
             maxId = memberRefereeIdMax.getMaxRefereeId() + 1;
             memberRefereeIdMax.setMaxRefereeId(maxId);
@@ -208,5 +211,16 @@ public class MemberInfoService extends CrudService<MemberInfoDao, MemberInfo> {
     @Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public void modifyMerchantRefereeId(MemberInfo memberInfo) {
         memberInfoDao.modifyMerchantRefereeId(memberInfo);
+    }
+
+    /**
+     * 取消商户认证 并下架所有商品
+     *
+     * @param id 商户ID
+     */
+    @Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    public void uncheckStatus(String id) {
+        goodsInfoService.uncheckMerchant(id);
+        memberInfoDao.uncheckStatus(id);
     }
 }
