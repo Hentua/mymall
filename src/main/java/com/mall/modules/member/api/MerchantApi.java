@@ -2,8 +2,10 @@ package com.mall.modules.member.api;
 
 import com.alibaba.fastjson.JSONObject;
 import com.mall.common.config.Global;
+import com.mall.common.persistence.Page;
 import com.mall.common.utils.Result;
 import com.mall.common.utils.ResultGenerator;
+import com.mall.common.utils.StringUtils;
 import com.mall.common.utils.TreeNode;
 import com.mall.common.web.BaseController;
 import com.mall.modules.goods.entity.GoodsCategory;
@@ -116,6 +118,28 @@ public class MerchantApi extends BaseController {
 		}
 		return ResultGenerator.genSuccessResult();
 	}
+
+
+	/**
+	 * 店铺收藏or取消收藏
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/merchantCollectionList", method = RequestMethod.POST)
+	public Result merchantCollectionList(HttpServletRequest request, HttpServletResponse response) {
+		User user = UserUtils.getUser();
+		MemberInfo memberInfo = new MemberInfo();
+		memberInfo.setId(user.getId());
+		Page<MemberInfo> page = memberInfoService.findCollectionPage(new Page<MemberInfo>(request, response), memberInfo);
+		return ResultGenerator.genSuccessResult(page);
+	}
+
+
+
+
+
 
 
 

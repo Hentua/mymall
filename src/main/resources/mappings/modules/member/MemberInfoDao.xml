@@ -131,6 +131,16 @@
 			</otherwise>
 		</choose>
 	</select>
+
+
+	<select id="findCollectionList" resultType="MemberInfo" >
+		select
+			<include refid="memberInfoColumns"/>
+		from merchant_collection_info mci
+		left join member_info a on mci.merchant_id = a.id
+		<include refid="memberInfoJoins"/>
+		where mci.user_id = #{id}
+	</select>
 	
 	<insert id="insert">
 		INSERT INTO member_info(
