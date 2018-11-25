@@ -151,7 +151,7 @@ public class MemberInfoApi extends BaseController {
             memberInfo.setStatus("0");
             memberInfo.preInsert();
             memberInfo.setId(user.getId());
-            memberInfo.setReferee(MemberInfoService.genRefereeId());
+            memberInfo.setReferee(memberInfoService.genRefereeId());
             memberInfo.setIsNewRecord(true);
             memberInfoService.save(memberInfo);
             renderString(response, ResultGenerator.genSuccessResult("注册成功"));

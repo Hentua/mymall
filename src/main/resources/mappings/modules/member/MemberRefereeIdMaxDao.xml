@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.modules.member.dao.MemberRefereeIdMaxDao">
+    
+	<sql id="memberRefereeIdMaxColumns">
+		a.id AS "id",
+		a.max_referee_id AS "maxRefereeId"
+	</sql>
+	
+	<sql id="memberRefereeIdMaxJoins">
+	</sql>
+    
+	<select id="get" resultType="MemberRefereeIdMax">
+		SELECT 
+			<include refid="memberRefereeIdMaxColumns"/>
+		FROM member_referee_id_max a
+		<include refid="memberRefereeIdMaxJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="MemberRefereeIdMax">
+		SELECT 
+			<include refid="memberRefereeIdMaxColumns"/>
+		FROM member_referee_id_max a
+		<include refid="memberRefereeIdMaxJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="MemberRefereeIdMax">
+		SELECT 
+			<include refid="memberRefereeIdMaxColumns"/>
+		FROM member_referee_id_max a
+		<include refid="memberRefereeIdMaxJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO member_referee_id_max(
+			id,
+			max_referee_id
+		) VALUES (
+			#{id},
+			#{maxRefereeId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE member_referee_id_max SET 	
+			max_referee_id = #{maxRefereeId}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM member_referee_id_max
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

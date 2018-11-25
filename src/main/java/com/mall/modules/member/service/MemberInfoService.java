@@ -7,6 +7,7 @@ import com.mall.common.utils.StringUtils;
 import com.mall.modules.member.dao.MemberFavoriteDao;
 import com.mall.modules.member.dao.MemberFootprintDao;
 import com.mall.modules.member.dao.MemberInfoDao;
+import com.mall.modules.member.dao.MemberRefereeIdMaxDao;
 import com.mall.modules.member.entity.*;
 import com.mall.modules.member.utils.Base32;
 import com.mall.modules.sys.service.SystemService;
@@ -41,6 +42,8 @@ public class MemberInfoService extends CrudService<MemberInfoDao, MemberInfo> {
     private MemberFootprintDao memberFootprintDao;
     @Autowired
     private MemberMerchantCheckService memberMerchantCheckService;
+    @Autowired
+    private MemberRefereeIdMaxDao memberRefereeIdMaxDao;
 
     public MemberInfo get(String id) {
         return super.get(id);
@@ -99,21 +102,24 @@ public class MemberInfoService extends CrudService<MemberInfoDao, MemberInfo> {
         }
     }
 
-    public static String genRefereeId() {
-        IdWorker idWorker = new IdWorker();
-
-        Random random = new Random();
-        int max = 8;
-        int min = 1;
-        int pwdLength = 13;
-        String timeStamp = String.valueOf(idWorker.getId());
-        String randomStr = String.valueOf(random.nextInt(max) % (max - min + 1) + min);
-        String encodeStr = randomStr + timeStamp;
-        String couponPwd = Base32.encode(Long.valueOf(encodeStr));
-        if (couponPwd.length() != pwdLength) {
-            couponPwd = genRefereeId();
+    public String genRefereeId() {
+        List<MemberRefereeIdMax> memberRefereeIdMaxes = memberRefereeIdMaxDao.findList(new MemberRefereeIdMax());
+        Integer maxId = 0;
+        MemberRefereeIdMax memberRefereeIdMax;
+        if(null == memberRefereeIdMaxes || memberRefereeIdMaxes.size() <= 0) {
+            maxId = ++maxId;
+            memberRefereeIdMax = new MemberRefereeIdMax();
+            memberRefereeIdMax.setMaxRefereeId(maxId);
+            memberRefereeIdMax.preInsert();
+            memberRefereeIdMaxDao.insert(memberRefereeIdMax);
+        }else {
+            memberRefereeIdMax = memberRefereeIdMaxes.get(0);
+            maxId = memberRefereeIdMax.getMaxRefereeId() + 1;
+            memberRefereeIdMax.setMaxRefereeId(maxId);
+            memberRefereeIdMax.preUpdate();
+            memberRefereeIdMaxDao.update(memberRefereeIdMax);
         }
-        return couponPwd;
+        return String.format("%06d", maxId);
     }
 
     public List<MemberFavorite> findList(MemberFavorite memberFavorite) {

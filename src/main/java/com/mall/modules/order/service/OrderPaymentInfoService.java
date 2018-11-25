@@ -5,6 +5,10 @@ import com.mall.common.service.CrudService;
 import com.mall.modules.account.entity.AccountFlow;
 import com.mall.modules.account.service.AccountFlowService;
 import com.mall.modules.account.service.AccountService;
+import com.mall.modules.gift.entity.GiftMerchant;
+import com.mall.modules.gift.entity.GiftPurchaseLog;
+import com.mall.modules.gift.service.GiftMerchantService;
+import com.mall.modules.gift.service.GiftPurchaseLogService;
 import com.mall.modules.member.entity.MemberInfo;
 import com.mall.modules.member.service.MemberInfoService;
 import com.mall.modules.order.dao.OrderPaymentInfoDao;
@@ -39,6 +43,10 @@ public class OrderPaymentInfoService extends CrudService<OrderPaymentInfoDao, Or
 	private MemberInfoService memberInfoService;
 	@Autowired
 	private AccountFlowService accountFlowService;
+	@Autowired
+	private GiftPurchaseLogService giftPurchaseLogService;
+	@Autowired
+	private GiftMerchantService giftMerchantService;
 
 	public OrderPaymentInfo get(String id) {
 		return super.get(id);
@@ -128,6 +136,22 @@ public class OrderPaymentInfoService extends CrudService<OrderPaymentInfoDao, Or
 		MemberInfo memberInfo = memberInfoService.get(queryCondition);
 		Double balance = memberInfo.getBalance() + orderPaymentInfo.getAmountTotal();
 		accountService.editAccount(balance, null, memberInfo.getId());
+	}
+
+	@Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+	public void giftOrderPaySuccess(OrderPaymentInfo orderPaymentInfo) {
+		String paymentNo = orderPaymentInfo.getPaymentNo();
+		GiftPurchaseLog queryCondition = new GiftPurchaseLog();
+		queryCondition.setPaymentNo(paymentNo);
+		List<GiftPurchaseLog> giftPurchaseLogs = giftPurchaseLogService.findList(queryCondition);
+		for (GiftPurchaseLog g : giftPurchaseLogs) {
+			g.setStatus("1");
+			g.setPayTime(new Date());
+			GiftMerchant giftMerchant = giftPurchaseLogService.genGiftMerchant(g);
+			giftMerchantService.save(giftMerchant);
+			g.setGiftMerchantCode(giftMerchant.getId());
+			giftPurchaseLogService.save(g);
+		}
 	}
 
 }

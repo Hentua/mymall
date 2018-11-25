@@ -9,7 +9,6 @@
 			//$("#name").focus();
 			$("#inputForm").validate({
 				submitHandler: function(form){
-					loading('正在提交，请稍等...');
 					form.submit();
 				},
 				errorContainer: "#messageBox",
@@ -96,7 +95,7 @@
 			</div>
 		</div>
 		<div class="form-actions">
-			<input id="btnSubmit" class="btn btn-primary" type="submit" value="购 买"/>&nbsp;
+			<input id="btnSubmit" class="btn btn-primary" type="submit" value="购 买" data-loading-text="正在提交，请稍候..."/>&nbsp;
 			<input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
 		</div>
 	</form:form>

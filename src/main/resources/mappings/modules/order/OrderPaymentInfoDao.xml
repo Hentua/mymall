@@ -168,7 +168,7 @@
 	</update>
 
 	<update id="modifyPaymentInfoStatus">
-		update order_payment_info set payment_status = #{paymentStatus}, pay_channel = #{payChannel}, prepay_id = #{prepayId} where payment_no = #{paymentNo}
+		update order_payment_info set payment_status = #{paymentStatus}, pay_channel = #{payChannel}, prepay_id = #{prepayId}, code_url = #{codeUrl} where payment_no = #{paymentNo}
 	</update>
 
 	<update id="weixinPayResult">

@@ -271,7 +271,7 @@ public class MemberInfoController extends BaseController {
         memberInfo.setBalance(0.00);
         memberInfo.preInsert();
         memberInfo.setId(user.getId());
-        memberInfo.setReferee(MemberInfoService.genRefereeId());
+        memberInfo.setReferee(memberInfoService.genRefereeId());
         memberInfo.setStatus("0");
         memberInfo.setIsNewRecord(true);
         memberInfoService.save(memberInfo);

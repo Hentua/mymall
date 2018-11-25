@@ -3,7 +3,6 @@ package com.mall.modules.gift.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.mall.modules.gift.entity.GiftConfig;
 import com.mall.modules.gift.entity.GiftPurchaseLog;
 import com.mall.modules.sys.entity.User;
 import com.mall.modules.sys.utils.UserUtils;
@@ -22,8 +21,6 @@ import com.mall.common.web.BaseController;
 import com.mall.common.utils.StringUtils;
 import com.mall.modules.gift.entity.GiftConfigCategory;
 import com.mall.modules.gift.service.GiftConfigCategoryService;
-
-import java.text.DecimalFormat;
 
 /**
  * 礼包类别Controller
@@ -110,11 +107,11 @@ public class GiftConfigCategoryController extends BaseController {
 		GiftPurchaseLog giftPurchaseLog = giftConfigCategoryService.giftPurchase(giftConfigCategory);
 		// 微信支付
 		if("0".equals(payChannel)) {
-			return "modules/gift/wechatPay";
+			return "redirect:" + Global.getAdminPath() + "/payment/weixinPay?paymentNo=" + giftPurchaseLog.getPaymentNo() + "&callbackUrl=" + Global.getAdminPath() + "/gift/giftPurchaseLog";
 		}
 		// 余额支付
 		else if("3".equals(payChannel)) {
-			return "modules/gift/wechatPay";
+			return "modules/order/wechatPay";
 		}
 		// 打款到财务
 		else {

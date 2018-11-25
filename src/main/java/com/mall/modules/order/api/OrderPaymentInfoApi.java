@@ -116,6 +116,10 @@ public class OrderPaymentInfoApi extends BaseController {
                 else if("2".equalsIgnoreCase(paymentType)) {
                     orderPaymentInfoService.rechargeOrderPaySuccess(orderPaymentInfo);
                 }
+                // 礼包购买
+                else if("1".equalsIgnoreCase(paymentType)) {
+                    orderPaymentInfoService.giftOrderPaySuccess(orderPaymentInfo);
+                }
             }
             return WxPayNotifyResponse.success("成功");
         } catch (Exception e) {
