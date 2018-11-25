@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 佣金明细Service
@@ -48,6 +49,11 @@ public class CommissionInfoService extends CrudService<CommissionInfoDao, Commis
 
 		//修改状态
 //		dao.editStatus(commissionInfo.getId());
+	}
+
+
+	public Map<String,Object> merchantIndexSts(String userId){
+		return dao.merchantIndexSts(userId);
 	}
 
 

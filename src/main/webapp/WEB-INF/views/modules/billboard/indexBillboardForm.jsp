@@ -26,11 +26,17 @@
 
 		function showHide(t){
 		    // console.log($(t).val());
-		    if(1 == $(t).val() || 3 == $(t).val()){
+		    if(1 == $(t).val() || 3 == $(t).val() || 4 == $(t).val()){
                 $("#selGoods").hide();
 			}else{
                 $("#selGoods").show();
 			}
+            if(4 == $(t).val()){
+                $("#uninGoods").hide();
+            }
+            if(4 != $(t).val()){
+                $("#uninGoods").show();
+            }
 		}
 
 		function selGoods() {
@@ -103,6 +109,7 @@
 					<form:option value="1" label="轮播图广告位"/>
 					<form:option value="2"  label="标题广告"/>
 					<form:option value="3"  label="开机广告"/>
+					<form:option value="4"  label="后台首页广告"/>
 				</form:select>
 			</div>
 		</div>
@@ -112,14 +119,14 @@
 				<form:input path="title" htmlEscape="false" maxlength="100" class="input-xlarge "/>
 			</div>
 		</div>
-		<div class="control-group">
+		<div class="control-group"  >
 			<label class="control-label">广告图片：</label>
 			<div class="controls">
 				<form:hidden id="image" path="image" htmlEscape="false" maxlength="255" class="input-xlarge"/>
 				<sys:ckfinder input="image" type="images" uploadPath="/billboard/indexBillboard" selectMultiple="false" maxWidth="100" maxHeight="100"/>
 			</div>
 		</div>
-		<div class="control-group">
+		<div class="control-group" id="uninGoods">
 			<label class="control-label">广告关联商品：</label>
 			<div class="controls">
 				<span id="jump_span">

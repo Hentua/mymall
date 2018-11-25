@@ -17,8 +17,14 @@ import com.mall.common.utils.StringUtils;
 import com.mall.common.utils.excel.ExportExcel;
 import com.mall.common.utils.excel.ImportExcel;
 import com.mall.common.web.BaseController;
+import com.mall.modules.billboard.entity.IndexBillboard;
+import com.mall.modules.billboard.service.IndexBillboardService;
+import com.mall.modules.commission.service.CommissionInfoService;
+import com.mall.modules.coupon.service.CouponCustomerService;
 import com.mall.modules.member.entity.MemberInfo;
 import com.mall.modules.member.service.MemberInfoService;
+import com.mall.modules.notice.entity.IndexNotice;
+import com.mall.modules.notice.service.IndexNoticeService;
 import com.mall.modules.sys.entity.Office;
 import com.mall.modules.sys.entity.Role;
 import com.mall.modules.sys.entity.User;
@@ -300,6 +306,17 @@ public class UserController extends BaseController {
 	@Autowired
 	private MemberInfoService memberInfoService;
 
+	@Autowired
+	private CouponCustomerService couponCustomerService;
+
+	@Autowired
+	private IndexBillboardService indexBillboardService;
+
+	@Autowired
+	private CommissionInfoService commissionInfoService;
+
+	@Autowired
+	private IndexNoticeService indexNoticeService;
 	/**
 	 * 用户信息显示及保存
 	 * @param model
@@ -321,12 +338,18 @@ public class UserController extends BaseController {
 
 		//统计信息
 		JSONObject stsObj = new JSONObject();
-		stsObj.put("","");
-
+		stsObj.putAll(couponCustomerService.enabledCouponsCount(user.getId()));
+		stsObj.putAll(commissionInfoService.merchantIndexSts(user.getId()));
+		model.addAttribute("stsObj",stsObj);
 		//广告信息
-
+		IndexBillboard ib = new IndexBillboard();
+		ib.setType("4");
+		List<IndexBillboard> billboards = indexBillboardService.findList(ib);
+		model.addAttribute("billboards",billboards);
 		//公告信息
-
+		IndexNotice in = new IndexNotice();
+		List<IndexNotice> indexNotices = indexNoticeService.findList(in);
+		model.addAttribute("indexNotices",indexNotices);
 		return "modules/sys/merchantInfo";
 	}
 

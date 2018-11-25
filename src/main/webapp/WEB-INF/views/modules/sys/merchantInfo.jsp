@@ -88,6 +88,9 @@
 		.mr_notice table tr td:hover{
 			font-weight: bold;
 		}
+        .mr_notice a{
+            color: black;
+        }
 
 	</style>
 </head>
@@ -96,27 +99,29 @@
 		<div style="min-height: 85px">
 			<div class="mr_sts">
 				<div class="mr_sts_title">当日货款金额</div>
-				<div class="mr_sts_amount">100.00</div>
+				<div class="mr_sts_amount">${stsObj.dayOrderAmountTotal}</div>
 			</div>
 			<div class="mr_sts">
 				<div class="mr_sts_title">账户余额</div>
-				<div class="mr_sts_amount">100.00</div>
+				<div class="mr_sts_amount">${member.balance}</div>
 			</div>
 			<div class="mr_sts">
 				<div class="mr_sts_title">未提现佣金</div>
-				<div class="mr_sts_amount">100.00</div>
+				<div class="mr_sts_amount">${member.commission}</div>
 			</div>
 			<div class="mr_sts">
 				<div class="mr_sts_title">5折卡券数量</div>
-				<div class="mr_sts_amount">100.00</div>
+				<div class="mr_sts_amount">${stsObj.fiveDiscountCoupon}</div>
 			</div>
 		</div>
 		<div class="mr_ad">
 			<div class="slider6">
-				<div class="slide"><img src="${ctxStatic}/images/a1.png" width="100%"></div>
-				<div class="slide"><img src="${ctxStatic}/images/a2.png" width="100%"></div>
-				<div class="slide"><img src="${ctxStatic}/images/a3.png" width="100%"></div>
-				<div class="slide"><img src="${ctxStatic}/images/a4.png" width="100%"></div>
+				<c:forEach items="${billboards}" var="b">
+					<div class="slide"><img src="${b.fullImageUrl}" width="100%"></div>
+				</c:forEach>
+				<%--<div class="slide"><img src="${ctxStatic}/images/a2.png" width="100%"></div>--%>
+				<%--<div class="slide"><img src="${ctxStatic}/images/a3.png" width="100%"></div>--%>
+				<%--<div class="slide"><img src="${ctxStatic}/images/a4.png" width="100%"></div>--%>
 			</div>
 			<script type="text/javascript">
                 $(document).ready(function(){
@@ -136,15 +141,15 @@
 			<table >
 				<tr>
 					<td>头像：</td>
-					<td><img style="border: 1px solid #0190d7;" src="${ctxStatic}/images/logo.png" width="50%" ></td>
+					<td><img style="border: 1px solid #0190d7;" src="${member.fullAvatarUrl}" width="50%" ></td>
 				</tr>
 				<tr>
 					<td>账号：</td>
-					<td>13652371059</td>
+					<td>${user.mobile}</td>
 				</tr>
 				<tr>
 					<td>姓名：</td>
-					<td>hub</td>
+					<td>${user.name}</td>
 				</tr>
 				<tr>
 					<td>类别：</td>
@@ -152,15 +157,15 @@
 				</tr>
 				<tr>
 					<td>店铺名称：</td>
-					<td>胡汉三杂货铺</td>
+					<td>${member.nickname}</td>
 				</tr>
 				<tr>
 					<td>月销售额：</td>
-					<td>1000.00</td>
+					<td>${stsObj.monthOrderAmountTotal}</td>
 				</tr>
 				<tr>
 					<td>累计佣金：</td>
-					<td>512300.00</td>
+					<td>${stsObj.commissionTotal}</td>
 				</tr>
 				<tr>
 					<td>上次登录IP：</td>
@@ -176,18 +181,21 @@
 		<div class="mr_notice">
 			<div style="margin-left: 10px;font-weight: bold;margin-top: 20px">公告：</div>
 			<table>
-				<tr>
-					<td  nowrap="nowrap" >请在竞价前，仔细阅读公告，了解拍品请在竞价前，仔细阅读公告，了解拍品</td>
-				</tr>
-				<tr>
-					<td nowrap="nowrap">请在竞价前，仔细阅读公告，了解拍品请在竞价前，仔细阅读公告，了解拍品</td>
-				</tr>
-				<tr>
-					<td nowrap="nowrap">请在竞价前，仔细阅读公告，了解拍品请在您可以在海关拍卖频道的公告页和拍品详情页查看相应拍品的公告</td>
-				</tr>
-				<tr>
-					<td nowrap="nowrap">请在竞价前，仔细阅读公告，了解拍品请在您可以在海关拍卖频道的公告页和拍品详情页查看相应拍品的公告</td>
-				</tr>
+                <c:forEach items="${indexNotices}" var="i">
+                    <tr>
+                        <td  nowrap="nowrap"><a href="${ctx}/notice/indexNotice/info?id=${i.id}">${i.title}</a></td>
+                    </tr>
+                </c:forEach>
+
+				<%--<tr>--%>
+					<%--<td nowrap="nowrap">请在竞价前，仔细阅读公告，了解拍品请在竞价前，仔细阅读公告，了解拍品</td>--%>
+				<%--</tr>--%>
+				<%--<tr>--%>
+					<%--<td nowrap="nowrap">请在竞价前，仔细阅读公告，了解拍品请在您可以在海关拍卖频道的公告页和拍品详情页查看相应拍品的公告</td>--%>
+				<%--</tr>--%>
+				<%--<tr>--%>
+					<%--<td nowrap="nowrap">请在竞价前，仔细阅读公告，了解拍品请在您可以在海关拍卖频道的公告页和拍品详情页查看相应拍品的公告</td>--%>
+				<%--</tr>--%>
 			</table>
 		</div>
 	</div>
