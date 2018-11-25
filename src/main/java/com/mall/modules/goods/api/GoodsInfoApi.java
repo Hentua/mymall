@@ -210,9 +210,8 @@ public class GoodsInfoApi extends BaseController {
     @RequestMapping(value = "goodsCategory", method = RequestMethod.POST)
     public Result goodsCategory(HttpServletRequest request, HttpServletResponse response) {
         List<GoodsCategory> list = goodsCategoryService.findListByApi(new GoodsCategory());
-
-        TreeNode<GoodsCategory> tree=new TreeNode<GoodsCategory>(list);
-        return ResultGenerator.genSuccessResult(tree.TreeFormat());
+//        TreeNode<GoodsCategory> tree=new TreeNode<GoodsCategory>(list);
+        return ResultGenerator.genSuccessResult(list);
     }
 
 
