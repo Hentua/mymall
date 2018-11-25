@@ -23,7 +23,7 @@ public class ResultGenerator {
         return new Result()
                 .setStatus(ResultStatus.SUCCESS)
                 .setMessage(DEFAULT_SUCCESS_MESSAGE)
-                .setData(data);
+                .setData(null == data?new Object():data);
     }
 
     public static Result genFailResult(String message) {

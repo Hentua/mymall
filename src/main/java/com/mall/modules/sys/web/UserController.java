@@ -10,12 +10,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
 
+import com.alibaba.fastjson.JSONObject;
 import com.mall.common.config.Global;
 import com.mall.common.utils.DateUtils;
 import com.mall.common.utils.StringUtils;
 import com.mall.common.utils.excel.ExportExcel;
 import com.mall.common.utils.excel.ImportExcel;
 import com.mall.common.web.BaseController;
+import com.mall.modules.member.entity.MemberInfo;
+import com.mall.modules.member.service.MemberInfoService;
 import com.mall.modules.sys.entity.Office;
 import com.mall.modules.sys.entity.Role;
 import com.mall.modules.sys.entity.User;
@@ -294,32 +297,36 @@ public class UserController extends BaseController {
 		return "modules/sys/userInfo";
 	}
 
+	@Autowired
+	private MemberInfoService memberInfoService;
+
 	/**
 	 * 用户信息显示及保存
-	 * @param user
 	 * @param model
 	 * @return
 	 */
 	@RequiresPermissions("user")
 	@RequestMapping(value = "merchantInfo")
-	public String merchantInfo(User user, HttpServletResponse response, Model model) {
-		User currentUser = UserUtils.getUser();
-		if (StringUtils.isNotBlank(user.getName())){
-			if(Global.isDemoMode()){
-				model.addAttribute("message", "演示模式，不允许操作！");
-				return "modules/sys/merchantInfo";
-			}
-			currentUser.setEmail(user.getEmail());
-			currentUser.setPhone(user.getPhone());
-			currentUser.setMobile(user.getMobile());
-			currentUser.setRemarks(user.getRemarks());
-			currentUser.setPhoto(user.getPhoto());
-			systemService.updateUserInfo(currentUser);
-			model.addAttribute("message", "保存用户信息成功");
-		}
-		model.addAttribute("user", currentUser);
+	public String merchantInfo(HttpServletResponse response, Model model) {
+
+		//用户信息
+		User user = UserUtils.getUser();
+		MemberInfo m = new MemberInfo();
+		m.setId(user.getId());
+		m = memberInfoService.get(m);
+		model.addAttribute("member",m);
+		model.addAttribute("user", user);
 		//修改Global 没有私有构造函数，实现懒汉式单例模式.在第一次调用的时候实例化自己！
 		model.addAttribute("Global", Global.getInstance());
+
+		//统计信息
+		JSONObject stsObj = new JSONObject();
+		stsObj.put("","");
+
+		//广告信息
+
+		//公告信息
+
 		return "modules/sys/merchantInfo";
 	}
 
