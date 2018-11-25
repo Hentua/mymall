@@ -65,10 +65,11 @@ public class MerchantApi extends BaseController {
 		m.setId(merchantId);
 		m = memberInfoService.get(m);
 		JSONObject result = new JSONObject();
-		result.put("merchantHeadImg",m.getMerchantHeadImg());
+		result.put("merchantHeadImg",Global.getConfig("userfiles.baseURL") +m.getMerchantHeadImg());
 		result.put("nickname",m.getNickname());
 		result.put("merchantServicePhone",m.getMerchantServicePhone());
 		result.put("isCollection","0");
+		result.put("avatar",Global.getConfig("userfiles.baseURL") +m.getAvatar());
 		if(null != user){
 			MerchantCollectionInfo mc = new MerchantCollectionInfo();
 			mc.setUserId(user.getId());
