@@ -103,4 +103,18 @@ public interface OrderInfoDao extends CrudDao<OrderInfo> {
      */
     void remind(String id);
 
+    /**
+     * 自动完成订单
+     *
+     * @param id 订单ID
+     */
+    void autoOrderComplete(String id);
+
+    /**
+     * 自动关闭订单
+     *
+     * @param id 订单ID
+     */
+    void autoOrderCancel(String id);
+
 }

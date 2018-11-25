@@ -290,4 +290,14 @@ public class OrderInfoService extends CrudService<OrderInfoDao, OrderInfo> {
         dao.remind(orderId);
     }
 
+    @Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    public void autoOrderCancel(String id) {
+        dao.autoOrderCancel(id);
+    }
+
+    @Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    public void autoOrderComplete(String id) {
+        dao.autoOrderComplete(id);
+    }
+
 }

@@ -44,6 +44,7 @@ public class OrderInfo extends DataEntity<OrderInfo> {
 	private Double activityDiscountAmount; //活动扣减
 	private String activityId; //活动ID
 	private String remindFlag; // 发货提醒
+	private Date deliveryTime; // 发货时间
 
 	private String merchantName;
 	private String customerName;
@@ -54,6 +55,14 @@ public class OrderInfo extends DataEntity<OrderInfo> {
 
 	public OrderInfo(String id){
 		super(id);
+	}
+
+	public Date getDeliveryTime() {
+		return deliveryTime;
+	}
+
+	public void setDeliveryTime(Date deliveryTime) {
+		this.deliveryTime = deliveryTime;
 	}
 
 	public String getRemindFlag() {

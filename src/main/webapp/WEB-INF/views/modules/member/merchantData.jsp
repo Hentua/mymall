@@ -6,10 +6,6 @@
     <meta name="decorator" content="default"/>
     <script type="text/javascript">
         $(document).ready(function () {
-            if('${memberInfo.merchantType}' == '0') {
-                $('#merchantInfo').hide();
-                $('#promotersInfo').show();
-            }
             //$("#name").focus();
             $("#inputForm").validate({
                 submitHandler: function (form) {
@@ -65,7 +61,7 @@
             </c:choose>
         </div>
     </div>
-    <div id="merchantInfo" style="display: none;">
+    <div id="merchantInfo" style="${memberInfo.merchantType == '0' ? 'display: none;' : ''}">
         <div class="control-group">
             <label class="control-label">公司名称：</label>
             <div class="controls">
@@ -209,7 +205,7 @@
             </div>
         </div>
     </div>
-    <div id="promotersInfo">
+    <div id="promotersInfo"  style="${memberInfo.merchantType == '1' ? 'display: none;' : ''}">
         <div class="control-group">
             <label class="control-label">个人银行账户：</label>
             <div class="controls">
@@ -290,7 +286,7 @@
     </div>
     <div class="form-actions">
         <c:if test="${memberInfo.status == '1'}">
-            <a id="btnSubmit" class="btn btn-primary" onclick="return confirmx('确定要修改商户类型？如果您是商户，则将下架您的所有商品', this.href)" href="${ctx}/member/memberInfo/checkPayPasswordForm?id=${memberInfo.id}&failedCallbackUrl=${ctx}/member/memberInfo/merchantData?id=${memberInfo.id}&successCallbackUrl=${ctx}/member/memberInfo/modifyMerchantType">修改商户类型</a>
+            <a id="btnSubmit" class="btn btn-primary" onclick="return confirmx('确定要修改商户类型？如果您是商户，则将下架您的所有商品', this.href)" href="${ctx}/member/memberInfo/checkPayPasswordForm?id=${memberInfo.id}&failedCallbackUrl=${ctx}/member/memberInfo/merchantData?id=${memberInfo.id}&successCallbackUrl=${ctx}/member/memberInfo/modifyMerchantType?id=${memberInfo.id}">修改商户类型</a>
         </c:if>
         <c:if test="${memberInfo.status == '0' || memberInfo.status == '2'}">
             <input id="btnSubmit" class="btn btn-primary" type="submit" value="提交审核" onclick="this.form.action='${ctx}/member/memberInfo/submitMerchantData'"/>

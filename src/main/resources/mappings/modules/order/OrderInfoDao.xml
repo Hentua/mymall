@@ -32,7 +32,8 @@
 		a.activity_id AS "activityId",
 		a.settlements_amount as "settlementsAmount",
 		a.set_flag as "setFlag",
-		a.remind_flag as "remindFlag"
+		a.remind_flag as "remindFlag",
+		a.delivery_time as "deliveryTime"
 	</sql>
 
 	<resultMap id="OrderInfoDetail" type="OrderInfo">
@@ -369,13 +370,23 @@
 		where id = #{id} and customer_code = #{customerCode}
 	</update>
 
+	<update id="autoOrderCancel">
+		update order_info set order_status = '4', auto_closed_time = now()
+		where id = #{id}
+	</update>
+
 	<update id="orderComplete">
 		update order_info set order_status = '3', completed_time = now()
 		where id = #{id} and customer_code = #{customerCode}
 	</update>
 
+	<update id="autoOrderComplete">
+		update order_info set order_status = '3', auto_completed_time = now()
+		where id = #{id}
+	</update>
+
 	<update id="orderDelivery">
-		update order_info set order_status = '2'
+		update order_info set order_status = '2', delivery_time = now()
 		where id = #{id}
 	</update>
 

@@ -111,7 +111,7 @@ public class MemberMerchantCheckController extends BaseController {
 
 	@RequestMapping(value = "checkPass")
 	@Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
-	public String checkPass(MemberMerchantCheck memberMerchantCheck, Model model, RedirectAttributes redirectAttributes) {
+	public String checkPass(MemberMerchantCheck memberMerchantCheck, HttpServletRequest request, Model model, RedirectAttributes redirectAttributes) {
 		String remarks = memberMerchantCheck.getRemarks();
 		memberMerchantCheck = this.get(memberMerchantCheck.getId());
 		memberMerchantCheck.setRemarks(remarks);
@@ -123,11 +123,12 @@ public class MemberMerchantCheckController extends BaseController {
 			addMessage(redirectAttributes, "审核失败，用户不存在");
 			return "redirect:"+Global.getAdminPath()+"/member/memberMerchantCheck/?repage";
 		}
-		if(StringUtils.isBlank(memberMerchantCheck.getMemberInfo().getOperatorCode())) {
+		if(StringUtils.isBlank(request.getParameter("operatorCode"))) {
 			memberMerchantCheck = this.get(memberMerchantCheck.getId());
 			model.addAttribute("message", "商户归属运营不能为空");
 			return form(memberMerchantCheck, model);
 		}
+		memberMerchantCheck.getMemberInfo().setOperatorCode(request.getParameter("operatorCode"));
 		memberInfoService.memberCheck(memberInfo);
 		memberInfo.setOperatorCode(memberMerchantCheck.getMemberInfo().getOperatorCode());
 		memberInfoService.modifyMemberOperator(memberInfo);

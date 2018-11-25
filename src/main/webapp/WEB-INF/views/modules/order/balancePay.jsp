@@ -5,19 +5,21 @@
     <title>余额支付</title>
     <meta name="decorator" content="default"/>
     <style>
-        .wrap{
+        .wrap {
             margin: 10px auto;
             width: 329px;
             height: 640px;
             padding-top: 200px;
         }
-        .inputBoxContainer{
+
+        .inputBoxContainer {
             width: 240px;
             height: 50px;
             margin: 0 auto;
             position: relative;
         }
-        .inputBoxContainer .bogusInput{
+
+        .inputBoxContainer .bogusInput {
             width: 100%;
             height: 100%;
             border: #c3c3c3 1px solid;
@@ -28,32 +30,36 @@
             position: absolute;
             z-index: 0;
         }
-        .inputBoxContainer .realInput{
+
+        .inputBoxContainer .realInput {
             width: 100%;
             height: 100%;
             position: absolute;
-            top:0;
+            top: 0;
             left: 0;
             z-index: 1;
-            filter:alpha(opacity=0);
-            -moz-opacity:0;
-            opacity:0;
+            filter: alpha(opacity=0);
+            -moz-opacity: 0;
+            opacity: 0;
         }
-        .inputBoxContainer .bogusInput input{
+
+        .inputBoxContainer .bogusInput input {
             padding: 0;
             width: 16.3%;
             height: 100%;
-            float:left;
+            float: left;
             background: #ffffff;
             text-align: center;
             font-size: 20px;
             border: none;
             border-right: #C3C3C3 1px solid;
         }
-        .inputBoxContainer .bogusInput input:last-child{
+
+        .inputBoxContainer .bogusInput input:last-child {
             border: none;
         }
-        .confirmButton{
+
+        .confirmButton {
             width: 240px;
             height: 45px;
             border-radius: 7px;
@@ -66,7 +72,8 @@
             margin: 30px auto;
             margin-bottom: 20px;
         }
-        .showValue{
+
+        .showValue {
             width: 240px;
             height: 22px;
             line-height: 22px;
@@ -104,43 +111,43 @@
     </div>
 </div>
 <script type="text/javascript">
-    (function(){
+    (function () {
         var container = document.getElementById("inputBoxContainer");
         boxInput = {
-            maxLength:"",
-            realInput:"",
-            bogusInput:"",
-            bogusInputArr:"",
-            callback:"",
-            init:function(fun){
+            maxLength: "",
+            realInput: "",
+            bogusInput: "",
+            bogusInputArr: "",
+            callback: "",
+            init: function (fun) {
                 var that = this;
                 this.callback = fun;
                 that.realInput = container.children[0];
                 that.bogusInput = container.children[1];
                 that.bogusInputArr = that.bogusInput.children;
                 that.maxLength = that.bogusInputArr[0].getAttribute("maxlength");
-                that.realInput.oninput = function(){
+                that.realInput.oninput = function () {
                     that.setValue();
                 }
-                that.realInput.onpropertychange = function(){
+                that.realInput.onpropertychange = function () {
                     that.setValue();
                 }
             },
-            setValue:function(){
-                this.realInput.value = this.realInput.value.replace(/\D/g,"");
+            setValue: function () {
+                this.realInput.value = this.realInput.value.replace(/\D/g, "");
                 var real_str = this.realInput.value;
-                for(var i = 0 ; i < this.maxLength ; i++){
-                    this.bogusInputArr[i].value = real_str[i]?real_str[i]:"";
+                for (var i = 0; i < this.maxLength; i++) {
+                    this.bogusInputArr[i].value = real_str[i] ? real_str[i] : "";
                 }
-                if(real_str.length >= this.maxLength){
-                    this.realInput.value = real_str.substring(0,6);
+                if (real_str.length >= this.maxLength) {
+                    this.realInput.value = real_str.substring(0, 6);
                     this.callback();
                 }
             },
-            getBoxInputValue:function(){
+            getBoxInputValue: function () {
                 var realValue = "";
-                for(var i in this.bogusInputArr){
-                    if(!this.bogusInputArr[i].value){
+                for (var i in this.bogusInputArr) {
+                    if (!this.bogusInputArr[i].value) {
                         break;
                     }
                     realValue += this.bogusInputArr[i].value;
@@ -149,10 +156,10 @@
             }
         }
     })()
-    boxInput.init(function(){
+    boxInput.init(function () {
         getValue();
     });
-    document.getElementById("confirmButton").onclick = function(){
+    document.getElementById("confirmButton").onclick = function () {
 
         loading('提交中，请稍候...')
         $.post("${ctx}/api/balancePay", {
@@ -162,12 +169,10 @@
             closeLoading();
             var status = data.status;
             if (status != '200') {
-                alertx('支付失败：' + data.message + "，点击确定将跳转页面", function() {
-                    setTimeout(function () {
-                        location.href = '${callbackUrl}';
-                    }, 5000);
+                alertx('支付失败：' + data.message + "，点击确定将跳转页面", function () {
+                    location.href = '${callbackUrl}';
                 });
-            }else {
+            } else {
                 $('body').html('付款成功，即将跳转页面');
                 setTimeout(function () {
                     location.href = '${callbackUrl}';
@@ -175,7 +180,8 @@
             }
         });
     }
-    function getValue(){
+
+    function getValue() {
         // document.getElementById("showValue").innerText = boxInput.getBoxInputValue();
     }
 </script>
