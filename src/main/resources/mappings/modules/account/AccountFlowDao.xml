@@ -93,8 +93,8 @@
 
 	<select id="stsFlow" resultType="java.util.Map">
 		select
-			   ifnull(sum(case WHEN a.type =1 THEN amount end ),0)	 as "income",
-			   ifnull(sum(case WHEN a.type =2 THEN amount end ),0) as "expenditure"
+			   ifnull(sum(case WHEN a.type =1 THEN ROUND(amount,2) end ),0)	 as "income",
+			   ifnull(sum(case WHEN a.type =2 THEN ROUND(amount,2) end ),0) as "expenditure"
 		from account_flow a
 		where  user_id = #{userId} and check_status = '2'
 	</select>
