@@ -54,6 +54,12 @@ public class MemberInfoService extends CrudService<MemberInfoDao, MemberInfo> {
         return super.findPage(page, memberInfo);
     }
 
+    public Page<MemberInfo> findCollectionPage(Page<MemberInfo> page, MemberInfo memberInfo) {
+        memberInfo.setPage(page);
+        page.setList(dao.findCollectionList(memberInfo));
+        return page;
+    }
+
     @Transactional(readOnly = false)
     public void save(MemberInfo memberInfo) {
         super.save(memberInfo);
