@@ -41,6 +41,7 @@
 			margin-left: 1%;
 			width: 65%;
 			float: left;
+			padding-top: 10px;
 		}
 		.mr_notice{
 			border: 1px solid #008fd7;

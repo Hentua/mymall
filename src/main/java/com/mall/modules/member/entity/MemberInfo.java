@@ -1,6 +1,7 @@
 package com.mall.modules.member.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.mall.common.config.Global;
 import org.hibernate.validator.constraints.Length;
 
 import com.mall.common.persistence.DataEntity;
@@ -335,6 +336,22 @@ public class MemberInfo extends DataEntity<MemberInfo> {
 	@Length(min=0, max=200, message="头像地址长度必须介于 0 和 200 之间")
 	public String getAvatar() {
 		return avatar;
+	}
+
+	public String getFullAvatarUrl() {
+		String fullImageUrl = "";
+		if (null != avatar) {
+			fullImageUrl = Global.getConfig("userfiles.baseURL") + avatar;
+		}
+		return fullImageUrl;
+	}
+
+	public String getFullMerchantHeadImgUrl() {
+		String fullImageUrl = "";
+		if (null != merchantHeadImg) {
+			fullImageUrl = Global.getConfig("userfiles.baseURL") + merchantHeadImg;
+		}
+		return fullImageUrl;
 	}
 
 	public void setAvatar(String avatar) {

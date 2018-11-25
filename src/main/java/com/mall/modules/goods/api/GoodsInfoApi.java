@@ -3,6 +3,7 @@ package com.mall.modules.goods.api;
 import com.alibaba.druid.support.json.JSONUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.mall.common.config.Global;
 import com.mall.common.persistence.Page;
 import com.mall.common.service.ServiceException;
 import com.mall.common.utils.Result;
@@ -189,8 +190,8 @@ public class GoodsInfoApi extends BaseController {
         JSONObject result = new JSONObject();
         JSONObject merchant = new JSONObject();
         merchant.put("id",m.getId());
-        merchant.put("photo",m.getAvatar());
-        merchant.put("avatar",m.getAvatar());
+        merchant.put("photo",Global.getConfig("userfiles.baseURL") +m.getAvatar());
+        merchant.put("avatar", Global.getConfig("userfiles.baseURL") +m.getAvatar());
         merchant.put("nickname",m.getNickname());
         merchant.putAll(goodsInfoService.monthSalesTotal(m.getId()));
         result.put("goodsInfo",goodsInfo);
