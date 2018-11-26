@@ -51,13 +51,16 @@
 		left join index_billboard_goods ibg on a.id = ibg.goods_id
 		<include refid="goodsInfoJoins"/>
 		<where>
-			ibg.billboard_id = #{billboard.id}
+			 a.status = 3
+			AND a.del_flag = 0
+		  	and ibg.billboard_id = #{billboard.id}
 			<if test="goods != null and goods.goodsCategoryId != null and goods.goodsCategoryId != ''">
 				AND a.goods_category_id = #{goods.goodsCategoryId}
 			</if>
 			<if test="goods != null and goods.goodsName != null and goods.goodsName != ''">
 				AND a.goods_name LIKE CONCAT('%',#{goods.goodsName},'%')
 			</if>
+
 		</where>
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">

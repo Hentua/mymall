@@ -25,18 +25,21 @@
 			padding-top: 7px;
 			border: 1px solid #008fd7;
 			margin-left: 1%;
+			color: white;
+			cursor: pointer;
 		}
 		.mr_sts_title{
 			font-size: 17px;
+			padding-top: 5px;
 		}
 		.mr_sts_amount{
 			font-size: 22px;
 			font-weight: bold;
 			padding-top: 10px;
-			color: black;
+			color: white;
 		}
 		.mr_ad{
-			border: 1px solid #008fd7;
+			/*border: 1px solid #008fd7;*/
 			height: 300px;
 			margin-left: 1%;
 			width: 65%;
@@ -91,27 +94,39 @@
         .mr_notice a{
             color: black;
         }
+		.mr_index .y{
+			font-size: 12px;
+		}
+		.mr_sts_icon{
+			margin-left: 10px;
+			width: 50px;
+			float: left;
+		}
 
 	</style>
 </head>
 <body>
 	<div class="mr_index">
 		<div style="min-height: 85px">
-			<div class="mr_sts">
+			<div class="mr_sts" style="background-color: #1190D9">
+				<div class="mr_sts_icon"><img src="${ctxStatic}/images/icon-4.png" width="50px"></div>
 				<div class="mr_sts_title">当日货款金额</div>
-				<div class="mr_sts_amount">${stsObj.dayOrderAmountTotal}</div>
+				<div class="mr_sts_amount">${stsObj.dayOrderAmountTotal}&nbsp;<span class="y">元</span></div>
 			</div>
-			<div class="mr_sts">
+			<div class="mr_sts" style="background-color: #68B9F1">
+				<div class="mr_sts_icon"><img src="${ctxStatic}/images/icon-1.png" width="50px"></div>
 				<div class="mr_sts_title">账户余额</div>
-				<div class="mr_sts_amount">${member.balance}</div>
+				<div class="mr_sts_amount">${member.balance}&nbsp;<span class="y">元</span></div>
 			</div>
-			<div class="mr_sts">
+			<div class="mr_sts" style="background-color: #1190D9">
+				<div class="mr_sts_icon" style="    padding-top: 10px;"><img src="${ctxStatic}/images/icon-2.png" width="50px"></div>
 				<div class="mr_sts_title">未提现佣金</div>
-				<div class="mr_sts_amount">${member.commission}</div>
+				<div class="mr_sts_amount">${member.commission}&nbsp;<span class="y">元</span></div>
 			</div>
-			<div class="mr_sts">
-				<div class="mr_sts_title">5折卡券数量</div>
-				<div class="mr_sts_amount">${stsObj.fiveDiscountCoupon}</div>
+			<div class="mr_sts" style="background-color: #68B9F1">
+				<div class="mr_sts_icon" style="    padding-top: 11px;"><img src="${ctxStatic}/images/icon-3.png" width="50px"></div>
+				<div class="mr_sts_title">5折卡券金额</div>
+				<div class="mr_sts_amount">${stsObj.fiveDiscountCoupon}&nbsp;<span class="y">元</span></div>
 			</div>
 		</div>
 		<div class="mr_ad">
@@ -127,8 +142,10 @@
                 $(document).ready(function(){
                     $('.slider6').bxSlider({
                         mode: 'fade',
-                        slideWidth: 843,
-                        slideMargin: 10
+                        // slideWidth: 100,
+                        slideMargin: 10,
+                        responsive: true,
+                        speed: 2000
                     });
                 });
 			</script>

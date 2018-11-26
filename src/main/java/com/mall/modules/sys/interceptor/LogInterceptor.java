@@ -4,10 +4,12 @@
 package com.mall.modules.sys.interceptor;
 
 import java.text.SimpleDateFormat;
+import java.util.Enumeration;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.alibaba.fastjson.JSONObject;
 import com.mall.common.utils.DateUtils;
 import org.springframework.core.NamedThreadLocal;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -34,6 +36,14 @@ public class LogInterceptor extends BaseService implements HandlerInterceptor {
 	        startTimeThreadLocal.set(beginTime);		//线程绑定变量（该数据只有当前请求的线程可见）  
 	        logger.debug("开始计时: {}  URI: {}", new SimpleDateFormat("hh:mm:ss.SSS")
 	        	.format(beginTime), request.getRequestURI());
+			Enumeration enu=request.getParameterNames();
+			JSONObject jo =new JSONObject();
+			while(enu.hasMoreElements()){
+				String paraName=(String)enu.nextElement();
+				jo.put(paraName,request.getParameter(paraName));
+//            System.out.println(paraName+": "+request.getParameter(paraName));
+			}
+			logger.info("jsonparam = "+jo.toJSONString());
 		}
 		return true;
 	}
