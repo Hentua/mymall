@@ -232,7 +232,7 @@
 		<include refid="orderInfoJoins"/>
 		     left join member_info m on m.id = a.merchant_code
 		     left join member_info c on c.id = a.customer_code
-		     left join order_settlement s on c.order_id = a.id
+		     left join order_settlement s on s.order_id = a.id
 		<where>
 			<if test="customerCode != null and customerCode != ''">
 				and a.customer_code = #{customerCode}
