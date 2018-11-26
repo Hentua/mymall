@@ -44,22 +44,22 @@ public class OrderHandleTimer {
         int cancelCount = 0;
         int completeCount = 0;
         for (OrderInfo o : pendingPayList) {
-            cancelCount++;
             Calendar calendar = Calendar.getInstance();
             Date createDate = o.getCreateDate();
             calendar.setTime(createDate);
             calendar.add(Calendar.MINUTE, 30);
-            if(now.getTime() < calendar.getTimeInMillis()) {
+            if(now.getTime() > calendar.getTimeInMillis()) {
+                cancelCount++;
                 orderInfoService.autoOrderCancel(o.getId());
             }
         }
         for (OrderInfo o : pendingTakeList) {
-            completeCount++;
             Calendar calendar = Calendar.getInstance();
             Date deliveryTime = o.getDeliveryTime();
             calendar.setTime(deliveryTime);
             calendar.add(Calendar.DATE, 7);
-            if(now.getTime() < calendar.getTimeInMillis()) {
+            if(now.getTime() > calendar.getTimeInMillis()) {
+                completeCount++;
                 orderInfoService.autoOrderComplete(o.getId());
             }
         }
