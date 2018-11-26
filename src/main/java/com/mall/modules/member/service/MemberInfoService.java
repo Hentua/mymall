@@ -11,7 +11,10 @@ import com.mall.modules.member.dao.MemberInfoDao;
 import com.mall.modules.member.dao.MemberRefereeIdMaxDao;
 import com.mall.modules.member.entity.*;
 import com.mall.modules.member.utils.Base32;
+import com.mall.modules.sys.entity.Role;
+import com.mall.modules.sys.entity.User;
 import com.mall.modules.sys.service.SystemService;
+import com.mall.modules.sys.utils.UserUtils;
 import com.sohu.idcenter.IdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,6 +50,8 @@ public class MemberInfoService extends CrudService<MemberInfoDao, MemberInfo> {
     private MemberRefereeIdMaxDao memberRefereeIdMaxDao;
     @Autowired
     private GoodsInfoService goodsInfoService;
+    @Autowired
+    private SystemService systemService;
 
     public MemberInfo get(String id) {
         return super.get(id);
@@ -222,5 +227,15 @@ public class MemberInfoService extends CrudService<MemberInfoDao, MemberInfo> {
     public void uncheckStatus(String id) {
         goodsInfoService.uncheckMerchant(id);
         memberInfoDao.uncheckStatus(id);
+        User user = UserUtils.get(id);
+        List<Role> roles = user.getRoleList();
+        for (int i = 0; i < roles.size(); i++) {
+            Role r = roles.get(i);
+            if("1001".equals(r.getId())) {
+                roles.remove(i);
+            }
+        }
+        user.setRoleList(roles);
+        systemService.saveUser(user);
     }
 }

@@ -3,6 +3,8 @@ package com.mall.modules.gift.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.mall.common.utils.excel.ExportExcel;
+import com.mall.modules.member.entity.MemberFeedback;
 import com.mall.modules.sys.entity.User;
 import com.mall.modules.sys.utils.UserUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -20,6 +22,8 @@ import com.mall.common.web.BaseController;
 import com.mall.common.utils.StringUtils;
 import com.mall.modules.gift.entity.GiftTransferLog;
 import com.mall.modules.gift.service.GiftTransferLogService;
+
+import java.util.List;
 
 /**
  * 礼包赠送记录Controller
@@ -53,6 +57,40 @@ public class GiftTransferLogController extends BaseController {
 		Page<GiftTransferLog> page = giftTransferLogService.findPage(new Page<GiftTransferLog>(request, response), giftTransferLog);
 		model.addAttribute("page", page);
 		return "modules/gift/giftTransferLogList";
+	}
+
+	@RequestMapping(value = {"exportData"})
+	public void exportData(GiftTransferLog giftTransferLog, HttpServletRequest request, HttpServletResponse response, Model model) {
+		User currUser = UserUtils.getUser();
+		giftTransferLog.setMerchantCode(currUser.getId());
+		List<GiftTransferLog> giftTransferLogs = giftTransferLogService.findList(giftTransferLog);
+		ExportExcel exportExcel = new ExportExcel("礼包赠送记录", GiftTransferLog.class);
+		try {
+			exportExcel.setDataList(giftTransferLogs);
+			exportExcel.write(response, "礼包赠送记录.xlsx");
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@RequiresPermissions("gift:giftTransferLog:view")
+	@RequestMapping(value = {"operatorList", ""})
+	public String operatorList(GiftTransferLog giftTransferLog, HttpServletRequest request, HttpServletResponse response, Model model) {
+		Page<GiftTransferLog> page = giftTransferLogService.findPage(new Page<GiftTransferLog>(request, response), giftTransferLog);
+		model.addAttribute("page", page);
+		return "modules/gift/giftTransferLogOperatorList";
+	}
+
+	@RequestMapping(value = {"operatorExportData"})
+	public void operatorExportData(GiftTransferLog giftTransferLog, HttpServletRequest request, HttpServletResponse response, Model model) {
+		List<GiftTransferLog> giftTransferLogs = giftTransferLogService.findList(giftTransferLog);
+		ExportExcel exportExcel = new ExportExcel("礼包赠送记录", GiftTransferLog.class);
+		try {
+			exportExcel.setDataList(giftTransferLogs);
+			exportExcel.write(response, "礼包赠送记录.xlsx");
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@RequiresPermissions("gift:giftTransferLog:view")

@@ -107,6 +107,18 @@
 			</div>
 		</div>
 		<div class="control-group">
+			<label class="control-label">确认收货时间：</label>
+			<div class="controls">
+				<fmt:formatDate value="${orderInfo.completedTime}" pattern="yyyy-MM-dd HH:mm:ss"/>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">自动确认收货时间：</label>
+			<div class="controls">
+				<fmt:formatDate value="${orderInfo.autoCompletedTime}" pattern="yyyy-MM-dd HH:mm:ss"/>
+			</div>
+		</div>
+		<div class="control-group">
 			<label class="control-label">收货人：</label>
 			<div class="controls">
 					${orderInfo.orderLogistics.consigneeRealname}
@@ -127,7 +139,7 @@
 		<div class="control-group">
 			<label class="control-label">物流公司：</label>
 			<div class="controls">
-					${orderInfo.orderLogistics.logisticsType}
+					${fns:getDictLabel(orderInfo.orderLogistics.logisticsType, 'express_type', '')}
 			</div>
 		</div>
 		<div class="control-group">

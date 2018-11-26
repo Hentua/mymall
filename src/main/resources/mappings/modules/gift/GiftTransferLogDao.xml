@@ -17,13 +17,20 @@
 		a.gift_customer_code AS "giftCustomerCode",
 		c.category_name AS "giftConfigCategoryName",
 		m.nickname AS "customerName",
-		s.mobile AS "customerMobile"
+		s.mobile AS "customerMobile",
+		m.referee AS "customerId",
+		mm.nickname AS "merchantName",
+		mm.referee AS "merchantId",
+		c.gift_price AS "giftPrice",
+		gc.gift_count AS "status"
 	</sql>
 	
 	<sql id="giftTransferLogJoins">
 		left join member_info m on m.id = a.customer_code
+		left join member_info mm on mm.id = a.merchant_code
 		left join gift_config_category c on c.id = a.gift_category
 		left join sys_user s on s.id = a.customer_code
+		left join gift_customer gc on gc.id = a.gift_customer_code
 	</sql>
     
 	<select id="get" resultType="GiftTransferLog">
@@ -51,6 +58,15 @@
 			</if>
 			<if test="endCreateDate != null and endCreateDate != ''">
 				AND a.create_date &lt;= #{endCreateDate}
+			</if>
+			<if test="customerId != null and customerId != ''">
+				AND m.referee = #{customerId}
+			</if>
+			<if test="merchantId != null and merchantId != ''">
+				AND mm.referee = #{merchantId}
+			</if>
+			<if test="status != null and status != ''">
+				AND gc.gift_count = #{status}
 			</if>
 		</where>
 		<choose>

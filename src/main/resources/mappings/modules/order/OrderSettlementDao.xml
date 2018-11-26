@@ -10,11 +10,21 @@
 		a.status AS "status",
 		a.create_date AS "createDate",
 		a.settlement_date AS "settlementDate",
-		a.settlement_user_id AS "settlementUserId"
+		a.settlement_user_id AS "settlementUserId",
+		m.nickname AS "merchantName",
+		m.referee AS "merchantId",
+		mc.nickname AS "customerName",
+		mc.referee AS "customerId",
+		o.create_date AS "orderDate",
+		o.order_no AS "orderNo",
+		o.order_amount_total AS "orderAmount"
 	</sql>
 	
 	<sql id="orderSettlementJoins">
 		LEFT JOIN sys_user u3 ON u3.id = a.user_id
+		LEFT JOIN order_info o ON o.id = a.order_id
+		LEFT JOIN member_info m on m.id = o.merchant_code
+		LEFT JOIN member_info mc on mc.id = o.customer_code
 	</sql>
     
 	<select id="get" resultType="OrderSettlement">
@@ -53,14 +63,61 @@
 			<if test="settlementUserId != null and settlementUserId != ''">
 				AND a.settlement_user_id = #{settlementUserId}
 			</if>
+			<if test="merchantId != null and merchantId != ''">
+				AND m.referee = #{merchantId}
+			</if>
+			<if test="startDate != null">
+				AND o.create_date &gt;= #{startDate}
+			</if>
+			<if test="endDate != null">
+				AND o.create_date &lt;= #{endDate}
+			</if>
+			<if test="orderNo != null and orderNo != ''">
+				AND o.order_no = #{orderNo}
+			</if>
+			<if test="customerId != null and customerId != ''">
+				AND mc.referee = #{customerId}
+			</if>
 		</where>
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
 				ORDER BY ${page.orderBy}
 			</when>
 			<otherwise>
+				order by o.create_date desc
 			</otherwise>
 		</choose>
+	</select>
+
+	<select id="findTotal" resultType="Map">
+		SELECT
+			ifnull(sum(a.settlement_amount), 0.00) as "settlementAmountTotal",
+		    ifnull(sum(o.order_amount_total), 0.00) as "orderAmountTotal"
+		FROM order_settlement a
+		<include refid="orderSettlementJoins"/>
+		<where>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="merchantId != null and merchantId != ''">
+				AND m.referee = #{merchantId}
+			</if>
+			<if test="startDate != null">
+				AND o.create_date &gt;= #{startDate}
+			</if>
+			<if test="endDate != null">
+				AND o.create_date &lt;= #{endDate}
+			</if>
+			<if test="orderNo != null and orderNo != ''">
+				AND o.order_no = #{orderNo}
+			</if>
+			<if test="customerId != null and customerId != ''">
+				AND mc.referee = #{customerId}
+			</if>
+			<if test="userId != null and userId != ''">
+				AND a.user_id = #{userId}
+			</if>
+		</where>
 	</select>
 	
 	<select id="findAllList" resultType="OrderSettlement">

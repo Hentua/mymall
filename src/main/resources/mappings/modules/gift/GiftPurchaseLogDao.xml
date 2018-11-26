@@ -20,6 +20,7 @@
 		a.gift_merchant_code AS "giftMerchantCode",
 		c.category_name AS "giftConfigCategoryName",
 		m.nickname AS "merchantName",
+		m.referee AS "merchantId",
 		a.pay_channel AS "payChannel"
 	</sql>
 	
@@ -53,6 +54,21 @@
 			</if>
 			<if test="status != null and status != ''">
 				and a.status = #{status}
+			</if>
+			<if test="merchantId != null and merchantId != ''">
+				and m.referee = #{merchantId}
+			</if>
+			<if test="startDate != null">
+				and a.create_date &gt;= #{startDate}
+			</if>
+			<if test="endDate != null">
+				and a.end_date &lt;= #{endDate}
+			</if>
+			<if test="startPayDate != null">
+				and a.pay_time &gt;= #{startPayDate}
+			</if>
+			<if test="endPayDate != null">
+				and a.pay_time &lt;= #{endPayDate}
 			</if>
 		</where>
 		<choose>

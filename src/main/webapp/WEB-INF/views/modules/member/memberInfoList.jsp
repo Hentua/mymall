@@ -58,6 +58,7 @@
 				<th>用户类型</th>
 				<th>注册途径</th>
 				<th>注册时间</th>
+				<th>商户类型</th>
 				<th>商户审核状态</th>
 				<th>登录状态</th>
 				<th>备注</th>
@@ -90,6 +91,16 @@
 				</td>
 				<td>
 					<fmt:formatDate value="${memberInfo.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
+				</td>
+				<td>
+					<c:choose>
+						<c:when test="${memberInfo.merchantType == '0'}">
+							推广者
+						</c:when>
+						<c:when test="${memberInfo.merchantType == '1'}">
+							商家
+						</c:when>
+					</c:choose>
 				</td>
 				<td>
 					<c:choose>

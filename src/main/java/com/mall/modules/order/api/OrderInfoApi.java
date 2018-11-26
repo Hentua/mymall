@@ -252,7 +252,9 @@ public class OrderInfoApi extends BaseController {
                 }
                 if ("0".equals(orderType)) {
                     OrderShoppingCart orderShoppingCart = orderShoppingCartService.get(shoppingCartId);
-                    goodsRecommendId = orderShoppingCart.getGoodsRecommendId();
+                    if(null != orderShoppingCart) {
+                        goodsRecommendId = orderShoppingCart.getGoodsRecommendId();
+                    }
                 }
                 // 验证数据正确性
                 if (StringUtils.isBlank(goodsId)) {

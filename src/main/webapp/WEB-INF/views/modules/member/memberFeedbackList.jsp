@@ -14,6 +14,9 @@
 			$("#searchForm").submit();
         	return false;
         }
+		function exportData() {
+			window.open('${ctx}/member/memberFeedback/exportData?' + $('#searchForm').serialize());
+		}
 	</script>
 </head>
 <body>
@@ -27,7 +30,26 @@
 			<li><label>会员昵称：</label>
 				<form:input path="customerName" htmlEscape="false" maxlength="64" class="input-medium"/>
 			</li>
+			<li><label>会员ID：</label>
+				<form:input path="customerId" htmlEscape="false" maxlength="64" class="input-medium"/>
+			</li>
+			<li><label>反馈时间：</label>
+				<input name="startDate" id="startDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
+					   value="<fmt:formatDate value="${memberFeedback.startDate}" pattern="yyyy-MM-dd HH:mm:ss"/>"
+					   onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});"/> -
+				<input name="endDate" id="endDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
+					   value="<fmt:formatDate value="${memberFeedback.endDate}" pattern="yyyy-MM-dd HH:mm:ss"/>"
+					   onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});"/>
+			</li>
+			<li><label>状态：</label>
+				<form:select path="status" class="input-medium">
+					<form:option value="" label="全部"/>
+					<form:option value="0" label="未处理" />
+					<form:option value="1" label="已处理" />
+				</form:select>
+			</li>
 			<li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
+			<li class="btns"><input id="btnExport" class="btn btn-primary" type="button" value="导出" onclick="exportData()"/></li>
 			<li class="clearfix"></li>
 		</ul>
 	</form:form>
@@ -36,10 +58,11 @@
 		<thead>
 			<tr>
 				<th>会员昵称</th>
-				<th>会员账号</th>
+				<th>会员ID</th>
 				<th>反馈信息</th>
+				<th>处理信息</th>
 				<th>创建时间</th>
-				<th>是否回复</th>
+				<th>状态</th>
 				<th>详情</th>
 			</tr>
 		</thead>
@@ -50,10 +73,13 @@
 					${memberFeedback.customerName}
 				</td>
 				<td>
-					${memberFeedback.mobile}
+					${memberFeedback.customerId}
 				</td>
 				<td>
 					${memberFeedback.feedbackDetail}
+				</td>
+				<td>
+					${memberFeedback.reply}
 				</td>
 				<td>
 					<fmt:formatDate value="${memberFeedback.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
@@ -61,10 +87,10 @@
 				<td>
 					<c:choose>
 						<c:when test="${empty memberFeedback.reply}">
-							否
+							未处理
 						</c:when>
 						<c:otherwise>
-							是
+							已处理
 						</c:otherwise>
 					</c:choose>
 				</td>

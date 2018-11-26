@@ -3,6 +3,8 @@ package com.mall.modules.order.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.google.common.collect.Lists;
 import com.mall.common.persistence.DataEntity;
+import com.mall.common.utils.StringUtils;
+import com.mall.common.utils.excel.annotation.ExcelField;
 import com.mall.modules.order.utils.OrderStatus;
 import org.hibernate.validator.constraints.Length;
 
@@ -47,7 +49,12 @@ public class OrderInfo extends DataEntity<OrderInfo> {
 	private Date deliveryTime; // 发货时间
 
 	private String merchantName;
+	private String merchantAccount; // 卖家账号
 	private String customerName;
+	private String customerAccount; // 买家账号
+	private String settlementStatus; // 结算状态
+	private Date startDate; // 查询开始时间
+	private Date endDate; // 查询结束时间
 
 	public OrderInfo() {
 		super();
@@ -57,7 +64,49 @@ public class OrderInfo extends DataEntity<OrderInfo> {
 		super(id);
 	}
 
-	public Date getDeliveryTime() {
+	public Date getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+
+	public String getSettlementStatus() {
+		return settlementStatus;
+	}
+
+	public void setSettlementStatus(String settlementStatus) {
+		this.settlementStatus = settlementStatus;
+	}
+
+	@ExcelField(title = "商家ID", sort = 5)
+	public String getMerchantAccount() {
+        return merchantAccount;
+    }
+
+    public void setMerchantAccount(String merchantAccount) {
+        this.merchantAccount = merchantAccount;
+    }
+
+	@ExcelField(title = "下单人ID", sort = 14)
+    public String getCustomerAccount() {
+        return customerAccount;
+    }
+
+    public void setCustomerAccount(String customerAccount) {
+        this.customerAccount = customerAccount;
+    }
+
+    public Date getDeliveryTime() {
 		return deliveryTime;
 	}
 
@@ -73,6 +122,7 @@ public class OrderInfo extends DataEntity<OrderInfo> {
 		this.remindFlag = remindFlag;
 	}
 
+	@ExcelField(title = "活动扣减金额", sort = 9)
 	public Double getActivityDiscountAmount() {
 		return activityDiscountAmount;
 	}
@@ -97,6 +147,7 @@ public class OrderInfo extends DataEntity<OrderInfo> {
 		this.setFlag = setFlag;
 	}
 
+	@ExcelField(title = "应收货款", sort = 12)
 	public Double getSettlementsAmount() {
 		return settlementsAmount;
 	}
@@ -105,6 +156,7 @@ public class OrderInfo extends DataEntity<OrderInfo> {
 		this.settlementsAmount = settlementsAmount;
 	}
 
+	@ExcelField(title = "自动确认收货时间", sort = 18)
 	public Date getAutoCompletedTime() {
 		return autoCompletedTime;
 	}
@@ -113,6 +165,7 @@ public class OrderInfo extends DataEntity<OrderInfo> {
 		this.autoCompletedTime = autoCompletedTime;
 	}
 
+	@ExcelField(title = "下单人", sort = 13)
 	public String getCustomerName() {
 		return customerName;
 	}
@@ -121,6 +174,7 @@ public class OrderInfo extends DataEntity<OrderInfo> {
 		this.customerName = customerName;
 	}
 
+	@ExcelField(title = "商家", sort = 4)
 	public String getMerchantName() {
 		return merchantName;
 	}
@@ -145,6 +199,7 @@ public class OrderInfo extends DataEntity<OrderInfo> {
 		this.autoClosedTime = autoClosedTime;
 	}
 
+	@ExcelField(title = "确认收货时间", sort = 17)
 	public Date getCompletedTime() {
 		return completedTime;
 	}
@@ -169,6 +224,7 @@ public class OrderInfo extends DataEntity<OrderInfo> {
 		this.couponCode = couponCode;
 	}
 
+	@ExcelField(title = "订单号", sort = 1)
 	@Length(min=1, max=32, message="订单号长度必须介于 1 和 32 之间")
 	public String getOrderNo() {
 		return orderNo;
@@ -205,6 +261,7 @@ public class OrderInfo extends DataEntity<OrderInfo> {
 		this.orderType = orderType;
 	}
 
+	@ExcelField(title = "商品总数量", sort = 6)
 	@NotNull(message="商品总数量不能为空")
 	public Double getGoodsCount() {
 		return goodsCount;
@@ -213,7 +270,8 @@ public class OrderInfo extends DataEntity<OrderInfo> {
 	public void setGoodsCount(Double goodsCount) {
 		this.goodsCount = goodsCount;
 	}
-	
+
+	@ExcelField(title = "商品总金额", sort = 7)
 	@NotNull(message="订单商品总金额不能为空")
 	public Double getGoodsAmountTotal() {
 		return goodsAmountTotal;
@@ -222,7 +280,8 @@ public class OrderInfo extends DataEntity<OrderInfo> {
 	public void setGoodsAmountTotal(Double goodsAmountTotal) {
 		this.goodsAmountTotal = goodsAmountTotal;
 	}
-	
+
+	@ExcelField(title = "运费", sort = 10)
 	@NotNull(message="运费不能为空")
 	public Double getLogisticsFee() {
 		return logisticsFee;
@@ -231,7 +290,8 @@ public class OrderInfo extends DataEntity<OrderInfo> {
 	public void setLogisticsFee(Double logisticsFee) {
 		this.logisticsFee = logisticsFee;
 	}
-	
+
+	@ExcelField(title = "订单金额", sort = 11)
 	@NotNull(message="订单应付总金额不能为空")
 	public Double getOrderAmountTotal() {
 		return orderAmountTotal;
@@ -240,7 +300,8 @@ public class OrderInfo extends DataEntity<OrderInfo> {
 	public void setOrderAmountTotal(Double orderAmountTotal) {
 		this.orderAmountTotal = orderAmountTotal;
 	}
-	
+
+	@ExcelField(title = "优惠金额", sort = 8)
 	@NotNull(message="订单优惠扣减金额不能为空")
 	public Double getDiscountAmountTotal() {
 		return discountAmountTotal;
@@ -258,7 +319,8 @@ public class OrderInfo extends DataEntity<OrderInfo> {
 	public void setCustomerCode(String customerCode) {
 		this.customerCode = customerCode;
 	}
-	
+
+	@ExcelField(title = "支付时间", sort = 16)
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	public Date getPayTime() {
 		return payTime;
@@ -301,7 +363,42 @@ public class OrderInfo extends DataEntity<OrderInfo> {
 		this.paymentNo = paymentNo;
 	}
 
+	@ExcelField(title = "订单状态", sort = 2)
 	public String getOrderStatusZh() {
 		return OrderStatus.status2Zh(this.orderStatus);
+	}
+
+	@ExcelField(title = "订单类型", sort = 3)
+	public String getOrderTypeZh() {
+		String orderTypeZh = "";
+		if(StringUtils.isNotBlank(this.orderType)) {
+			switch (this.orderType) {
+				case "0": orderTypeZh = "自主下单";break;
+				case "1": orderTypeZh = "礼包兑换";break;
+				case "2": orderTypeZh = "礼包购买";break;
+				default:;
+			}
+		}
+		return orderTypeZh;
+	}
+
+	@ExcelField(title = "下单时间", sort = 15)
+	@Override
+	public Date getCreateDate() {
+		return createDate;
+	}
+
+	@ExcelField(title = "结款状态", sort = 19)
+	public String settlementStatusZh() {
+		String settlementStatusZh = "";
+		if(StringUtils.isNotBlank(this.settlementStatus)) {
+			switch (this.settlementStatus) {
+				case "1": settlementStatusZh = "未清算";break;
+				case "2": settlementStatusZh = "已清算";break;
+				case "3": settlementStatusZh = "已结算";break;
+				default:;
+			}
+		}
+		return settlementStatusZh;
 	}
 }

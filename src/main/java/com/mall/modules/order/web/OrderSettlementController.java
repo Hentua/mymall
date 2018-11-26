@@ -3,9 +3,12 @@ package com.mall.modules.order.web;
 import com.mall.common.config.Global;
 import com.mall.common.persistence.Page;
 import com.mall.common.utils.StringUtils;
+import com.mall.common.utils.excel.ExportExcel;
 import com.mall.common.web.BaseController;
 import com.mall.modules.order.entity.OrderSettlement;
 import com.mall.modules.order.service.OrderSettlementService;
+import com.mall.modules.sys.entity.User;
+import com.mall.modules.sys.utils.UserUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,6 +20,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 订单结算Controller
@@ -45,9 +50,34 @@ public class OrderSettlementController extends BaseController {
 	@RequiresPermissions("order:orderSettlement:view")
 	@RequestMapping(value = {"list", ""})
 	public String list(OrderSettlement orderSettlement, HttpServletRequest request, HttpServletResponse response, Model model) {
-		Page<OrderSettlement> page = orderSettlementService.findPage(new Page<OrderSettlement>(request, response), orderSettlement); 
+		Page<OrderSettlement> page = orderSettlementService.findPage(new Page<OrderSettlement>(request, response), orderSettlement);
+		Map<String, String> total = orderSettlementService.findTotal(orderSettlement);
+		model.addAttribute("total", total);
 		model.addAttribute("page", page);
 		return "modules/order/orderSettlementList";
+	}
+
+	@RequestMapping(value = {"merchantList", ""})
+	public String merchantList(OrderSettlement orderSettlement, HttpServletRequest request, HttpServletResponse response, Model model) {
+		User currUser = UserUtils.getUser();
+		orderSettlement.setUserId(currUser.getId());
+		Page<OrderSettlement> page = orderSettlementService.findPage(new Page<OrderSettlement>(request, response), orderSettlement);
+		Map<String, String> total = orderSettlementService.findTotal(orderSettlement);
+		model.addAttribute("total", total);
+		model.addAttribute("page", page);
+		return "modules/order/orderSettlementListMerchant";
+	}
+
+	@RequestMapping(value = "exportOrderSettlement")
+	public void exportSettlementList(OrderSettlement orderSettlement, HttpServletRequest request, HttpServletResponse response) {
+		List<OrderSettlement> orderSettlementList = orderSettlementService.findList(orderSettlement);
+		ExportExcel exportExcel = new ExportExcel("货款结算", OrderSettlement.class);
+		try {
+			exportExcel.setDataList(orderSettlementList);
+			exportExcel.write(response, "货款结算.xlsx");
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@RequiresPermissions("order:orderSettlement:view")

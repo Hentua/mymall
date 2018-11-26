@@ -3,8 +3,10 @@ package com.mall.modules.gift.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.mall.common.utils.excel.ExportExcel;
 import com.mall.modules.gift.entity.GiftMerchant;
 import com.mall.modules.gift.service.GiftMerchantService;
+import com.mall.modules.member.entity.MemberFeedback;
 import com.mall.modules.sys.entity.User;
 import com.mall.modules.sys.utils.UserUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -26,6 +28,7 @@ import com.mall.modules.gift.entity.GiftPurchaseLog;
 import com.mall.modules.gift.service.GiftPurchaseLogService;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 礼包购买记录Controller
@@ -62,6 +65,41 @@ public class GiftPurchaseLogController extends BaseController {
 		Page<GiftPurchaseLog> page = giftPurchaseLogService.findPage(new Page<GiftPurchaseLog>(request, response), giftPurchaseLog);
 		model.addAttribute("page", page);
 		return "modules/gift/giftPurchaseLogList";
+	}
+
+	@RequestMapping(value = {"exportData"})
+	public void exportData(GiftPurchaseLog giftPurchaseLog, HttpServletRequest request, HttpServletResponse response, Model model) {
+		User currUser = UserUtils.getUser();
+		giftPurchaseLog.setMerchantCode(currUser.getId());
+		giftPurchaseLog.setStatus("1");
+		List<GiftPurchaseLog> giftPurchaseLogs = giftPurchaseLogService.findList(giftPurchaseLog);
+		ExportExcel exportExcel = new ExportExcel("礼包购买记录", GiftPurchaseLog.class);
+		try {
+			exportExcel.setDataList(giftPurchaseLogs);
+			exportExcel.write(response, "礼包购买记录.xlsx");
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@RequiresPermissions("gift:giftPurchaseLog:view")
+	@RequestMapping(value = {"operatorList"})
+	public String operatorList(GiftPurchaseLog giftPurchaseLog, HttpServletRequest request, HttpServletResponse response, Model model) {
+		Page<GiftPurchaseLog> page = giftPurchaseLogService.findPage(new Page<GiftPurchaseLog>(request, response), giftPurchaseLog);
+		model.addAttribute("page", page);
+		return "modules/gift/giftPurchaseLogOperatorList";
+	}
+
+	@RequestMapping(value = {"operatorExportData"})
+	public void operatorExportData(GiftPurchaseLog giftPurchaseLog, HttpServletRequest request, HttpServletResponse response, Model model) {
+		List<GiftPurchaseLog> giftPurchaseLogs = giftPurchaseLogService.findList(giftPurchaseLog);
+		ExportExcel exportExcel = new ExportExcel("礼包购买记录", GiftPurchaseLog.class);
+		try {
+			exportExcel.setDataList(giftPurchaseLogs);
+			exportExcel.write(response, "礼包购买记录.xlsx");
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@RequiresPermissions("gift:giftPurchaseLog:view")

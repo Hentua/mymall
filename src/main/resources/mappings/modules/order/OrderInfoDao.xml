@@ -160,7 +160,9 @@
 		SELECT
 			<include refid="orderInfoColumns"/>,
 			m.nickname as "merchantName",
-			c.nickname as "customerName"
+			c.nickname as "customerName",
+		    m.referee as "merchantAccount",
+		    c.referee as "customerAccount"
 		FROM order_info a
 		<include refid="orderInfoJoins"/>
 			left join member_info m on m.id = a.merchant_code
@@ -222,11 +224,15 @@
 		SELECT
 			<include refid="orderInfoColumns"/>,
 			m.nickname as "merchantName",
-		    c.nickname as "customerName"
+		    c.nickname as "customerName",
+		    s.status as "settlementStatus",
+			m.referee as "merchantAccount",
+			c.referee as "customerAccount"
 		FROM order_info a
 		<include refid="orderInfoJoins"/>
 		     left join member_info m on m.id = a.merchant_code
 		     left join member_info c on c.id = a.customer_code
+		     left join order_settlement s on c.order_id = a.id
 		<where>
 			<if test="customerCode != null and customerCode != ''">
 				and a.customer_code = #{customerCode}
@@ -242,6 +248,18 @@
 			</if>
 			<if test="setFlag != null and setFlag != ''">
 				and a.set_flag = #{setFlag}
+			</if>
+			<if test="merchantAccount != null and merchantAccount != ''">
+				and m.referee = #{merchantAccount}
+			</if>
+			<if test="customerAccount != null and customerAccount != ''">
+				and c.referee = #{customerAccount}
+			</if>
+			<if test="startDate != null">
+				and a.create_date &gt;= #{startDate}
+			</if>
+			<if test="endDate != null">
+				and a.end_date &lt;= #{endDate}
 			</if>
 		</where>
 		<choose>

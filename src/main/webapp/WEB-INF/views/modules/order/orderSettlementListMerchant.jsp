@@ -14,22 +14,16 @@
 			$("#searchForm").submit();
         	return false;
         }
-        function exportData() {
-			window.open('${ctx}/order/orderSettlement/exportOrderSettlement?' + $('#searchForm').serialize());
-		}
 	</script>
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li class="active"><a href="${ctx}/order/orderSettlement/list">货款结算列表</a></li>
+		<li class="active"><a href="${ctx}/order/orderSettlement/merchantList">货款结算列表</a></li>
 	</ul>
-	<form:form id="searchForm" modelAttribute="orderSettlement" action="${ctx}/order/orderSettlement/list" method="post" class="breadcrumb form-search">
+	<form:form id="searchForm" modelAttribute="orderSettlement" action="${ctx}/order/orderSettlement/merchantList" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<ul class="ul-form">
-			<li><label>商家ID：</label>
-				<form:input path="merchantId" htmlEscape="false" maxlength="64" class="input-medium"/>
-			</li>
 			<li><label>订单时间：</label>
 				<input name="startDate" id="startDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
 					   value="<fmt:formatDate value="${orderSettlement.startDate}" pattern="yyyy-MM-dd HH:mm:ss"/>"
@@ -53,7 +47,6 @@
 				</form:select>
 			</li>
 			<li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
-			<li class="btns"><input id="btnExport" class="btn btn-primary" type="button" value="导出" onclick="exportData()"/></li>
 			<li class="clearfix"></li>
 		</ul>
 	</form:form>
@@ -61,8 +54,6 @@
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
 		<thead>
 			<tr>
-				<th>商家名称</th>
-				<th>商家ID</th>
 				<th>订单时间 </th>
 				<th>订单编号</th>
 				<th>下单人</th>
@@ -70,18 +61,11 @@
 				<th>订单金额</th>
 				<th>结算金额</th>
 				<th>状态</th>
-				<shiro:hasPermission name="order:orderSettlement:edit"><th>操作</th></shiro:hasPermission>
 			</tr>
 		</thead>
 		<tbody>
 		<c:forEach items="${page.list}" var="orderSettlement">
 			<tr>
-				<td>
-					${orderSettlement.merchantName}
-				</td>
-				<td>
-					${orderSettlement.merchantId}
-				</td>
 				<td>
 					<fmt:formatDate value="${orderSettlement.orderDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
 				</td>
@@ -111,11 +95,6 @@
 						已结算
 					</c:if>
 				</td>
-				<shiro:hasPermission name="order:orderSettlement:edit"><td>
-					<c:if test="${orderSettlement.status == '2'}">
-						<a href="${ctx}/order/orderSettlement/updateStatus?id=${orderSettlement.id}" onclick="return confirmx('确认要结算该笔信息吗？', this.href)">删除</a>
-					</c:if>
-				</td></shiro:hasPermission>
 			</tr>
 		</c:forEach>
 		</tbody>

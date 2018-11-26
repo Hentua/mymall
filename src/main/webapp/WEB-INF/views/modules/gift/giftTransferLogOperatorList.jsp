@@ -15,20 +15,23 @@
         	return false;
         }
 		function exportData() {
-			window.open('${ctx}/gift/giftTransferLog/exportData?' + $('#searchForm').serialize());
+			window.open('${ctx}/gift/giftTransferLog/operatorExportData?' + $('#searchForm').serialize());
 		}
 	</script>
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li class="active"><a href="${ctx}/gift/giftTransferLog/">礼包赠送记录</a></li>
+		<li class="active"><a href="${ctx}/gift/giftTransferLog/operatorList">礼包赠送记录</a></li>
 	</ul>
-	<form:form id="searchForm" modelAttribute="giftTransferLog" action="${ctx}/gift/giftTransferLog/" method="post" class="breadcrumb form-search">
+	<form:form id="searchForm" modelAttribute="giftTransferLog" action="${ctx}/gift/giftTransferLog/operatorList" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<ul class="ul-form">
 			<li><label>礼包名称：</label>
 				<form:input path="giftConfigCategoryName" htmlEscape="false" maxlength="20" class="input-medium"/>
+			</li>
+			<li><label>商家ID：</label>
+				<form:input path="merchantId" htmlEscape="false" maxlength="20" class="input-medium"/>
 			</li>
 			<li><label>赠送时间：</label>
 				<input name="beginCreateDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
@@ -55,6 +58,8 @@
 		<thead>
 			<tr>
 				<th>礼包名称</th>
+				<th>商家</th>
+				<th>商家ID</th>
 				<th>金额</th>
 				<th>会员</th>
 				<th>会员ID</th>
@@ -67,6 +72,12 @@
 			<tr>
 				<td>
 					<a href="${ctx}/gift/giftConfigCategory/giftConfigCategoryDetail?id=${giftTransferLog.giftCategory}">${giftTransferLog.giftConfigCategoryName}</a>
+				</td>
+				<td>
+					${giftTransferLog.merchantName}
+				</td>
+				<td>
+					${giftTransferLog.merchantId}
 				</td>
 				<td>
 					${giftTransferLog.giftPrice}

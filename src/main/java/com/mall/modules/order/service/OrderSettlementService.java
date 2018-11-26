@@ -1,6 +1,7 @@
 package com.mall.modules.order.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +40,10 @@ public class OrderSettlementService extends CrudService<OrderSettlementDao, Orde
 	@Transactional(readOnly = false)
 	public void delete(OrderSettlement orderSettlement) {
 		super.delete(orderSettlement);
+	}
+
+	public Map<String, String> findTotal(OrderSettlement orderSettlement) {
+		return dao.findTotal(orderSettlement);
 	}
 	
 }

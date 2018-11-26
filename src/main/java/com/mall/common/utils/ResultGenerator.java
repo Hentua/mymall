@@ -31,14 +31,16 @@ public class ResultGenerator {
 
     public static Result genFailResult(String message) {
         return new Result()
-               .setData(null == message?"" :message)
+//               .setData(null == message?"" :message)
+                .setData("")
                 .setStatus(ResultStatus.FAIL)
                 .setMessage(message);
     }
 
-    public static Result genFailResult(String message,ResultStatus status ) {
+    public static Result genFailResult(String message,ResultStatus status) {
         return new Result()
-              .setData(null == message?"" :message)
+//              .setData(null == message?"" :message)
+                .setData("")
                 .setStatus(status)
                 .setMessage(message);
     }

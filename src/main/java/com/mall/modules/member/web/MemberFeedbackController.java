@@ -3,6 +3,7 @@ package com.mall.modules.member.web;
 import com.mall.common.config.Global;
 import com.mall.common.persistence.Page;
 import com.mall.common.utils.StringUtils;
+import com.mall.common.utils.excel.ExportExcel;
 import com.mall.common.web.BaseController;
 import com.mall.modules.member.entity.MemberFeedback;
 import com.mall.modules.member.service.MemberFeedbackService;
@@ -17,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * 会员反馈信息Controller
@@ -48,6 +50,18 @@ public class MemberFeedbackController extends BaseController {
 		Page<MemberFeedback> page = memberFeedbackService.findPage(new Page<MemberFeedback>(request, response), memberFeedback); 
 		model.addAttribute("page", page);
 		return "modules/member/memberFeedbackList";
+	}
+
+	@RequestMapping(value = {"exportData"})
+	public void exportData(MemberFeedback memberFeedback, HttpServletRequest request, HttpServletResponse response, Model model) {
+		List<MemberFeedback> feedbackList = memberFeedbackService.findList(memberFeedback);
+		ExportExcel exportExcel = new ExportExcel("反馈信息", MemberFeedback.class);
+		try {
+			exportExcel.setDataList(feedbackList);
+			exportExcel.write(response, "反馈信息.xlsx");
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@RequiresPermissions("member:memberFeedback:view")

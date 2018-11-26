@@ -1,5 +1,7 @@
 package com.mall.modules.gift.entity;
 
+import com.mall.common.utils.StringUtils;
+import com.mall.common.utils.excel.annotation.ExcelField;
 import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.NotNull;
 
@@ -28,13 +30,62 @@ public class GiftTransferLog extends DataEntity<GiftTransferLog> {
 	private String customerName; // 获得会员昵称
 	private String giftConfigCategoryName; // 礼包名称
 	private String customerMobile; // 会员手机号
-	
+	private String customerId;
+	private String merchantName;
+	private String merchantId;
+	private Double giftPrice;
+	private String status;
+
 	public GiftTransferLog() {
 		super();
 	}
 
 	public GiftTransferLog(String id){
 		super(id);
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	@ExcelField(title = "会员ID", sort = 6)
+	public String getCustomerId() {
+		return customerId;
+	}
+
+	public void setCustomerId(String customerId) {
+		this.customerId = customerId;
+	}
+
+	@ExcelField(title = "商家名称", sort = 1)
+	public String getMerchantName() {
+		return merchantName;
+	}
+
+	public void setMerchantName(String merchantName) {
+		this.merchantName = merchantName;
+	}
+
+	@ExcelField(title = "商家ID", sort = 2)
+	public String getMerchantId() {
+		return merchantId;
+	}
+
+	public void setMerchantId(String merchantId) {
+		this.merchantId = merchantId;
+	}
+
+	@ExcelField(title = "金额", sort = 4)
+	public Double getGiftPrice() {
+		return giftPrice;
+	}
+
+	public void setGiftPrice(Double giftPrice) {
+		this.giftPrice = giftPrice;
 	}
 
 	public Date getBeginCreateDate() {
@@ -61,6 +112,7 @@ public class GiftTransferLog extends DataEntity<GiftTransferLog> {
 		this.customerMobile = customerMobile;
 	}
 
+	@ExcelField(title = "会员名称", sort = 5)
 	public String getCustomerName() {
 		return customerName;
 	}
@@ -69,6 +121,7 @@ public class GiftTransferLog extends DataEntity<GiftTransferLog> {
 		this.customerName = customerName;
 	}
 
+	@ExcelField(title = "礼包名称", sort = 3)
 	public String getGiftConfigCategoryName() {
 		return giftConfigCategoryName;
 	}
@@ -128,5 +181,23 @@ public class GiftTransferLog extends DataEntity<GiftTransferLog> {
 	public void setGiftCount(Integer giftCount) {
 		this.giftCount = giftCount;
 	}
-	
+
+	@ExcelField(title = "赠送时间", sort = 7)
+	@Override
+	public Date getCreateDate() {
+		return createDate;
+	}
+
+	@ExcelField(title = "状态", sort = 8)
+	public String statusZh() {
+		String statusZh = "";
+		if(StringUtils.isNotBlank(this.status)) {
+			switch (this.status) {
+				case "0": statusZh = "已使用";break;
+				case "1": statusZh = "未使用";break;
+				default: statusZh = "未使用";
+			}
+		}
+		return statusZh;
+	}
 }

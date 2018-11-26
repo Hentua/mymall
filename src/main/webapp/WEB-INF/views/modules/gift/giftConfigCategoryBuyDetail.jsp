@@ -81,12 +81,6 @@
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">礼包赠送返佣：</label>
-			<div class="controls">
-				<span class="help-inline" id="commission">${giftConfigCategory.commission}</span>
-			</div>
-		</div>
-		<div class="control-group">
 			<label class="control-label">支付渠道：</label>
 			<div class="controls">
 				<c:if test="${giftConfigCategory.giftPrice <= 10000}"><span id="WeChatPay"><form:radiobutton path="payChannel" label="微信支付" value="0" /></span></c:if>

@@ -15,20 +15,23 @@
         	return false;
         }
 		function exportData() {
-			window.open('${ctx}/order/giftPurchaseLog/exportData?' + $('#searchForm').serialize());
+			window.open('${ctx}/order/giftPurchaseLog/operatorExportData?' + $('#searchForm').serialize());
 		}
 	</script>
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li class="active"><a href="${ctx}/gift/giftPurchaseLog/">礼包购买记录</a></li>
+		<li class="active"><a href="${ctx}/gift/giftPurchaseLog/operatorList">礼包购买记录</a></li>
 	</ul>
-	<form:form id="searchForm" modelAttribute="giftPurchaseLog" action="${ctx}/gift/giftPurchaseLog/" method="post" class="breadcrumb form-search">
+	<form:form id="searchForm" modelAttribute="giftPurchaseLog" action="${ctx}/gift/giftPurchaseLog/operatorList" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<ul class="ul-form">
 			<li><label>礼包名称：</label>
 				<form:input path="giftConfigCategoryName" htmlEscape="false" maxlength="20" class="input-medium"/>
+			</li>
+			<li><label>商家ID：</label>
+				<form:input path="merchantId" htmlEscape="false" maxlength="20" class="input-medium"/>
 			</li>
 			<li><label>订单号：</label>
 				<form:input path="paymentNo" htmlEscape="false" maxlength="20" class="input-medium"/>
@@ -67,6 +70,8 @@
 				<th>购买时间</th>
 				<th>支付时间</th>
 				<th>购买状态</th>
+				<th>商家名称</th>
+				<th>商家ID</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -98,6 +103,12 @@
 				</td>
 				<td>
 					${giftPurchaseLog.statusZh}
+				</td>
+				<td>
+					${giftPurchaseLog.merchantName}
+				</td>
+				<td>
+					${giftPurchaseLog.merchantId}
 				</td>
 			</tr>
 		</c:forEach>

@@ -11,6 +11,7 @@
 		a.update_by AS "updateBy.id",
 		a.update_date AS "updateDate",
 		m.nickname AS "customerName",
+		m.referee AS "customerId",
 		a.reply AS "reply",
 		u.login_name AS "mobile"
 	</sql>
@@ -40,6 +41,21 @@
 			</if>
 			<if test="customerCode != null and customerCode != ''">
 				and a.customer_code = #{customerCode}
+			</if>
+			<if test="customerId != null and customerId != ''">
+				and m.referee = #{customerId}
+			</if>
+			<if test="startDate != null">
+				and a.create_date &gt;= #{startDate}
+			</if>
+			<if test="endDate != null">
+				and a.end_date &lt;= #{endDate}
+			</if>
+			<if test="status != null and status != '0'">
+				and a.reply is null
+			</if>
+			<if test="status != null and status != '1'">
+				and a.reply is not null
 			</if>
 		</where>
 		<choose>

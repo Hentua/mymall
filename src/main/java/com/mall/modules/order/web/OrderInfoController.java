@@ -4,7 +4,9 @@ import com.alibaba.fastjson.JSON;
 import com.mall.common.config.Global;
 import com.mall.common.persistence.Page;
 import com.mall.common.utils.StringUtils;
+import com.mall.common.utils.excel.ExportExcel;
 import com.mall.common.web.BaseController;
+import com.mall.modules.member.entity.MemberFeedback;
 import com.mall.modules.order.entity.OrderInfo;
 import com.mall.modules.order.entity.OrderLogistics;
 import com.mall.modules.order.entity.TaskRequest;
@@ -26,6 +28,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * 订单信息Controller
@@ -57,6 +60,31 @@ public class OrderInfoController extends BaseController {
 		Page<OrderInfo> page = orderInfoService.findPage(new Page<OrderInfo>(request, response), orderInfo); 
 		model.addAttribute("page", page);
 		return "modules/order/orderInfoList";
+	}
+
+	@RequestMapping(value = {"exportData"})
+	public void exportData(OrderInfo orderInfo, HttpServletRequest request, HttpServletResponse response, Model model) {
+		List<OrderInfo> orderInfos = orderInfoService.findList(orderInfo);
+		ExportExcel exportExcel = new ExportExcel("订单信息", OrderInfo.class);
+		try {
+			exportExcel.setDataList(orderInfos);
+			exportExcel.write(response, "订单信息.xlsx");
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@RequestMapping(value = {"exportMerchantData"})
+	public void exportMerchantData(OrderInfo orderInfo, HttpServletRequest request, HttpServletResponse response, Model model) {
+		orderInfo.setMerchantCode(UserUtils.getUser().getId());
+		List<OrderInfo> orderInfos = orderInfoService.findList(orderInfo);
+		ExportExcel exportExcel = new ExportExcel("订单信息", OrderInfo.class);
+		try {
+			exportExcel.setDataList(orderInfos);
+			exportExcel.write(response, "订单信息.xlsx");
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@RequiresPermissions("order:orderInfo:view")
