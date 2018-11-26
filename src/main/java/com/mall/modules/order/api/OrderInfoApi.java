@@ -785,7 +785,7 @@ public class OrderInfoApi extends BaseController {
                 throw new ServiceException("已经提醒过商家发货了");
             }
             orderInfoService.remind(orderId);
-            renderString(response, ResultGenerator.genSuccessResult("提醒成功"));
+            renderString(response, ResultGenerator.genSuccessResult());
         } catch (Exception e) {
             renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
         }
