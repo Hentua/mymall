@@ -15,7 +15,7 @@
         	return false;
         }
 		function exportData() {
-			window.open('${ctx}/order/giftPurchaseLog/exportData?' + $('#searchForm').serialize());
+			window.open('${ctx}/gift/giftPurchaseLog/exportData?' + $('#searchForm').serialize());
 		}
 	</script>
 </head>

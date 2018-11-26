@@ -15,7 +15,7 @@
         	return false;
         }
 		function exportData() {
-			window.open('${ctx}/order/giftPurchaseLog/operatorExportData?' + $('#searchForm').serialize());
+			window.open('${ctx}/gift/giftPurchaseLog/operatorExportData?' + $('#searchForm').serialize());
 		}
 	</script>
 </head>
@@ -52,6 +52,14 @@
 					   value="<fmt:formatDate value="${giftPurchaseLog.endPayDate}" pattern="yyyy-MM-dd HH:mm:ss"/>"
 					   onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});"/>
 			</li>
+            <li><label>状态：</label>
+                <form:select path="status" class="input-medium">
+                    <form:option value="" label="全部"/>
+                    <form:option value="0" label="待支付"/>
+                    <form:option value="1" label="购买成功"/>
+                    <form:option value="2" label="支付失败"/>
+                </form:select>
+            </li>
 			<li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
 			<li class="btns"><input id="btnExport" class="btn btn-primary" type="button" value="导出" onclick="exportData()"/></li>
 			<li class="clearfix"></li>

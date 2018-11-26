@@ -74,7 +74,7 @@ public class GiftTransferLogController extends BaseController {
 	}
 
 	@RequiresPermissions("gift:giftTransferLog:view")
-	@RequestMapping(value = {"operatorList", ""})
+	@RequestMapping(value = {"operatorList"})
 	public String operatorList(GiftTransferLog giftTransferLog, HttpServletRequest request, HttpServletResponse response, Model model) {
 		Page<GiftTransferLog> page = giftTransferLogService.findPage(new Page<GiftTransferLog>(request, response), giftTransferLog);
 		model.addAttribute("page", page);

@@ -83,10 +83,10 @@
 					${giftTransferLog.giftPrice}
 				</td>
 				<td>
-					${giftTransferLog.customerId}
+					${giftTransferLog.customerName}
 				</td>
 				<td>
-					${giftTransferLog.customerMobile}
+					${giftTransferLog.customerId}
 				</td>
 				<td>
 					<fmt:formatDate value="${giftTransferLog.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
