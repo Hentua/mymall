@@ -610,7 +610,7 @@ public class OrderInfoApi extends BaseController {
             int result = orderInfoService.orderComplete(updateCondition);
             if (result > 0) {
                 //订单完成生成佣金信息 根据订单信息创建账单流水
-//                accountService.createAccountFlow(orderInfo);
+                accountService.createAccountFlow(orderInfo);
                 renderString(response, ResultGenerator.genSuccessResult());
             } else {
                 throw new ServiceException("确认收货失败");

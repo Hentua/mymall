@@ -254,17 +254,19 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 	 * @param senUserId 送出用户ID
 	 * @param amount 礼包金额
 	 * @param giftId 礼包ID
+	 * @param receiverId  接收人ID
+	 * @param merchantQualification  是否赠送商家资格 0-否 1-是
 	 * @throws Exception
 	 */
 	@Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
-	public void createCommissionInfo(String senUserId,Double amount,String giftId) throws Exception{
-
+	public void createCommissionInfo(String senUserId,String receiverId,Double amount,String giftId,String  merchantQualification) throws Exception{
 		User merchantRefereeUser = null ;
 		User customerRefereeUser = null;
 		User merchant = null;
-
+		User customer = null;
 		//卖家信息
 		merchant = UserUtils.get(senUserId);
+		customer = UserUtils.get(receiverId);
 		//买家信息
 		if(null == merchant){
 			logger.error("创建佣金流水失败：卖家信息为空");
@@ -272,37 +274,50 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 		}
 		//卖家推荐人
 		merchantRefereeUser = UserUtils.get(merchant.getMerchantRefereeId());
+		customerRefereeUser = UserUtils.get(customer.getMerchantRefereeId());
 		//买家推荐人
 		if(null == merchantRefereeUser){
-			logger.error("创建佣金流水失败：卖家推荐人为空");
+			logger.error("创建佣金流水失败：卖家推荐入驻人为空");
 			return ;
 		}
 		if(null == customerRefereeUser){
-			logger.error("创建佣金流水失败：买家推荐人为空");
+			logger.error("创建佣金流水失败：买家推荐入驻人为空");
 			return ;
 		}
-
-		//新增佣金记录
-		//卖家推荐人佣金
-		CommissionInfo merchantRefereeCommission = new CommissionInfo();
-		//1：推荐用户消费返佣 2：推荐商家销售返佣 3：推荐商家入驻返佣 4：推荐商家送出礼包返佣 5：商家送出礼包返佣
-		merchantRefereeCommission.setType("4");
-		merchantRefereeCommission.setUserId(merchantRefereeUser.getId());
-		merchantRefereeCommission.setProduceUserId(merchant.getId());
-		merchantRefereeCommission.setOriginAmount(amount);
-		merchantRefereeCommission.setAmount(commissionConfigService.getCommissionAmount("4",amount));
-		merchantRefereeCommission.setUnionId(giftId);
-		commissionInfoService.save(merchantRefereeCommission);
-
-		CommissionInfo merchantCommission = new CommissionInfo();
+		if("1".equals(merchantQualification)){
+			//卖家推荐人佣金
+			CommissionInfo merchantRefereeCommission = new CommissionInfo();
 			//1：推荐用户消费返佣 2：推荐商家销售返佣 3：推荐商家入驻返佣 4：推荐商家送出礼包返佣 5：商家送出礼包返佣
-		merchantCommission.setType("5");
-		merchantCommission.setUserId(merchant.getId());
-		merchantCommission.setProduceUserId(merchant.getId());
-		merchantCommission.setOriginAmount(amount);
-		merchantCommission.setAmount(commissionConfigService.getCommissionAmount("5",amount));
-		merchantCommission.setUnionId(giftId);
-		commissionInfoService.save(merchantCommission);
+			merchantRefereeCommission.setType("3");
+			merchantRefereeCommission.setUserId(customerRefereeUser.getId());
+			merchantRefereeCommission.setProduceUserId(merchant.getId());
+			merchantRefereeCommission.setOriginAmount(amount);
+			merchantRefereeCommission.setAmount(commissionConfigService.getCommissionAmount("3",amount));
+			merchantRefereeCommission.setUnionId(giftId);
+			commissionInfoService.save(merchantRefereeCommission);
+		}else{
+			//新增佣金记录
+			//卖家推荐人佣金
+			CommissionInfo merchantRefereeCommission = new CommissionInfo();
+			//1：推荐用户消费返佣 2：推荐商家销售返佣 3：推荐商家入驻返佣 4：推荐商家送出礼包返佣 5：商家送出礼包返佣
+			merchantRefereeCommission.setType("4");
+			merchantRefereeCommission.setUserId(merchantRefereeUser.getId());
+			merchantRefereeCommission.setProduceUserId(merchant.getId());
+			merchantRefereeCommission.setOriginAmount(amount);
+			merchantRefereeCommission.setAmount(commissionConfigService.getCommissionAmount("4",amount));
+			merchantRefereeCommission.setUnionId(giftId);
+			commissionInfoService.save(merchantRefereeCommission);
+
+			CommissionInfo merchantCommission = new CommissionInfo();
+			//1：推荐用户消费返佣 2：推荐商家销售返佣 3：推荐商家入驻返佣 4：推荐商家送出礼包返佣 5：商家送出礼包返佣
+			merchantCommission.setType("5");
+			merchantCommission.setUserId(merchant.getId());
+			merchantCommission.setProduceUserId(merchant.getId());
+			merchantCommission.setOriginAmount(amount);
+			merchantCommission.setAmount(commissionConfigService.getCommissionAmount("5",amount));
+			merchantCommission.setUnionId(giftId);
+			commissionInfoService.save(merchantCommission);
+		}
         commissionConfigService.setConfigs(null);
 	}
 

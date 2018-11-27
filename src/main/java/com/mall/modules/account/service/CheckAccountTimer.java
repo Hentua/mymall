@@ -69,29 +69,28 @@ public class CheckAccountTimer {
                 if((date.getTime() - completedTime.getTime())>dayTime){
                     //清算
                     logger.info("清算订单号："+orderInfo.getOrderNo());
-                    try{
-                        accountService.createAccountFlow(orderInfo);
-                    }catch (Exception e){
-                        e.printStackTrace();
-                        logger.error("创建佣金流水错误");
-                    }
+//                    try{
+////                        accountService.createAccountFlow(orderInfo);
+//                    }catch (Exception e){
+//                        e.printStackTrace();
+//                        logger.error("创建佣金流水错误");
+//                    }
                     //修改订单结算状态
                     accountInfoService.toAccount(orderInfo.getId());
-//                    CommissionInfo c = new CommissionInfo();
-//                    c.setUnionId(orderInfo.getId());
-//                    //遍历累加金额
-//                    List<CommissionInfo> commissionInfos = commissionInfoService.findList(c);
-//                    for (CommissionInfo ci: commissionInfos) {
-//                        commissionInfoService.editStatus(ci);
-//                    }
-//                    OrderSettlement orderSettlement = new OrderSettlement();
-//                    orderSettlement.setOrderId(orderInfo.getId());
-//                    List<OrderSettlement> orderSettlements = orderSettlementService.findList(orderSettlement);
-//
-//                    for (OrderSettlement os: orderSettlements) {
-//                        os.setStatus("1");
-//                        orderSettlementService.save(os);
-//                    }
+                    CommissionInfo c = new CommissionInfo();
+                    c.setUnionId(orderInfo.getId());
+                    //遍历累加金额
+                    List<CommissionInfo> commissionInfos = commissionInfoService.findList(c);
+                    for (CommissionInfo ci: commissionInfos) {
+                        commissionInfoService.editStatus(ci);
+                    }
+                    OrderSettlement orderSettlement = new OrderSettlement();
+                    orderSettlement.setOrderId(orderInfo.getId());
+                    List<OrderSettlement> orderSettlements = orderSettlementService.findList(orderSettlement);
+                    for (OrderSettlement os: orderSettlements) {
+                        os.setStatus("1");
+                        orderSettlementService.save(os);
+                    }
                 }
             }
         }

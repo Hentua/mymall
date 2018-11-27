@@ -34,7 +34,7 @@ public class CommissionInfoService extends CrudService<CommissionInfoDao, Commis
 	@Transactional(readOnly = false)
 	public void save(CommissionInfo commissionInfo) {
 		super.save(commissionInfo);
-		dao.accumulation(commissionInfo);
+//		dao.accumulation(commissionInfo);
 	}
 	
 	@Transactional(readOnly = false)
@@ -46,9 +46,9 @@ public class CommissionInfoService extends CrudService<CommissionInfoDao, Commis
 	@Transactional(readOnly = false)
 	public void editStatus(CommissionInfo commissionInfo) {
 		//累加金额
-
+		dao.accumulation(commissionInfo);
 		//修改状态
-//		dao.editStatus(commissionInfo.getId());
+		dao.editStatus(commissionInfo.getId());
 	}
 
 
