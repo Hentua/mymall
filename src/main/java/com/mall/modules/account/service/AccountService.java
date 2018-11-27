@@ -254,7 +254,7 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 	 * @param senUserId 送出用户ID
 	 * @param amount 礼包金额
 	 * @param giftId 礼包ID
-	 * @param receiverId  接收人ID
+	 * @param receiverId  接收佣金人ID
 	 * @param merchantQualification  是否赠送商家资格 0-否 1-是
 	 * @throws Exception
 	 */
@@ -263,10 +263,10 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 		User merchantRefereeUser = null ;
 		User customerRefereeUser = null;
 		User merchant = null;
-		User customer = null;
+//		User customer = null;
 		//卖家信息
 		merchant = UserUtils.get(senUserId);
-		customer = UserUtils.get(receiverId);
+//		customer = UserUtils.get(receiverId);
 		//买家信息
 		if(null == merchant){
 			logger.error("创建佣金流水失败：卖家信息为空");
@@ -274,7 +274,7 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 		}
 		//卖家推荐人
 		merchantRefereeUser = UserUtils.get(merchant.getMerchantRefereeId());
-		customerRefereeUser = UserUtils.get(customer.getMerchantRefereeId());
+		customerRefereeUser = UserUtils.get(receiverId);
 		//买家推荐人
 		if(null == merchantRefereeUser){
 			logger.error("创建佣金流水失败：卖家推荐入驻人为空");
