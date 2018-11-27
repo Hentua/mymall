@@ -151,9 +151,10 @@
                     $('.slider6').bxSlider({
                         mode: 'fade',
                         // slideWidth: 100,
-                        slideMargin: 10,
+                        slideMargin: 100,
                         responsive: true,
-                        speed: 2000
+                        speed: 500,
+                        auto:true
                     });
                 });
 			</script>
@@ -191,6 +192,10 @@
 				<tr>
 					<td>累计佣金：</td>
 					<td>${stsObj.commissionTotal}</td>
+				</tr>
+				<tr>
+					<td>我的推荐码：</td>
+					<td>${member.referee}</td>
 				</tr>
 				<tr>
 					<td>上次登录IP：</td>
