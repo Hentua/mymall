@@ -30,7 +30,6 @@ import com.mall.modules.goods.entity.GoodsStandard;
 import com.mall.modules.goods.service.GoodsInfoService;
 import com.mall.modules.goods.service.GoodsStandardService;
 import com.mall.modules.member.entity.MemberDeliveryAddress;
-import com.mall.modules.member.entity.MemberInfo;
 import com.mall.modules.member.service.MemberDeliveryAddressService;
 import com.mall.modules.member.service.MemberInfoService;
 import com.mall.modules.order.entity.*;
@@ -38,7 +37,6 @@ import com.mall.modules.order.service.OrderInfoService;
 import com.mall.modules.order.service.OrderPaymentInfoService;
 import com.mall.modules.order.service.OrderReturnsService;
 import com.mall.modules.order.service.OrderShoppingCartService;
-import com.mall.modules.sys.entity.Role;
 import com.mall.modules.sys.entity.User;
 import com.mall.modules.sys.service.SystemService;
 import com.mall.modules.sys.utils.DictUtils;
@@ -210,27 +208,10 @@ public class OrderInfoApi extends BaseController {
                 // 是否赠送商户资格
                 String merchantQualification = giftCustomer.getMerchantQualification();
                 if ("1".equals(merchantQualification)) {
-                    // 如果用户当前不是商户 赋予用户未审核商户权限
-                    // todo 该逻辑需要变更到礼包赠送
-                    if ("0".equals(currUser.getUserType())) {
-                        List<Role> roleList = currUser.getRoleList();
-                        roleList.add(new Role("1000"));
-                        currUser.setUserType("1");
-                        systemService.saveUser(currUser);
-                        UserUtils.clearCache();
-                        String merchantRefereeId = giftCustomer.getTransferMerchantCode();
-                        MemberInfo memberInfo = new MemberInfo();
-                        memberInfo.setId(currUser.getId());
-                        memberInfo.setMerchantRefereeId(merchantRefereeId);
-                        memberInfoService.modifyMerchantRefereeId(memberInfo);
-                    }
                     couponMerchantService.exchangeGiftGenCoupon(giftConfig, giftCustomerId, customerCode);
                 } else if ("0".equals(merchantQualification)) {
                     couponCustomerService.exchangeGiftGenCoupon(giftConfig, giftCustomerId, customerCode);
                 }
-                // 生成礼包佣金
-                // todo 礼包佣金变更到礼包赠送
-//                accountService.createCommissionInfo(giftCustomer.getTransferMerchantCode(), giftCustomer.getCommission(), giftCustomerId);
             }
             if (null == goodsArr || goodsArr.size() <= 0) {
                 throw new ServiceException("未选择要购买的商品，请重新选择");

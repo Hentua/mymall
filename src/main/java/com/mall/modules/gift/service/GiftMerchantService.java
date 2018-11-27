@@ -3,11 +3,18 @@ package com.mall.modules.gift.service;
 import com.mall.common.persistence.Page;
 import com.mall.common.service.CrudService;
 import com.mall.common.service.ServiceException;
+import com.mall.common.utils.StringUtils;
+import com.mall.modules.gift.dao.GiftConfigCategoryDao;
 import com.mall.modules.gift.dao.GiftMerchantDao;
+import com.mall.modules.gift.entity.GiftConfigCategory;
 import com.mall.modules.gift.entity.GiftCustomer;
 import com.mall.modules.gift.entity.GiftMerchant;
 import com.mall.modules.gift.entity.GiftTransferLog;
+import com.mall.modules.member.entity.MemberInfo;
+import com.mall.modules.member.service.MemberInfoService;
+import com.mall.modules.sys.entity.Role;
 import com.mall.modules.sys.entity.User;
+import com.mall.modules.sys.service.SystemService;
 import com.mall.modules.sys.utils.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,6 +37,12 @@ public class GiftMerchantService extends CrudService<GiftMerchantDao, GiftMercha
     private GiftTransferLogService giftTransferLogService;
     @Autowired
     private GiftCustomerService giftCustomerService;
+    @Autowired
+    private MemberInfoService memberInfoService;
+    @Autowired
+    private SystemService systemService;
+    @Autowired
+    private GiftConfigCategoryDao giftConfigCategoryDao;
 
     public GiftMerchant get(String id) {
         return super.get(id);
@@ -55,6 +68,7 @@ public class GiftMerchantService extends CrudService<GiftMerchantDao, GiftMercha
 
     @Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public void giftTransfer(GiftMerchant giftMerchant) throws Exception {
+        GiftConfigCategory giftConfigCategory = giftConfigCategoryDao.get(giftMerchant.getGiftConfigCategory());
         GiftTransferLog giftTransferLog = giftTransferLogService.genGiftTransferLog(giftMerchant);
         GiftCustomer giftCustomer = giftCustomerService.genGiftCustomer(giftMerchant);
         String customerMobile = giftMerchant.getCustomerMobile();
@@ -62,6 +76,11 @@ public class GiftMerchantService extends CrudService<GiftMerchantDao, GiftMercha
         if (null == customer) {
             throw new ServiceException("用户不存在");
         }
+
+        MemberInfo queryCondition = new MemberInfo();
+        queryCondition.setId(customer.getId());
+        MemberInfo memberInfo = memberInfoService.get(queryCondition);
+
         String customerCode = customer.getId();
         giftCustomer.setCustomerCode(customerCode);
         giftTransferLog.setCustomerCode(customerCode);
@@ -76,6 +95,29 @@ public class GiftMerchantService extends CrudService<GiftMerchantDao, GiftMercha
         giftCustomerService.save(giftCustomer);
         giftTransferLog.setGiftCustomerCode(giftCustomer.getId());
         giftTransferLogService.save(giftTransferLog);
+        String merchantQualification = giftConfigCategory.getMerchantQualification();
+        if("1".equals(merchantQualification)) {
+            // 如果用户当前不是商户 赋予用户未审核商户权限
+            if ("0".equals(customer.getUserType()) && StringUtils.isBlank(memberInfo.getMerchantRefereeId())) {
+                List<Role> roleList = customer.getRoleList();
+                roleList.add(new Role("1000"));
+                customer.setUserType("1");
+                systemService.saveUser(customer);
+                UserUtils.clearCache();
+                String merchantRefereeId = giftCustomer.getTransferMerchantCode();
+                MemberInfo memberInfoCondition = new MemberInfo();
+                memberInfoCondition.setId(customer.getId());
+                memberInfoCondition.setMerchantRefereeId(merchantRefereeId);
+                memberInfoService.modifyMerchantRefereeId(memberInfoCondition);
+                // 生成礼包佣金
+                // todo 礼包赠送佣金
+//                 accountService.createCommissionInfo(giftCustomer.getTransferMerchantCode(), giftCustomer.getCommission(), giftCustomerId);
+            }
+        }else if("0".equals(merchantQualification)) {
+            // 生成礼包佣金
+            // todo 礼包赠送佣金
+//             accountService.createCommissionInfo(giftCustomer.getTransferMerchantCode(), giftCustomer.getCommission(), giftCustomerId);
+        }
     }
 
 }
