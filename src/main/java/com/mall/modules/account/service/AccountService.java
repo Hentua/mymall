@@ -295,7 +295,7 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 		commissionInfoService.save(merchantRefereeCommission);
 
 		CommissionInfo merchantCommission = new CommissionInfo();
-		//1：推荐用户消费返佣 2：推荐商家销售返佣 3：推荐商家入驻返佣 4：推荐商家送出礼包返佣 5：商家送出礼包返佣
+			//1：推荐用户消费返佣 2：推荐商家销售返佣 3：推荐商家入驻返佣 4：推荐商家送出礼包返佣 5：商家送出礼包返佣
 		merchantCommission.setType("5");
 		merchantCommission.setUserId(merchant.getId());
 		merchantCommission.setProduceUserId(merchant.getId());

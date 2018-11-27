@@ -318,7 +318,7 @@ public class UserController extends BaseController {
 	@Autowired
 	private IndexNoticeService indexNoticeService;
 	/**
-	 * 用户信息显示及保存
+	 *
 	 * @param model
 	 * @return
 	 */
@@ -351,6 +351,43 @@ public class UserController extends BaseController {
 		List<IndexNotice> indexNotices = indexNoticeService.findList(in);
 		model.addAttribute("indexNotices",indexNotices);
 		return "modules/sys/merchantInfo";
+	}
+
+	/**
+	 *
+	 * @param model
+	 * @return
+	 */
+	@RequiresPermissions("user")
+	@RequestMapping(value = "merchantInfoView")
+	public String merchantInfoView(HttpServletResponse response, Model model) {
+		//用户信息
+		User user = UserUtils.getUser();
+		MemberInfo m = new MemberInfo();
+		m.setId(user.getId());
+		m = memberInfoService.get(m);
+		model.addAttribute("member",m);
+		model.addAttribute("user", user);
+		return "modules/sys/merchantInfoView";
+	}
+
+
+	/**
+	 *
+	 * @param model
+	 * @return
+	 */
+	@RequiresPermissions("user")
+	@RequestMapping(value = "merchantInfoEdit")
+	public String merchantInfoEdit(HttpServletResponse response, Model model) {
+		//用户信息
+		User user = UserUtils.getUser();
+		MemberInfo m = new MemberInfo();
+		m.setId(user.getId());
+		m = memberInfoService.get(m);
+		model.addAttribute("member",m);
+		model.addAttribute("user", user);
+		return "modules/sys/merchantInfoEdit";
 	}
 
 	/**

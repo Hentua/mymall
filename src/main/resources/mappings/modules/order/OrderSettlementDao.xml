@@ -23,7 +23,6 @@
 	</sql>
 	
 	<sql id="orderSettlementJoins">
-		LEFT JOIN sys_user u3 ON u3.id = a.user_id
 		LEFT JOIN order_info o ON o.id = a.order_id
 		LEFT JOIN sys_user um ON um.id = o.merchant_code
 		LEFT JOIN sys_user uc ON uc.id = o.customer_code
