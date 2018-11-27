@@ -19,7 +19,10 @@
 		a.image as "image",
 		pgc.category_name as "parentCategoryName",
 		a.commission_mode as "commissionMode",
-		a.commission_number as "commissionNumber"
+		a.commission_number as "commissionNumber",
+		a.jump_Id as "jumpId",
+		jg.image as "jumpGoodsImage",
+		jg.goods_name as "jumpGoodsName"
 	</sql>
 
 
@@ -31,13 +34,15 @@
 		a.status AS "status",
 		a.remarks AS "remarks",
 		a.sort as "sort",
-		a.image as "image"
+		a.image as "image",
+		a.jump_Id as "jumpId"
 	</sql>
 
 	<sql id="goodsCategoryJoins">
 		left join goods_category pgc on a.parent_category_id = pgc.id
 		left join sys_user cu on cu.id = a.create_by
 		left join sys_user uu on uu.id = a.update_by
+		left join goods_info jg on jg.id = a.jump_Id
 	</sql>
     
 	<select id="get" resultType="GoodsCategory">
@@ -170,7 +175,8 @@
 			image,
 			sort,
 			commission_mode,
-			commission_number
+			commission_number,
+			jump_id
 		) VALUES (
 			#{id},
 			#{parentCategoryId},
@@ -185,7 +191,8 @@
 			#{image},
 			#{sort},
 			#{commissionMode},
-			#{commissionNumber}
+			#{commissionNumber},
+			#{jumpId}
 		)
 	</insert>
 	
@@ -201,7 +208,8 @@
 			image = #{image},
 			sort = #{sort},
 			commission_mode = #{commissionMode},
-			commission_number = #{commissionNumber}
+			commission_number = #{commissionNumber},
+			jump_Id = #{jumpId}
 		WHERE id = #{id}
 	</update>
 	

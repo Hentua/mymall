@@ -3,6 +3,7 @@
  */
 package com.mall.modules.sys.interceptor;
 
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Enumeration;
 
@@ -62,10 +63,10 @@ public class LogInterceptor extends BaseService implements HandlerInterceptor {
 
 		// 保存日志
 		LogUtils.saveLog(request, handler, ex, null);
-		
+
 		// 打印JVM信息。
 		if (logger.isDebugEnabled()){
-			long beginTime = startTimeThreadLocal.get();//得到线程绑定的局部变量（开始时间）  
+			long beginTime = startTimeThreadLocal.get();//得到线程绑定的局部变量（开始时间）
 			long endTime = System.currentTimeMillis(); 	//2、结束时间  
 	        logger.debug("计时结束：{}  耗时：{}  URI: {}  最大内存: {}m  已分配内存: {}m  已分配内存中的剩余空间: {}m  最大可用内存: {}m",
 	        		new SimpleDateFormat("hh:mm:ss.SSS").format(endTime), DateUtils.formatDateTime(endTime - beginTime),
