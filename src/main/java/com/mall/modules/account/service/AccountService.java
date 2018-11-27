@@ -252,9 +252,9 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 	/**
 	 * 礼包送出创建佣金接口
 	 * @param senUserId 送出用户ID
+	 * @param receiverId  接收佣金人ID
 	 * @param amount 礼包金额
 	 * @param giftId 礼包ID
-	 * @param receiverId  接收佣金人ID
 	 * @param merchantQualification  是否赠送商家资格 0-否 1-是
 	 * @throws Exception
 	 */
