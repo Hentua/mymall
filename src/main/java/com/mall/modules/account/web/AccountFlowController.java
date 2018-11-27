@@ -9,6 +9,8 @@ import com.mall.modules.account.service.AccountFlowService;
 import com.mall.modules.account.service.AccountService;
 import com.mall.modules.member.entity.MemberInfo;
 import com.mall.modules.member.service.MemberInfoService;
+import com.mall.modules.sys.entity.User;
+import com.mall.modules.sys.utils.UserUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -57,6 +59,16 @@ public class AccountFlowController extends BaseController {
 		Page<AccountFlow> page = accountFlowService.findPage(new Page<AccountFlow>(request, response), accountFlow); 
 		model.addAttribute("page", page);
 		return "modules/account/accountFlowList";
+	}
+
+	@RequestMapping(value = {"merchantList", ""})
+	public String merchantList(AccountFlow accountFlow, HttpServletRequest request, HttpServletResponse response, Model model) {
+		User user = UserUtils.getUser();
+		accountFlow.setUserId(user.getId());
+		Page<AccountFlow> page = accountFlowService.findPage(new Page<AccountFlow>(request, response), accountFlow);
+		model.addAttribute("page", page);
+		model.addAttribute("accountFlow",accountFlow);
+		return "modules/account/merchantAccountFlowList";
 	}
 
 	@RequiresPermissions("account:accountFlow:view")

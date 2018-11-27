@@ -104,21 +104,29 @@
 		}
 
 	</style>
+	<script type="text/javascript">
+		$(function () {
+
+        })
+		function actionGo(url) {
+			location.href = url;
+        }
+	</script>
 </head>
 <body>
 	<div class="mr_index">
 		<div style="min-height: 85px">
-			<div class="mr_sts" style="background-color: #1190D9">
+			<div class="mr_sts" style="background-color: #1190D9" onclick="actionGo('${ctx}/order/orderInfo/merchantList')">
 				<div class="mr_sts_icon"><img src="${ctxStatic}/images/icon-4.png" width="50px"></div>
 				<div class="mr_sts_title">当日货款金额</div>
 				<div class="mr_sts_amount">${stsObj.dayOrderAmountTotal}&nbsp;<span class="y">元</span></div>
 			</div>
-			<div class="mr_sts" style="background-color: #68B9F1">
+			<div class="mr_sts" style="background-color: #68B9F1" onclick="actionGo('${ctx}/account/accountFlow/merchantList')">
 				<div class="mr_sts_icon"><img src="${ctxStatic}/images/icon-1.png" width="50px"></div>
 				<div class="mr_sts_title">账户余额</div>
 				<div class="mr_sts_amount">${member.balance}&nbsp;<span class="y">元</span></div>
 			</div>
-			<div class="mr_sts" style="background-color: #1190D9">
+			<div class="mr_sts" style="background-color: #1190D9" onclick="actionGo('${ctx}/commission/commissionInfo/merchantList')">
 				<div class="mr_sts_icon" style="    padding-top: 10px;"><img src="${ctxStatic}/images/icon-2.png" width="50px"></div>
 				<div class="mr_sts_title">未提现佣金</div>
 				<div class="mr_sts_amount">${member.commission}&nbsp;<span class="y">元</span></div>

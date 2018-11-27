@@ -20,7 +20,7 @@
 	<ul class="nav nav-tabs">
 		<li class="active"><a href="${ctx}/account/accountFlow/">充值提现审核</a></li>
 	</ul>
-	<form:form id="searchForm" modelAttribute="accountFlow" action="${ctx}/account/accountFlow/" method="post" class="breadcrumb form-search">
+	<form:form id="searchForm" modelAttribute="accountFlow" action="${ctx}/account/accountFlow/list" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<input id="org" name="org" type="hidden" value="13"/>

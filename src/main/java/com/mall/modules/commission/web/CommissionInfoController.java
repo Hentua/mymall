@@ -3,6 +3,8 @@ package com.mall.modules.commission.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.mall.modules.sys.entity.User;
+import com.mall.modules.sys.utils.UserUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -50,6 +52,17 @@ public class CommissionInfoController extends BaseController {
 		model.addAttribute("page", page);
 		return "modules/commission/commissionInfoList";
 	}
+	@RequestMapping(value = {"merchantList", ""})
+	public String merchantList(CommissionInfo commissionInfo, HttpServletRequest request, HttpServletResponse response, Model model) {
+		User user = UserUtils.getUser();
+		commissionInfo.setUserId(user.getId());
+		Page<CommissionInfo> page = commissionInfoService.findPage(new Page<CommissionInfo>(request, response), commissionInfo);
+		model.addAttribute("page", page);
+		model.addAttribute("commissionInfo",commissionInfo);
+		return "modules/commission/merchantCommissionInfoList";
+	}
+
+
 
 	@RequiresPermissions("commission:commissionInfo:view")
 	@RequestMapping(value = "form")

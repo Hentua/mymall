@@ -18,9 +18,10 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li class="active"><a href="${ctx}/commission/commissionInfo/">佣金明细列表</a></li>
+		<li class="active">佣金明细列表</li>
 	</ul>
-	<form:form id="searchForm" modelAttribute="commissionInfo" action="${ctx}/commission/commissionInfo/list" method="post" class="breadcrumb form-search">
+	<form:form id="searchForm" modelAttribute="commissionInfo" action="${ctx}/commission/commissionInfo/merchantList" method="post" class="breadcrumb form-search">
+		<input id="userId" name="userId" type="hidden" value="${commissionInfo.userId}"/>
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<ul class="ul-form">
