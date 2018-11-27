@@ -310,10 +310,9 @@ public class AccountApi extends BaseController {
             entPayRequest.setDescription("美易优选-提现");
             entPayRequest.setSpbillCreateIp(IpUtil.getIpAddress(request));
             EntPayResult entPayResult = wxPayService.getEntPayService().entPay(entPayRequest);
+            orderWeixinExpenditureCallbackService.save(entPayResult);
             if (!"SUCCESS".equalsIgnoreCase(entPayResult.getReturnCode()) || !"SUCCESS".equalsIgnoreCase(entPayResult.getResultCode())) {
                 throw new ServiceException("微信处理失败");
-            } else {
-                orderWeixinExpenditureCallbackService.save(entPayResult);
             }
             renderString(response, ResultGenerator.genSuccessResult());
         } catch (Exception e) {

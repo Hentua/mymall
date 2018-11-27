@@ -109,6 +109,12 @@
 			<if test="merchantRefereeId != null and merchantRefereeId != ''">
 				and a.merchant_referee_id = #{merchantRefereeId}
 			</if>
+			<if test="startDate != null">
+				and a.create_date &gt;= #{startDate}
+			</if>
+			<if test="endDate != null">
+				and a.create_date &lt;= #{endDate}
+			</if>
 			and a.del_flag = #{DEL_FLAG_NORMAL}
 		</where>
 		<choose>

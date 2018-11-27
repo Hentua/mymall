@@ -42,7 +42,7 @@ public class OrderWeixinExpenditureCallbackService extends CrudService<OrderWeix
 		super.delete(orderWeixinExpenditureCallback);
 	}
 
-	@Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+	@Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
 	public void save(EntPayResult entPayResult) {
 		OrderWeixinExpenditureCallback orderWeixinExpenditureCallback = new OrderWeixinExpenditureCallback();
 		orderWeixinExpenditureCallback.setReturnCode(entPayResult.getReturnCode());

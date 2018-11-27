@@ -24,7 +24,7 @@ public class ApiExceptionHandleUtil {
             return ResultGenerator.genFailResult("参数错误");
         }else if(e instanceof WxPayException) {
             e.printStackTrace();
-            return ResultGenerator.genFailResult("操作失败：" + e.getMessage());
+            return ResultGenerator.genFailResult("微信处理失败");
         }else {
             e.printStackTrace();
             return ResultGenerator.genFailResult("服务内部错误", ResultStatus.INTERNAL_SERVER_ERROR);

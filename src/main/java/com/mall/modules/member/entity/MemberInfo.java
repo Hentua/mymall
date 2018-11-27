@@ -2,10 +2,13 @@ package com.mall.modules.member.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mall.common.config.Global;
-import org.hibernate.validator.constraints.Length;
-
 import com.mall.common.persistence.DataEntity;
+import com.mall.common.utils.StringUtils;
+import com.mall.common.utils.excel.annotation.ExcelField;
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
+
+import java.util.Date;
 
 /**
  * 用户信息Entity
@@ -76,6 +79,10 @@ public class MemberInfo extends DataEntity<MemberInfo> {
 	private String idcardBack; // 法人身份证反面
 	@JsonIgnore
 	private String specialQualification; // 特殊资质
+	@JsonIgnore
+	private Date startDate;
+	@JsonIgnore
+	private Date endDate;
 
 	private String loginFlag;
 
@@ -84,6 +91,22 @@ public class MemberInfo extends DataEntity<MemberInfo> {
 
 	//店铺联系电话
 	private String merchantServicePhone;
+
+	public Date getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
 
 	public String getPersonAccount() {
 		return personAccount;
@@ -325,6 +348,7 @@ public class MemberInfo extends DataEntity<MemberInfo> {
 		this.status = status;
 	}
 
+	@ExcelField(title = "备注", sort = 5)
 	@Override
 	public String getRemarks() {
 		return remarks;
@@ -361,6 +385,7 @@ public class MemberInfo extends DataEntity<MemberInfo> {
 		this.sex = sex;
 	}
 
+	@ExcelField(title = "会员账号", sort = 2)
 	public String getMobile() {
 		return mobile;
 	}
@@ -369,6 +394,7 @@ public class MemberInfo extends DataEntity<MemberInfo> {
 		this.mobile = mobile;
 	}
 
+	@ExcelField(title = "会员名称", sort = 1)
 	public String getNickname() {
 		return nickname;
 	}
@@ -436,5 +462,24 @@ public class MemberInfo extends DataEntity<MemberInfo> {
 	public void setRegisterWay(String registerWay) {
 		this.registerWay = registerWay;
 	}
-	
+
+	@ExcelField(title = "注册途径", sort = 3)
+	public String getRegisterWayZh() {
+		String registerWayZh = "";
+		if(StringUtils.isNotBlank(this.registerWay)) {
+			switch (this.registerWay) {
+				case "0": registerWayZh = "自主注册";break;
+				case "1": registerWayZh = "后台添加";break;
+				default:;
+			}
+		}
+		return registerWayZh;
+	}
+
+	@ExcelField(title = "注册时间", sort = 4)
+	@Override
+	public Date getCreateDate() {
+		return createDate;
+	}
+
 }

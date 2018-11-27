@@ -5,11 +5,11 @@ import com.mall.common.config.Global;
 import com.mall.common.persistence.Page;
 import com.mall.common.service.ServiceException;
 import com.mall.common.utils.StringUtils;
+import com.mall.common.utils.excel.ExportExcel;
 import com.mall.common.web.BaseController;
 import com.mall.modules.member.entity.MemberInfo;
 import com.mall.modules.member.service.MemberInfoService;
 import com.mall.modules.member.service.MemberVerifyCodeService;
-import com.mall.modules.order.entity.OrderPaymentInfo;
 import com.mall.modules.sys.entity.Office;
 import com.mall.modules.sys.entity.Role;
 import com.mall.modules.sys.entity.User;
@@ -25,10 +25,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.jws.WebParam;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -92,6 +90,21 @@ public class MemberInfoController extends BaseController {
         Page<MemberInfo> page = memberInfoService.findPage(new Page<MemberInfo>(request, response), memberInfo);
         model.addAttribute("page", page);
         return "modules/member/merchantMemberInfoList";
+    }
+
+    @RequestMapping(value = {"exportMerchantMemberInfo"})
+    public void exportMerchantMemberInfo(MemberInfo memberInfo, HttpServletRequest request, HttpServletResponse response, Model model) {
+        User currUser = UserUtils.getUser();
+        String refereeId = currUser.getId();
+        memberInfo.setRefereeId(refereeId);
+        List<MemberInfo> memberInfos = memberInfoService.findList(memberInfo);
+        ExportExcel exportExcel = new ExportExcel("会员信息", MemberInfo.class);
+        try {
+            exportExcel.setDataList(memberInfos);
+            exportExcel.write(response, "会员信息.xlsx");
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @RequiresPermissions("member:memberInfo:view")
