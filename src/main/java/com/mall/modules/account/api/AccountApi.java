@@ -305,7 +305,7 @@ public class AccountApi extends BaseController {
             EntPayRequest entPayRequest = new EntPayRequest();
             entPayRequest.setPartnerTradeNo(accountFlow.getFlowNo());
             entPayRequest.setOpenid(openId);
-            entPayRequest.setCheckName("FORCE_CHECK");
+            entPayRequest.setCheckName("NO_CHECK");
             entPayRequest.setAmount(BaseWxPayRequest.yuanToFen(String.valueOf(amount)));
             entPayRequest.setDescription("美易优选-提现");
             entPayRequest.setSpbillCreateIp(IpUtil.getIpAddress(request));

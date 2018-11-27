@@ -141,41 +141,41 @@ public class MemberMerchantCheckController extends BaseController {
 			user.setRoleList(roleList);
 			systemService.saveUser(user);
 			UserUtils.clearCache();
+			//  商户入驻返佣金
+			//商家信息
+			memberInfo = memberInfoService.get(memberInfo);
+			//推荐人信息
+			User referee = UserUtils.get(memberInfo.getMerchantRefereeId());
+			//新增佣金记录
+			//卖家推荐人佣金
+			CommissionInfo commissionInfo = new CommissionInfo();
+			//1：推荐用户消费返佣 2：推荐商家销售返佣 3：推荐商家入驻返佣 4：推荐商家送出礼包返佣 5：商家送出礼包返佣
+			commissionInfo.setType("3");
+			commissionInfo.setUserId(referee.getId());
+			commissionInfo.setProduceUserId(memberInfo.getId());
+			commissionInfo.setOriginAmount(0.0);
+			commissionInfo.setAmount(commissionConfigService.getCommissionAmount("3",0.0));
+			commissionInfo.setUnionId("");
+			commissionInfoService.save(commissionInfo);
+			//新增账单流水记录
+			//卖家账单流水
+			AccountInfo merchantAccountInfo = new AccountInfo();
+			merchantAccountInfo.setUserId(referee.getId());
+			merchantAccountInfo.setType("1"); //收支类型 1：收入 2：支出
+			merchantAccountInfo.setWay("1");//收支方式（1：佣金收益 2：销售收益） 支出（3：提现 4：结算）
+			merchantAccountInfo.setAmount(commissionInfo.getAmount());
+			merchantAccountInfo.setUnionId(commissionInfo.getId());
+			merchantAccountInfo.setStatus("1");//状态 （1：已到账 2：未到账 3：未提现结算 4：已提现结算 ）
+			merchantAccountInfo.setToAccountDate(new Date());
+			accountInfoService.save(merchantAccountInfo);
 		}
 		User currUser = UserUtils.getUser();
 		memberMerchantCheck.setCheckBy(currUser.getId());
 		memberMerchantCheck.setCheckDate(new Date());
 		memberMerchantCheck.setStatus("1");
 		memberMerchantCheckService.save(memberMerchantCheck);
-		//  用户注册返佣金
-		//商家信息
-		memberInfo = memberInfoService.get(memberInfo);
-		//推荐人信息
-		User referee = UserUtils.get(memberInfo.getRefereeId());
-		//新增佣金记录
-		//卖家推荐人佣金
-		CommissionInfo commissionInfo = new CommissionInfo();
-		//1：推荐用户消费返佣 2：推荐商家销售返佣 3：推荐商家入驻返佣 4：推荐商家送出礼包返佣 5：商家送出礼包返佣
-		commissionInfo.setType("3");
-		commissionInfo.setUserId(referee.getId());
-		commissionInfo.setProduceUserId(memberInfo.getId());
-		commissionInfo.setOriginAmount(0.0);
-		commissionInfo.setAmount(commissionConfigService.getCommissionAmount("3",0.0));
-		commissionInfo.setUnionId("");
-		commissionInfoService.save(commissionInfo);
 
 
-		//新增账单流水记录
-		//卖家账单流水
-		AccountInfo merchantAccountInfo = new AccountInfo();
-		merchantAccountInfo.setUserId(referee.getId());
-		merchantAccountInfo.setType("1"); //收支类型 1：收入 2：支出
-		merchantAccountInfo.setWay("1");//收支方式（1：佣金收益 2：销售收益） 支出（3：提现 4：结算）
-		merchantAccountInfo.setAmount(commissionInfo.getAmount());
-		merchantAccountInfo.setUnionId(commissionInfo.getId());
-		merchantAccountInfo.setStatus("1");//状态 （1：已到账 2：未到账 3：未提现结算 4：已提现结算 ）
-		merchantAccountInfo.setToAccountDate(new Date());
-		accountInfoService.save(merchantAccountInfo);
 		addMessage(redirectAttributes, "审核成功");
 		return "redirect:"+Global.getAdminPath()+"/member/memberMerchantCheck/?repage";
 	}
