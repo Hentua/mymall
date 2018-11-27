@@ -36,13 +36,13 @@
 		<form:hidden path="email" htmlEscape="false" maxlength="255" class="input-xlarge"/>
 		<sys:ckfinder input="email" type="files" uploadPath="/mytask" selectMultiple="false"/> --%>
 		<sys:message content="${message}"/>
-		<div class="control-group">
-			<label class="control-label">头像:</label>
-			<div class="controls">
-				<form:hidden id="nameImage" path="photo" htmlEscape="false" maxlength="255" class="input-xlarge"/>
-				<sys:ckfinder input="nameImage" type="images" uploadPath="/photo" selectMultiple="false" maxWidth="100" maxHeight="100"/>
-			</div>
-		</div>
+		<%--<div class="control-group">--%>
+			<%--<label class="control-label">头像:</label>--%>
+			<%--<div class="controls">--%>
+				<%--<form:hidden id="nameImage" path="photo" htmlEscape="false" maxlength="255" class="input-xlarge"/>--%>
+				<%--<sys:ckfinder input="nameImage" type="images" uploadPath="/photo" selectMultiple="false" maxWidth="100" maxHeight="100"/>--%>
+			<%--</div>--%>
+		<%--</div>--%>
 		<div class="control-group">
 			<label class="control-label">姓名:</label>
 			<div class="controls">
