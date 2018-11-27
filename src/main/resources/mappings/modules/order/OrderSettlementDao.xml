@@ -17,11 +17,15 @@
 		mc.referee AS "customerId",
 		o.create_date AS "orderDate",
 		o.order_no AS "orderNo",
-		o.order_amount_total AS "orderAmount"
+		o.order_amount_total AS "orderAmount",
+		um.login_name AS "merchantAccount",
+		uc.login_name AS "customerAccount"
 	</sql>
 	
 	<sql id="orderSettlementJoins">
 		LEFT JOIN sys_user u3 ON u3.id = a.user_id
+		LEFT JOIN sys_user um ON um.id = o.merchant_code
+		LEFT JOIN sys_user uc ON uc.id = o.customer_code
 		LEFT JOIN order_info o ON o.id = a.order_id
 		LEFT JOIN member_info m on m.id = o.merchant_code
 		LEFT JOIN member_info mc on mc.id = o.customer_code
@@ -77,6 +81,12 @@
 			</if>
 			<if test="customerId != null and customerId != ''">
 				AND mc.referee = #{customerId}
+			</if>
+			<if test="customerAccount != null and customerAccount != ''">
+				AND uc.login_name = #{customerAccount}
+			</if>
+			<if test="merchantAccount != null and merchantAccount != ''">
+				AND um.login_name = #{merchantAccount}
 			</if>
 		</where>
 		<choose>

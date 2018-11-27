@@ -30,7 +30,7 @@
 			<li><label>订单号：</label>
 				<form:input path="orderNo" htmlEscape="false" maxlength="32" class="input-medium"/>
 			</li>
-			<li><label>商家ID：</label>
+			<li><label>商家账号：</label>
 				<form:input path="merchantAccount" htmlEscape="false" maxlength="32" class="input-medium"/>
 			</li>
 			<li><label>订单时间：</label>
@@ -41,7 +41,7 @@
 					   value="<fmt:formatDate value="${orderInfo.endDate}" pattern="yyyy-MM-dd HH:mm:ss"/>"
 					   onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});"/>
 			</li>
-			<li><label>下单人ID：</label>
+			<li><label>下单人账号：</label>
 				<form:input path="customerAccount" htmlEscape="false" maxlength="32" class="input-medium"/>
 			</li>
 			<li><label>订单状态：</label>
@@ -76,7 +76,7 @@
 			<th>订单状态</th>
 			<th>订单类型</th>
 			<th>商家</th>
-			<th>商家ID</th>
+			<th>商家账号</th>
 			<th>商品总数量</th>
 			<th>商品总金额</th>
 			<th>优惠金额</th>
@@ -85,7 +85,7 @@
 			<th>订单金额</th>
 			<th>应收货款</th>
 			<th>下单人</th>
-			<th>下单人ID</th>
+			<th>下单人账号</th>
 			<th>下单时间</th>
 			<th>支付时间</th>
 			<th>确认收货时间</th>

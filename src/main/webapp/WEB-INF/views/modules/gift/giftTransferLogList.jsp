@@ -57,7 +57,7 @@
 				<th>礼包名称</th>
 				<th>金额</th>
 				<th>会员</th>
-				<th>会员ID</th>
+				<th>会员账号</th>
 				<th>赠送时间</th>
 				<th>状态</th>
 			</tr>
@@ -75,7 +75,7 @@
 					${giftTransferLog.customerName}
 				</td>
 				<td>
-					${giftTransferLog.customerId}
+					${giftTransferLog.customerAccount}
 				</td>
 				<td>
 					<fmt:formatDate value="${giftTransferLog.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/>

@@ -88,7 +88,7 @@ public class OrderInfo extends DataEntity<OrderInfo> {
 		this.settlementStatus = settlementStatus;
 	}
 
-	@ExcelField(title = "商家ID", sort = 5)
+	@ExcelField(title = "商家账号", sort = 5)
 	public String getMerchantAccount() {
         return merchantAccount;
     }
@@ -97,7 +97,7 @@ public class OrderInfo extends DataEntity<OrderInfo> {
         this.merchantAccount = merchantAccount;
     }
 
-	@ExcelField(title = "下单人ID", sort = 14)
+	@ExcelField(title = "下单人账号", sort = 14)
     public String getCustomerAccount() {
         return customerAccount;
     }

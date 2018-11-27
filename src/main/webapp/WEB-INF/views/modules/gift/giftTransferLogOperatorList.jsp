@@ -30,8 +30,8 @@
 			<li><label>礼包名称：</label>
 				<form:input path="giftConfigCategoryName" htmlEscape="false" maxlength="20" class="input-medium"/>
 			</li>
-			<li><label>商家ID：</label>
-				<form:input path="merchantId" htmlEscape="false" maxlength="20" class="input-medium"/>
+			<li><label>商家账号：</label>
+				<form:input path="merchantAccount" htmlEscape="false" maxlength="20" class="input-medium"/>
 			</li>
 			<li><label>赠送时间：</label>
 				<input name="beginCreateDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
@@ -59,10 +59,10 @@
 			<tr>
 				<th>礼包名称</th>
 				<th>商家</th>
-				<th>商家ID</th>
+				<th>商家账号</th>
 				<th>金额</th>
 				<th>会员</th>
-				<th>会员ID</th>
+				<th>会员账号</th>
 				<th>赠送时间</th>
 				<th>状态</th>
 			</tr>
@@ -77,7 +77,7 @@
 					${giftTransferLog.merchantName}
 				</td>
 				<td>
-					${giftTransferLog.merchantId}
+					${giftTransferLog.merchantAccount}
 				</td>
 				<td>
 					${giftTransferLog.giftPrice}
@@ -86,7 +86,7 @@
 					${giftTransferLog.customerName}
 				</td>
 				<td>
-					${giftTransferLog.customerId}
+					${giftTransferLog.customerAccount}
 				</td>
 				<td>
 					<fmt:formatDate value="${giftTransferLog.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/>

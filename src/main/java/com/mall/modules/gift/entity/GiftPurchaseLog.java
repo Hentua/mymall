@@ -1,12 +1,12 @@
 package com.mall.modules.gift.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.mall.common.persistence.DataEntity;
 import com.mall.common.utils.excel.annotation.ExcelField;
 import org.hibernate.validator.constraints.Length;
+
 import javax.validation.constraints.NotNull;
 import java.util.Date;
-import com.fasterxml.jackson.annotation.JsonFormat;
-
-import com.mall.common.persistence.DataEntity;
 
 /**
  * 礼包购买记录Entity
@@ -36,6 +36,7 @@ public class GiftPurchaseLog extends DataEntity<GiftPurchaseLog> {
 	private Date startPayDate;
 	private Date endPayDate;
 	private String merchantId;
+	private String merchantAccount;
 
 	public GiftPurchaseLog() {
 		super();
@@ -45,7 +46,15 @@ public class GiftPurchaseLog extends DataEntity<GiftPurchaseLog> {
 		super(id);
 	}
 
-	@ExcelField(title = "商户ID", sort = 10)
+	@ExcelField(title = "商家账号", sort = 10)
+	public String getMerchantAccount() {
+		return merchantAccount;
+	}
+
+	public void setMerchantAccount(String merchantAccount) {
+		this.merchantAccount = merchantAccount;
+	}
+
 	public String getMerchantId() {
 		return merchantId;
 	}

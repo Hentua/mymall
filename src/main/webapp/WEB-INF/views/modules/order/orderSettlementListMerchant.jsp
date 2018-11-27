@@ -35,8 +35,8 @@
 			<li><label>订单编号：</label>
 				<form:input path="orderNo" htmlEscape="false" maxlength="64" class="input-medium"/>
 			</li>
-			<li><label>下单人ID：</label>
-				<form:input path="customerId" htmlEscape="false" maxlength="64" class="input-medium"/>
+			<li><label>下单人账号：</label>
+				<form:input path="customerAccount" htmlEscape="false" maxlength="64" class="input-medium"/>
 			</li>
 			<li><label>结算状态 ：</label>
 				<form:select path="status" class="input-medium">
@@ -57,7 +57,7 @@
 				<th>订单时间 </th>
 				<th>订单编号</th>
 				<th>下单人</th>
-				<th>下单人ID</th>
+				<th>下单人账号</th>
 				<th>订单金额</th>
 				<th>结算金额</th>
 				<th>状态</th>
@@ -76,7 +76,7 @@
 					${orderSettlement.customerName}
 				</td>
 				<td>
-					${orderSettlement.customerId}
+					${orderSettlement.customerAccount}
 				</td>
 				<td>
 					${orderSettlement.orderAmount}

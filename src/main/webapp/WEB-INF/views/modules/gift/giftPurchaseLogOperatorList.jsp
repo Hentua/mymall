@@ -30,8 +30,8 @@
 			<li><label>礼包名称：</label>
 				<form:input path="giftConfigCategoryName" htmlEscape="false" maxlength="20" class="input-medium"/>
 			</li>
-			<li><label>商家ID：</label>
-				<form:input path="merchantId" htmlEscape="false" maxlength="20" class="input-medium"/>
+			<li><label>商家账号：</label>
+				<form:input path="merchantAccount" htmlEscape="false" maxlength="20" class="input-medium"/>
 			</li>
 			<li><label>订单号：</label>
 				<form:input path="paymentNo" htmlEscape="false" maxlength="20" class="input-medium"/>
@@ -79,7 +79,7 @@
 				<th>支付时间</th>
 				<th>购买状态</th>
 				<th>商家名称</th>
-				<th>商家ID</th>
+				<th>商家账号</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -116,7 +116,7 @@
 					${giftPurchaseLog.merchantName}
 				</td>
 				<td>
-					${giftPurchaseLog.merchantId}
+					${giftPurchaseLog.merchantAccount}
 				</td>
 			</tr>
 		</c:forEach>

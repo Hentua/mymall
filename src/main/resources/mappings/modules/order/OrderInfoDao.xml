@@ -226,12 +226,14 @@
 			m.nickname as "merchantName",
 		    c.nickname as "customerName",
 		    s.status as "settlementStatus",
-			m.referee as "merchantAccount",
-			c.referee as "customerAccount"
+			um.login_name as "merchantAccount",
+			uc.login_name as "customerAccount"
 		FROM order_info a
 		<include refid="orderInfoJoins"/>
 		     left join member_info m on m.id = a.merchant_code
 		     left join member_info c on c.id = a.customer_code
+		     left join sys_user um on um.id = a.merchant_code
+		     left join sys_user uc on uc.id = a.customer_code
 		     left join order_settlement s on s.order_id = a.id
 		<where>
 			<if test="customerCode != null and customerCode != ''">
@@ -250,10 +252,10 @@
 				and a.set_flag = #{setFlag}
 			</if>
 			<if test="merchantAccount != null and merchantAccount != ''">
-				and m.referee = #{merchantAccount}
+				and um.login_name = #{merchantAccount}
 			</if>
 			<if test="customerAccount != null and customerAccount != ''">
-				and c.referee = #{customerAccount}
+				and uc.login_name = #{customerAccount}
 			</if>
 			<if test="startDate != null">
 				and a.create_date &gt;= #{startDate}
