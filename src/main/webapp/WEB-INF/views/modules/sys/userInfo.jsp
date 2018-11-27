@@ -44,9 +44,16 @@
 			<%--</div>--%>
 		<%--</div>--%>
 		<div class="control-group">
-			<label class="control-label">姓名:</label>
+			<label class="control-label">会员名称:</label>
 			<div class="controls">
-				<form:input path="name" htmlEscape="false" maxlength="50" class="required" readonly="true"/>
+				<%--<form:input path="name" htmlEscape="false" maxlength="50" class="required" readonly="true"/>--%>
+                ${user.name}
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">会员账号:</label>
+			<div class="controls">
+				${user.loginName}
 			</div>
 		</div>
 		<div class="control-group">
