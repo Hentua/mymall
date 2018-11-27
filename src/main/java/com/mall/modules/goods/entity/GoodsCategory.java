@@ -24,6 +24,11 @@ public class GoodsCategory extends DataEntity<GoodsCategory> implements TreeNode
 	private Long sort; //排序标识
 	private String image;		//分类图片
 	private String parentCategoryName;//父分类名称
+
+
+	private String jumpId;      //跳转ID
+	private String jumpGoodsImage; //商品图片
+	private String jumpGoodsName;
 	/**
 	 * 子节点集合
 	 */
@@ -35,6 +40,29 @@ public class GoodsCategory extends DataEntity<GoodsCategory> implements TreeNode
 	private Double commissionNumber;
 
 
+	public String getJumpId() {
+		return jumpId;
+	}
+
+	public void setJumpId(String jumpId) {
+		this.jumpId = jumpId;
+	}
+
+	public String getJumpGoodsImage() {
+		return jumpGoodsImage;
+	}
+
+	public void setJumpGoodsImage(String jumpGoodsImage) {
+		this.jumpGoodsImage = jumpGoodsImage;
+	}
+
+	public String getJumpGoodsName() {
+		return jumpGoodsName;
+	}
+
+	public void setJumpGoodsName(String jumpGoodsName) {
+		this.jumpGoodsName = jumpGoodsName;
+	}
 
 	public GoodsCategory() {
 		super();

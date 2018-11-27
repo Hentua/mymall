@@ -78,6 +78,9 @@
 					<c:if test="${indexBillboard.type == 3}">
 						开机广告
 					</c:if>
+					<c:if test="${indexBillboard.type == 4}">
+						后台首页广告
+					</c:if>
 				</td>
 				<td>
 					<fmt:formatDate value="${indexBillboard.updateDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
