@@ -4,6 +4,7 @@ import com.mall.common.persistence.Page;
 import com.mall.common.service.CrudService;
 import com.mall.common.service.ServiceException;
 import com.mall.common.utils.StringUtils;
+import com.mall.modules.account.service.AccountService;
 import com.mall.modules.gift.dao.GiftConfigCategoryDao;
 import com.mall.modules.gift.dao.GiftMerchantDao;
 import com.mall.modules.gift.entity.GiftConfigCategory;
@@ -43,6 +44,8 @@ public class GiftMerchantService extends CrudService<GiftMerchantDao, GiftMercha
     private SystemService systemService;
     @Autowired
     private GiftConfigCategoryDao giftConfigCategoryDao;
+    @Autowired
+    private AccountService accountService;
 
     public GiftMerchant get(String id) {
         return super.get(id);
@@ -96,6 +99,7 @@ public class GiftMerchantService extends CrudService<GiftMerchantDao, GiftMercha
         giftTransferLog.setGiftCustomerCode(giftCustomer.getId());
         giftTransferLogService.save(giftTransferLog);
         String merchantQualification = giftConfigCategory.getMerchantQualification();
+        String receiverId = "";
         if("1".equals(merchantQualification)) {
             // 如果用户当前不是商户 赋予用户未审核商户权限
             if ("0".equals(customer.getUserType()) && StringUtils.isBlank(memberInfo.getMerchantRefereeId())) {
@@ -109,15 +113,13 @@ public class GiftMerchantService extends CrudService<GiftMerchantDao, GiftMercha
                 memberInfoCondition.setId(customer.getId());
                 memberInfoCondition.setMerchantRefereeId(merchantRefereeId);
                 memberInfoService.modifyMerchantRefereeId(memberInfoCondition);
-                // 生成礼包佣金
-                // todo 礼包赠送佣金
-//                 accountService.createCommissionInfo(giftCustomer.getTransferMerchantCode(), giftCustomer.getCommission(), giftCustomerId);
+                receiverId = merchantRefereeId;
+            }else {
+                receiverId = memberInfo.getMerchantRefereeId();
             }
-        }else if("0".equals(merchantQualification)) {
-            // 生成礼包佣金
-            // todo 礼包赠送佣金
-//             accountService.createCommissionInfo(giftCustomer.getTransferMerchantCode(), giftCustomer.getCommission(), giftCustomerId);
         }
+        // 生成礼包佣金
+        accountService.createCommissionInfo(giftCustomer.getTransferMerchantCode(), receiverId, giftConfigCategory.getGiftPrice(), giftCustomer.getId(), merchantQualification);
     }
 
 }

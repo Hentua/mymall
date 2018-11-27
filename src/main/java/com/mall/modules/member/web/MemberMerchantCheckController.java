@@ -5,9 +5,7 @@ import com.mall.common.config.Global;
 import com.mall.common.persistence.Page;
 import com.mall.common.utils.StringUtils;
 import com.mall.common.web.BaseController;
-import com.mall.modules.account.entity.AccountInfo;
 import com.mall.modules.account.service.AccountInfoService;
-import com.mall.modules.commission.entity.CommissionInfo;
 import com.mall.modules.commission.service.CommissionConfigService;
 import com.mall.modules.commission.service.CommissionInfoService;
 import com.mall.modules.member.entity.MemberInfo;
@@ -143,7 +141,7 @@ public class MemberMerchantCheckController extends BaseController {
 			UserUtils.clearCache();
 			//  商户入驻返佣金
 			//商家信息
-			memberInfo = memberInfoService.get(memberInfo);
+			/*memberInfo = memberInfoService.get(memberInfo);
 			//推荐人信息
 			User referee = UserUtils.get(memberInfo.getMerchantRefereeId());
 			//新增佣金记录
@@ -167,7 +165,7 @@ public class MemberMerchantCheckController extends BaseController {
 			merchantAccountInfo.setUnionId(commissionInfo.getId());
 			merchantAccountInfo.setStatus("1");//状态 （1：已到账 2：未到账 3：未提现结算 4：已提现结算 ）
 			merchantAccountInfo.setToAccountDate(new Date());
-			accountInfoService.save(merchantAccountInfo);
+			accountInfoService.save(merchantAccountInfo);*/
 		}
 		User currUser = UserUtils.getUser();
 		memberMerchantCheck.setCheckBy(currUser.getId());
