@@ -1,8 +1,13 @@
 package com.mall.modules.account.api;
 
 import com.alibaba.fastjson.JSONObject;
+import com.github.binarywang.wxpay.bean.entpay.EntPayRequest;
+import com.github.binarywang.wxpay.bean.entpay.EntPayResult;
+import com.github.binarywang.wxpay.bean.request.BaseWxPayRequest;
+import com.github.binarywang.wxpay.service.WxPayService;
 import com.mall.common.persistence.Page;
 import com.mall.common.service.ServiceException;
+import com.mall.common.utils.IpUtil;
 import com.mall.common.utils.Result;
 import com.mall.common.utils.ResultGenerator;
 import com.mall.common.utils.StringUtils;
@@ -20,6 +25,7 @@ import com.mall.modules.member.entity.MemberInfo;
 import com.mall.modules.member.service.MemberInfoService;
 import com.mall.modules.order.entity.OrderPaymentInfo;
 import com.mall.modules.order.service.OrderPaymentInfoService;
+import com.mall.modules.order.service.OrderWeixinExpenditureCallbackService;
 import com.mall.modules.sys.entity.User;
 import com.mall.modules.sys.utils.UserUtils;
 import com.sohu.idcenter.IdWorker;
@@ -27,14 +33,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.rmi.server.ServerCloneException;
 import java.text.DecimalFormat;
 
 /**
@@ -69,6 +73,12 @@ public class AccountApi extends BaseController {
 
     @Autowired
     private CouponCustomerService couponCustomerService;
+
+    @Autowired
+    private WxPayService wxPayService;
+
+    @Autowired
+    private OrderWeixinExpenditureCallbackService orderWeixinExpenditureCallbackService;
 
     /**
      * 账户余额信息
@@ -156,7 +166,7 @@ public class AccountApi extends BaseController {
     public Result recharge(HttpServletRequest request, HttpServletResponse response) {
         User user = UserUtils.getUser();
         String amount = request.getParameter("amount");
-        if(StringUtils.isBlank(amount)) {
+        if (StringUtils.isBlank(amount)) {
             return ResultGenerator.genFailResult("不合法的充值金额");
         }
         AccountFlow accountFlow = new AccountFlow();
@@ -187,11 +197,11 @@ public class AccountApi extends BaseController {
         String amount = request.getParameter("amount");
         User currUser = UserUtils.getUser();
         try {
-            if(StringUtils.isBlank(amount)) {
+            if (StringUtils.isBlank(amount)) {
                 throw new ServiceException("充值金额不能为空");
             }
             Double amountDouble = Double.valueOf(amount);
-            if(amountDouble <= 0) {
+            if (amountDouble <= 0) {
                 throw new ServiceException("不合法的充值金额");
             }
             OrderPaymentInfo orderPaymentInfo = orderPaymentInfoService.genAmountPaymentInfo("0", "2", amountDouble, 0.00);
@@ -205,9 +215,9 @@ public class AccountApi extends BaseController {
             accountFlow.setCheckStatus("1");
             accountFlowService.save(accountFlow);
             renderString(response, ResultGenerator.genSuccessResult(orderPaymentInfo));
-        }catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
             renderString(response, ResultGenerator.genFailResult("不合法的充值金额"));
-        }catch (Exception e) {
+        } catch (Exception e) {
             renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
         }
     }
@@ -222,29 +232,93 @@ public class AccountApi extends BaseController {
      */
     @ResponseBody
     @RequestMapping(value = "expenditure", method = RequestMethod.POST)
-    public Result expenditure(HttpServletRequest request, HttpServletResponse response) {
+    public void expenditure(HttpServletRequest request, HttpServletResponse response) {
         User user = UserUtils.getUser();
+        String incomeExpenditureMode = request.getParameter("incomeExpenditureMode");
         String amountStr = request.getParameter("amount");
         Double amount = Double.valueOf(amountStr);
         MemberInfo m = new MemberInfo();
         m.setId(user.getId());
         MemberInfo memberInfo = memberInfoService.get(m);
-        if (memberInfo.getBalance() < amount) {
-            return ResultGenerator.genFailResult("账户余额不足");
+        try {
+            if (memberInfo.getBalance() < amount) {
+                throw new ServiceException("账户余额不足");
+            }
+            AccountFlow accountFlow = new AccountFlow();
+            accountFlow.setFlowNo(String.valueOf(idWorker.getId()));
+            accountFlow.setUserId(user.getId());
+            accountFlow.setAmount(amount);
+            accountFlow.setType("2");//支出
+            accountFlow.setMode("3");//提现
+            accountFlow.setIncomeExpenditureMode(incomeExpenditureMode);// 收支方式 1：微信 2：用户转账
+            accountFlow.setBankAccount(request.getParameter("bankAccount"));//银行账户
+            accountFlow.setBankAccountName(request.getParameter("bankAccountName"));//开户人名称
+            accountFlow.setBankName(request.getParameter("bankName"));//开户行
+            accountFlow.setCheckStatus("1");
+            accountFlowService.save(accountFlow);
+            renderString(response, ResultGenerator.genSuccessResult());
+        } catch (Exception e) {
+            renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
         }
-        AccountFlow accountFlow = new AccountFlow();
-        accountFlow.setFlowNo(String.valueOf(idWorker.getId()));
-        accountFlow.setUserId(user.getId());
-        accountFlow.setAmount(amount);
-        accountFlow.setType("2");//支出
-        accountFlow.setMode("3");//提现
-        accountFlow.setIncomeExpenditureMode(request.getParameter("incomeExpenditureMode"));// 收支方式 1：微信 2：用户转账
-        accountFlow.setBankAccount(request.getParameter("bankAccount"));//银行账户
-        accountFlow.setBankAccountName(request.getParameter("bankAccountName"));//开户人名称
-        accountFlow.setBankName(request.getParameter("bankName"));//开户行
-        accountFlow.setCheckStatus("1");
-        accountFlowService.save(accountFlow);
-        return ResultGenerator.genSuccessResult("成功");
+    }
+
+    /**
+     * 微信提现
+     *
+     * @param request  请求体
+     * @param response 响应体
+     */
+    @ResponseBody
+    @RequestMapping(value = "wxExpenditure", method = RequestMethod.POST)
+    @Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    public void wxExpenditure(HttpServletRequest request, HttpServletResponse response) {
+        User user = UserUtils.getUser();
+        String id = user.getId();
+        MemberInfo queryCondition = new MemberInfo();
+        queryCondition.setId(id);
+        MemberInfo memberInfo = memberInfoService.get(queryCondition);
+        String amountStr = request.getParameter("amount");
+        Double amount = Double.valueOf(amountStr);
+        try {
+            String openId = memberInfo.getOpenid();
+            if (StringUtils.isBlank(openId)) {
+                throw new ServiceException("您还未绑定微信，不能申请提现");
+            }
+            if (memberInfo.getBalance() < amount) {
+                throw new ServiceException("账户余额不足");
+            }
+            AccountFlow accountFlow = new AccountFlow();
+            accountFlow.setFlowNo(String.valueOf(idWorker.getId()));
+            accountFlow.setUserId(user.getId());
+            accountFlow.setAmount(amount);
+            accountFlow.setType("2");//支出
+            accountFlow.setMode("3");//提现
+            accountFlow.setIncomeExpenditureMode("1");// 收支方式 1：微信 2：用户转账
+            accountFlow.setCheckStatus("2");
+            accountFlowService.save(accountFlow);
+            Double balance = memberInfo.getBalance() - amount;
+            if (balance < 0) {
+                throw new ServiceException("账户余额不足");
+            }
+            memberInfo.setBalance(balance);
+            accountService.editAccount(balance, null, memberInfo.getId());
+            EntPayRequest entPayRequest = new EntPayRequest();
+            entPayRequest.setPartnerTradeNo(accountFlow.getFlowNo());
+            entPayRequest.setOpenid(openId);
+            entPayRequest.setCheckName("FORCE_CHECK");
+            entPayRequest.setAmount(BaseWxPayRequest.yuanToFen(String.valueOf(amount)));
+            entPayRequest.setDescription("美易优选-提现");
+            entPayRequest.setSpbillCreateIp(IpUtil.getIpAddress(request));
+            EntPayResult entPayResult = wxPayService.getEntPayService().entPay(entPayRequest);
+            if (!"SUCCESS".equalsIgnoreCase(entPayResult.getReturnCode()) || !"SUCCESS".equalsIgnoreCase(entPayResult.getResultCode())) {
+                throw new ServiceException("微信处理失败");
+            } else {
+                orderWeixinExpenditureCallbackService.save(entPayResult);
+            }
+            renderString(response, ResultGenerator.genSuccessResult());
+        } catch (Exception e) {
+            renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
+        }
     }
 
 

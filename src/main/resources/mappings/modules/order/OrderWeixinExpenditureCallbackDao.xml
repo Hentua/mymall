@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.modules.order.dao.OrderWeixinExpenditureCallbackDao">
+    
+	<sql id="orderWeixinExpenditureCallbackColumns">
+		a.id AS "id",
+		a.return_code AS "returnCode",
+		a.return_msg AS "returnMsg",
+		a.mch_appid AS "mchAppid",
+		a.mchid AS "mchid",
+		a.device_info AS "deviceInfo",
+		a.nonce_str AS "nonceStr",
+		a.result_code AS "resultCode",
+		a.err_code AS "errCode",
+		a.err_code_des AS "errCodeDes",
+		a.partner_trade_no AS "partnerTradeNo",
+		a.payment_no AS "paymentNo",
+		a.payment_time AS "paymentTime",
+		a.create_date AS "createDate",
+		a.update_date AS "updateDate"
+	</sql>
+	
+	<sql id="orderWeixinExpenditureCallbackJoins">
+	</sql>
+    
+	<select id="get" resultType="OrderWeixinExpenditureCallback">
+		SELECT 
+			<include refid="orderWeixinExpenditureCallbackColumns"/>
+		FROM order_weixin_expenditure_callback a
+		<include refid="orderWeixinExpenditureCallbackJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="OrderWeixinExpenditureCallback">
+		SELECT 
+			<include refid="orderWeixinExpenditureCallbackColumns"/>
+		FROM order_weixin_expenditure_callback a
+		<include refid="orderWeixinExpenditureCallbackJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="OrderWeixinExpenditureCallback">
+		SELECT 
+			<include refid="orderWeixinExpenditureCallbackColumns"/>
+		FROM order_weixin_expenditure_callback a
+		<include refid="orderWeixinExpenditureCallbackJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO order_weixin_expenditure_callback(
+			id,
+			return_code,
+			return_msg,
+			mch_appid,
+			mchid,
+			device_info,
+			nonce_str,
+			result_code,
+			err_code,
+			err_code_des,
+			partner_trade_no,
+			payment_no,
+			payment_time,
+			create_date,
+			update_date
+		) VALUES (
+			#{id},
+			#{returnCode},
+			#{returnMsg},
+			#{mchAppid},
+			#{mchid},
+			#{deviceInfo},
+			#{nonceStr},
+			#{resultCode},
+			#{errCode},
+			#{errCodeDes},
+			#{partnerTradeNo},
+			#{paymentNo},
+			#{paymentTime},
+			#{createDate},
+			#{updateDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE order_weixin_expenditure_callback SET 	
+			return_code = #{returnCode},
+			return_msg = #{returnMsg},
+			mch_appid = #{mchAppid},
+			mchid = #{mchid},
+			device_info = #{deviceInfo},
+			nonce_str = #{nonceStr},
+			result_code = #{resultCode},
+			err_code = #{errCode},
+			err_code_des = #{errCodeDes},
+			partner_trade_no = #{partnerTradeNo},
+			payment_no = #{paymentNo},
+			payment_time = #{paymentTime},
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM order_weixin_expenditure_callback
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
