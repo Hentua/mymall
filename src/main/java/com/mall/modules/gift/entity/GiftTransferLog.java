@@ -1,12 +1,11 @@
 package com.mall.modules.gift.entity;
 
+import com.mall.common.persistence.DataEntity;
 import com.mall.common.utils.StringUtils;
 import com.mall.common.utils.excel.annotation.ExcelField;
 import org.hibernate.validator.constraints.Length;
+
 import javax.validation.constraints.NotNull;
-
-import com.mall.common.persistence.DataEntity;
-
 import java.util.Date;
 
 /**
@@ -35,6 +34,8 @@ public class GiftTransferLog extends DataEntity<GiftTransferLog> {
 	private String merchantId;
 	private Double giftPrice;
 	private String status;
+	private String customerAccount;
+	private String merchantAccount;
 
 	public GiftTransferLog() {
 		super();
@@ -42,6 +43,24 @@ public class GiftTransferLog extends DataEntity<GiftTransferLog> {
 
 	public GiftTransferLog(String id){
 		super(id);
+	}
+
+	@ExcelField(title = "会员账号", sort = 6)
+	public String getCustomerAccount() {
+		return customerAccount;
+	}
+
+	public void setCustomerAccount(String customerAccount) {
+		this.customerAccount = customerAccount;
+	}
+
+	@ExcelField(title = "商家账号", sort = 2)
+	public String getMerchantAccount() {
+		return merchantAccount;
+	}
+
+	public void setMerchantAccount(String merchantAccount) {
+		this.merchantAccount = merchantAccount;
 	}
 
 	public String getStatus() {
@@ -52,7 +71,6 @@ public class GiftTransferLog extends DataEntity<GiftTransferLog> {
 		this.status = status;
 	}
 
-	@ExcelField(title = "会员ID", sort = 6)
 	public String getCustomerId() {
 		return customerId;
 	}
@@ -70,7 +88,6 @@ public class GiftTransferLog extends DataEntity<GiftTransferLog> {
 		this.merchantName = merchantName;
 	}
 
-	@ExcelField(title = "商家ID", sort = 2)
 	public String getMerchantId() {
 		return merchantId;
 	}

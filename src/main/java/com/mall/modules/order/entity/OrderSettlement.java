@@ -1,13 +1,13 @@
 package com.mall.modules.order.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.mall.common.persistence.DataEntity;
 import com.mall.common.utils.StringUtils;
 import com.mall.common.utils.excel.annotation.ExcelField;
 import org.hibernate.validator.constraints.Length;
+
 import javax.validation.constraints.NotNull;
 import java.util.Date;
-import com.fasterxml.jackson.annotation.JsonFormat;
-
-import com.mall.common.persistence.DataEntity;
 
 /**
  * 订单结算Entity
@@ -33,6 +33,8 @@ public class OrderSettlement extends DataEntity<OrderSettlement> {
 	private Double orderAmount;
 	private Date startDate;
 	private Date endDate;
+	private Date customerAccount;
+	private Date merchantAccount;
 
 	public OrderSettlement() {
 		super();
@@ -40,6 +42,24 @@ public class OrderSettlement extends DataEntity<OrderSettlement> {
 
 	public OrderSettlement(String id){
 		super(id);
+	}
+
+	@ExcelField(title = "下单人账号", sort = 6)
+	public Date getCustomerAccount() {
+		return customerAccount;
+	}
+
+	public void setCustomerAccount(Date customerAccount) {
+		this.customerAccount = customerAccount;
+	}
+
+	@ExcelField(title = "商家账号", sort = 2)
+	public Date getMerchantAccount() {
+		return merchantAccount;
+	}
+
+	public void setMerchantAccount(Date merchantAccount) {
+		this.merchantAccount = merchantAccount;
 	}
 
 	public Date getStartDate() {
@@ -76,7 +96,6 @@ public class OrderSettlement extends DataEntity<OrderSettlement> {
 		this.merchantName = merchantName;
 	}
 
-	@ExcelField(title = "商家ID", sort = 2)
 	public String getMerchantId() {
 		return merchantId;
 	}
@@ -94,7 +113,6 @@ public class OrderSettlement extends DataEntity<OrderSettlement> {
 		this.customerName = customerName;
 	}
 
-	@ExcelField(title = "下单人ID", sort = 6)
 	public String getCustomerId() {
 		return customerId;
 	}

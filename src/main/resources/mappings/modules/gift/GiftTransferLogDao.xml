@@ -18,6 +18,8 @@
 		c.category_name AS "giftConfigCategoryName",
 		m.nickname AS "customerName",
 		s.mobile AS "customerMobile",
+		s.login_name AS "customerAccount",
+		sm.login_name AS "merchantAccount",
 		m.referee AS "customerId",
 		mm.nickname AS "merchantName",
 		mm.referee AS "merchantId",
@@ -30,6 +32,7 @@
 		left join member_info mm on mm.id = a.merchant_code
 		left join gift_config_category c on c.id = a.gift_category
 		left join sys_user s on s.id = a.customer_code
+		left join sys_user sm on sm.id = a.merchant_code
 		left join gift_customer gc on gc.id = a.gift_customer_code
 	</sql>
     
@@ -64,6 +67,12 @@
 			</if>
 			<if test="merchantId != null and merchantId != ''">
 				AND mm.referee = #{merchantId}
+			</if>
+			<if test="customerAccount != null and customerAccount != ''">
+				AND s.login_name = #{customerAccount}
+			</if>
+			<if test="merchantAccount != null and merchantAccount != ''">
+				AND sm.login_name = #{merchantAccount}
 			</if>
 			<if test="status != null and status != ''">
 				AND gc.gift_count = #{status}

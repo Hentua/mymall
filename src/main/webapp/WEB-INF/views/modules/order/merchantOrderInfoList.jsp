@@ -40,7 +40,7 @@
                    value="<fmt:formatDate value="${orderInfo.endDate}" pattern="yyyy-MM-dd HH:mm:ss"/>"
                    onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});"/>
         </li>
-        <li><label>下单人ID：</label>
+        <li><label>下单人账号：</label>
             <form:input path="customerAccount" htmlEscape="false" maxlength="32" class="input-medium"/>
         </li>
         <li><label>订单状态：</label>
@@ -82,7 +82,7 @@
         <th>订单金额</th>
         <th>应收货款</th>
         <th>下单人</th>
-        <th>下单人ID</th>
+        <th>下单人账号</th>
         <th>下单时间</th>
         <th>备注</th>
         <th>支付时间</th>

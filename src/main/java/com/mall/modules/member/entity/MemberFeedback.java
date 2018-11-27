@@ -26,6 +26,7 @@ public class MemberFeedback extends DataEntity<MemberFeedback> {
 
 	private Date startDate;
 	private Date endDate;
+	private String customerAccount;
 
 	public MemberFeedback() {
 		super();
@@ -33,6 +34,15 @@ public class MemberFeedback extends DataEntity<MemberFeedback> {
 
 	public MemberFeedback(String id){
 		super(id);
+	}
+
+	@ExcelField(title = "会员账号", sort = 2)
+	public String getCustomerAccount() {
+		return customerAccount;
+	}
+
+	public void setCustomerAccount(String customerAccount) {
+		this.customerAccount = customerAccount;
 	}
 
 	public Date getStartDate() {
@@ -70,7 +80,6 @@ public class MemberFeedback extends DataEntity<MemberFeedback> {
 		this.status = status;
 	}
 
-	@ExcelField(title = "会员ID", sort = 2)
 	public String getCustomerId() {
 		return customerId;
 	}

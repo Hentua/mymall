@@ -27,8 +27,8 @@
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<ul class="ul-form">
-			<li><label>商家ID：</label>
-				<form:input path="merchantId" htmlEscape="false" maxlength="64" class="input-medium"/>
+			<li><label>商家账号：</label>
+				<form:input path="merchantAccount" htmlEscape="false" maxlength="64" class="input-medium"/>
 			</li>
 			<li><label>订单时间：</label>
 				<input name="startDate" id="startDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
@@ -41,8 +41,8 @@
 			<li><label>订单编号：</label>
 				<form:input path="orderNo" htmlEscape="false" maxlength="64" class="input-medium"/>
 			</li>
-			<li><label>下单人ID：</label>
-				<form:input path="customerId" htmlEscape="false" maxlength="64" class="input-medium"/>
+			<li><label>下单人账号：</label>
+				<form:input path="customerAccount" htmlEscape="false" maxlength="64" class="input-medium"/>
 			</li>
 			<li><label>结算状态 ：</label>
 				<form:select path="status" class="input-medium">
@@ -62,11 +62,11 @@
 		<thead>
 			<tr>
 				<th>商家名称</th>
-				<th>商家ID</th>
+				<th>商家账号</th>
 				<th>订单时间 </th>
 				<th>订单编号</th>
 				<th>下单人</th>
-				<th>下单人ID</th>
+				<th>下单人账号</th>
 				<th>订单金额</th>
 				<th>结算金额</th>
 				<th>状态</th>
@@ -80,7 +80,7 @@
 					${orderSettlement.merchantName}
 				</td>
 				<td>
-					${orderSettlement.merchantId}
+					${orderSettlement.merchantAccount}
 				</td>
 				<td>
 					<fmt:formatDate value="${orderSettlement.orderDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
@@ -92,7 +92,7 @@
 					${orderSettlement.customerName}
 				</td>
 				<td>
-					${orderSettlement.customerId}
+					${orderSettlement.customerAccount}
 				</td>
 				<td>
 					${orderSettlement.orderAmount}

@@ -30,8 +30,8 @@
 			<li><label>会员昵称：</label>
 				<form:input path="customerName" htmlEscape="false" maxlength="64" class="input-medium"/>
 			</li>
-			<li><label>会员ID：</label>
-				<form:input path="customerId" htmlEscape="false" maxlength="64" class="input-medium"/>
+			<li><label>会员账号：</label>
+				<form:input path="customerAccount" htmlEscape="false" maxlength="64" class="input-medium"/>
 			</li>
 			<li><label>反馈时间：</label>
 				<input name="startDate" id="startDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
@@ -73,7 +73,7 @@
 					${memberFeedback.customerName}
 				</td>
 				<td>
-					${memberFeedback.customerId}
+					${memberFeedback.customerAccount}
 				</td>
 				<td>
 					${memberFeedback.feedbackDetail}

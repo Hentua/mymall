@@ -13,7 +13,8 @@
 		m.nickname AS "customerName",
 		m.referee AS "customerId",
 		a.reply AS "reply",
-		u.login_name AS "mobile"
+		u.login_name AS "mobile",
+		u.login_name AS "customerAccount"
 	</sql>
 	
 	<sql id="memberFeedbackJoins">

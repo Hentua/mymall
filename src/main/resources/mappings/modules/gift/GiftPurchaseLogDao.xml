@@ -21,11 +21,13 @@
 		c.category_name AS "giftConfigCategoryName",
 		m.nickname AS "merchantName",
 		m.referee AS "merchantId",
+		u.login_name AS "merchantAccount",
 		a.pay_channel AS "payChannel"
 	</sql>
 	
 	<sql id="giftPurchaseLogJoins">
 		left join member_info m on m.id = a.merchant_code
+		left join sys_user u on u.id = a.merchant_code
 		left join gift_config_category c on c.id = a.gift_category
 	</sql>
     
@@ -57,6 +59,9 @@
 			</if>
 			<if test="merchantId != null and merchantId != ''">
 				and m.referee = #{merchantId}
+			</if>
+			<if test="merchantAccount != null and merchantAccount != ''">
+				and u.login_name = #{merchantAccount}
 			</if>
 			<if test="startDate != null">
 				and a.create_date &gt;= #{startDate}
