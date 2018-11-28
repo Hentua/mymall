@@ -1,9 +1,10 @@
 package com.mall.modules.gift.entity;
 
-import org.hibernate.validator.constraints.Length;
-import javax.validation.constraints.NotNull;
-
 import com.mall.common.persistence.DataEntity;
+import org.hibernate.validator.constraints.Length;
+
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 /**
  * 礼包类别Entity
@@ -91,6 +92,7 @@ public class GiftConfigCategory extends DataEntity<GiftConfigCategory> {
 	}
 	
 	@NotNull(message="礼包价格不能为空")
+	@Min(value = 0, message = "礼包价格不能小于0")
 	public Double getGiftPrice() {
 		return giftPrice;
 	}
