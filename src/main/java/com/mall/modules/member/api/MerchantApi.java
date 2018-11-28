@@ -58,7 +58,7 @@ public class MerchantApi extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/merchant/info", method = RequestMethod.POST)
-	public Result info(HttpServletRequest request, HttpServletResponse response) {
+	public void info(HttpServletRequest request, HttpServletResponse response) {
 		String merchantId = request.getParameter("merchantId");
 		User user = UserUtils.getUser();
 		MemberInfo m = new MemberInfo();
@@ -79,7 +79,7 @@ public class MerchantApi extends BaseController {
 			}
 		}
 		result.putAll(goodsInfoService.merchantCountt(merchantId));
-		return ResultGenerator.genSuccessResult(result);
+		renderString(response, ResultGenerator.genSuccessResult(result));
 	}
 
 	/**
@@ -90,11 +90,11 @@ public class MerchantApi extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/merchant/goodsCategory", method = RequestMethod.POST)
-	public Result goodsCategory(HttpServletRequest request, HttpServletResponse response) {
+	public void goodsCategory(HttpServletRequest request, HttpServletResponse response) {
 		String merchantId = request.getParameter("merchantId");
 		List<GoodsCategory> list = goodsCategoryService.findMerchantList(merchantId);
 //		TreeNode<GoodsCategory> tree=new TreeNode<GoodsCategory>(list);
-		return ResultGenerator.genSuccessResult(list);
+		renderString(response, ResultGenerator.genSuccessResult(list));
 	}
 
 	/**
@@ -105,7 +105,7 @@ public class MerchantApi extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/merchantCollection", method = RequestMethod.POST)
-	public Result merchantCollection(HttpServletRequest request, HttpServletResponse response) {
+	public void merchantCollection(HttpServletRequest request, HttpServletResponse response) {
 		User user = UserUtils.getUser();
 		String merchantId = request.getParameter("merchantId");
 		MerchantCollectionInfo mc = new MerchantCollectionInfo();
@@ -117,7 +117,7 @@ public class MerchantApi extends BaseController {
 			mc.setMerchantId(merchantId);
 			merchantCollectionInfoService.save(mc);
 		}
-		return ResultGenerator.genSuccessResult();
+		renderString(response, ResultGenerator.genSuccessResult());
 	}
 
 
@@ -129,12 +129,12 @@ public class MerchantApi extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/merchantCollectionList", method = RequestMethod.POST)
-	public Result merchantCollectionList(HttpServletRequest request, HttpServletResponse response) {
+	public void merchantCollectionList(HttpServletRequest request, HttpServletResponse response) {
 		User user = UserUtils.getUser();
 		MemberInfo memberInfo = new MemberInfo();
 		memberInfo.setId(user.getId());
 		Page<MemberInfo> page = memberInfoService.findCollectionPage(new Page<MemberInfo>(request, response), memberInfo);
-		return ResultGenerator.genSuccessResult(page);
+		renderString(response, ResultGenerator.genSuccessResult(page));
 	}
 
 

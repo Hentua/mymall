@@ -67,16 +67,16 @@ public class GoodsInfoApi extends BaseController {
      */
     @ResponseBody
     @RequestMapping(value = "merchantQuery", method = RequestMethod.POST)
-    public Result goodsMerchantInfoQuery(HttpServletRequest request, HttpServletResponse response) {
+    public void goodsMerchantInfoQuery(HttpServletRequest request, HttpServletResponse response) {
         String keyWord = request.getParameter("keyWord");
         if(StringUtils.isEmpty(keyWord)){
-            return ResultGenerator.genSuccessResult(new Object());
+            renderString(response,ResultGenerator.genSuccessResult(new Object()));
         }
         MemberInfo memberInfo = new MemberInfo();
         memberInfo.setNickname(request.getParameter("keyWord"));
         memberInfo.setStatus("1");
         Page<MemberInfo> page = memberInfoService.findPage(new Page<MemberInfo>(request, response), memberInfo);
-        return ResultGenerator.genSuccessResult(page);
+        renderString(response,ResultGenerator.genSuccessResult(page));
     }
 
 
@@ -89,7 +89,7 @@ public class GoodsInfoApi extends BaseController {
      */
     @ResponseBody
     @RequestMapping(value = "goodsList", method = RequestMethod.POST)
-    public Result goodsList(HttpServletRequest request, HttpServletResponse response) {
+    public void goodsList(HttpServletRequest request, HttpServletResponse response) {
         String sortType = request.getParameter("sortType");
         String sortWay = request.getParameter("sortWay");
         String keyWord = request.getParameter("keyWord");
@@ -118,7 +118,7 @@ public class GoodsInfoApi extends BaseController {
 
 
         page = goodsInfoService.findPageByApi(page,goodsInfo);
-        return ResultGenerator.genSuccessResult(page);
+        renderString(response,ResultGenerator.genSuccessResult(page));
     }
 
     /**
@@ -128,7 +128,7 @@ public class GoodsInfoApi extends BaseController {
      */
     @ResponseBody
     @RequestMapping(value = "goodsDetails", method = RequestMethod.POST)
-    public Result goodsDetails(HttpServletRequest request, HttpServletResponse response) {
+    public void goodsDetails(HttpServletRequest request, HttpServletResponse response) {
         GoodsInfo goodsInfo = null;
         String goodsRecommendCode = request.getParameter("goodsRecommendCode");
         if(!StringUtils.isEmpty(goodsRecommendCode)){
@@ -142,7 +142,7 @@ public class GoodsInfoApi extends BaseController {
         }
 
         if(null == goodsInfo || goodsInfo.getStatus() != 2){
-            return  ResultGenerator.genFailResult("商品已下架").setData("商品已下架");
+            renderString(response,ResultGenerator.genFailResult("商品已下架").setData("商品已下架"));
         }
         MemberInfo m = new MemberInfo();
         m.setId(goodsInfo.getMerchantId());
@@ -198,7 +198,7 @@ public class GoodsInfoApi extends BaseController {
         result.put("merchant",merchant);
         result.put("evaluate",evaluate);
         result.put("recommend",recommend);
-        return ResultGenerator.genSuccessResult(result);
+        renderString(response,ResultGenerator.genSuccessResult(result));
     }
 
     /**
@@ -208,20 +208,20 @@ public class GoodsInfoApi extends BaseController {
      */
     @ResponseBody
     @RequestMapping(value = "goodsCategory", method = RequestMethod.POST)
-    public Result goodsCategory(HttpServletRequest request, HttpServletResponse response) {
+    public void goodsCategory(HttpServletRequest request, HttpServletResponse response) {
         List<GoodsCategory> list = goodsCategoryService.findListByApi(new GoodsCategory());
 
         TreeNode<GoodsCategory> tree=new TreeNode<GoodsCategory>(list);
-        return ResultGenerator.genSuccessResult(tree.TreeFormat());
+        renderString(response,ResultGenerator.genSuccessResult(tree.TreeFormat()));
     }
 
 
     @ResponseBody
     @RequestMapping(value = "addGoodsEvaluate", method = RequestMethod.POST)
-    public Result addGoodsEvaluate(HttpServletRequest request, HttpServletResponse response) {
+    public void addGoodsEvaluate(HttpServletRequest request, HttpServletResponse response) {
         GoodsInfo goodsInfo = goodsInfoService.get(request.getParameter("goodsId"));
         if(null == goodsInfo){
-            return  ResultGenerator.genFailResult("商品信息未找到");
+            renderString(response,ResultGenerator.genFailResult("商品已下架"));
         }
         User user = UserUtils.getUser();
         GoodsEvaluate goodsEvaluate = new GoodsEvaluate();
@@ -234,16 +234,16 @@ public class GoodsInfoApi extends BaseController {
         goodsEvaluate.setEvaluateUserName(user.getNickname());
         goodsEvaluate.setEvaluateDate(new Date());
         goodsEvaluateService.save(goodsEvaluate);
-        return ResultGenerator.genSuccessResult("成功");
+        renderString(response, ResultGenerator.genSuccessResult("成功"));
     }
 
 
     @ResponseBody
     @RequestMapping(value = "goodsEvaluateList", method = RequestMethod.POST)
-    public Result goodsEvaluateList(HttpServletRequest request, HttpServletResponse response) {
+    public void goodsEvaluateList(HttpServletRequest request, HttpServletResponse response) {
         GoodsInfo goodsInfo = goodsInfoService.get(request.getParameter("goodsId"));
         if(null == goodsInfo){
-            return  ResultGenerator.genFailResult("商品信息未找到");
+            renderString(response,  ResultGenerator.genFailResult("商品信息未找到"));
         }
         logger.info(request.getParameter("pageNo"));
         logger.info(request.getParameter("pageSize"));
@@ -251,6 +251,6 @@ public class GoodsInfoApi extends BaseController {
         goodsEvaluate.setGoodsId(goodsInfo.getId());
         Page<GoodsEvaluate> page = new Page<GoodsEvaluate>(request,response);
         page = goodsEvaluateService.findPage(page,goodsEvaluate);
-        return ResultGenerator.genSuccessResult(page);
+        renderString(response, ResultGenerator.genSuccessResult(page));
     }
 }

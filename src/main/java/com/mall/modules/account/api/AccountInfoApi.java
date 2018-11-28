@@ -53,7 +53,7 @@ public class AccountInfoApi extends BaseController {
 
 	@ResponseBody
 	@RequestMapping(value = "getList", method = RequestMethod.POST)
-	public Result getList(HttpServletRequest request, HttpServletResponse response) {
+	public void getList(HttpServletRequest request, HttpServletResponse response) {
 		User user = UserUtils.getUser();
 		AccountInfo accountInfo = new AccountInfo();
 		accountInfo.setUserId(user.getId());
@@ -88,12 +88,12 @@ public class AccountInfoApi extends BaseController {
 		result.put("list",page.getList());
 		//收入 income 支出 expenditure 未到账 outAccount
 		result.putAll(accountInfoService.getStsInfo(accountInfo));
-		return ResultGenerator.genSuccessResult(result);
+		renderString(response, ResultGenerator.genSuccessResult(result));
 	}
 
 	@ResponseBody
 	@RequestMapping(value = "getDetails", method = RequestMethod.POST)
-	public Result getDetails(HttpServletRequest request, HttpServletResponse response) {
+	public void getDetails(HttpServletRequest request, HttpServletResponse response) {
 		User user = UserUtils.getUser();
 		AccountInfo accountInfo = new AccountInfo();
 		accountInfo.setUserId(user.getId());
@@ -112,6 +112,6 @@ public class AccountInfoApi extends BaseController {
 			OrderInfo orderInfo =orderInfoService.get(accountInfo.getUnionId());
 			accountInfo.setOrderInfo(orderInfo);
 		}
-		return ResultGenerator.genSuccessResult(accountInfo);
+		renderString(response, ResultGenerator.genSuccessResult(accountInfo));
 	}
 }

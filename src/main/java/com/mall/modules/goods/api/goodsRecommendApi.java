@@ -55,7 +55,7 @@ public class goodsRecommendApi extends BaseController {
      */
     @ResponseBody
     @RequestMapping(value = "goodsRecommend", method = RequestMethod.POST)
-    public Result goodsRecommend(HttpServletRequest request, HttpServletResponse response)throws Exception {
+    public void goodsRecommend(HttpServletRequest request, HttpServletResponse response)throws Exception {
         User user = UserUtils.getUser();
         String goodsId = request.getParameter("goodsId");
         GoodsInfo goodsInfo = goodsInfoService.get(goodsId);
@@ -69,6 +69,6 @@ public class goodsRecommendApi extends BaseController {
         JSONObject jo =new JSONObject();
         String code = goodsInfo.getGoodsName()+",复制整段信息，打开美易优选,（"+goodsRecommend.getId()+"）";
         jo.put("goodsRecommendCode",code);
-        return ResultGenerator.genSuccessResult(jo);
+        renderString(response,ResultGenerator.genSuccessResult(jo));
     }
 }

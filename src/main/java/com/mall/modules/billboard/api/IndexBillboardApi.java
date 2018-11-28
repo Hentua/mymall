@@ -42,7 +42,7 @@ public class IndexBillboardApi extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "getBillboards", method = RequestMethod.POST)
-	public Result getBillboards(HttpServletRequest request, HttpServletResponse response) {
+	public void getBillboards(HttpServletRequest request, HttpServletResponse response) {
 		//类型：1轮播图广告位 2独立广告位
 //		String type = request.getParameter("type");
 //		if(StringUtils.isEmpty(type)){
@@ -68,7 +68,7 @@ public class IndexBillboardApi extends BaseController {
 		map.put("recommendData",list2);
 		map.put("categoryData",list3);
 
-		return ResultGenerator.genSuccessResult(map);
+		renderString(response, ResultGenerator.genSuccessResult(map));
 	}
 
 
@@ -79,12 +79,12 @@ public class IndexBillboardApi extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "getOpenBillboards", method = RequestMethod.POST)
-	public Result getOpenBillboards(HttpServletRequest request, HttpServletResponse response) {
+	public void getOpenBillboards(HttpServletRequest request, HttpServletResponse response) {
 		//1轮播图广告位 2独立广告
 		IndexBillboard billboard = new IndexBillboard();
 		billboard.setType("3");
 		List<IndexBillboard> list = indexBillboardService.findList(billboard);
-		return ResultGenerator.genSuccessResult(list);
+		renderString(response, ResultGenerator.genSuccessResult(list));
 	}
 
 }

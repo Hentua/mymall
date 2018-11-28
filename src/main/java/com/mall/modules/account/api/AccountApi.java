@@ -89,7 +89,7 @@ public class AccountApi extends BaseController {
      */
     @ResponseBody
     @RequestMapping(value = "info", method = RequestMethod.POST)
-    public Result info(HttpServletRequest request, HttpServletResponse response) {
+    public void info(HttpServletRequest request, HttpServletResponse response) {
         User user = UserUtils.getUser();
         MemberInfo m = new MemberInfo();
         m.setId(user.getId());
@@ -97,7 +97,7 @@ public class AccountApi extends BaseController {
         JSONObject result = new JSONObject();
         result.put("balance", memberInfo.getBalance());
         result.put("commission", memberInfo.getCommission());
-        return ResultGenerator.genSuccessResult(result);
+        renderString(response, ResultGenerator.genSuccessResult(result));
     }
 
     /**
@@ -109,7 +109,7 @@ public class AccountApi extends BaseController {
      */
     @ResponseBody
     @RequestMapping(value = "list", method = RequestMethod.POST)
-    public Result list(HttpServletRequest request, HttpServletResponse response) {
+    public void list(HttpServletRequest request, HttpServletResponse response) {
         DecimalFormat decimalFormat = new DecimalFormat("#0.00");
         User user = UserUtils.getUser();
         MemberInfo m = new MemberInfo();
@@ -128,7 +128,7 @@ public class AccountApi extends BaseController {
         result.put("pageSize", page.getPageSize());
         result.put("count", page.getCount());
         result.putAll(accountFlowService.stsFlow(accountFlow));
-        return ResultGenerator.genSuccessResult(result);
+        renderString(response, ResultGenerator.genSuccessResult(result));
     }
 
 
@@ -141,7 +141,7 @@ public class AccountApi extends BaseController {
      */
     @ResponseBody
     @RequestMapping(value = "commissionList", method = RequestMethod.POST)
-    public Result commissionList(HttpServletRequest request, HttpServletResponse response) {
+    public void commissionList(HttpServletRequest request, HttpServletResponse response) {
         User user = UserUtils.getUser();
         MemberInfo m = new MemberInfo();
         m.setId(user.getId());
@@ -150,7 +150,7 @@ public class AccountApi extends BaseController {
         c.setUserId(memberInfo.getId());
         Page<CommissionInfo> page = new Page<>(request, response);
         page = commissionInfoService.findPage(page, c);
-        return ResultGenerator.genSuccessResult(page);
+        renderString(response, ResultGenerator.genSuccessResult(page));
     }
 
 
@@ -163,11 +163,11 @@ public class AccountApi extends BaseController {
      */
     @ResponseBody
     @RequestMapping(value = "recharge", method = RequestMethod.POST)
-    public Result recharge(HttpServletRequest request, HttpServletResponse response) {
+    public void recharge(HttpServletRequest request, HttpServletResponse response) {
         User user = UserUtils.getUser();
         String amount = request.getParameter("amount");
         if (StringUtils.isBlank(amount)) {
-            return ResultGenerator.genFailResult("不合法的充值金额");
+            renderString(response, ResultGenerator.genFailResult("不合法的充值金额"));
         }
         AccountFlow accountFlow = new AccountFlow();
         accountFlow.setFlowNo(String.valueOf(idWorker.getId()));
@@ -181,7 +181,7 @@ public class AccountApi extends BaseController {
         accountFlow.setBankName(request.getParameter("bankName"));//开户行
         accountFlow.setCheckStatus("1");
         accountFlowService.save(accountFlow);
-        return ResultGenerator.genSuccessResult("成功");
+        renderString(response, ResultGenerator.genSuccessResult("成功"));
     }
 
     /**
@@ -330,7 +330,7 @@ public class AccountApi extends BaseController {
      */
     @ResponseBody
     @RequestMapping(value = "CommissionTransferBalance", method = RequestMethod.POST)
-    public Result CommissionTransferBalance(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public void CommissionTransferBalance(HttpServletRequest request, HttpServletResponse response) throws Exception {
         User user = UserUtils.getUser();
         MemberInfo m = new MemberInfo();
         m.setId(user.getId());
@@ -338,7 +338,7 @@ public class AccountApi extends BaseController {
         String amountStr = request.getParameter("amount");
         Double amount = Double.valueOf(amountStr);
         if (memberInfo.getCommission() < amount) {
-            return ResultGenerator.genFailResult("佣金余额不足");
+            renderString(response, ResultGenerator.genFailResult("佣金余额不足"));
         }
         AccountFlow accountFlow = new AccountFlow();
         accountFlow.setFlowNo(String.valueOf(idWorker.getId()));
@@ -356,7 +356,7 @@ public class AccountApi extends BaseController {
         couponCustomerService.saveCouponCustomerByPlatform(amount, "0", user.getId(), "佣金转余额优惠券", "3");
         //操作余额
         accountService.editAccount(memberInfo.getBalance() + amount, memberInfo.getCommission() - amount, user.getId());
-        return ResultGenerator.genSuccessResult("成功");
+        renderString(response, ResultGenerator.genSuccessResult("成功"));
     }
 
     /**
@@ -368,7 +368,7 @@ public class AccountApi extends BaseController {
      */
     @ResponseBody
     @RequestMapping(value = "commissionTakeOut", method = RequestMethod.POST)
-    public Result CommissionTakeOut(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public void CommissionTakeOut(HttpServletRequest request, HttpServletResponse response) throws Exception {
         User user = UserUtils.getUser();
         MemberInfo m = new MemberInfo();
         m.setId(user.getId());
@@ -376,7 +376,7 @@ public class AccountApi extends BaseController {
         String amountStr = request.getParameter("amount");
         Double amount = Double.valueOf(amountStr);
         if (memberInfo.getCommission() < amount) {
-            return ResultGenerator.genFailResult("佣金余额不足");
+            renderString(response, ResultGenerator.genFailResult("佣金余额不足"));
         }
         //新增提现记录
         CommissionTakeOut commissionTakeOut = new CommissionTakeOut();
@@ -387,7 +387,7 @@ public class AccountApi extends BaseController {
         commissionTakeOut.setBankName(request.getParameter("bankName"));
         commissionTakeOut.setCheckStatus("1");
         commissionTakeOutService.save(commissionTakeOut);
-        return ResultGenerator.genSuccessResult("成功");
+        renderString(response, ResultGenerator.genSuccessResult("提现成功"));
     }
 
 

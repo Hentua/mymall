@@ -60,10 +60,10 @@ public class RecommendApi extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/api/recommendUrl", method = RequestMethod.POST)
-	public Result addGoodsEvaluate(HttpServletRequest request, HttpServletResponse response) {
+	public void addGoodsEvaluate(HttpServletRequest request, HttpServletResponse response) {
 		User user = UserUtils.getUser();
 		JSONObject jo = new JSONObject();
 		jo.put("url",Global.getConfig("page.baseUrl")+"registration?recommendCode="+user.getReferee());
-		return ResultGenerator.genSuccessResult(jo);
+		renderString(response, ResultGenerator.genSuccessResult(jo));
 	}
 }
