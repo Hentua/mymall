@@ -217,12 +217,12 @@
         </div>
     </c:if>
     <div class="control-group">
-        <label class="control-label">归属运营：</label>
+        <label class="control-label">归属督导经理：</label>
         <div class="controls">
             <c:choose>
                 <c:when test="${memberMerchantCheck.status == '0'}">
                     <sys:treeselect id="user" name="operatorCode" value="${memberMerchantCheck.memberInfo.operatorCode}" labelName="user.name" labelValue="${memberMerchantCheck.memberInfo.operatorName}"
-                                    title="用户" url="/sys/user/operatorTreeData" cssClass="input-small" allowClear="false" notAllowSelectParent="true"/>
+                                    title="归属督导经理" url="/sys/user/operatorTreeData" cssClass="input-small" allowClear="false" notAllowSelectParent="true"/>
                 </c:when>
                 <c:otherwise>
                     ${memberMerchantCheck.memberInfo.operatorName}

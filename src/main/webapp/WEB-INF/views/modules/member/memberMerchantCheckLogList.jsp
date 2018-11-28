@@ -41,7 +41,7 @@
 		<thead>
 			<tr>
 				<th>商户名称</th>
-				<th>用户类型</th>
+				<th>商户类型</th>
 				<th>手机号码</th>
 				<th>注册途径</th>
 				<th>申请时间</th>
@@ -58,14 +58,11 @@
 				</a></td>
 				<td>
 					<c:choose>
-						<c:when test="${memberMerchantCheck.memberType == '0'}">
-							普通会员
+						<c:when test="${memberMerchantCheck.merchantType == '0'}">
+							推广者
 						</c:when>
-						<c:when test="${memberMerchantCheck.memberType == '1'}">
+						<c:when test="${memberMerchantCheck.merchantType == '1'}">
 							商户
-						</c:when>
-						<c:when test="${memberMerchantCheck.memberType == '2'}">
-							运营
 						</c:when>
 					</c:choose>
 				</td>

@@ -20,7 +20,7 @@
 	<ul class="nav nav-tabs">
 		<li class="active"><a href="${ctx}/member/memberInfo/allList">商户列表</a></li>
 	</ul>
-	<form:form id="searchForm" modelAttribute="memberInfo" action="${ctx}/member/memberInfo/" method="post" class="breadcrumb form-search">
+	<form:form id="searchForm" modelAttribute="memberInfo" action="${ctx}/member/memberInfo/allList" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<ul class="ul-form">
@@ -55,10 +55,10 @@
 			<tr>
 				<th>昵称</th>
 				<th>手机号码</th>
-				<th>用户类型</th>
+				<th>商户类型</th>
 				<th>注册途径</th>
 				<th>注册时间</th>
-				<th>归属运营</th>
+				<th>归属督导经理</th>
 				<th>商户审核状态</th>
 				<th>登录状态</th>
 				<th>备注</th>
@@ -76,14 +76,11 @@
 				</td>
 				<td>
 					<c:choose>
-						<c:when test="${memberInfo.userType == '0'}">
-							普通会员
+						<c:when test="${memberInfo.merchantType == '0'}">
+							推广者
 						</c:when>
-						<c:when test="${memberInfo.userType == '1'}">
+						<c:when test="${memberInfo.merchantType == '1'}">
 							商户
-						</c:when>
-						<c:when test="${memberInfo.userType == '2'}">
-							运营
 						</c:when>
 					</c:choose>
 				</td>
@@ -135,7 +132,7 @@
 					<c:if test="${memberInfo.status == '1'}">
 						<a href="${ctx}/member/memberInfo/uncheckMerchant?id=${memberInfo.id}" onclick="return confirmx('确定要取消该商户审核状态吗？如果类型为商户，将下架该商户的所有商品', this.href)">取消审核</a>
 					</c:if>
-					<a href="${ctx}/member/memberInfo/allListForm?id=${memberInfo.id}">修改归属运营</a>
+					<a href="${ctx}/member/memberInfo/allListForm?id=${memberInfo.id}">修改归属督导经理</a>
 				</td>
 			</tr>
 		</c:forEach>

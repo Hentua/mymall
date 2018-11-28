@@ -17,7 +17,8 @@
 		u.mobile AS "mobile",
 		m.status AS "merchantStatus",
 		m.register_way AS "registerWay",
-		u.user_type AS "memberType"
+		u.user_type AS "memberType",
+		m.merchant_type AS "merchantType"
 	</sql>
 	
 	<sql id="memberMerchantCheckJoins">
