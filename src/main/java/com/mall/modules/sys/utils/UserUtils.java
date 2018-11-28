@@ -62,8 +62,6 @@ public class UserUtils {
             user.setRoleList(roleDao.findList(new Role(user)));
             CacheUtils.put(USER_CACHE, USER_CACHE_ID_ + user.getId(), user);
             CacheUtils.put(USER_CACHE, USER_CACHE_LOGIN_NAME_ + user.getLoginName(), user);
-        } else {
-            return userDao.get(id);
         }
         return user;
     }

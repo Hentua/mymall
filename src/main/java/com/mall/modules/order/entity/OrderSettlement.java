@@ -33,8 +33,8 @@ public class OrderSettlement extends DataEntity<OrderSettlement> {
 	private Double orderAmount;
 	private Date startDate;
 	private Date endDate;
-	private Date customerAccount;
-	private Date merchantAccount;
+	private String customerAccount;
+	private String merchantAccount;
 
 	public OrderSettlement() {
 		super();
@@ -45,20 +45,20 @@ public class OrderSettlement extends DataEntity<OrderSettlement> {
 	}
 
 	@ExcelField(title = "下单人账号", sort = 6)
-	public Date getCustomerAccount() {
+	public String getCustomerAccount() {
 		return customerAccount;
 	}
 
-	public void setCustomerAccount(Date customerAccount) {
+	public void setCustomerAccount(String customerAccount) {
 		this.customerAccount = customerAccount;
 	}
 
 	@ExcelField(title = "商家账号", sort = 2)
-	public Date getMerchantAccount() {
+	public String getMerchantAccount() {
 		return merchantAccount;
 	}
 
-	public void setMerchantAccount(Date merchantAccount) {
+	public void setMerchantAccount(String merchantAccount) {
 		this.merchantAccount = merchantAccount;
 	}
 
