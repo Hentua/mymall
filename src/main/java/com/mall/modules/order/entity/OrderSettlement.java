@@ -31,10 +31,20 @@ public class OrderSettlement extends DataEntity<OrderSettlement> {
 	private Date orderDate;
 	private String orderNo;
 	private Double orderAmount;
+	private String orderStatus;
 	private Date startDate;
 	private Date endDate;
 	private String customerAccount;
 	private String merchantAccount;
+
+
+	public String getOrderStatus() {
+		return orderStatus;
+	}
+
+	public void setOrderStatus(String orderStatus) {
+		this.orderStatus = orderStatus;
+	}
 
 	public OrderSettlement() {
 		super();

@@ -161,6 +161,12 @@ public class GoodsInfoController extends BaseController {
 		return "modules/goods/goodsDetailCheck";
 	}
 
+	/**
+	 * 商品详情
+	 * @param goodsInfo
+	 * @param model
+	 * @return
+	 */
 	@RequiresPermissions("goods:goodsInfo:view")
 	@RequestMapping(value = "goodsDetail")
 	public String goodsDetail(GoodsInfo goodsInfo, Model model) {

@@ -100,7 +100,7 @@
 	</update>
 	<update id="deleteByGoodsId">
 		DELETE FROM goods_image
-		WHERE id = #{goodsId}
+		WHERE goods_id = #{goodsId}
 	</update>
 	
 </mapper>

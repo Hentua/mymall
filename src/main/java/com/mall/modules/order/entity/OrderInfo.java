@@ -22,7 +22,7 @@ public class OrderInfo extends DataEntity<OrderInfo> {
 	private static final long serialVersionUID = 1L;
 	private String orderNo;		// 订单号
 	private String merchantCode;		// 卖家店铺ID
-	private String orderStatus;		// 订单状态（0-待付款，1-已付款，2-已取消，3-退款申请，4-已退款）
+	private String orderStatus;		// 订单状态（0-待付款，1-待发货，2-已发货，3-交易成功，4-交易关闭，5-售后处理中，6-处理完成）
 	private String orderType;		// 订单类型（0-平台自主下单，1-礼包兑换）
 	private Double goodsCount;		// 商品总数量
 	private Double goodsAmountTotal;		// 订单商品总金额

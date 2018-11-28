@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Member;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -148,6 +149,18 @@ public class GoodsInfoApi extends BaseController {
         m.setId(goodsInfo.getMerchantId());
         m = memberInfoService.get(m);
         List<GoodsImage> goodsImages = goodsImageService.findListByGoodsId(goodsInfo.getId());
+        String goodsImagesStr = "";
+        if(null != goodsImages && goodsImages.size()!=0){
+            goodsImagesStr = goodsImages.get(0).getImageUrl();
+        }
+        String[] goodsImageArray = goodsImagesStr.split("\\|");
+        goodsImages = new ArrayList<>();
+        for (String img: goodsImageArray) {
+            GoodsImage goodsImage = new GoodsImage();
+            goodsImage.setImageUrl(img);
+            goodsImage.setGoodsId(goodsInfo.getId());
+            goodsImages.add(goodsImage);
+        }
         goodsInfo.setGoodsImages(goodsImages);
 
         GoodsStandard goodsStandard = new GoodsStandard();
