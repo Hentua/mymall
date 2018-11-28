@@ -141,7 +141,7 @@ public class GoodsInfoApi extends BaseController {
             goodsInfo=goodsInfoService.get(request.getParameter("goodsId"));
         }
 
-        if(null == goodsInfo || goodsInfo.getStatus() != 3){
+        if(null == goodsInfo || goodsInfo.getStatus() != 2){
             return  ResultGenerator.genFailResult("商品已下架").setData("商品已下架");
         }
         MemberInfo m = new MemberInfo();

@@ -51,7 +51,7 @@
 		left join index_billboard_goods ibg on a.id = ibg.goods_id
 		<include refid="goodsInfoJoins"/>
 		<where>
-			 a.status = 3
+			 a.status = 2
 			AND a.del_flag = 0
 		  	and ibg.billboard_id = #{billboard.id}
 			<if test="goods != null and goods.goodsCategoryId != null and goods.goodsCategoryId != ''">
@@ -100,7 +100,7 @@
 		FROM goods_info a
 		left join member_info m on a.merchant_id = m.id
 		<where>
-			a.status = 3
+			a.status = 2
 			<if test="goodsCategoryId != null and goodsCategoryId != ''">
 				AND a.goods_category_id = #{goodsCategoryId}
 			</if>
@@ -274,7 +274,7 @@
 	<select id="merchantCountt" parameterType="java.lang.String" resultType="java.util.Map">
 		select count(1) as "goodsCount" from goods_info a
 		<where>
-			a.status = 3
+			a.status = 2
 			AND a.merchant_id = #{userId}
 			and a.del_flag = 0
 		</where>

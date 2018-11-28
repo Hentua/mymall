@@ -13,6 +13,7 @@ import javax.validation.ConstraintViolationException;
 import javax.validation.ValidationException;
 import javax.validation.Validator;
 
+import com.alibaba.druid.support.json.JSONUtils;
 import com.mall.common.mapper.JsonMapper;
 import com.mall.common.utils.DateUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -153,7 +154,7 @@ public abstract class BaseController {
 	 * @return
 	 */
 	protected String renderString(HttpServletResponse response, Object object) {
-		return renderString(response, JsonMapper.toJsonString(object), "application/json");
+		return renderString(response, JSONUtils.toJSONString(object), "application/json");
 	}
 	
 	/**
