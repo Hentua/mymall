@@ -185,9 +185,9 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 			merchantRefereeCommission.setType("2");
 			merchantRefereeCommission.setUserId(merchantRefereeUser.getId());
 			merchantRefereeCommission.setProduceUserId(merchant.getId());
-			merchantRefereeCommission.setOriginAmount(orderInfo.getOrderAmountTotal());
-			merchantRefereeCommission.setAmount(commissionConfigService.getCommissionAmount("2",orderInfo.getOrderAmountTotal()));
-			merchantRefereeCommission.setUnionId(orderInfo.getId());
+			merchantRefereeCommission.setOriginAmount(orderInfo.getSettlementsAmount());
+			merchantRefereeCommission.setAmount(commissionConfigService.getCommissionAmount("2",orderInfo.getSettlementsAmount()));
+			merchantRefereeCommission.setUnionId(orderInfo.getOrderNo());
 			merchantRefereeCommission.setMode(config.getMode());
 			merchantRefereeCommission.setNumber(config.getNumber());
 			commissionInfoService.save(merchantRefereeCommission);
@@ -200,7 +200,7 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 			customerRefereeCommission.setProduceUserId(customer.getId());
 			customerRefereeCommission.setOriginAmount(orderInfo.getOrderAmountTotal());
 			customerRefereeCommission.setAmount(commissionConfigService.getCommissionAmount("1",orderInfo));
-			customerRefereeCommission.setUnionId(orderInfo.getId());
+			customerRefereeCommission.setUnionId(orderInfo.getOrderNo());
 			customerRefereeCommission.setMode(config.getMode());
 			customerRefereeCommission.setNumber(config.getNumber());
 			commissionInfoService.save(customerRefereeCommission);
@@ -235,11 +235,11 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 					commissionInfo.setType("1");
 					commissionInfo.setUserId(g.getUserId());
 					commissionInfo.setProduceUserId(customer.getId());
-					commissionInfo.setOriginAmount(orderInfo.getOrderAmountTotal());
+					commissionInfo.setOriginAmount(og.getGoodsPrice());
 					commissionInfo.setAmount(amount);
 					commissionInfo.setMode(gc.getCommissionMode());
 					commissionInfo.setNumber(gc.getCommissionNumber());
-					commissionInfo.setUnionId(orderInfo.getId());
+					commissionInfo.setUnionId(orderInfo.getOrderNo());
 					commissionInfoService.save(commissionInfo);
 				}
 				orderGoodsDao.editGoodsSalesTotal(og);

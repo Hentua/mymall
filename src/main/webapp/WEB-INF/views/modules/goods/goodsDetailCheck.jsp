@@ -24,6 +24,12 @@
             });
         });
 
+        function go_a(status) {
+			$("#goodsStatus").val(status);
+			$("#inputForm").submit();
+			<%--location.href = "${ctx}/goods/goodsInfo/updateStatusCheck?id=${goodsInfo.id}&status="+status;--%>
+        }
+
 	</script>
 </head>
 <body>
@@ -31,9 +37,9 @@
 		<li><a href="${ctx}/goods/goodsInfo/checkList/">商品信息列表</a></li>
 		<li class="active"><a href="${ctx}/goods/goodsInfo/goodsDetailCheck?id=${goodsInfo.id}">商品详情</a></li>
 	</ul><br/>
-	<form:form id="inputForm" modelAttribute="goodsInfo" action="${ctx}/goods/goodsInfo/updateStatusCheck" method="post" class="form-horizontal">
+	<form:form id="inputForm" modelAttribute="goodsInfo" action="${ctx}/goods/goodsInfo/updateStatusCheck"   method="post" class="form-horizontal">
 		<form:hidden path="id"/>
-		<input type="hidden" name="status" value="3">
+		<input type="hidden" id="goodsStatus" name="status" >
 		<sys:message content="${message}"/>
 		<div class="control-group">
 			<label class="control-label">商品分类：</label>
@@ -62,18 +68,10 @@
 		<div class="control-group">
 			<label class="control-label">优惠类型：</label>
 			<div class="controls">
-				<c:if test="${goodsInfo.discountType == 0}">
-					不可使用优惠
-				</c:if>
-				<c:if test="${goodsInfo.discountType == 1}">
-					仅可以使用5折优惠
-				</c:if>
-				<c:if test="${goodsInfo.discountType == 2}">
-					仅可以使用7折优惠
-				</c:if>
-				<c:if test="${goodsInfo.discountType == 3}">
-					都可使用
-				</c:if>
+				<form:radiobutton title="不可使用优惠" checked="checked" htmlEscape="false" class="required" path="discountType" value="0" label="不可使用优惠"/>
+				<form:radiobutton title="仅可以使用5折优惠" htmlEscape="false" class="required" path="discountType" value="1" label="仅可以使用5折优惠"/>
+				<form:radiobutton title="仅可以使用7折优惠" htmlEscape="false" class="required" path="discountType" value="2" label="仅可以使用7折优惠"/>
+				<form:radiobutton title="都可使用" htmlEscape="false" class="required" path="discountType" value="3" label="都可使用"/>
 			</div>
 		</div>
 		<div class="control-group">
@@ -129,7 +127,8 @@
 		<div class="form-actions">
 			<input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
 			<c:if test="${goodsInfo.status == '2'}">
-				<input id="btnSubmit" class="btn btn-primary" type="submit" on value="上 架"/>
+				<input id="btnSubmit" class="btn btn-primary" type="button" onclick="go_a('3')" value="上 架"/>
+				<input id="btnSubmit" class="btn btn-primary" type="button" onclick="go_a('1')" value="驳 回"/>
 			</c:if>
 		</div>
 	</form:form>

@@ -61,7 +61,8 @@
 				<th>佣金金额</th>
 				<th>佣金类型</th>
 				<th>产生时间</th>
-				<%--<th>状态</th>--%>
+				<th>关联单号</th>
+				<th>状态</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -99,14 +100,19 @@
 					</c:if>
 				</td>
 				<td><fmt:formatDate value="${commissionInfo.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
-				<%--<td>--%>
-					<%--<c:if test="${commissionInfo.status == '1'}">--%>
-						<%--已清算--%>
-					<%--</c:if>--%>
-					<%--<c:if test="${commissionInfo.status == '0'}">--%>
-						<%--未清算--%>
-					<%--</c:if>--%>
-				<%--</td>--%>
+				<td>
+					<c:if test="${commissionInfo.type == '1' || commissionInfo.type == '2'}">
+						${commissionInfo.unionId}
+					</c:if>
+				</td>
+				<td>
+					<c:if test="${commissionInfo.status == '1'}">
+						已清算
+					</c:if>
+					<c:if test="${commissionInfo.status == '0'}">
+						未清算
+					</c:if>
+				</td>
 			</tr>
 		</c:forEach>
 		</tbody>

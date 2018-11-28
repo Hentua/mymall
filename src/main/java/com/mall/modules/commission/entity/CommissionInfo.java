@@ -17,6 +17,7 @@ public class CommissionInfo extends DataEntity<CommissionInfo> {
 	private Double originAmount;		// 产生佣金金额
 	private Double amount;		// 佣金金额
 	private String unionId;		// 关联订单号 【推荐商家入驻无订单号】
+	private String orderBathNo;   //
 	private String settlementId;		// 提现结算单ID
 	private String produceUserName; //被推荐人名称
 	private String status;  //清算状态 0未清算 1已清算

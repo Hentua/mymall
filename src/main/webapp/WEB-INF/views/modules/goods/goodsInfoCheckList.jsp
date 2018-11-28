@@ -135,7 +135,7 @@
 				</td>
 				<shiro:hasPermission name="goods:goodsInfo:edit"><td>
 					<c:if test="${goodsInfo.status == '2'}">
-						<a href="${ctx}/goods/goodsInfo/goodsDetailCheck?id=${goodsInfo.id}" onclick="">上架</a>
+						<a href="${ctx}/goods/goodsInfo/goodsDetailCheck?id=${goodsInfo.id}" onclick="">审核</a>
 					</c:if>
 					<c:if test="${goodsInfo.status == '3'}">
 						<a href="${ctx}/goods/goodsInfo/updateStatusCheck?id=${goodsInfo.id}&status=1" onclick="return confirmx('确认要下架该商品信息吗？', this.href)">下架</a>
