@@ -106,7 +106,7 @@
 			#{delFlag},
 			#{remarks},
 			#{status},
-			#{merchantCode}
+			#{merchantCode},
 			#{commission}
 		)
 	</insert>
