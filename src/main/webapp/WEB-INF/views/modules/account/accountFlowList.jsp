@@ -18,7 +18,7 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li class="active"><a href="${ctx}/account/accountFlow/">充值提现审核</a></li>
+		<li class="active"><a href="${ctx}/account/accountFlow/list">充值提现审核</a></li>
 	</ul>
 	<form:form id="searchForm" modelAttribute="accountFlow" action="${ctx}/account/accountFlow/list" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
@@ -106,7 +106,7 @@
 					</c:if>
 				</td>
 				<shiro:hasPermission name="account:accountFlow:edit"><td>
-					<c:if test="${accountFlow.checkStatus == '1'}">
+					<c:if test="${accountFlow.checkStatus == '1' && accountFlow.incomeExpenditureMode == '2'}">
 						<a href="${ctx}/account/accountFlow/check?id=${accountFlow.id}" onclick="return confirmx('确认要审核通过该笔记录吗？', this.href)">审核通过</a>
 					</c:if>
     				<%--<a href="${ctx}/account/accountFlow/form?id=${accountFlow.id}">修改</a>--%>

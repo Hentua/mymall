@@ -49,7 +49,8 @@
 				 m.nickname  like CONCAT('%',#{nickname},'%')
 			</if>
 			<if test="org != null and org != ''">
-				and a.mode in ('1','3') and a.income_expenditure_mode = '2'
+				and a.mode in ('1','3')
+-- 				and a.income_expenditure_mode = '2'
 			</if>
 			<if test="checkStatus != null and checkStatus != ''">
 				and a.check_status = #{checkStatus}
