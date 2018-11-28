@@ -48,22 +48,36 @@
 		}
 		.mr_notice{
 			border: 1px solid #008fd7;
-			height: 187px;
+			height: 170px;
 			margin-left: 1%;
 			width: 65%;
 			float: left;
 			margin-top: -188px;
 		}
 		.mr_info{
-			border: 1px solid #008fd7;
+			/*border: 1px solid #008fd7;*/
 			width: 29.3%;
 			margin-left: 1%;
 			float: left;
 			height: 478px;
 			padding: 1% 1%;
+			font-size: 14px;
 		}
-		.mr_info div{
-			text-align: center;
+		.mr_info .mr_info_left{
+			font-weight: bold;
+			padding-top: 20px;
+			float: left;
+			text-align: right;
+			width: 25%;
+			border-bottom: 1px solid #1190d9;
+		}
+		.mr_info .mr_info_right{
+			padding-top: 20px;
+			float: left;
+			text-align: left;
+			width: 75%;
+			border-bottom: 1px solid #1190d9;
+
 		}
 		.mr_info table tr td{
 			padding-top: 15px;
@@ -164,48 +178,108 @@
 			<%--<div style="width: 100%">--%>
 				<%----%>
 			<%--</div>--%>
-			<table >
-				<tr>
-					<td>头像：</td>
-					<td><img style="border: 1px solid #0190d7;" src="${member.fullAvatarUrl}" width="50%" ></td>
-				</tr>
-				<tr>
-					<td>账号：</td>
-					<td>${user.mobile}</td>
-				</tr>
-				<tr>
-					<td>姓名：</td>
-					<td>${user.name}</td>
-				</tr>
-				<tr>
-					<td>类别：</td>
-					<td>商家</td>
-				</tr>
-				<tr>
-					<td>店铺名称：</td>
-					<td>${member.nickname}</td>
-				</tr>
-				<tr>
-					<td>月销售额：</td>
-					<td>${stsObj.monthOrderAmountTotal}</td>
-				</tr>
-				<tr>
-					<td>累计佣金：</td>
-					<td>${stsObj.commissionTotal}</td>
-				</tr>
-				<tr>
-					<td>我的推荐码：</td>
-					<td>${member.referee}</td>
-				</tr>
-				<tr>
-					<td>上次登录IP：</td>
-					<td>${user.oldLoginIp}</td>
-				</tr>
-				<tr>
-					<td>上次登录时间：</td>
-					<td><fmt:formatDate value="${user.oldLoginDate}" type="both" dateStyle="full"/></td>
-				</tr>
-			</table>
+				<div  style="    width: 100%;
+    text-align: center;">
+					<img style="border: 1px solid #1190d9;    border-radius: 50%;width: 108px" src="${member.fullAvatarUrl}" width="50%" >
+				</div>
+				<div class="mr_info_left">
+					账号：
+				</div>
+				<div class="mr_info_right">
+					${user.mobile}
+				</div>
+				<div class="mr_info_left">
+					姓名：
+				</div>
+				<div class="mr_info_right">
+					${user.name}
+				</div>
+				<div class="mr_info_left">
+					类别：
+				</div>
+				<div class="mr_info_right">
+					商家
+				</div>
+				<div class="mr_info_left">
+					店铺名称：
+				</div>
+				<div class="mr_info_right">
+					${member.nickname}
+				</div>
+				<div class="mr_info_left">
+					月销售额：
+				</div>
+				<div class="mr_info_right">
+					${stsObj.monthOrderAmountTotal}
+				</div>
+				<div class="mr_info_left">
+					累计佣金：
+				</div>
+				<div class="mr_info_right">
+					${stsObj.commissionTotal}
+				</div>
+				<div class="mr_info_left">
+					我的推荐码：
+				</div>
+				<div class="mr_info_right">
+					${member.referee}
+				</div>
+				<div class="mr_info_left">
+					上次登录IP：
+				</div>
+				<div class="mr_info_right">
+					${user.oldLoginIp}
+				</div>
+				<div class="mr_info_left">
+					上次登录时间：
+				</div>
+				<div class="mr_info_right">
+					<fmt:formatDate value="${user.oldLoginDate}" type="both" dateStyle="full"/>
+				</div>
+
+
+			<%--<table >--%>
+				<%--<tr>--%>
+					<%--<td></td>--%>
+					<%--<td></td>--%>
+				<%--</tr>--%>
+				<%--<tr>--%>
+					<%--<td>账号：</td>--%>
+					<%--<td>${user.mobile}</td>--%>
+				<%--</tr>--%>
+				<%--<tr>--%>
+					<%--<td>姓名：</td>--%>
+					<%--<td>${user.name}</td>--%>
+				<%--</tr>--%>
+				<%--<tr>--%>
+					<%--<td>类别：</td>--%>
+					<%--<td>商家</td>--%>
+				<%--</tr>--%>
+				<%--<tr>--%>
+					<%--<td>店铺名称：</td>--%>
+					<%--<td>${member.nickname}</td>--%>
+				<%--</tr>--%>
+				<%--<tr>--%>
+					<%--<td>月销售额：</td>--%>
+					<%--<td>${stsObj.monthOrderAmountTotal}</td>--%>
+				<%--</tr>--%>
+				<%--<tr>--%>
+					<%--<td>累计佣金：</td>--%>
+					<%--<td>${stsObj.commissionTotal}</td>--%>
+				<%--</tr>--%>
+				<%--<tr>--%>
+					<%--<td>我的推荐码：</td>--%>
+					<%--<td>${member.referee}</td>--%>
+				<%--</tr>--%>
+				<%--<tr>--%>
+					<%--<td>上次登录IP：</td>--%>
+					<%--<td>${user.oldLoginIp}</td>--%>
+				<%--</tr>--%>
+				<%--<tr>--%>
+					<%--<td>上次登录时间：</td>--%>
+					<%--<td><fmt:formatDate value="${user.oldLoginDate}" type="both" dateStyle="full"/></td>--%>
+				<%--</tr>--%>
+			<%--</table>--%>
 		</div>
 		<!-- 公告 -->
 		<div class="mr_notice">
