@@ -282,7 +282,7 @@
 	</select>
 	<select id="monthSalesTotal" parameterType="java.lang.String" resultType="java.util.Map">
 		SELECT
-			sum( og.count ) as "monthSalesTotal"
+			IFNULL(sum( og.count ),0) as "monthSalesTotal"
 		FROM
 			order_goods og
 			LEFT JOIN order_info oi ON og.order_no = oi.order_no

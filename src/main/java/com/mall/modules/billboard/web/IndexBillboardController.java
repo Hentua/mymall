@@ -4,7 +4,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.mall.modules.goods.entity.BillboardGoods;
+import com.mall.modules.goods.entity.GoodsCategory;
 import com.mall.modules.goods.entity.GoodsInfo;
+import com.mall.modules.goods.service.GoodsCategoryService;
 import com.mall.modules.goods.service.GoodsInfoService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +41,9 @@ public class IndexBillboardController extends BaseController {
 	@Autowired
 	private GoodsInfoService goodsInfoService;
 
+	@Autowired
+	private GoodsCategoryService goodsCategoryService;
+
 	@ModelAttribute
 	public IndexBillboard get(@RequestParam(required=false) String id) {
 		IndexBillboard entity = null;
@@ -68,6 +73,10 @@ public class IndexBillboardController extends BaseController {
 			List<GoodsInfo> goodsInfos = goodsInfoService.findListByBillboard(billboardGoods);
 			indexBillboard.setGoodsList(goodsInfos);
 		}
+		GoodsCategory gc = new GoodsCategory();
+		gc.setDepth(1);
+		List<GoodsCategory> categories = goodsCategoryService.findList(gc);
+		model.addAttribute("categories",categories);
 		model.addAttribute("indexBillboard", indexBillboard);
 		return "modules/billboard/indexBillboardForm";
 	}
@@ -77,6 +86,9 @@ public class IndexBillboardController extends BaseController {
 	public String save(IndexBillboard indexBillboard, Model model, RedirectAttributes redirectAttributes) {
 		if (!beanValidator(model, indexBillboard)){
 			return form(indexBillboard, model);
+		}
+		if("5".equals(indexBillboard.getType())){
+			indexBillboard.setJumpId(indexBillboard.getCategoryId());
 		}
 		indexBillboardService.save(indexBillboard);
 		addMessage(redirectAttributes, "保存首页广告位成功");

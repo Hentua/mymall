@@ -54,6 +54,8 @@ public class IndexBillboardApi extends BaseController {
 		List<IndexBillboard> list = indexBillboardService.findList(billboard);
 		billboard.setType("2");
 		List<IndexBillboard> list2 = indexBillboardService.findList(billboard);
+		billboard.setType("5");
+		List<IndexBillboard> list3 = indexBillboardService.findList(billboard);
 		//独立广告位带商品集合
 		for (IndexBillboard b: list2) {
 				BillboardGoods billboardGoods = new BillboardGoods();
@@ -64,6 +66,8 @@ public class IndexBillboardApi extends BaseController {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("adListData",list);
 		map.put("recommendData",list2);
+		map.put("categoryData",list3);
+
 		return ResultGenerator.genSuccessResult(map);
 	}
 

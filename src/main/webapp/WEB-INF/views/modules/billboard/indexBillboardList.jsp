@@ -31,9 +31,10 @@
 			<li><label>类型：</label>
 				<form:select path="type" cssStyle="width: 170px">
 					<form:option value="">全部</form:option>
-					<form:option value="1">轮播广告</form:option>
-					<form:option value="2">标题广告</form:option>
-					<form:option value="3"  label="开机广告"/>
+					<form:option value="1" label="APP首页轮播图广告位"/>
+					<form:option value="2"  label="APP首页标题广告"/>
+					<form:option value="3"  label="APP开机广告"/>
+					<form:option value="5"  label="APP首页推荐分类"/>
 					<form:option value="4"  label="后台首页广告"/>
 				</form:select>
 			</li>
@@ -70,13 +71,16 @@
 				</td>
 				<td>
 					<c:if test="${indexBillboard.type == 1}">
-						轮播广告
+						APP首页轮播图广告位
 					</c:if>
 					<c:if test="${indexBillboard.type == 2}">
-						标题广告
+						APP首页标题广告
 					</c:if>
 					<c:if test="${indexBillboard.type == 3}">
-						开机广告
+						APP开机广告
+					</c:if>
+					<c:if test="${indexBillboard.type == 5}">
+						APP首页推荐分类
 					</c:if>
 					<c:if test="${indexBillboard.type == 4}">
 						后台首页广告

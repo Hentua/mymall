@@ -22,9 +22,18 @@ public class IndexBillboard extends DataEntity<IndexBillboard> {
 	private String type;		// 类型：1轮播图广告位 2独立广告位 3开机广告 4后台首页广告
 	private String appFlag;		// app广告位标识
 	private String jumpId;      //跳转ID
+	private String categoryId;      //跳转分类ID
 	private String jumpGoodsImage; //商品图片
 	private String jumpGoodsName;
 	private String[] goodsId;   //form表单商品ID集合
+
+	public String getCategoryId() {
+		return categoryId;
+	}
+
+	public void setCategoryId(String categoryId) {
+		this.categoryId = categoryId;
+	}
 
 	//广告位关联商品集合
 	private List<GoodsInfo> goodsList;
@@ -86,7 +95,7 @@ public class IndexBillboard extends DataEntity<IndexBillboard> {
 		this.title = title;
 	}
 	
-	@Length(min=0, max=100, message="轮播图片长度必须介于 0 和 100 之间")
+	@Length(min=0, max=500, message="轮播图片长度必须介于 0 和 100 之间")
 	public String getImage() {
 		return image;
 	}

@@ -13,7 +13,6 @@ import javax.validation.ConstraintViolationException;
 import javax.validation.ValidationException;
 import javax.validation.Validator;
 
-import com.alibaba.druid.support.json.JSONUtils;
 import com.mall.common.mapper.JsonMapper;
 import com.mall.common.utils.DateUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -48,19 +47,19 @@ public abstract class BaseController {
 	 */
 	@Value("${adminPath}")
 	protected String adminPath;
-	
+
 	/**
 	 * 前端基础路径
 	 */
 	@Value("${frontPath}")
 	protected String frontPath;
-	
+
 	/**
 	 * 前端URL后缀
 	 */
 	@Value("${urlSuffix}")
 	protected String urlSuffix;
-	
+
 	/**
 	 * 验证Bean实例对象
 	 */
@@ -84,7 +83,7 @@ public abstract class BaseController {
 		}
 		return true;
 	}
-	
+
 	/**
 	 * 服务端参数有效性验证
 	 * @param object 验证的实体对象
@@ -102,7 +101,7 @@ public abstract class BaseController {
 		}
 		return true;
 	}
-	
+
 	/**
 	 * 服务端参数有效性验证
 	 * @param object 验证的实体对象
@@ -112,7 +111,7 @@ public abstract class BaseController {
 	protected void beanValidator(Object object, Class<?>... groups) {
 		BeanValidators.validateWithException(validator, object, groups);
 	}
-	
+
 	/**
 	 * 添加Model消息
 	 * @param message
@@ -124,7 +123,7 @@ public abstract class BaseController {
 		}
 		model.addAttribute("message", sb.toString());
 	}
-	
+
 	/**
 	 * 添加Flash消息
 	 * @param message
@@ -154,9 +153,9 @@ public abstract class BaseController {
 	 * @return
 	 */
 	protected String renderString(HttpServletResponse response, Object object) {
-		return renderString(response, JSONUtils.toJSONString(object), "application/json");
+		return renderString(response, JsonMapper.toJsonString(object), "application/json");
 	}
-	
+
 	/**
 	 * 客户端返回字符串
 	 * @param response
@@ -166,8 +165,8 @@ public abstract class BaseController {
 	protected String renderString(HttpServletResponse response, String string, String type) {
 		try {
 			response.reset();
-	        response.setContentType(type);
-	        response.setCharacterEncoding("utf-8");
+			response.setContentType(type);
+			response.setCharacterEncoding("utf-8");
 			response.getWriter().print(string);
 			return null;
 		} catch (IOException e) {
@@ -179,18 +178,18 @@ public abstract class BaseController {
 	 * 参数绑定异常
 	 */
 	@ExceptionHandler({BindException.class, ConstraintViolationException.class, ValidationException.class})
-    public String bindException() {  
-        return "error/400";
-    }
-	
+	public String bindException() {
+		return "error/400";
+	}
+
 	/**
 	 * 授权登录异常
 	 */
 	@ExceptionHandler({AuthenticationException.class})
-    public String authenticationException() {  
-        return "error/403";
-    }
-	
+	public String authenticationException() {
+		return "error/403";
+	}
+
 	/**
 	 * 初始化数据绑定
 	 * 1. 将所有传递进来的String进行HTML编码，防止XSS攻击
@@ -223,5 +222,5 @@ public abstract class BaseController {
 //			}
 		});
 	}
-	
+
 }

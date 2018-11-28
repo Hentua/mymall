@@ -25,18 +25,37 @@
 		});
 
 		function showHide(t){
-		    // console.log($(t).val());
-		    if(1 == $(t).val() || 3 == $(t).val() || 4 == $(t).val()){
-                $("#selGoods").hide();
-			}else{
+			//
+            <%--<form:option value="1" label="APP首页轮播图广告位"/>--%>
+            <%--<form:option value="2"  label="APP首页标题广告"/>--%>
+            <%--<form:option value="3"  label="APP开机广告"/>--%>
+            <%--<form:option value="5"  label="APP首页推荐分类"/>--%>
+            <%--<form:option value="4"  label="后台首页广告"/>--%>
+
+
+		    console.log($(t).val());
+		    if(2 == $(t).val()  ){
                 $("#selGoods").show();
 			}
-            if(4 == $(t).val()){
+			if(2 != $(t).val() ){
+                $("#selGoods").hide();
+			}
+
+
+            if(4 == $(t).val() || 5 == $(t).val()){
                 $("#uninGoods").hide();
             }
-            if(4 != $(t).val()){
+            if(4 != $(t).val() && 5 != $(t).val()){
                 $("#uninGoods").show();
             }
+
+            if(5 != $(t).val()){
+                $("#uninGoodsCategory").hide();
+			}
+            if(5 == $(t).val()){
+                $("#uninGoodsCategory").show();
+            }
+
 		}
 
 		function selGoods() {
@@ -106,9 +125,10 @@
 			<label class="control-label">类型：</label>
 			<div class="controls">
 				<form:select path="type" onchange="showHide(this)"   class="input-xlarge ">
-					<form:option value="1" label="轮播图广告位"/>
-					<form:option value="2"  label="标题广告"/>
-					<form:option value="3"  label="开机广告"/>
+					<form:option value="1" label="APP首页轮播图广告位"/>
+					<form:option value="2"  label="APP首页标题广告"/>
+					<form:option value="3"  label="APP开机广告"/>
+					<form:option value="5"  label="APP首页推荐分类"/>
 					<form:option value="4"  label="后台首页广告"/>
 				</form:select>
 			</div>
@@ -126,7 +146,7 @@
 				<sys:ckfinder input="image" type="images" uploadPath="/billboard/indexBillboard" selectMultiple="false" maxWidth="100" maxHeight="100"/>
 			</div>
 		</div>
-		<div class="control-group" id="uninGoods">
+		<div class="control-group" id="uninGoods" style="${(indexBillboard.type != 5)?'':'display: none'}">
 			<label class="control-label">广告关联商品：</label>
 			<div class="controls">
 				<span id="jump_span">
@@ -141,7 +161,20 @@
 				<input class="btn" style="display: ${empty indexBillboard.jumpId?'':'none'}" id="selGoods1" type="button" value="选择商品" onclick="selGoodsbyjump(this)">
 			</div>
 		</div>
-		<div class="control-group" id="selGoods" style="${(indexBillboard.type == 2)?'':'display: none'}">
+
+		<div class="control-group" id="uninGoodsCategory" style="${(indexBillboard.type == 5)?'':'display: none'}">
+			<label class="control-label">广告关联分类：</label>
+			<div class="controls">
+				<form:select path="categoryId" cssStyle="width: 170px">
+					<form:option value="">全部</form:option>
+					<c:forEach items="${categories}" var="c">
+						<form:option value="${c.id}">${c.categoryName}</form:option>
+					</c:forEach>
+				</form:select>
+			</div>
+		</div>
+
+		<div class="control-group" id="selGoods"  style="${(indexBillboard.type == 2)?'':'display: none'}" >
 			<label class="control-label">标题广告商品列表：</label>
 			<div class="controls">
 				<div style="" id="goodsInfos">
