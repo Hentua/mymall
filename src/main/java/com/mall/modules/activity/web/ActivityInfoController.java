@@ -1,9 +1,12 @@
 package com.mall.modules.activity.web;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.mall.common.config.Global;
+import com.mall.common.persistence.Page;
 import com.mall.common.utils.DateUtils;
+import com.mall.common.utils.StringUtils;
+import com.mall.common.web.BaseController;
+import com.mall.modules.activity.entity.ActivityInfo;
+import com.mall.modules.activity.service.ActivityInfoService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,13 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.mall.common.config.Global;
-import com.mall.common.persistence.Page;
-import com.mall.common.web.BaseController;
-import com.mall.common.utils.StringUtils;
-import com.mall.modules.activity.entity.ActivityInfo;
-import com.mall.modules.activity.service.ActivityInfoService;
-
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 
 /**
@@ -73,7 +71,7 @@ public class ActivityInfoController extends BaseController {
 			model.addAttribute("message", "结束时间不能小于开始时间");
 			return form(activityInfo, model);
 		}
-		if(activityInfo.getDiscountRate() <= 0) {
+		if(activityInfo.getDiscountRate() <= 0 || activityInfo.getDiscountRate() > 1) {
 			model.addAttribute("message", "请填写正确的折扣比例");
 			return form(activityInfo, model);
 		}

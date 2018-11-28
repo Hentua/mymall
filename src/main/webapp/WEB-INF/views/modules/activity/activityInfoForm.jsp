@@ -121,13 +121,14 @@
 			<div class="controls">
 				<c:choose>
 					<c:when test="${empty activityInfo.id}">
-						<form:input path="discountRate" htmlEscape="false" class="input-xlarge required number"/>
+						<form:input path="discountRate" htmlEscape="false" class="input-xlarge required number" max="1"/>
 						<span class="help-inline"><font color="red">*</font> </span>
 					</c:when>
 					<c:otherwise>
 						${activityInfo.discountRate}
 					</c:otherwise>
 				</c:choose>
+				<span class="help-inline"><font color="red">扣减比例，最大为1</font> </span>
 			</div>
 		</div>
 		<div class="control-group">
