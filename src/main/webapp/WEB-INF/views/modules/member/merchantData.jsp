@@ -199,7 +199,6 @@
                     <c:otherwise>
                         <sys:ckfinder input="specialQualification" type="images" uploadPath="/merchant"
                                       selectMultiple="false" maxWidth="100" maxHeight="100"/>
-                        <span class="help-inline"><font color="red">*</font> </span>
                     </c:otherwise>
                 </c:choose>
             </div>
