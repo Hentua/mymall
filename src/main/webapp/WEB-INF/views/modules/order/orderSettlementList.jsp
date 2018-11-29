@@ -67,8 +67,10 @@
 				<th>订单编号</th>
 				<th>下单人</th>
 				<th>下单人账号</th>
-				<th>订单金额</th>
-				<th>结算金额</th>
+				<th>商品名称</th>
+				<th>购买数量</th>
+				<th>小计</th>
+				<th>商品结算金额</th>
 				<th>状态</th>
 				<shiro:hasPermission name="order:orderSettlement:edit"><th>操作</th></shiro:hasPermission>
 			</tr>
