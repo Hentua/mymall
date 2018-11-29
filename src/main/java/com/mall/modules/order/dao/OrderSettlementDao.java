@@ -3,6 +3,7 @@ package com.mall.modules.order.dao;
 import com.mall.common.persistence.CrudDao;
 import com.mall.common.persistence.annotation.MyBatisDao;
 import com.mall.modules.order.entity.OrderSettlement;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.Map;
 
@@ -22,5 +23,8 @@ public interface OrderSettlementDao extends CrudDao<OrderSettlement> {
      * @return 合计
      */
     Map<String, String> findTotal(OrderSettlement orderSettlement);
+
+
+    void editStatus(@Param("orderId") String orderId);
 
 }

@@ -184,5 +184,11 @@
 		DELETE FROM order_settlement
 		WHERE id = #{id}
 	</update>
+
+	<update id="editStatus" parameterType="java.lang.String">
+		UPDATE order_settlement SET
+			status = 1
+		WHERE order_id = #{orderId}
+	</update>
 	
 </mapper>

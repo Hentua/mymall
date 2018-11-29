@@ -47,9 +47,9 @@
 			<li><label>结算状态 ：</label>
 				<form:select path="status" class="input-medium">
 					<form:option value="" label="全部"/>
-					<form:option value="1" label="未清算" />
-					<form:option value="2" label="已清算" />
-					<form:option value="3" label="已结算" />
+					<form:option value="0" label="未清算" />
+					<form:option value="1" label="已清算" />
+					<form:option value="2" label="已结算" />
 				</form:select>
 			</li>
 			<li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
@@ -101,19 +101,19 @@
 					${orderSettlement.settlementAmount}
 				</td>
 				<td>
-					<c:if test="${orderSettlement.status == '1'}">
+					<c:if test="${orderSettlement.status == '0'}">
 						未清算
 					</c:if>
-					<c:if test="${orderSettlement.status == '2'}">
+					<c:if test="${orderSettlement.status == '1'}">
 						已清算
 					</c:if>
-					<c:if test="${orderSettlement.status == '3'}">
+					<c:if test="${orderSettlement.status == '2'}">
 						已结算
 					</c:if>
 				</td>
 				<shiro:hasPermission name="order:orderSettlement:edit"><td>
-					<c:if test="${orderSettlement.orderStatus == '3' || orderSettlement.orderStatus == '6'}">
-						<a href="${ctx}/order/orderSettlement/updateStatus?id=${orderSettlement.id}" onclick="return confirmx('确认要结算该笔信息吗？', this.href)">删除</a>
+					<c:if test="${(orderSettlement.orderStatus == '3' || orderSettlement.orderStatus == '6') && orderSettlement.status == '1'}">
+						<a href="${ctx}/order/orderSettlement/updateStatus?id=${orderSettlement.id}" onclick="return confirmx('确认要结算该笔信息吗？', this.href)">结算</a>
 					</c:if>
 				</td></shiro:hasPermission>
 			</tr>

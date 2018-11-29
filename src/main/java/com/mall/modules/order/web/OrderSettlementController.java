@@ -105,7 +105,7 @@ public class OrderSettlementController extends BaseController {
 		orderSettlement.setStatus("2");
 		orderSettlementService.save(orderSettlement);
 		addMessage(redirectAttributes, "保存订单结算成功");
-		return "redirect:"+Global.getAdminPath()+"/order/orderSettlement/?repage";
+		return "redirect:"+Global.getAdminPath()+"/order/orderSettlement/list?repage";
 	}
 	
 	@RequiresPermissions("order:orderSettlement:edit")

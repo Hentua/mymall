@@ -9,7 +9,10 @@ import com.mall.modules.commission.service.CommissionConfigService;
 import com.mall.modules.commission.service.CommissionInfoService;
 import com.mall.modules.member.entity.MemberInfo;
 import com.mall.modules.member.service.MemberInfoService;
+import com.mall.modules.order.dao.OrderSettlementDao;
 import com.mall.modules.order.entity.OrderInfo;
+import com.mall.modules.order.entity.OrderSettlement;
+import com.mall.modules.order.service.OrderSettlementService;
 import groovy.util.logging.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -251,6 +254,9 @@ public class AccountInfoService extends CrudService<AccountInfoDao, AccountInfo>
 	@Autowired
 	private CommissionInfoDao commissionInfoDao;
 
+	@Autowired
+	private OrderSettlementDao orderSettlementDao;
+
 	/**
 	 * 修改订单状态
 	 * @param orderId 订单id
@@ -259,6 +265,7 @@ public class AccountInfoService extends CrudService<AccountInfoDao, AccountInfo>
 	public void toAccount(String orderId){
 		//更新订单状态
 		commissionInfoDao.editOrderStatus(orderId);
-		//
+//		//
+//		orderSettlementDao.editStatus(orderId);
 	}
 }
