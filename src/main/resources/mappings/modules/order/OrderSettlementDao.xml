@@ -18,7 +18,7 @@
 		o.create_date AS "orderDate",
 		o.order_no AS "orderNo",
 		o.order_amount_total AS "orderAmount",
-		o.status as "orderStatus"
+		o.status as "orderStatus",
 		um.login_name AS "merchantAccount",
 		uc.login_name AS "customerAccount"
 	</sql>
