@@ -175,6 +175,10 @@ public class MerchantApi extends BaseController {
 			MemberBankAccount memberBankAccount = new MemberBankAccount();
 			memberBankAccount.setUserId(user.getId());
 			memberBankAccount.setBankAccount(bankAccount);
+			List<MemberBankAccount> memberBankAccounts = memberBankAccountService.findList(memberBankAccount);
+			if(null !=memberBankAccounts && memberBankAccounts.size()>0){
+				renderString(response, ResultGenerator.genFailResult("该卡已绑定"));
+			}
 			memberBankAccount.setBankAccountName(bankAccountName);
 			memberBankAccount.setBankAddress(bankAddress);
 			memberBankAccountService.save(memberBankAccount);
