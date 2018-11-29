@@ -3,6 +3,7 @@ package com.mall.modules.order.service;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +27,11 @@ public class OrderSettlementService extends CrudService<OrderSettlementDao, Orde
 	
 	public List<OrderSettlement> findList(OrderSettlement orderSettlement) {
 		return super.findList(orderSettlement);
+	}
+
+	public Page<OrderSettlement> findListWithGoods(Page<OrderSettlement> page, OrderSettlement orderSettlement) {
+		orderSettlement.setPage(page);
+		return page.setList(dao.findListWithGoods(orderSettlement));
 	}
 	
 	public Page<OrderSettlement> findPage(Page<OrderSettlement> page, OrderSettlement orderSettlement) {

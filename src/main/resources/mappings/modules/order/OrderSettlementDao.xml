@@ -20,9 +20,7 @@
 		o.order_amount_total AS "orderAmount",
 		o.order_status as "orderStatus",
 		um.login_name AS "merchantAccount",
-		uc.login_name AS "customerAccount",
-		g.goods_name AS "goodsName",
-		g.settlements_amount AS "goodsSettlementAmount"
+		uc.login_name AS "customerAccount"
 	</sql>
 	
 	<sql id="orderSettlementJoins">
@@ -31,7 +29,6 @@
 		LEFT JOIN sys_user uc ON uc.id = o.customer_code
 		LEFT JOIN member_info m on m.id = o.merchant_code
 		LEFT JOIN member_info mc on mc.id = o.customer_code
-		left join order_goods g on g.order_no = o.order_no
 	</sql>
     
 	<select id="get" resultType="OrderSettlement">
@@ -91,9 +88,6 @@
 			<if test="merchantAccount != null and merchantAccount != ''">
 				AND um.login_name = #{merchantAccount}
 			</if>
-			<if test="goodsName != null and goodsName != ''">
-				AND g.goods_name like concat('%', #{goodsName}, '%')
-			</if>
 		</where>
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
@@ -105,12 +99,81 @@
 		</choose>
 	</select>
 
+    <select id="findListWithGoods" resultType="OrderSettlement">
+        SELECT
+        <include refid="orderSettlementColumns"/>,
+        g.goods_name AS "goodsName",
+        g.settlements_amount AS "goodsSettlementAmount",
+        g.count AS "goodsCount",
+        g.subtotal AS "subtotal"
+        FROM order_settlement a
+        <include refid="orderSettlementJoins"/>
+        left join order_goods g on g.order_no = o.order_no
+        <where>
+
+            <if test="orderId != null and orderId != ''">
+                AND a.order_id = #{orderId}
+            </if>
+            <if test="userId != null and userId != ''">
+                AND a.user_id = #{userId}
+            </if>
+            <if test="settlementAmount != null and settlementAmount != ''">
+                AND a.settlement_amount = #{settlementAmount}
+            </if>
+            <if test="status != null and status != ''">
+                AND a.status = #{status}
+            </if>
+            <if test="createDate != null and createDate != ''">
+                AND a.create_date = #{createDate}
+            </if>
+            <if test="settlementDate != null and settlementDate != ''">
+                AND a.settlement_date = #{settlementDate}
+            </if>
+            <if test="settlementUserId != null and settlementUserId != ''">
+                AND a.settlement_user_id = #{settlementUserId}
+            </if>
+            <if test="merchantId != null and merchantId != ''">
+                AND m.referee = #{merchantId}
+            </if>
+            <if test="startDate != null">
+                AND o.create_date &gt;= #{startDate}
+            </if>
+            <if test="endDate != null">
+                AND o.create_date &lt;= #{endDate}
+            </if>
+            <if test="orderNo != null and orderNo != ''">
+                AND o.order_no = #{orderNo}
+            </if>
+            <if test="customerId != null and customerId != ''">
+                AND mc.referee = #{customerId}
+            </if>
+            <if test="customerAccount != null and customerAccount != ''">
+                AND uc.login_name = #{customerAccount}
+            </if>
+            <if test="merchantAccount != null and merchantAccount != ''">
+                AND um.login_name = #{merchantAccount}
+            </if>
+            <if test="goodsName != null and goodsName != ''">
+                AND g.goods_name like concat('%', #{goodsName}, '%')
+            </if>
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                order by o.create_date desc
+            </otherwise>
+        </choose>
+    </select>
+
 	<select id="findTotal" resultType="Map">
 		SELECT
 			ifnull(sum(a.settlement_amount), 0.00) as "settlementAmountTotal",
 		    ifnull(sum(o.order_amount_total), 0.00) as "orderAmountTotal"
 		FROM order_settlement a
 		<include refid="orderSettlementJoins"/>
+        left join order_goods g on g.order_no = o.order_no
 		<where>
 			<if test="status != null and status != ''">
 				AND a.status = #{status}
@@ -133,6 +196,9 @@
 			<if test="userId != null and userId != ''">
 				AND a.user_id = #{userId}
 			</if>
+            <if test="goodsName != null and goodsName != ''">
+                AND g.goods_name like concat('%', #{goodsName}, '%')
+            </if>
 		</where>
 	</select>
 	

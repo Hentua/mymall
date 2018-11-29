@@ -1,5 +1,6 @@
 package com.mall.modules.order.web;
 
+import com.google.common.collect.Maps;
 import com.mall.common.config.Global;
 import com.mall.common.persistence.Page;
 import com.mall.common.utils.StringUtils;
@@ -50,8 +51,17 @@ public class OrderSettlementController extends BaseController {
 	@RequiresPermissions("order:orderSettlement:view")
 	@RequestMapping(value = {"list", ""})
 	public String list(OrderSettlement orderSettlement, HttpServletRequest request, HttpServletResponse response, Model model) {
-		Page<OrderSettlement> page = orderSettlementService.findPage(new Page<OrderSettlement>(request, response), orderSettlement);
-		Map<String, String> total = orderSettlementService.findTotal(orderSettlement);
+		Page<OrderSettlement> page = orderSettlementService.findListWithGoods(new Page<OrderSettlement>(request, response), orderSettlement);
+//		Map<String, String> total = orderSettlementService.findTotal(orderSettlement);
+		Map<String, String> total = Maps.newHashMap();
+		Double settlementAmountTotal = 0.00;
+		Double orderAmountTotal = 0.00;
+		for (OrderSettlement o : page.getList()) {
+			settlementAmountTotal += o.getGoodsSettlementAmount();
+			orderAmountTotal += o.getSubtotal();
+		}
+		total.put("orderAmountTotal", String.valueOf(orderAmountTotal));
+		total.put("settlementAmountTotal", String.valueOf(settlementAmountTotal));
 		model.addAttribute("total", total);
 		model.addAttribute("page", page);
 		return "modules/order/orderSettlementList";
@@ -61,8 +71,17 @@ public class OrderSettlementController extends BaseController {
 	public String merchantList(OrderSettlement orderSettlement, HttpServletRequest request, HttpServletResponse response, Model model) {
 		User currUser = UserUtils.getUser();
 		orderSettlement.setUserId(currUser.getId());
-		Page<OrderSettlement> page = orderSettlementService.findPage(new Page<OrderSettlement>(request, response), orderSettlement);
-		Map<String, String> total = orderSettlementService.findTotal(orderSettlement);
+		Page<OrderSettlement> page = orderSettlementService.findListWithGoods(new Page<OrderSettlement>(request, response), orderSettlement);
+//		Map<String, String> total = orderSettlementService.findTotal(orderSettlement);
+		Map<String, String> total = Maps.newHashMap();
+		Double settlementAmountTotal = 0.00;
+		Double orderAmountTotal = 0.00;
+		for (OrderSettlement o : page.getList()) {
+			settlementAmountTotal += o.getGoodsSettlementAmount();
+			orderAmountTotal += o.getSubtotal();
+		}
+		total.put("orderAmountTotal", String.valueOf(orderAmountTotal));
+		total.put("settlementAmountTotal", String.valueOf(settlementAmountTotal));
 		model.addAttribute("total", total);
 		model.addAttribute("page", page);
 		return "modules/order/orderSettlementListMerchant";

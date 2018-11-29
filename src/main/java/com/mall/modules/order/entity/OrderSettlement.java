@@ -38,7 +38,7 @@ public class OrderSettlement extends DataEntity<OrderSettlement> {
 	private String merchantAccount;
 
 	private String goodsName; // 商品名称
-	private String goodsSettlementAmount; // 商品结算金额
+	private Double goodsSettlementAmount; // 商品结算金额
 	private Integer goodsCount; // 商品数量
 	private Double subtotal; // 小计
 
@@ -66,11 +66,11 @@ public class OrderSettlement extends DataEntity<OrderSettlement> {
 		this.goodsName = goodsName;
 	}
 
-	public String getGoodsSettlementAmount() {
+	public Double getGoodsSettlementAmount() {
 		return goodsSettlementAmount;
 	}
 
-	public void setGoodsSettlementAmount(String goodsSettlementAmount) {
+	public void setGoodsSettlementAmount(Double goodsSettlementAmount) {
 		this.goodsSettlementAmount = goodsSettlementAmount;
 	}
 

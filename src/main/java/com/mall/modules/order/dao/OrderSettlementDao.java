@@ -5,6 +5,7 @@ import com.mall.common.persistence.annotation.MyBatisDao;
 import com.mall.modules.order.entity.OrderSettlement;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -26,5 +27,7 @@ public interface OrderSettlementDao extends CrudDao<OrderSettlement> {
 
 
     void editStatus(@Param("orderId") String orderId);
+
+    List<OrderSettlement> findListWithGoods(OrderSettlement orderSettlement);
 
 }
