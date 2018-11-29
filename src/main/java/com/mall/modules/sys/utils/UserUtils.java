@@ -67,6 +67,18 @@ public class UserUtils {
     }
 
     /**
+     * 根据ID获取用户
+     *
+     * @param id
+     * @return 取不到返回null
+     */
+    public static User getNoCache(String id) {
+        User user = userDao.get(id);
+        return user;
+    }
+
+
+    /**
      * 根据登录名获取用户
      *
      * @param loginName

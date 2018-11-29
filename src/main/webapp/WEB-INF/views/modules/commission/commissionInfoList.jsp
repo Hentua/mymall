@@ -69,8 +69,8 @@
 		<c:forEach items="${page.list}" var="commissionInfo">
 			<tr>
 				<td>${commissionInfo.userMobile}</td>
-				<td>${commissionInfo.userMobile}</td>
-				<td>${commissionInfo.produceUserName}</td>
+				<td>${commissionInfo.userName}</td>
+				<td>${commissionInfo.produceUserMobile}</td>
 				<td>${commissionInfo.produceUserName}</td>
 				<td>
 					<c:if test="${commissionInfo.mode == '1'}">

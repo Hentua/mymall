@@ -57,6 +57,7 @@ public class CheckAccountTimer {
         List<OrderInfo> orderInfos = orderInfoService.findList(o);
         //当前时间
         Date date = new Date();
+        Integer setCount = 0;
         //可退货时间 毫秒
         Long dayTime = Long.parseLong(DictUtils.getDictValue("account_day_time","account_day_time","1"));
         for (OrderInfo orderInfo : orderInfos) {
@@ -78,7 +79,7 @@ public class CheckAccountTimer {
                     //修改订单结算状态
                     accountInfoService.toAccount(orderInfo.getId());
                     CommissionInfo c = new CommissionInfo();
-                    c.setUnionId(orderInfo.getId());
+                    c.setUnionId(orderInfo.getOrderNo());
                     //遍历累加金额
                     List<CommissionInfo> commissionInfos = commissionInfoService.findList(c);
                     for (CommissionInfo ci: commissionInfos) {
@@ -93,7 +94,9 @@ public class CheckAccountTimer {
                     }
                 }
             }
+            logger.info("订单号："+orderInfo.getOrderNo());
+            setCount++;
         }
-        logger.info("==================执行清算定时器结束========================");
+        logger.info("==================执行清算定时器结束,清算订单数："+setCount+"===================");
     }
 }

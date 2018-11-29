@@ -136,6 +136,7 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 		User merchantRefereeUser = null ;
 		User customerRefereeUser = null;
 		User merchant = null;
+		User customer = null;
 
 		if(null == orderInfo){
 			logger.error("创建佣金流水失败：订单信息为空");
@@ -146,9 +147,9 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 //			return ;
 //		}
 		//卖家信息
-		merchant = UserUtils.get(orderInfo.getMerchantCode());
+		merchant = UserUtils.getNoCache(orderInfo.getMerchantCode());
 		//买家信息
-		User customer = UserUtils.get(orderInfo.getCustomerCode());
+		customer = UserUtils.getNoCache(orderInfo.getCustomerCode());
 		if(null == merchant){
 			logger.error("创建佣金流水失败：卖家信息为空");
 			return ;
@@ -158,9 +159,9 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 			return ;
 		}
 		//卖家推荐人
-		merchantRefereeUser = UserUtils.get(merchant.getMerchantRefereeId());
+		merchantRefereeUser = UserUtils.getNoCache(merchant.getMerchantRefereeId());
 		//买家推荐人
-		customerRefereeUser = UserUtils.get(customer.getRefereeId());
+		customerRefereeUser = UserUtils.getNoCache(customer.getRefereeId());
 		if(null == merchantRefereeUser){
 			logger.error("创建佣金流水失败：卖家推荐人为空");
 			return ;
@@ -266,16 +267,15 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 		User merchant = null;
 //		User customer = null;
 		//卖家信息
-		merchant = UserUtils.get(senUserId);
-//		customer = UserUtils.get(receiverId);
+		merchant = UserUtils.getNoCache(senUserId);
 		//买家信息
 		if(null == merchant){
 			logger.error("创建佣金流水失败：卖家信息为空");
 			return ;
 		}
 		//卖家推荐人
-		merchantRefereeUser = UserUtils.get(merchant.getMerchantRefereeId());
-		customerRefereeUser = UserUtils.get(receiverId);
+		merchantRefereeUser = UserUtils.getNoCache(merchant.getMerchantRefereeId());
+		customerRefereeUser = UserUtils.getNoCache(receiverId);
 		//买家推荐人
 		if(null == merchantRefereeUser){
 			logger.error("创建佣金流水失败：卖家推荐入驻人为空");

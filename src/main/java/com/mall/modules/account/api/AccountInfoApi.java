@@ -102,7 +102,7 @@ public class AccountInfoApi extends BaseController {
 		// 收支方式（1：佣金收益 2：销售收益） 支出（3：提现 4：结算）
 		if("1".equals(accountInfo.getWay()) || "3".equals(accountInfo.getWay())){
 			CommissionInfo commissionInfo = commissionInfoService.get(accountInfo.getUnionId());
-			User produceUser = UserUtils.get(commissionInfo.getProduceUserId());
+			User produceUser = UserUtils.getNoCache(commissionInfo.getProduceUserId());
 			if(null != produceUser){
 				commissionInfo.setProduceUserName(produceUser.getNickname());
 			}

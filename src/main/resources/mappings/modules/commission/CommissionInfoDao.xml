@@ -125,10 +125,10 @@
 			produce_user_id,
 			origin_amount,
 			amount,
-			union_id,
-			settlement_id,
 			mode,
 			number,
+			union_id,
+			settlement_id,
 			create_date
 		) VALUES (
 			#{id},
