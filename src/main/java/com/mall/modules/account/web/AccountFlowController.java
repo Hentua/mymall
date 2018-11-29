@@ -2,6 +2,7 @@ package com.mall.modules.account.web;
 
 import com.mall.common.config.Global;
 import com.mall.common.persistence.Page;
+import com.mall.common.utils.IdGen;
 import com.mall.common.utils.StringUtils;
 import com.mall.common.web.BaseController;
 import com.mall.modules.account.entity.AccountFlow;
@@ -10,7 +11,9 @@ import com.mall.modules.account.service.AccountService;
 import com.mall.modules.member.entity.MemberInfo;
 import com.mall.modules.member.service.MemberInfoService;
 import com.mall.modules.sys.entity.User;
+import com.mall.modules.sys.utils.DictUtils;
 import com.mall.modules.sys.utils.UserUtils;
+import com.sohu.idcenter.IdWorker;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,6 +25,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 
 /**
  * 账户流水Controller
@@ -77,6 +81,14 @@ public class AccountFlowController extends BaseController {
 		model.addAttribute("accountFlow", accountFlow);
 		return "modules/account/accountFlowForm";
 	}
+	@RequestMapping(value = "recharge")
+	public String recharge(AccountFlow accountFlow, Model model) {
+
+
+		return "modules/account/accountRecharge";
+	}
+
+
 
 	@RequiresPermissions("account:accountFlow:edit")
 	@RequestMapping(value = "save")
@@ -88,6 +100,26 @@ public class AccountFlowController extends BaseController {
 		addMessage(redirectAttributes, "保存账户流水成功");
 		return "redirect:"+Global.getAdminPath()+"/account/accountFlow/?repage";
 	}
+	private static IdWorker idWorker = new IdWorker();
+
+	@RequestMapping(value = "rechargeSave")
+	public String rechargeSave(AccountFlow accountFlow, Model model, RedirectAttributes redirectAttributes) {
+		if (!beanValidator(model, accountFlow)){
+			return form(accountFlow, model);
+		}
+		User user = UserUtils.getUser();
+		accountFlow.setFlowNo(String.valueOf(idWorker.getId()));
+		accountFlow.setId(IdGen.uuid());
+		accountFlow.setUserId(user.getId());
+		accountFlow.setType("1");//收入
+		accountFlow.setMode("1");//消费
+		accountFlow.setCheckStatus("1");
+		accountFlow.setCreateDate(new Date());
+		accountFlowService.save(accountFlow);
+		addMessage(redirectAttributes, "充值记录提交成功");
+		return "redirect:"+Global.getAdminPath()+"/account/accountFlow/?repage";
+	}
+
 	
 	@RequiresPermissions("account:accountFlow:edit")
 	@RequestMapping(value = "delete")
@@ -124,5 +156,9 @@ public class AccountFlowController extends BaseController {
 		addMessage(redirectAttributes, "审核成功");
 		return "redirect:"+Global.getAdminPath()+"/account/accountFlow/list?repage";
 	}
+
+
+
+
 
 }

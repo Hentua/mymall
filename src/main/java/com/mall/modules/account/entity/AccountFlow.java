@@ -4,6 +4,7 @@ import com.mall.common.persistence.DataEntity;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 
 /**
  * 账户流水Entity
@@ -23,13 +24,20 @@ public class AccountFlow extends DataEntity<AccountFlow> {
 	private String bankAccount;		// 银行账户
 	private String bankAccountName;		// 开户人名称
 	private String bankName;		// 开户行
+	private String platBankAccount; //平台收款银行账户
+	private Date transferDate;      //转账时间
+	private String transferImage;   //转账截图
+
+
 	private String checkStatus;		// 充值提现审核状态：1未审核 2已审核
 	private String paymentType;     //消费类型 0普通订单 1礼包购买
 
 	private String nickname; //名称昵称
 	private String org;
 
-	
+
+
+
 	public AccountFlow() {
 		super();
 	}
@@ -38,6 +46,30 @@ public class AccountFlow extends DataEntity<AccountFlow> {
 		super(id);
 	}
 
+
+	public String getPlatBankAccount() {
+		return platBankAccount;
+	}
+
+	public void setPlatBankAccount(String platBankAccount) {
+		this.platBankAccount = platBankAccount;
+	}
+
+	public Date getTransferDate() {
+		return transferDate;
+	}
+
+	public void setTransferDate(Date transferDate) {
+		this.transferDate = transferDate;
+	}
+
+	public String getTransferImage() {
+		return transferImage;
+	}
+
+	public void setTransferImage(String transferImage) {
+		this.transferImage = transferImage;
+	}
 
 	public String getPaymentType() {
 		return paymentType;

@@ -17,7 +17,10 @@
 		a.bank_name AS "bankName",
 		a.check_status AS "checkStatus",
 		m.nickname as "nickname",
-		a.payment_Type as "paymentType"
+		a.payment_Type as "paymentType",
+		a.plat_bank_account as "platBankAccount",
+		a.transfer_date as "transferDate",
+		a.transfer_image as "transferImage"
 	</sql>
 	
 	<sql id="accountFlowJoins">
@@ -116,7 +119,10 @@
 			bank_account_name,
 			bank_name,
 			check_status,
-			payment_Type
+			payment_Type,
+			plat_bank_account,
+			transfer_date,
+			transfer_image
 		) VALUES (
 			#{id},
 			#{flowNo},
@@ -131,7 +137,10 @@
 			#{bankAccountName},
 			#{bankName},
 			#{checkStatus},
-			#{paymentType}
+			#{paymentType},
+			#{platBankAccount},
+			#{transferDate},
+			#{transferImage}
 		)
 	</insert>
 	

@@ -70,11 +70,16 @@
 				<td>${commissionInfo.userMobile}（${commissionInfo.userName}）</td>
 				<td>${commissionInfo.produceUserMobile}（${commissionInfo.produceUserName}）</td>
 				<td>
-					<c:if test="${commissionInfo.mode == '1'}">
-						固定金额-${commissionInfo.number}
+					<c:if test="${commissionInfo.type == '1'}">
+						商品分类配置比例
 					</c:if>
-					<c:if test="${commissionInfo.mode == '2'}">
-						总额百分比-${commissionInfo.number}%
+					<c:if test="${commissionInfo.type != '1'}">
+						<c:if test="${commissionInfo.mode == '1'}">
+							固定金额-${commissionInfo.number}
+						</c:if>
+						<c:if test="${commissionInfo.mode == '2'}">
+							总额百分比-${commissionInfo.number}%
+						</c:if>
 					</c:if>
 				</td>
 				<td>${commissionInfo.originAmount}</td>

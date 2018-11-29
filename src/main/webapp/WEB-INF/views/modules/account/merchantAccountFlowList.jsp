@@ -20,6 +20,7 @@
 	<ul class="nav nav-tabs">
 		<li  ><a href="${ctx}/sys/user/merchantInfo">首页</a></li>
 		<li class="active"><a href="${ctx}/account/accountFlow/merchantList">账户余额</a></li>
+		<li ><a href="${ctx}/account/accountFlow/recharge">打款充值</a></li>
 	</ul>
 	<form:form id="searchForm" modelAttribute="accountFlow" action="${ctx}/account/accountFlow/merchantList" method="post" class="breadcrumb form-search">
 		<input id="userId" name="userId" type="hidden" value="${accountFlow.userId}"/>
