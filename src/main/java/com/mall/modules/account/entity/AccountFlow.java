@@ -24,6 +24,7 @@ public class AccountFlow extends DataEntity<AccountFlow> {
 	private String bankAccountName;		// 开户人名称
 	private String bankName;		// 开户行
 	private String checkStatus;		// 充值提现审核状态：1未审核 2已审核
+	private String paymentType;     //消费类型 0普通订单 1礼包购买
 
 	private String nickname; //名称昵称
 	private String org;
@@ -37,6 +38,14 @@ public class AccountFlow extends DataEntity<AccountFlow> {
 		super(id);
 	}
 
+
+	public String getPaymentType() {
+		return paymentType;
+	}
+
+	public void setPaymentType(String paymentType) {
+		this.paymentType = paymentType;
+	}
 
 	public String getOrg() {
 		return org;

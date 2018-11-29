@@ -18,7 +18,8 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li class="active">余额明细列表</li>
+		<li  ><a href="${ctx}/sys/user/merchantInfo">首页</a></li>
+		<li class="active"><a href="${ctx}/account/accountFlow/merchantList">账户余额</a></li>
 	</ul>
 	<form:form id="searchForm" modelAttribute="accountFlow" action="${ctx}/account/accountFlow/merchantList" method="post" class="breadcrumb form-search">
 		<input id="userId" name="userId" type="hidden" value="${accountFlow.userId}"/>
@@ -79,7 +80,14 @@
 					<c:if test="${accountFlow.type == '2'}">
 						<span style="color:#ff0f1e">支出</span>
 						-<c:if test="${accountFlow.mode == '3'}">提现</c:if>
-						<c:if test="${accountFlow.mode == '4'}">消费</c:if>
+						<c:if test="${accountFlow.mode == '4'}">
+							<c:if test="${accountFlow.paymentType == '0'}">
+								订单消费
+							</c:if>
+							<c:if test="${accountFlow.paymentType == '1'}">
+								礼包消费
+							</c:if>
+						</c:if>
 					</c:if>
 				</td>
 				<td>

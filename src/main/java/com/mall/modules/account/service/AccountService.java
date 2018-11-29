@@ -84,12 +84,13 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 
 	/**
 	 * 余额消费
-	 * @param amount
-	 * @param paymentNo
-	 * @param userId
+	 * @param amount 金额
+	 * @param paymentNo 支付单号
+	 * @param userId 用户id
+	 * @param paymentType 消费类型 0普通订单 1礼包购买
 	 */
 	@Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
-	public void consumption(Double amount,String paymentNo,String userId){
+	public void consumption(Double amount,String paymentNo,String userId,String paymentType){
 
 		MemberInfo m = new MemberInfo();
 		m.setId(userId);

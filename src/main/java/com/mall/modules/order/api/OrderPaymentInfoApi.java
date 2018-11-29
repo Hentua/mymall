@@ -210,7 +210,7 @@ public class OrderPaymentInfoApi extends BaseController {
                 throw new ServiceException("不合法的支付信息");
             }
             Double amountTotal = orderPaymentInfo.getAmountTotal();
-            accountService.consumption(amountTotal, paymentNo, userId);
+            accountService.consumption(amountTotal, paymentNo, userId,orderPaymentInfo.getPaymentType());
             orderPaymentInfo.setPayChannel("3");
             // 支付成功
             String paymentType = orderPaymentInfo.getPaymentType();
