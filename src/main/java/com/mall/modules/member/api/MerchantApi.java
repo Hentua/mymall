@@ -11,8 +11,10 @@ import com.mall.common.web.BaseController;
 import com.mall.modules.goods.entity.GoodsCategory;
 import com.mall.modules.goods.service.GoodsCategoryService;
 import com.mall.modules.goods.service.GoodsInfoService;
+import com.mall.modules.member.entity.MemberBankAccount;
 import com.mall.modules.member.entity.MemberInfo;
 import com.mall.modules.member.entity.MerchantCollectionInfo;
+import com.mall.modules.member.service.MemberBankAccountService;
 import com.mall.modules.member.service.MemberInfoService;
 import com.mall.modules.member.service.MerchantCollectionInfoService;
 import com.mall.modules.sys.entity.User;
@@ -47,6 +49,9 @@ public class MerchantApi extends BaseController {
 
 	@Autowired
 	private MerchantCollectionInfoService merchantCollectionInfoService;
+
+	@Autowired
+	private MemberBankAccountService memberBankAccountService;
 
 
 
@@ -136,6 +141,75 @@ public class MerchantApi extends BaseController {
 		Page<MemberInfo> page = memberInfoService.findCollectionPage(new Page<MemberInfo>(request, response), memberInfo);
 		renderString(response, ResultGenerator.genSuccessResult(page));
 	}
+
+
+	/**
+	 * 用户银行卡列表接口
+	 * @param request
+	 * @param response
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/member/memberBankList", method = RequestMethod.POST)
+	public void memberBankList(HttpServletRequest request, HttpServletResponse response){
+		User user = UserUtils.getUser();
+		MemberBankAccount memberBankAccount = new MemberBankAccount();
+		memberBankAccount.setUserId(user.getId());
+		List<MemberBankAccount> list = memberBankAccountService.findList(memberBankAccount);
+		renderString(response, ResultGenerator.genSuccessResult(list));
+	}
+
+
+	/**
+	 * 绑定银行卡接口
+	 * @param request
+	 * @param response
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/member/memberBankAdd", method = RequestMethod.POST)
+	public void memberBankAdd(HttpServletRequest request, HttpServletResponse response){
+		try{
+			User user = UserUtils.getUser();
+			String bankAccount = request.getParameter("bankAccount");
+			String bankAccountName = request.getParameter("bankAccountName");
+			String bankAddress = request.getParameter("bankAddress");
+			MemberBankAccount memberBankAccount = new MemberBankAccount();
+			memberBankAccount.setUserId(user.getId());
+			memberBankAccount.setBankAccount(bankAccount);
+			memberBankAccount.setBankAccountName(bankAccountName);
+			memberBankAccount.setBankAddress(bankAddress);
+			memberBankAccountService.save(memberBankAccount);
+		}catch (Exception e){
+			e.printStackTrace();
+			renderString(response, ResultGenerator.genFailResult("绑定银行卡失败"));
+		}
+		renderString(response, ResultGenerator.genSuccessResult("绑定银行卡成功"));
+	}
+
+	/**
+	 * 绑定银行卡接口
+	 * @param request
+	 * @param response
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/member/memberBankDel", method = RequestMethod.POST)
+	public void memberBankDel(HttpServletRequest request, HttpServletResponse response){
+		try{
+			String bankAccountId = request.getParameter("bankAccountId");
+			User user = UserUtils.getUser();
+			MemberBankAccount memberBankAccount = new MemberBankAccount();
+			memberBankAccount.setId(bankAccountId);
+			memberBankAccount.setUserId(user.getId());
+			memberBankAccountService.delete(memberBankAccount);
+		}catch (Exception e){
+			e.printStackTrace();
+			renderString(response, ResultGenerator.genFailResult("解绑银行卡失败"));
+		}
+		renderString(response, ResultGenerator.genSuccessResult("解绑银行卡成功"));
+	}
+
+
+
+
 
 
 

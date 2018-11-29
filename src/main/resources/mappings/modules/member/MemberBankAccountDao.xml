@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.modules.member.dao.MemberBankAccountDao">
+    
+	<sql id="memberBankAccountColumns">
+		a.id AS "id",
+		a.user_id AS "userId",
+		a.bank_account AS "bankAccount",
+		a.bank_account_name AS "bankAccountName",
+		a.bank_address AS "bankAddress",
+		a.create_date AS "createDate",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="memberBankAccountJoins">
+	</sql>
+    
+	<select id="get" resultType="MemberBankAccount">
+		SELECT 
+			<include refid="memberBankAccountColumns"/>
+		FROM member_bank_account a
+		<include refid="memberBankAccountJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="MemberBankAccount">
+		SELECT 
+			<include refid="memberBankAccountColumns"/>
+		FROM member_bank_account a
+		<include refid="memberBankAccountJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="userId != null and userId != ''">
+				AND a.user_id = #{userId}
+			</if>
+			<if test="bankAccount != null and bankAccount != ''">
+				AND a.bank_account = #{bankAccount}
+			</if>
+			<if test="bankAccountName != null and bankAccountName != ''">
+				AND a.bank_account_name = #{bankAccountName}
+			</if>
+			<if test="bankAddress != null and bankAddress != ''">
+				AND a.bank_address = #{bankAddress}
+			</if>
+			<if test="createDate != null and createDate != ''">
+				AND a.create_date = #{createDate}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="MemberBankAccount">
+		SELECT 
+			<include refid="memberBankAccountColumns"/>
+		FROM member_bank_account a
+		<include refid="memberBankAccountJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO member_bank_account(
+			id,
+			user_id,
+			bank_account,
+			bank_account_name,
+			bank_address,
+			create_date,
+			del_flag
+		) VALUES (
+			#{id},
+			#{userId},
+			#{bankAccount},
+			#{bankAccountName},
+			#{bankAddress},
+			#{createDate},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE member_bank_account SET 	
+			user_id = #{userId},
+			bank_account = #{bankAccount},
+			bank_account_name = #{bankAccountName},
+			bank_address = #{bankAddress}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE member_bank_account SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id} and user_id = #{userId}
+	</update>
+	
+</mapper>

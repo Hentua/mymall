@@ -68,10 +68,26 @@
 		<div class="control-group">
 			<label class="control-label">优惠类型：</label>
 			<div class="controls">
-				<form:radiobutton title="不可使用优惠" checked="checked" htmlEscape="false" class="required" path="discountType" value="0" label="不可使用优惠"/>
-				<form:radiobutton title="仅可以使用5折优惠" htmlEscape="false" class="required" path="discountType" value="1" label="仅可以使用5折优惠"/>
-				<form:radiobutton title="仅可以使用7折优惠" htmlEscape="false" class="required" path="discountType" value="2" label="仅可以使用7折优惠"/>
-				<form:radiobutton title="都可使用" htmlEscape="false" class="required" path="discountType" value="3" label="都可使用"/>
+				<c:if test="${goodsInfo.status != '2'}">
+					<c:if test="${goodsInfo.discountType == '0'}">
+						不可使用优惠
+					</c:if>
+					<c:if test="${goodsInfo.discountType == '1'}">
+						仅可以使用5折优惠
+					</c:if>
+					<c:if test="${goodsInfo.discountType == '2'}">
+						仅可以使用7折优惠
+					</c:if>
+					<c:if test="${goodsInfo.discountType == '3'}">
+						都可使用
+					</c:if>
+				</c:if>
+				<c:if test="${goodsInfo.status == '2'}">
+					<form:radiobutton title="不可使用优惠" checked="checked" htmlEscape="false" class="required" path="discountType" value="0" label="不可使用优惠"/>
+					<form:radiobutton title="仅可以使用5折优惠" htmlEscape="false" class="required" path="discountType" value="1" label="仅可以使用5折优惠"/>
+					<form:radiobutton title="仅可以使用7折优惠" htmlEscape="false" class="required" path="discountType" value="2" label="仅可以使用7折优惠"/>
+					<form:radiobutton title="都可使用" htmlEscape="false" class="required" path="discountType" value="3" label="都可使用"/>
+				</c:if>
 			</div>
 		</div>
 		<div class="control-group">
