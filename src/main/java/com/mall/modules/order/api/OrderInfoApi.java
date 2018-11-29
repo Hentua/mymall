@@ -533,7 +533,7 @@ public class OrderInfoApi extends BaseController {
                     discountAmount += goodsDiscountAmount;
                     amountTotal += goodsAmountTotal;
                 }
-                orderPaymentInfo.setAmountTotal(amountTotal);
+                orderPaymentInfo.setAmountTotal(Double.parseDouble(df.format(amountTotal)));
                 orderPaymentInfo.setDiscountAmount(discountAmount);
             } else if ("1".equals(orderType)) {
                 orderPaymentInfo.setDiscountAmount(0.00);

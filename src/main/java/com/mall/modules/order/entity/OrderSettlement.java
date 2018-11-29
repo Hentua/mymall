@@ -37,6 +37,42 @@ public class OrderSettlement extends DataEntity<OrderSettlement> {
 	private String customerAccount;
 	private String merchantAccount;
 
+	private String goodsName; // 商品名称
+	private String goodsSettlementAmount; // 商品结算金额
+	private Integer goodsCount; // 商品数量
+	private Double subtotal; // 小计
+
+	public Integer getGoodsCount() {
+		return goodsCount;
+	}
+
+	public void setGoodsCount(Integer goodsCount) {
+		this.goodsCount = goodsCount;
+	}
+
+	public Double getSubtotal() {
+		return subtotal;
+	}
+
+	public void setSubtotal(Double subtotal) {
+		this.subtotal = subtotal;
+	}
+
+	public String getGoodsName() {
+		return goodsName;
+	}
+
+	public void setGoodsName(String goodsName) {
+		this.goodsName = goodsName;
+	}
+
+	public String getGoodsSettlementAmount() {
+		return goodsSettlementAmount;
+	}
+
+	public void setGoodsSettlementAmount(String goodsSettlementAmount) {
+		this.goodsSettlementAmount = goodsSettlementAmount;
+	}
 
 	public String getOrderStatus() {
 		return orderStatus;
