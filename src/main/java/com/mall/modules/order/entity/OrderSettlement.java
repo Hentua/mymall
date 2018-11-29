@@ -42,6 +42,7 @@ public class OrderSettlement extends DataEntity<OrderSettlement> {
 	private Integer goodsCount; // 商品数量
 	private Double subtotal; // 小计
 
+	@ExcelField(title = "商品购买数量", sort = 11, groups = {1})
 	public Integer getGoodsCount() {
 		return goodsCount;
 	}
@@ -50,6 +51,7 @@ public class OrderSettlement extends DataEntity<OrderSettlement> {
 		this.goodsCount = goodsCount;
 	}
 
+	@ExcelField(title = "商品小计", sort = 12, groups = {1})
 	public Double getSubtotal() {
 		return subtotal;
 	}
@@ -58,6 +60,7 @@ public class OrderSettlement extends DataEntity<OrderSettlement> {
 		this.subtotal = subtotal;
 	}
 
+	@ExcelField(title = "商品名称", sort = 10, groups = {1})
 	public String getGoodsName() {
 		return goodsName;
 	}
@@ -66,6 +69,7 @@ public class OrderSettlement extends DataEntity<OrderSettlement> {
 		this.goodsName = goodsName;
 	}
 
+	@ExcelField(title = "商品结算金额", sort = 13, groups = {1})
 	public Double getGoodsSettlementAmount() {
 		return goodsSettlementAmount;
 	}
@@ -90,7 +94,7 @@ public class OrderSettlement extends DataEntity<OrderSettlement> {
 		super(id);
 	}
 
-	@ExcelField(title = "下单人账号", sort = 6)
+	@ExcelField(title = "下单人账号", sort = 6, groups = {0})
 	public String getCustomerAccount() {
 		return customerAccount;
 	}
@@ -99,7 +103,7 @@ public class OrderSettlement extends DataEntity<OrderSettlement> {
 		this.customerAccount = customerAccount;
 	}
 
-	@ExcelField(title = "商家账号", sort = 2)
+	@ExcelField(title = "商家账号", sort = 2, groups = {0})
 	public String getMerchantAccount() {
 		return merchantAccount;
 	}
@@ -124,7 +128,7 @@ public class OrderSettlement extends DataEntity<OrderSettlement> {
 		this.endDate = endDate;
 	}
 
-	@ExcelField(title = "订单号", sort = 4)
+	@ExcelField(title = "订单号", sort = 4, groups = {0})
 	public String getOrderNo() {
 		return orderNo;
 	}
@@ -133,7 +137,7 @@ public class OrderSettlement extends DataEntity<OrderSettlement> {
 		this.orderNo = orderNo;
 	}
 
-	@ExcelField(title = "商家名称", sort = 1)
+	@ExcelField(title = "商家名称", sort = 1, groups = {0})
 	public String getMerchantName() {
 		return merchantName;
 	}
@@ -150,7 +154,7 @@ public class OrderSettlement extends DataEntity<OrderSettlement> {
 		this.merchantId = merchantId;
 	}
 
-	@ExcelField(title = "下单人", sort = 5)
+	@ExcelField(title = "下单人", sort = 5, groups = {0})
 	public String getCustomerName() {
 		return customerName;
 	}
@@ -167,7 +171,7 @@ public class OrderSettlement extends DataEntity<OrderSettlement> {
 		this.customerId = customerId;
 	}
 
-	@ExcelField(title = "订单时间", sort = 3)
+	@ExcelField(title = "订单时间", sort = 3, groups = {0})
 	public Date getOrderDate() {
 		return orderDate;
 	}
@@ -176,7 +180,7 @@ public class OrderSettlement extends DataEntity<OrderSettlement> {
 		this.orderDate = orderDate;
 	}
 
-	@ExcelField(title = "订单金额", sort = 7)
+	@ExcelField(title = "订单金额", sort = 7, groups = {0})
 	public Double getOrderAmount() {
 		return orderAmount;
 	}
@@ -204,7 +208,7 @@ public class OrderSettlement extends DataEntity<OrderSettlement> {
 	}
 	
 	@NotNull(message="结算金额不能为空")
-	@ExcelField(title = "结算金额", sort = 8)
+	@ExcelField(title = "结算金额", sort = 8, groups = {0})
 	public Double getSettlementAmount() {
 		return settlementAmount;
 	}
@@ -240,7 +244,7 @@ public class OrderSettlement extends DataEntity<OrderSettlement> {
 		this.settlementUserId = settlementUserId;
 	}
 
-	@ExcelField(title = "状态", sort = 9)
+	@ExcelField(title = "状态", sort = 9, groups = {0})
 	public String getStatusZh() {
 		String statusZh = "";
 		if(StringUtils.isNotBlank(this.status)) {

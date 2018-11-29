@@ -89,8 +89,9 @@ public class OrderSettlementController extends BaseController {
 
 	@RequestMapping(value = "exportOrderSettlement")
 	public void exportSettlementList(OrderSettlement orderSettlement, HttpServletRequest request, HttpServletResponse response) {
-		List<OrderSettlement> orderSettlementList = orderSettlementService.findList(orderSettlement);
-		ExportExcel exportExcel = new ExportExcel("货款结算", OrderSettlement.class);
+		Page<OrderSettlement> page = orderSettlementService.findListWithGoods(new Page<>(request, response, -1), orderSettlement);
+		List<OrderSettlement> orderSettlementList = page.getList();
+		ExportExcel exportExcel = new ExportExcel("货款结算", OrderSettlement.class, 1, 0, 1);
 		try {
 			exportExcel.setDataList(orderSettlementList);
 			exportExcel.write(response, "货款结算.xlsx");
