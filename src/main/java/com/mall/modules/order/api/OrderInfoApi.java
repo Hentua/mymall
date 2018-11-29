@@ -228,10 +228,7 @@ public class OrderInfoApi extends BaseController {
                 double goodsDiscountAmount = 0.00;
                 double goodsActivityDiscountAmount = 0.00;
                 String goodsRecommendId = "";
-                if ("0".equals(orderType) && StringUtils.isBlank(shoppingCartId)) {
-                    throw new ServiceException("不合法的订单信息");
-                }
-                if ("0".equals(orderType)) {
+                if (StringUtils.isNotBlank(shoppingCartId)) {
                     OrderShoppingCart orderShoppingCart = orderShoppingCartService.get(shoppingCartId);
                     if(null != orderShoppingCart) {
                         goodsRecommendId = orderShoppingCart.getGoodsRecommendId();
@@ -382,9 +379,11 @@ public class OrderInfoApi extends BaseController {
                 orderInfoMap.put(merchantCode, orderInfo);
 
                 // 删除购物车数据
-                OrderShoppingCart deleteCondition = new OrderShoppingCart();
-                deleteCondition.setId(shoppingCartId);
-                orderShoppingCartService.delete(deleteCondition);
+                if(StringUtils.isNotBlank(shoppingCartId)) {
+                    OrderShoppingCart deleteCondition = new OrderShoppingCart();
+                    deleteCondition.setId(shoppingCartId);
+                    orderShoppingCartService.delete(deleteCondition);
+                }
             }
 
             // 订单后续计算 并生成账单信息
