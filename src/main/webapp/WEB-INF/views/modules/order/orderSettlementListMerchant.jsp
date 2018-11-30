@@ -130,9 +130,6 @@
         <td>${total.orderAmountTotal}</td>
         <td>${total.settlementAmountTotal}</td>
         <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
     </tr>
     </tfoot>
 </table>
