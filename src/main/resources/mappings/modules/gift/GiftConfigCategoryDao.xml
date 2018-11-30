@@ -48,7 +48,7 @@
 				and a.status = #{status}
 			</if>
 			<if test="merchantCode != null and merchantCode != ''">
-				and (a.merchant_code = #{merchantCode} or a.merchant_code is null)
+				and (a.merchant_code = #{merchantCode} or a.merchant_code is null or a.merchant_code = '')
 			</if>
 		</where>
 		<choose>
