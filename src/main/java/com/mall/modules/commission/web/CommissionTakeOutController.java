@@ -4,6 +4,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.mall.modules.account.service.AccountService;
+import com.mall.modules.commission.entity.CommissionInfo;
+import com.mall.modules.commission.service.CommissionInfoService;
 import com.mall.modules.member.entity.MemberInfo;
 import com.mall.modules.member.service.MemberInfoService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -39,6 +41,9 @@ public class CommissionTakeOutController extends BaseController {
 
 	@Autowired
 	private MemberInfoService memberInfoService;
+
+	@Autowired
+	private CommissionInfoService commissionInfoService;
 	
 	@ModelAttribute
 	public CommissionTakeOut get(@RequestParam(required=false) String id) {
@@ -55,26 +60,54 @@ public class CommissionTakeOutController extends BaseController {
 	@RequiresPermissions("commission:commissionTakeOut:view")
 	@RequestMapping(value = {"list", ""})
 	public String list(CommissionTakeOut commissionTakeOut, HttpServletRequest request, HttpServletResponse response, Model model) {
-		Page<CommissionTakeOut> page = commissionTakeOutService.findPage(new Page<CommissionTakeOut>(request, response), commissionTakeOut); 
+
+		CommissionInfo commissionInfo = new CommissionInfo();
+		commissionInfo.setBankAccount(commissionTakeOut.getBankAccount());
+		commissionInfo.setBankAccountName(commissionTakeOut.getBankAccountName());
+		commissionInfo.setBankName(commissionTakeOut.getBankName());
+		commissionInfo.setUserMobile(commissionTakeOut.getUserMobile());
+		commissionInfo.setCheckStatus(commissionTakeOut.getCheckStatus());
+		commissionInfo.setType("6");
+		Page<CommissionInfo> page = commissionInfoService.findPage(new Page<CommissionInfo>(request, response), commissionInfo);
 		model.addAttribute("page", page);
 		return "modules/commission/commissionTakeOutList";
 	}
 
-	@RequiresPermissions("commission:commissionTakeOut:view")
 	@RequestMapping(value = "form")
-	public String form(CommissionTakeOut commissionTakeOut, Model model) {
-		model.addAttribute("commissionTakeOut", commissionTakeOut);
+	public String form(CommissionInfo commissionInfo, Model model) {
+		commissionInfo = commissionInfoService.get(commissionInfo.getId());
+		model.addAttribute("commissionInfo", commissionInfo);
 		return "modules/commission/commissionTakeOutForm";
 	}
 
-	@RequiresPermissions("commission:commissionTakeOut:edit")
 	@RequestMapping(value = "save")
-	public String save(CommissionTakeOut commissionTakeOut, Model model, RedirectAttributes redirectAttributes) {
-		if (!beanValidator(model, commissionTakeOut)){
-			return form(commissionTakeOut, model);
+	public String save(CommissionInfo c, Model model, RedirectAttributes redirectAttributes) {
+		if("3".equals(c.getCheckStatus())){
+			CommissionInfo commissionInfo = commissionInfoService.get(c.getId());
+			commissionInfo.setCheckStatus(c.getCheckStatus());
+			commissionInfo.setCheckRemark(c.getCheckRemark());
+			commissionInfoService.save(commissionInfo);
 		}
-		commissionTakeOutService.save(commissionTakeOut);
-		addMessage(redirectAttributes, "保存佣金提现成功");
+		if("2".equals(c.getCheckStatus())){
+			CommissionInfo commissionInfo = commissionInfoService.get(c.getId());
+			if("2".equals(commissionInfo.getCheckStatus())){
+				addMessage(redirectAttributes, "打款失败[该笔提现已打款]");
+				return "redirect:"+Global.getAdminPath()+"/commission/commissionTakeOut/?repage";
+			}
+			MemberInfo memberInfo = new MemberInfo();
+			memberInfo.setId(commissionInfo.getUserId());
+			memberInfo = memberInfoService.get(memberInfo);
+			if(memberInfo.getCommission()<commissionInfo.getAmount()){
+				addMessage(redirectAttributes, "打款失败[用户佣金余额不足]");
+				return "redirect:"+Global.getAdminPath()+"/commission/commissionTakeOut/?repage";
+			}
+			//审核成功后
+			accountService.editAccount(memberInfo.getBalance(),memberInfo.getCommission()-commissionInfo.getAmount(),memberInfo.getId());
+			commissionInfo.setCheckStatus("2");
+			commissionInfo.setCheckRemark(c.getCheckRemark());
+			commissionInfoService.save(commissionInfo);
+			addMessage(redirectAttributes, "打款成功");
+		}
 		return "redirect:"+Global.getAdminPath()+"/commission/commissionTakeOut/?repage";
 	}
 	
@@ -90,19 +123,24 @@ public class CommissionTakeOutController extends BaseController {
 	@RequiresPermissions("commission:commissionTakeOut:edit")
 	@RequestMapping(value = "updateStatus")
 	public String updateStatus(CommissionTakeOut commissionTakeOut, RedirectAttributes redirectAttributes) {
-		commissionTakeOut = commissionTakeOutService.get(commissionTakeOut.getId());
+		CommissionInfo commissionInfo = commissionInfoService.get(commissionTakeOut.getId());
 		if("2".equals(commissionTakeOut.getCheckStatus())){
 			addMessage(redirectAttributes, "打款成功");
 			return "redirect:"+Global.getAdminPath()+"/commission/commissionTakeOut/?repage";
 		}
 		commissionTakeOut.setCheckStatus("2");
 		MemberInfo memberInfo = new MemberInfo();
-		memberInfo.setId(commissionTakeOut.getUserId());
+		memberInfo.setId(commissionInfo.getUserId());
 		memberInfo = memberInfoService.get(memberInfo);
-
+		if(memberInfo.getCommission()<commissionInfo.getAmount()){
+			addMessage(redirectAttributes, "打款失败[用户佣金余额不足]");
+			return "redirect:"+Global.getAdminPath()+"/commission/commissionTakeOut/?repage";
+		}
 		//审核成功后
-		accountService.editAccount(memberInfo.getBalance(),memberInfo.getCommission()-commissionTakeOut.getAmount(),memberInfo.getId());
-		commissionTakeOutService.save(commissionTakeOut);
+		accountService.editAccount(memberInfo.getBalance(),memberInfo.getCommission()-commissionInfo.getAmount(),memberInfo.getId());
+		commissionInfo.setCheckStatus("2");
+		commissionInfo.setCheckRemark(commissionTakeOut.getCheckRemark());
+		commissionInfoService.save(commissionInfo);
 		addMessage(redirectAttributes, "打款成功");
 		return "redirect:"+Global.getAdminPath()+"/commission/commissionTakeOut/?repage";
 	}

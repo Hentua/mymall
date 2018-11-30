@@ -39,8 +39,9 @@
 			<li><label>状态：</label>
 				<form:select path="checkStatus" cssClass="select-multiple" cssStyle="width: 170px">
 					<form:option value="" label="全部" />
-					<form:option value="1" label="待打款" />
+					<form:option value="1" label="待审核" />
 					<form:option value="2" label="已打款" />
+					<form:option value="3" label="已驳回" />
 				</form:select>
 			</li>
 			<li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
@@ -59,6 +60,7 @@
 				<th>开户人名称</th>
 				<th>开户行</th>
 				<th>状态</th>
+				<th>备注</th>
 				<shiro:hasPermission name="commission:commissionTakeOut:edit"><th>操作</th></shiro:hasPermission>
 			</tr>
 		</thead>
@@ -88,15 +90,22 @@
 				</td>
 				<td>
 					<c:if test="${commissionTakeOut.checkStatus == '1'}">
-						未打款
+						待审核
 					</c:if>
 					<c:if test="${commissionTakeOut.checkStatus == '2'}">
 						已打款
 					</c:if>
+					<c:if test="${commissionTakeOut.checkStatus == '3'}">
+						已驳回
+					</c:if>
+
+				</td>
+				<td>
+					${commissionTakeOut.checkRemark}
 				</td>
 				<shiro:hasPermission name="commission:commissionTakeOut:edit"><td>
 					<c:if test="${commissionTakeOut.checkStatus == '1'}">
-						<a href="${ctx}/commission/commissionTakeOut/updateStatus?id=${commissionTakeOut.id}" onclick="return confirmx('确认该笔佣金提现已打款吗？', this.href)">打款完成</a>
+						<a href="${ctx}/commission/commissionTakeOut/form?id=${commissionTakeOut.id}"  >打款审核</a>
 
 					</c:if>
 				</td></shiro:hasPermission>

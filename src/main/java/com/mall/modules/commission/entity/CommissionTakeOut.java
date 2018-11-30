@@ -20,7 +20,16 @@ public class CommissionTakeOut extends DataEntity<CommissionTakeOut> {
 	private String bankName;		// 开户行
 	private String checkStatus;		// 提现审核状态：1未审核 2已审核
     private String userMobile;
-	
+    private String checkRemark;
+
+	public String getCheckRemark() {
+		return checkRemark;
+	}
+
+	public void setCheckRemark(String checkRemark) {
+		this.checkRemark = checkRemark;
+	}
+
 	public CommissionTakeOut() {
 		super();
 	}

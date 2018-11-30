@@ -357,10 +357,23 @@ public class AccountApi extends BaseController {
 //		accountFlow.setBankAccount(request.getParameter("bankAccount"));//银行账户
 //		accountFlow.setBankAccountName(request.getParameter("bankAccountName"));//开户人名称
 //		accountFlow.setBankName(request.getParameter("bankName"));//开户行
-        accountFlow.setCheckStatus("1");
+        accountFlow.setCheckStatus("2");
         accountFlowService.save(accountFlow);
         //送优惠券函数
         couponCustomerService.saveCouponCustomerByPlatform(amount, "0", user.getId(), "佣金转余额优惠券", "3");
+
+
+        //新增转余额记录
+        CommissionInfo commissionInfo = new CommissionInfo();
+        commissionInfo.setType("7");
+        commissionInfo.setAmount(amount);
+        commissionInfo.setUserId(user.getId());
+//        commissionInfo.setBankAccount(request.getParameter("bankAccount"));
+//        commissionInfo.setBankAccountName(request.getParameter("bankAccountName"));
+//        commissionInfo.setBankName(request.getParameter("bankName"));
+        commissionInfo.setCheckStatus("2");
+        commissionInfo.setStatus("1");
+        commissionInfoService.save(commissionInfo);
         //操作余额
         accountService.editAccount(memberInfo.getBalance() + amount, memberInfo.getCommission() - amount, user.getId());
         renderString(response, ResultGenerator.genSuccessResult("成功"));
@@ -386,14 +399,17 @@ public class AccountApi extends BaseController {
             renderString(response, ResultGenerator.genFailResult("佣金余额不足"));
         }
         //新增提现记录
-        CommissionTakeOut commissionTakeOut = new CommissionTakeOut();
-        commissionTakeOut.setAmount(amount);
-        commissionTakeOut.setUserId(user.getId());
-        commissionTakeOut.setBankAccount(request.getParameter("bankAccount"));
-        commissionTakeOut.setBankAccountName(request.getParameter("bankAccountName"));
-        commissionTakeOut.setBankName(request.getParameter("bankName"));
-        commissionTakeOut.setCheckStatus("1");
-        commissionTakeOutService.save(commissionTakeOut);
+        CommissionInfo commissionInfo = new CommissionInfo();
+        commissionInfo.setType("6");
+        commissionInfo.setAmount(amount);
+        commissionInfo.setUserId(user.getId());
+        commissionInfo.setBankAccount(request.getParameter("bankAccount"));
+        commissionInfo.setBankAccountName(request.getParameter("bankAccountName"));
+        commissionInfo.setBankName(request.getParameter("bankName"));
+        commissionInfo.setCheckStatus("1");
+        commissionInfo.setStatus("1");
+        commissionInfoService.save(commissionInfo);
+
         renderString(response, ResultGenerator.genSuccessResult("提现成功"));
     }
 

@@ -23,55 +23,61 @@
 				}
 			});
 		});
+
+        function go_a(status) {
+            $("#checkStatus").val(status);
+            $("#inputForm").submit();
+            <%--location.href = "${ctx}/goods/goodsInfo/updateStatusCheck?id=${goodsInfo.id}&status="+status;--%>
+        }
 	</script>
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li><a href="${ctx}/commission/commissionTakeOut/">佣金提现列表</a></li>
-		<li class="active"><a href="${ctx}/commission/commissionTakeOut/form?id=${commissionTakeOut.id}">佣金提现<shiro:hasPermission name="commission:commissionTakeOut:edit">${not empty commissionTakeOut.id?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="commission:commissionTakeOut:edit">查看</shiro:lacksPermission></a></li>
+		<li class="active"><a href="${ctx}/commission/commissionTakeOut/form?id=${commissionInfo.id}">打款审核</a></li>
 	</ul><br/>
-	<form:form id="inputForm" modelAttribute="commissionTakeOut" action="${ctx}/commission/commissionTakeOut/save" method="post" class="form-horizontal">
+	<form:form id="inputForm" modelAttribute="commissionInfo" action="${ctx}/commission/commissionTakeOut/save" method="post" class="form-horizontal">
 		<form:hidden path="id"/>
+		<input type="hidden" id="checkStatus" name="checkStatus" >
 		<sys:message content="${message}"/>		
 		<div class="control-group">
-			<label class="control-label">用户id：</label>
+			<label class="control-label">用户账号：</label>
 			<div class="controls">
-				<form:input path="userId" htmlEscape="false" maxlength="64" class="input-xlarge "/>
+				${commissionInfo.userMobile}
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">提现金额：</label>
+			<label class="control-label">用户名称：</label>
 			<div class="controls">
-				<form:input path="amount" htmlEscape="false" class="input-xlarge required"/>
-				<span class="help-inline"><font color="red">*</font> </span>
+				${commissionInfo.userName}
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">银行账户：</label>
 			<div class="controls">
-				<form:input path="bankAccount" htmlEscape="false" maxlength="100" class="input-xlarge "/>
+				${commissionInfo.bankAccount}
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">开户人名称：</label>
 			<div class="controls">
-				<form:input path="bankAccountName" htmlEscape="false" maxlength="50" class="input-xlarge "/>
+				${commissionInfo.bankAccountName}
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">开户行：</label>
 			<div class="controls">
-				<form:input path="bankName" htmlEscape="false" maxlength="200" class="input-xlarge "/>
+				${commissionInfo.bankName}
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">提现审核状态：1未审核 2已审核：</label>
+			<label class="control-label">审核备注：</label>
 			<div class="controls">
-				<form:input path="checkStatus" htmlEscape="false" maxlength="3" class="input-xlarge "/>
+				<form:textarea path="checkRemark" htmlEscape="false" rows="4" maxlength="500" class="input-xxlarge "/>
 			</div>
 		</div>
 		<div class="form-actions">
-			<shiro:hasPermission name="commission:commissionTakeOut:edit"><input id="btnSubmit" class="btn btn-primary" type="submit" value="保 存"/>&nbsp;</shiro:hasPermission>
+			<input class="btn btn-primary" type="button"  onclick="go_a('2')" value="审核通过"/>
+			<input  class="btn btn-primary" type="button"  onclick="go_a('3')" value="驳 回"/>
 			<input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
 		</div>
 	</form:form>
