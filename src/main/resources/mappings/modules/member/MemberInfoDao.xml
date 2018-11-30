@@ -126,6 +126,59 @@
 			</otherwise>
 		</choose>
 	</select>
+
+	<select id="findListByPower" resultType="MemberInfo">
+		SELECT
+			<include refid="memberInfoColumns"/>,
+		    m.nickname AS "refereeName"
+		FROM member_info a
+		<include refid="memberInfoJoins"/>
+		left join member_info m on m.id = a.referee_id
+		left join sys_office o on o.id = u1.office_id
+		<where>
+		     <if test="refereeId != null and refereeId != ''">
+				 and a.referee_id = #{refereeId}
+			 </if>
+		     <if test="nickname != null and nickname != ''">
+				 and a.nickname  LIKE CONCAT('%',#{nickname},'%')
+			 </if>
+			 <if test="status != null and status != ''">
+				 and a.status = #{status}
+			 </if>
+		     <if test="registerWay != null and registerWay != ''">
+				 and a.register_way = #{registerWay}
+			 </if>
+			<if test="mobile != null and mobile != ''">
+				and u.login_name = #{mobile}
+			</if>
+			<if test="operatorCode != null and operatorCode != ''">
+				and a.operator_code = #{operatorCode}
+			</if>
+			<if test="userType != null and userType != ''">
+				and u.user_type = #{userType}
+			</if>
+			<if test="merchantRefereeId != null and merchantRefereeId != ''">
+				and a.merchant_referee_id = #{merchantRefereeId}
+			</if>
+			<if test="startDate != null">
+				and a.create_date &gt;= #{startDate}
+			</if>
+			<if test="endDate != null">
+				and a.create_date &lt;= #{endDate}
+			</if>
+			and a.del_flag = #{DEL_FLAG_NORMAL}
+			<!-- 数据范围过滤 -->
+			${sqlMap.dsf}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date DESC
+			</otherwise>
+		</choose>
+	</select>
 	
 	<select id="findAllList" resultType="MemberInfo">
 		SELECT 

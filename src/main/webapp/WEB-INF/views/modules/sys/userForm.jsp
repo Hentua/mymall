@@ -129,8 +129,9 @@
 			<label class="control-label">用户类型:</label>
 			<div class="controls">
 				<form:select path="userType" class="input-xlarge">
-					<form:option value="" label="请选择"/>
-					<form:options items="${fns:getDictList('sys_user_type')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
+					<%--<form:option value="" label="请选择"/>--%>
+					<%--<form:options items="${fns:getDictList('sys_user_type')}" itemLabel="label" itemValue="value" htmlEscape="false"/>--%>
+					<form:option value="2" label="运营"/>
 				</form:select>
 			</div>
 		</div>

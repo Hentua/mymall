@@ -82,6 +82,15 @@ public class MemberInfoController extends BaseController {
     }
 
     @RequiresPermissions("member:memberInfo:view")
+    @RequestMapping(value = {"merchantInfoListByPower"})
+    public String merchantInfoListByPower(MemberInfo memberInfo, HttpServletRequest request, HttpServletResponse response, Model model) {
+        memberInfo.setUserType("1");
+        Page<MemberInfo> page = memberInfoService.findListByPower(new Page<MemberInfo>(request, response), memberInfo);
+        model.addAttribute("page", page);
+        return "modules/member/merchantInfoListByPower";
+    }
+
+    @RequiresPermissions("member:memberInfo:view")
     @RequestMapping(value = {"merchantMemberInfo"})
     public String merchantMemberInfo(MemberInfo memberInfo, HttpServletRequest request, HttpServletResponse response, Model model) {
         User currUser = UserUtils.getUser();
@@ -125,7 +134,7 @@ public class MemberInfoController extends BaseController {
     public String uncheckMerchant(MemberInfo memberInfo, Model model) {
         memberInfoService.uncheckStatus(memberInfo.getId());
         model.addAttribute("message", "取消商户审核成功");
-        return "redirect:" + Global.getAdminPath() + "/member/memberInfo/allList?repage";
+        return "redirect:" + Global.getAdminPath() + "/member/memberInfo/merchantInfoListByPower?repage";
     }
 
     @RequiresPermissions("member:memberInfo:edit")
@@ -133,11 +142,11 @@ public class MemberInfoController extends BaseController {
     public String modifyMemberOperator(MemberInfo memberInfo, Model model, RedirectAttributes redirectAttributes) {
         if (null == memberInfo) {
             addMessage(redirectAttributes, "表单信息不合法");
-            return "redirect:" + Global.getAdminPath() + "/member/memberInfo/allList?repage";
+            return "redirect:" + Global.getAdminPath() + "/member/memberInfo/merchantInfoListByPower?repage";
         }
         if (StringUtils.isBlank(memberInfo.getId())) {
             addMessage(redirectAttributes, "未选择要编辑的商户");
-            return "redirect:" + Global.getAdminPath() + "/member/memberInfo/allList?repage";
+            return "redirect:" + Global.getAdminPath() + "/member/memberInfo/merchantInfoListByPower?repage";
         }
         if (StringUtils.isBlank(memberInfo.getOperatorCode())) {
             model.addAttribute("message", "未选择商户归属的运营");
@@ -146,7 +155,7 @@ public class MemberInfoController extends BaseController {
         }
         memberInfoService.modifyMemberOperator(memberInfo);
         addMessage(redirectAttributes, "操作成功");
-        return "redirect:" + Global.getAdminPath() + "/member/memberInfo/allList?repage";
+        return "redirect:" + Global.getAdminPath() + "/member/memberInfo/merchantInfoListByPower?repage";
     }
 
     @RequiresPermissions("member:memberInfo:edit")
@@ -154,21 +163,21 @@ public class MemberInfoController extends BaseController {
     public String disableUser(MemberInfo memberInfo, Model model, RedirectAttributes redirectAttributes) {
         if (null == memberInfo) {
             addMessage(redirectAttributes, "表单信息不合法");
-            return "redirect:" + Global.getAdminPath() + "/member/memberInfo/allList?repage";
+            return "redirect:" + Global.getAdminPath() + "/member/memberInfo/merchantInfoListByPower?repage";
         }
         if (StringUtils.isBlank(memberInfo.getId())) {
             addMessage(redirectAttributes, "未选择要禁止登录的会员");
-            return "redirect:" + Global.getAdminPath() + "/member/memberInfo/allList?repage";
+            return "redirect:" + Global.getAdminPath() + "/member/memberInfo/merchantInfoListByPower?repage";
         }
         User user = UserUtils.get(memberInfo.getId());
         if (null == user || "0".equals(user.getLoginFlag())) {
             addMessage(redirectAttributes, "操作失败，用户信息不合法");
-            return "redirect:" + Global.getAdminPath() + "/member/memberInfo/allList?repage";
+            return "redirect:" + Global.getAdminPath() + "/member/memberInfo/merchantInfoListByPower?repage";
         }
         user.setLoginFlag("0");
         systemService.modifyLoginFlag(user);
         addMessage(redirectAttributes, "操作成功");
-        return "redirect:" + Global.getAdminPath() + "/member/memberInfo/allList?repage";
+        return "redirect:" + Global.getAdminPath() + "/member/memberInfo/merchantInfoListByPower?repage";
     }
 
     @RequiresPermissions("member:memberInfo:edit")
@@ -176,21 +185,21 @@ public class MemberInfoController extends BaseController {
     public String enableUser(MemberInfo memberInfo, Model model, RedirectAttributes redirectAttributes) {
         if (null == memberInfo) {
             addMessage(redirectAttributes, "表单信息不合法");
-            return "redirect:" + Global.getAdminPath() + "/member/memberInfo/allList?repage";
+            return "redirect:" + Global.getAdminPath() + "/member/memberInfo/merchantInfoListByPower?repage";
         }
         if (StringUtils.isBlank(memberInfo.getId())) {
             addMessage(redirectAttributes, "未选择要允许登录的会员");
-            return "redirect:" + Global.getAdminPath() + "/member/memberInfo/allList?repage";
+            return "redirect:" + Global.getAdminPath() + "/member/memberInfo/merchantInfoListByPower?repage";
         }
         User user = UserUtils.get(memberInfo.getId());
         if (null == user || "1".equals(user.getLoginFlag())) {
             addMessage(redirectAttributes, "操作失败，用户信息不合法");
-            return "redirect:" + Global.getAdminPath() + "/member/memberInfo/allList?repage";
+            return "redirect:" + Global.getAdminPath() + "/member/memberInfo/merchantInfoListByPower?repage";
         }
         user.setLoginFlag("1");
         systemService.modifyLoginFlag(user);
         addMessage(redirectAttributes, "操作成功");
-        return "redirect:" + Global.getAdminPath() + "/member/memberInfo/allList?repage";
+        return "redirect:" + Global.getAdminPath() + "/member/memberInfo/merchantInfoListByPower?repage";
     }
 
     @RequestMapping(value = "merchantData")

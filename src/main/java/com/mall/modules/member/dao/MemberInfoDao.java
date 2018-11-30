@@ -3,7 +3,6 @@ package com.mall.modules.member.dao;
 import com.mall.common.persistence.CrudDao;
 import com.mall.common.persistence.annotation.MyBatisDao;
 import com.mall.modules.member.entity.MemberInfo;
-import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -82,5 +81,13 @@ public interface MemberInfoDao extends CrudDao<MemberInfo> {
      * @param id 会员ID
      */
     void uncheckStatus(String id);
+
+    /**
+     * 根据权限查询商户
+     *
+     * @param memberInfo 查询条件
+     * @return 商户列表
+     */
+    List<MemberInfo> findListByPower(MemberInfo memberInfo);
 
 }

@@ -18,9 +18,9 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li class="active"><a href="${ctx}/member/memberInfo/allList">商户列表</a></li>
+		<li class="active"><a href="${ctx}/member/memberInfo/merchantInfoListByPower">商户列表</a></li>
 	</ul>
-	<form:form id="searchForm" modelAttribute="memberInfo" action="${ctx}/member/memberInfo/allList" method="post" class="breadcrumb form-search">
+	<form:form id="searchForm" modelAttribute="memberInfo" action="${ctx}/member/memberInfo/merchantInfoListByPower" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<ul class="ul-form">
@@ -62,7 +62,7 @@
 				<th>商户审核状态</th>
 				<th>登录状态</th>
 				<th>备注</th>
-				<%--<th>操作</th>--%>
+				<th>操作</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -122,7 +122,7 @@
 				<td>
 					${memberInfo.remarks}
 				</td>
-				<%--<td>
+				<td>
 					<c:if test="${memberInfo.loginFlag == '0'}">
 						<a href="${ctx}/member/memberInfo/enableUser?id=${memberInfo.id}" onclick="return confirmx('确定允许该用户登录吗？', this.href)">允许登录</a>
 					</c:if>
@@ -132,8 +132,8 @@
 					<c:if test="${memberInfo.status == '1'}">
 						<a href="${ctx}/member/memberInfo/uncheckMerchant?id=${memberInfo.id}" onclick="return confirmx('确定要取消该商户审核状态吗？如果类型为商户，将下架该商户的所有商品', this.href)">取消审核</a>
 					</c:if>
-					<a href="${ctx}/member/memberInfo/allListForm?id=${memberInfo.id}">修改归属督导经理</a>
-				</td>--%>
+					<shiro:hasPermission name="member:memberInfo:modify"><a href="${ctx}/member/memberInfo/allListForm?id=${memberInfo.id}">修改归属督导经理</a></shiro:hasPermission>
+				</td>
 			</tr>
 		</c:forEach>
 		</tbody>

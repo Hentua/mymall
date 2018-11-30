@@ -10,19 +10,16 @@ import com.mall.modules.member.dao.MemberFootprintDao;
 import com.mall.modules.member.dao.MemberInfoDao;
 import com.mall.modules.member.dao.MemberRefereeIdMaxDao;
 import com.mall.modules.member.entity.*;
-import com.mall.modules.member.utils.Base32;
 import com.mall.modules.sys.entity.Role;
 import com.mall.modules.sys.entity.User;
 import com.mall.modules.sys.service.SystemService;
 import com.mall.modules.sys.utils.UserUtils;
-import com.sohu.idcenter.IdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -237,5 +234,11 @@ public class MemberInfoService extends CrudService<MemberInfoDao, MemberInfo> {
         }
         user.setRoleList(roles);
         systemService.saveUser(user);
+    }
+
+    public Page<MemberInfo> findListByPower(Page<MemberInfo> page, MemberInfo memberInfo) {
+        memberInfo.setPage(page);
+        memberInfo.getSqlMap().put("dsf", dataScopeFilter(UserUtils.getUser(), "o", "u1"));
+        return page.setList(memberInfoDao.findListByPower(memberInfo));
     }
 }
