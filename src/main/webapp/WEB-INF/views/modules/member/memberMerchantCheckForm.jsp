@@ -221,8 +221,8 @@
         <div class="controls">
             <c:choose>
                 <c:when test="${memberMerchantCheck.status == '0'}">
-                    <sys:treeselect id="user" name="operatorCode" value="${memberMerchantCheck.memberInfo.operatorCode}" labelName="user.name" labelValue="${memberMerchantCheck.memberInfo.operatorName}"
-                                    title="归属督导经理" url="/sys/user/operatorTreeData" cssClass="input-small" allowClear="false" notAllowSelectParent="true"/>
+                    <sys:treeselect id="operatorCode" name="operatorCode" value="${memberMerchantCheck.memberInfo.operatorCode}" labelName="operatorName" labelValue="${memberMerchantCheck.memberInfo.operatorName}"
+                                    title="归属督导经理" url="/sys/office/treeData?type=4" cssClass="input-small" allowClear="true" notAllowSelectParent="true"/>
                 </c:when>
                 <c:otherwise>
                     ${memberMerchantCheck.memberInfo.operatorName}

@@ -30,6 +30,10 @@
 			<li><label>手机号码：</label>
 				<form:input path="mobile" htmlEscape="false" maxlength="20" class="input-medium"/>
 			</li>
+			<li><label>督导经理：</label>
+				<sys:treeselect id="operatorCode" name="operatorCode" value="${memberInfo.operatorCode}" labelName="operatorName" labelValue="${memberInfo.operatorName}"
+								title="归属督导经理" url="/sys/office/treeData?type=4" cssClass="input-small" allowClear="true" notAllowSelectParent="true"/>
+			</li>
 			<li><label>注册途径：</label>
 				<form:select path="registerWay" class="input-medium">
 					<form:option value="" label="全部"/>

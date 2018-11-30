@@ -8,7 +8,7 @@
 	<script type="text/javascript">
 		var key, lastValue = "", nodeList = [], type = getQueryString("type", "${url}");
 		var tree, setting = {view:{selectedMulti:false,dblClickExpand:false},check:{enable:"${checked}",nocheckInherit:true},
-				async:{enable:(type==3),url:"${ctx}/sys/user/treeData",autoParam:["id=officeId"]},
+				async:{enable:(type==3 || type==4),url:"${ctx}/sys/user/treeData?type=" + type,autoParam:["id=officeId"]},
 				data:{simpleData:{enable:true}},callback:{<%--
 					beforeClick: function(treeId, treeNode){
 						if("${checked}" == "true"){

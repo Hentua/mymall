@@ -206,7 +206,7 @@
 	</select>
 
 	<select id="findOperatorList" resultType="Map">
-		select '0' as pId, '0' as pIds, id as id, name as name from sys_user where user_type = '2' and del_flag='0' and login_flag = '1'
+		select office_id as "pId", concat('u_', id) as "id", name as "name" from sys_user where user_type = '2' and del_flag='0' and login_flag = '1' and office_id = #{officeId}
 	</select>
 	
 	<!-- 根据OfficeId获取用户（树查询用户时用） -->

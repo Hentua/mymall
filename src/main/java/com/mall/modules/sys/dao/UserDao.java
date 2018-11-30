@@ -85,9 +85,10 @@ public interface UserDao extends CrudDao<User> {
     /**
      * 查询运营树状结构数据
      *
+     * @param officeId 部门ID
      * @return 运营用户列表
      */
-    List<Map<String, String>> findOperatorList();
+    List<Map<String, Object>> findOperatorList(String officeId);
 
     /**
      * 修改用户登录状态
