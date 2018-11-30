@@ -2,6 +2,7 @@ package com.mall.modules.account.web;
 
 import com.alibaba.druid.support.json.JSONUtils;
 import com.mall.common.config.Global;
+import com.mall.common.mapper.JsonMapper;
 import com.mall.common.persistence.Page;
 import com.mall.common.utils.IdGen;
 import com.mall.common.utils.StringUtils;
@@ -118,7 +119,7 @@ public class AccountFlowController extends BaseController {
 	public String recharge(AccountFlow accountFlow, Model model) {
 		List<PlatBankAccount> platBankAccountList =platBankAccountService.findList(new PlatBankAccount());
 		model.addAttribute("platBankAccountList",platBankAccountList);
-		model.addAttribute("platBankAccountListJson",JSONUtils.toJSONString(platBankAccountList));
+		model.addAttribute("platBankAccountListJson", JsonMapper.toJsonString(platBankAccountList));
 		return "modules/account/accountRecharge";
 	}
 

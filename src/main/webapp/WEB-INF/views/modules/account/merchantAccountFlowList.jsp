@@ -48,7 +48,7 @@
 		<thead>
 			<tr>
 				<th>流水单号</th>
-				<th>用户名称</th>
+				<%--<th>用户名称</th>--%>
 				<th>金额</th>
 				<th>类型</th>
 				<th>操作时间</th>
@@ -67,9 +67,9 @@
 				<td>1
 					${accountFlow.flowNo}
 				 </td>
-				<td>
-					${accountFlow.nickname}
-				</td>
+				<%--<td>--%>
+					<%--${accountFlow.nickname}--%>
+				<%--</td>--%>
 				<td>
 					${accountFlow.amount}
 				</td>
@@ -91,7 +91,6 @@
 							<c:if test="${accountFlow.paymentType == '1'}">
 								礼包消费
 							</c:if>
-							${accountFlow.paymentType}
 						</c:if>
 					</c:if>
 				</td>
