@@ -27,7 +27,7 @@
 </head>
 <body>
 <ul class="nav nav-tabs">
-    <li><a href="${ctx}/member/memberInfo/allList">商户列表</a></li>
+    <li><a href="${ctx}/member/memberInfo/merchantInfoListByPower">商户列表</a></li>
     <li class="active"><a href="${ctx}/member/memberInfo/allListForm?id=${id}">商户详情</a></li>
 </ul>
 <br/>
