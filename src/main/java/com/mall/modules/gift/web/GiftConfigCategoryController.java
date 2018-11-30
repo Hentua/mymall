@@ -57,6 +57,8 @@ public class GiftConfigCategoryController extends BaseController {
 	@RequiresPermissions("gift:giftConfigCategory:view")
 	@RequestMapping(value = {"buyList"})
 	public String buyList(GiftConfigCategory giftConfigCategory, HttpServletRequest request, HttpServletResponse response, Model model) {
+		User user = UserUtils.getUser();
+		giftConfigCategory.setMerchantCode(user.getId());
 		giftConfigCategory.setStatus("1");
 		Page<GiftConfigCategory> page = giftConfigCategoryService.findPage(new Page<GiftConfigCategory>(request, response), giftConfigCategory);
 		model.addAttribute("page", page);
