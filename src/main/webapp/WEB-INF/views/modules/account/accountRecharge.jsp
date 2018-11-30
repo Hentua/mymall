@@ -22,7 +22,36 @@
 					}
 				}
 			});
+
+
 		});
+
+        var platBankAccountListJson = eval('(${platBankAccountListJson})');
+        $(function () {
+            // alert(platBankAccountListJson)
+            var x=platBankAccountListJson[0];
+            console.log(x)
+            $("#platBankAccount_input").val(x.bankAccount);
+            $("#bankAccountName").val(x.bankAccountName);
+            $("#bankName").val(x.bankName);
+            $("#platBankAccount_hide").val(x.bankAccount);
+        })
+
+        function chesel(t) {
+            var x = {};
+            for(var i=0;i<platBankAccountListJson.length;i++){
+                var w = platBankAccountListJson[i];
+                if(w.id == $(t).val()){
+                    x=w;
+                    break;
+                }
+            }
+            $("#platBankAccount_input").val(x.bankAccount);
+            $("#bankAccountName").val(x.bankAccountName);
+            $("#bankName").val(x.bankName);
+            $("#platBankAccount_hide").val(x.bankAccount);
+
+        }
 	</script>
 </head>
 <body>
@@ -38,9 +67,9 @@
 		<div class="control-group">
 			<label class="control-label">转账至：</label>
 			<div class="controls">
-				<form:select path="platBankAccount" cssStyle="width: 283px">
+				<form:select path="" cssStyle="width: 283px" onchange="chesel(this)">
 					<c:forEach items="${platBankAccountList}" var="p">
-						<form:option value="${p.bankAccount}" label="${p.title}" />
+						<form:option value="${p.id}" label="${p.title}" />
 					</c:forEach>
 					<%--<form:options items="${fns:getDictList('plat_bank_account')}" itemLabel="label" itemValue="value" htmlEscape="false"/>--%>
 				</form:select>
@@ -48,23 +77,28 @@
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">转账银行账户：</label>
+			<label class="control-label">平台银行账户：</label>
 			<div class="controls">
-				<form:input path="bankAccount" htmlEscape="false" maxlength="100" class="input-xlarge required"/>
-				<span class="help-inline"><font color="red">*</font> </span>
+				<form:input id="platBankAccount_input" path="" htmlEscape="false" maxlength="50"  disabled="true"  class="input-xlarge required"/>
+				<form:hidden id="platBankAccount_hide" path="platBankAccount" />
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">开户人名称：</label>
 			<div class="controls">
-				<form:input path="bankAccountName" htmlEscape="false" maxlength="50" class="input-xlarge required"/>
-				<span class="help-inline"><font color="red">*</font> </span>
+				<form:input id="bankAccountName" path="bankAccountName" htmlEscape="false" disabled="true" maxlength="50" class="input-xlarge required"/>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">开户行：</label>
 			<div class="controls">
-				<form:input path="bankName" htmlEscape="false" maxlength="200" class="input-xlarge required"/>
+				<form:input id="bankName" path="bankName" htmlEscape="false" maxlength="200" disabled="true" class="input-xlarge required"/>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">转账银行账户：</label>
+			<div class="controls">
+				<form:input path="bankAccount" htmlEscape="false" maxlength="100" class="input-xlarge required"/>
 				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>
