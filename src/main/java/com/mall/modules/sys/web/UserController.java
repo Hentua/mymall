@@ -3,15 +3,12 @@
  */
 package com.mall.modules.sys.web;
 
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.ConstraintViolationException;
-
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.mall.common.beanvalidator.BeanValidators;
 import com.mall.common.config.Global;
+import com.mall.common.persistence.Page;
 import com.mall.common.utils.DateUtils;
 import com.mall.common.utils.StringUtils;
 import com.mall.common.utils.excel.ExportExcel;
@@ -34,18 +31,15 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.mall.common.beanvalidator.BeanValidators;
-import com.mall.common.persistence.Page;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.ConstraintViolationException;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 用户Controller
@@ -431,18 +425,22 @@ public class UserController extends BaseController {
 	@RequiresPermissions("user")
 	@ResponseBody
 	@RequestMapping(value = "treeData")
-	public List<Map<String, Object>> treeData(@RequestParam(required=false) String officeId, HttpServletResponse response) {
+	public List<Map<String, Object>> treeData(@RequestParam(required=false) String officeId, @RequestParam(required=false) String type, HttpServletResponse response) {
 		List<Map<String, Object>> mapList = Lists.newArrayList();
 		List<User> list = systemService.findUserByOfficeId(officeId);
-		for (int i=0; i<list.size(); i++){
-			User e = list.get(i);
-			Map<String, Object> map = Maps.newHashMap();
-			map.put("id", "u_"+e.getId());
-			map.put("pId", officeId);
-			map.put("name", StringUtils.replace(e.getName(), " ", ""));
-			mapList.add(map);
+		if("4".equals(type)) {
+			return systemService.findOperatorList(officeId);
+		}else {
+			for (int i=0; i<list.size(); i++){
+				User e = list.get(i);
+				Map<String, Object> map = Maps.newHashMap();
+				map.put("id", "u_"+e.getId());
+				map.put("pId", officeId);
+				map.put("name", StringUtils.replace(e.getName(), " ", ""));
+				mapList.add(map);
+			}
+			return mapList;
 		}
-		return mapList;
 	}
     
 //	@InitBinder
@@ -469,7 +467,7 @@ public class UserController extends BaseController {
 
 	@ResponseBody
 	@RequestMapping(value = "operatorTreeData")
-	public List<Map<String, String>> findOperatorTreeData(HttpServletResponse response) {
-		return systemService.findOperatorList();
+	public List<Map<String, Object>> findOperatorTreeData(@RequestParam(required = false)String officeId, HttpServletResponse response) {
+		return systemService.findOperatorList(officeId);
 	}
 }

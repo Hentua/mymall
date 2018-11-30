@@ -3,11 +3,8 @@
  */
 package com.mall.modules.sys.web;
 
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletResponse;
-
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.mall.common.config.Global;
 import com.mall.common.utils.StringUtils;
 import com.mall.common.web.BaseController;
@@ -26,8 +23,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 机构Controller
@@ -165,7 +163,7 @@ public class OfficeController extends BaseController {
 				map.put("pId", e.getParentId());
 				map.put("pIds", e.getParentIds());
 				map.put("name", e.getName());
-				if (type != null && "3".equals(type)){
+				if (type != null && ("3".equals(type) || "4".equals(type))){
 					map.put("isParent", true);
 				}
 				mapList.add(map);
