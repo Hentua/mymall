@@ -91,8 +91,11 @@ public class CommissionTakeOutController extends BaseController {
 	@RequestMapping(value = "updateStatus")
 	public String updateStatus(CommissionTakeOut commissionTakeOut, RedirectAttributes redirectAttributes) {
 		commissionTakeOut = commissionTakeOutService.get(commissionTakeOut.getId());
+		if("2".equals(commissionTakeOut.getCheckStatus())){
+			addMessage(redirectAttributes, "打款成功");
+			return "redirect:"+Global.getAdminPath()+"/commission/commissionTakeOut/?repage";
+		}
 		commissionTakeOut.setCheckStatus("2");
-
 		MemberInfo memberInfo = new MemberInfo();
 		memberInfo.setId(commissionTakeOut.getUserId());
 		memberInfo = memberInfoService.get(memberInfo);
@@ -100,7 +103,7 @@ public class CommissionTakeOutController extends BaseController {
 		//审核成功后
 		accountService.editAccount(memberInfo.getBalance(),memberInfo.getCommission()-commissionTakeOut.getAmount(),memberInfo.getId());
 		commissionTakeOutService.save(commissionTakeOut);
-		addMessage(redirectAttributes, "操作成功");
+		addMessage(redirectAttributes, "打款成功");
 		return "redirect:"+Global.getAdminPath()+"/commission/commissionTakeOut/?repage";
 	}
 
