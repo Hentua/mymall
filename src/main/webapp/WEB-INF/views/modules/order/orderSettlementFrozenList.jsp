@@ -21,11 +21,12 @@
 </head>
 <body>
 <ul class="nav nav-tabs">
-    <li class="active"><a href="${ctx}/order/orderSettlement/list">货款结算列表</a></li>
+    <li class="active"><a href="${ctx}/order/orderSettlement/frozenList">货款结算列表</a></li>
 </ul>
-<form:form id="searchForm" modelAttribute="orderSettlement" action="${ctx}/order/orderSettlement/list" method="post" class="breadcrumb form-search">
+<form:form id="searchForm" modelAttribute="orderSettlement" action="${ctx}/order/orderSettlement/frozenList" method="post" class="breadcrumb form-search">
     <input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
     <input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
+    <form:hidden path="status" value="1"/>
     <ul class="ul-form">
         <li><label>商家账号：</label>
             <form:input path="merchantAccount" htmlEscape="false" maxlength="64" class="input-medium"/>
@@ -43,14 +44,6 @@
         </li>
         <li><label>下单人账号：</label>
             <form:input path="customerAccount" htmlEscape="false" maxlength="64" class="input-medium"/>
-        </li>
-        <li><label>结算状态 ：</label>
-            <form:select path="status" class="input-medium">
-                <form:option value="" label="全部"/>
-                <form:option value="1" label="未清算" />
-                <form:option value="2" label="已清算" />
-                <form:option value="3" label="已结算" />
-            </form:select>
         </li>
         <li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
         <li class="btns"><input id="btnExport" class="btn btn-primary" type="button" value="导出" onclick="exportData()"/></li>

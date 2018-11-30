@@ -51,7 +51,7 @@ public class OrderSettlementController extends BaseController {
 	@RequiresPermissions("order:orderSettlement:view")
 	@RequestMapping(value = {"list", ""})
 	public String list(OrderSettlement orderSettlement, HttpServletRequest request, HttpServletResponse response, Model model) {
-		Page<OrderSettlement> page = orderSettlementService.findListWithGoods(new Page<OrderSettlement>(request, response), orderSettlement);
+		Page<OrderSettlement> page = orderSettlementService.findPage(new Page<OrderSettlement>(request, response), orderSettlement);
 //		Map<String, String> total = orderSettlementService.findTotal(orderSettlement);
 		Map<String, String> total = Maps.newHashMap();
 		Double settlementAmountTotal = 0.00;
@@ -67,7 +67,26 @@ public class OrderSettlementController extends BaseController {
 		return "modules/order/orderSettlementList";
 	}
 
-	@RequestMapping(value = {"merchantList", ""})
+	@RequiresPermissions("order:orderSettlement:view")
+	@RequestMapping(value = {"frozenList"})
+	public String frozenList(OrderSettlement orderSettlement, HttpServletRequest request, HttpServletResponse response, Model model) {
+		Page<OrderSettlement> page = orderSettlementService.findPage(new Page<OrderSettlement>(request, response), orderSettlement);
+//		Map<String, String> total = orderSettlementService.findTotal(orderSettlement);
+		Map<String, String> total = Maps.newHashMap();
+		Double settlementAmountTotal = 0.00;
+		Double orderAmountTotal = 0.00;
+		for (OrderSettlement o : page.getList()) {
+			settlementAmountTotal += o.getGoodsSettlementAmount();
+			orderAmountTotal += o.getSubtotal();
+		}
+		total.put("orderAmountTotal", String.valueOf(orderAmountTotal));
+		total.put("settlementAmountTotal", String.valueOf(settlementAmountTotal));
+		model.addAttribute("total", total);
+		model.addAttribute("page", page);
+		return "modules/order/orderSettlementFrozenList";
+	}
+
+	@RequestMapping(value = {"merchantList"})
 	public String merchantList(OrderSettlement orderSettlement, HttpServletRequest request, HttpServletResponse response, Model model) {
 		User currUser = UserUtils.getUser();
 		orderSettlement.setUserId(currUser.getId());
@@ -89,6 +108,20 @@ public class OrderSettlementController extends BaseController {
 
 	@RequestMapping(value = "exportOrderSettlement")
 	public void exportSettlementList(OrderSettlement orderSettlement, HttpServletRequest request, HttpServletResponse response) {
+		List<OrderSettlement> orderSettlementList = orderSettlementService.findList(orderSettlement);
+		ExportExcel exportExcel = new ExportExcel("货款结算", OrderSettlement.class, 1, 0);
+		try {
+			exportExcel.setDataList(orderSettlementList);
+			exportExcel.write(response, "货款结算.xlsx");
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@RequestMapping(value = "merchantExportOrderSettlement")
+	public void merchantExportOrderSettlement(OrderSettlement orderSettlement, HttpServletRequest request, HttpServletResponse response) {
+		User currUser = UserUtils.getUser();
+		orderSettlement.setUserId(currUser.getId());
 		Page<OrderSettlement> page = orderSettlementService.findListWithGoods(new Page<>(request, response, -1), orderSettlement);
 		List<OrderSettlement> orderSettlementList = page.getList();
 		ExportExcel exportExcel = new ExportExcel("货款结算", OrderSettlement.class, 1, 0, 1);
