@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.modules.sys.dao.PlatBankAccountDao">
+    
+	<sql id="platBankAccountColumns">
+		a.id AS "id",
+		a.bank_account AS "bankAccount",
+		a.bank_account_name AS "bankAccountName",
+		a.bank_name AS "bankName",
+		a.title AS "title",
+		a.create_date AS "createDate"
+	</sql>
+	
+	<sql id="platBankAccountJoins">
+	</sql>
+    
+	<select id="get" resultType="PlatBankAccount">
+		SELECT 
+			<include refid="platBankAccountColumns"/>
+		FROM plat_bank_account a
+		<include refid="platBankAccountJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="PlatBankAccount">
+		SELECT 
+			<include refid="platBankAccountColumns"/>
+		FROM plat_bank_account a
+		<include refid="platBankAccountJoins"/>
+		<where>
+			
+			<if test="bankAccount != null and bankAccount != ''">
+				AND a.bank_account LIKE 
+					<if test="dbName == 'oracle'">'%'||#{bankAccount}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{bankAccount}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{bankAccount},'%')</if>
+			</if>
+			<if test="bankAccountName != null and bankAccountName != ''">
+				AND a.bank_account_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{bankAccountName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{bankAccountName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{bankAccountName},'%')</if>
+			</if>
+			<if test="bankName != null and bankName != ''">
+				AND a.bank_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{bankName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{bankName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{bankName},'%')</if>
+			</if>
+			<if test="title != null and title != ''">
+				AND a.title LIKE 
+					<if test="dbName == 'oracle'">'%'||#{title}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{title}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{title},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="PlatBankAccount">
+		SELECT 
+			<include refid="platBankAccountColumns"/>
+		FROM plat_bank_account a
+		<include refid="platBankAccountJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO plat_bank_account(
+			id,
+			bank_account,
+			bank_account_name,
+			bank_name,
+			title,
+			create_date
+		) VALUES (
+			#{id},
+			#{bankAccount},
+			#{bankAccountName},
+			#{bankName},
+			#{title},
+			#{createDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE plat_bank_account SET 	
+			bank_account = #{bankAccount},
+			bank_account_name = #{bankAccountName},
+			bank_name = #{bankName},
+			title = #{title}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM plat_bank_account
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
