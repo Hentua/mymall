@@ -199,8 +199,8 @@
     <div class="control-group">
         <label class="control-label">归属督导经理：</label>
         <div class="controls">
-            <sys:treeselect id="user" name="operatorCode" value="${memberInfo.operatorCode}" labelName="user.name" labelValue="${memberInfo.operatorName}"
-                            title="归属督导经理" url="/sys/user/operatorTreeData" cssClass="input-small" allowClear="false" notAllowSelectParent="true"/>
+            <sys:treeselect id="operatorCode" name="operatorCode" value="${memberInfo.operatorCode}" labelName="operatorName" labelValue="${memberInfo.operatorName}"
+                            title="归属督导经理" url="/sys/office/treeData?type=4" cssClass="input-small" allowClear="true" notAllowSelectParent="true"/>
         </div>
     </div>
     <div class="control-group">

@@ -32,7 +32,7 @@
 			</li>
 			<li><label>督导经理：</label>
 				<sys:treeselect id="operatorCode" name="operatorCode" value="${memberInfo.operatorCode}" labelName="operatorName" labelValue="${memberInfo.operatorName}"
-								title="用户" url="/sys/office/treeData?type=4" cssClass="input-small" allowClear="true" notAllowSelectParent="true"/>
+								title="归属督导经理" url="/sys/office/treeData?type=4" cssClass="input-small" allowClear="true" notAllowSelectParent="true"/>
 			</li>
 			<li><label>注册途径：</label>
 				<form:select path="registerWay" class="input-medium">
