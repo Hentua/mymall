@@ -64,7 +64,7 @@
 		<tbody>
 		<c:forEach items="${page.list}" var="accountFlow">
 			<tr>
-				<td>
+				<td>1
 					${accountFlow.flowNo}
 				 </td>
 				<td>
@@ -91,6 +91,7 @@
 							<c:if test="${accountFlow.paymentType == '1'}">
 								礼包消费
 							</c:if>
+							${accountFlow.paymentType}
 						</c:if>
 					</c:if>
 				</td>

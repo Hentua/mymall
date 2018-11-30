@@ -113,6 +113,7 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 		accountFlow.setOrderId(paymentNo);
 		accountFlow.setCheckStatus("2");
 		accountFlow.setCreateDate(new Date());
+		accountFlow.setPaymentType(paymentType);
 		accountFlowDao.insert(accountFlow);
 
 		Map<String,Object> paramMap = new HashMap<>();
