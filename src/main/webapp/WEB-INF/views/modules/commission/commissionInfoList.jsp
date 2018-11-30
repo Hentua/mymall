@@ -84,6 +84,11 @@
 							总额百分比-${commissionInfo.number}%
 						</c:if>
 					</c:if>
+					<c:if test="${commissionInfo.type == '6'}">
+
+					</c:if>
+					<c:if test="${commissionInfo.type == '7'}">
+					</c:if>
 				</td>
 				<td>${commissionInfo.originAmount}</td>
 				<td>${commissionInfo.amount}</td>
@@ -102,6 +107,12 @@
 					</c:if>
 					<c:if test="${commissionInfo.type == '5'}">
 						商家送出礼包返佣
+					</c:if>
+					<c:if test="${commissionInfo.type == '6'}">
+						提现
+					</c:if>
+					<c:if test="${commissionInfo.type == '7'}">
+						佣金转余额
 					</c:if>
 				</td>
 				<td><fmt:formatDate value="${commissionInfo.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/></td>

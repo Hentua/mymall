@@ -129,11 +129,26 @@ public class CommissionInfo extends DataEntity<CommissionInfo> {
 	}
 
 	public String getStatusText(){
-		if("1".equals(this.getStatus())) {
-			return  "已清算";
+		if("6".equals(this.getType())){
+			if("1".equals(this.getCheckStatus())){
+				return "待审核";
+			}
+			if("2".equals(this.getCheckStatus())){
+				return "已审核";
+			}
+			if("3".equals(this.getCheckStatus())){
+				return "已驳回";
+			}
+		}else if("7".equals(this.getType())){
+			return "已完成";
 		}else{
-			return "未清算";
+			if("1".equals(this.getStatus())) {
+				return  "已清算";
+			}else{
+				return "未清算";
+			}
 		}
+		return this.getType()+"-"+this.getStatus();
 	}
 
 	public void setStatus(String status) {
