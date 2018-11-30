@@ -32,7 +32,8 @@ public class AccountFlow extends DataEntity<AccountFlow> {
 	private String checkStatus;		// 充值提现审核状态：1未审核 2已审核
 	private String paymentType;     //消费类型 0普通订单 1礼包购买
 
-	private String nickname; //名称昵称
+	private String nickname; //用户名称
+	private String userMobile; //用户账号
 	private String org;
 
 
@@ -46,6 +47,14 @@ public class AccountFlow extends DataEntity<AccountFlow> {
 		super(id);
 	}
 
+
+	public String getUserMobile() {
+		return userMobile;
+	}
+
+	public void setUserMobile(String userMobile) {
+		this.userMobile = userMobile;
+	}
 
 	public String getPlatBankAccount() {
 		return platBankAccount;

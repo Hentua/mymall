@@ -19,8 +19,9 @@
 <body>
 	<ul class="nav nav-tabs">
 		<li  ><a href="${ctx}/sys/user/merchantInfo">首页</a></li>
-		<li class="active"><a href="${ctx}/account/accountFlow/merchantList">账户余额</a></li>
+		<li class="active"><a href="${ctx}/account/accountFlow/merchantList">余额明细</a></li>
 		<li ><a href="${ctx}/account/accountFlow/recharge">打款充值</a></li>
+		<li  ><a href="${ctx}/account/accountFlow/merchantRechargeFlow">打款充值记录</a></li>
 	</ul>
 	<form:form id="searchForm" modelAttribute="accountFlow" action="${ctx}/account/accountFlow/merchantList" method="post" class="breadcrumb form-search">
 		<input id="userId" name="userId" type="hidden" value="${accountFlow.userId}"/>
@@ -51,9 +52,11 @@
 				<th>金额</th>
 				<th>类型</th>
 				<th>操作时间</th>
-				<%--<th>银行账户</th>--%>
+				<%--<th>转账时间</th>--%>
+				<%--<th>平台收款账户</th>--%>
+				<%--<th>转账银行账户</th>--%>
 				<%--<th>开户人名称</th>--%>
-				<%--<th>开户行</th>--%>
+				<%--<th>开户行地址</th>--%>
 				<%--<th>审核状态</th>--%>
 				<%--<shiro:hasPermission name="account:accountFlow:edit"><th>操作</th></shiro:hasPermission>--%>
 			</tr>
@@ -94,6 +97,11 @@
 				<td>
 					<fmt:formatDate value="${accountFlow.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
 				</td>
+				<%--<td><fmt:formatDate value="${accountFlow.transferDate}" pattern="yyyy-MM-dd HH:mm:ss"/></td>--%>
+				<%--<td>${accountFlow.platBankAccount}</td>--%>
+				<%--<td>转账银行账户</td>--%>
+				<%--<td>开户人名称</td>--%>
+				<%--<td>开户行地址</td>--%>
 			</tr>
 		</c:forEach>
 		</tbody>

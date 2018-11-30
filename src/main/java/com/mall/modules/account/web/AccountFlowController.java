@@ -60,6 +60,9 @@ public class AccountFlowController extends BaseController {
 	@RequiresPermissions("account:accountFlow:view")
 	@RequestMapping(value = {"list", ""})
 	public String list(AccountFlow accountFlow, HttpServletRequest request, HttpServletResponse response, Model model) {
+		accountFlow.setType("1");
+		accountFlow.setMode("1");
+		accountFlow.setIncomeExpenditureMode("2");
 		Page<AccountFlow> page = accountFlowService.findPage(new Page<AccountFlow>(request, response), accountFlow); 
 		model.addAttribute("page", page);
 		return "modules/account/accountFlowList";
@@ -81,11 +84,39 @@ public class AccountFlowController extends BaseController {
 		model.addAttribute("accountFlow", accountFlow);
 		return "modules/account/accountFlowForm";
 	}
+
+
+	/**
+	 *
+	 * @param accountFlow
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping(value = "recharge")
 	public String recharge(AccountFlow accountFlow, Model model) {
 
 
 		return "modules/account/accountRecharge";
+	}
+
+
+	/**
+	 * 余额充值流水-商家
+	 * @param accountFlow
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "merchantRechargeFlow")
+	public String merchantRechargeFlow(AccountFlow accountFlow,HttpServletRequest request, HttpServletResponse response,  Model model) {
+		User user = UserUtils.getUser();
+		accountFlow.setUserId(user.getId());
+		accountFlow.setType("1");
+		accountFlow.setMode("1");
+		accountFlow.setIncomeExpenditureMode("2");
+		Page<AccountFlow> page = accountFlowService.findPage(new Page<AccountFlow>(request, response), accountFlow);
+		model.addAttribute("page", page);
+		model.addAttribute("accountFlow",accountFlow);
+		return "modules/account/merchantRechargeFlow";
 	}
 
 
@@ -104,20 +135,18 @@ public class AccountFlowController extends BaseController {
 
 	@RequestMapping(value = "rechargeSave")
 	public String rechargeSave(AccountFlow accountFlow, Model model, RedirectAttributes redirectAttributes) {
-		if (!beanValidator(model, accountFlow)){
-			return form(accountFlow, model);
-		}
 		User user = UserUtils.getUser();
 		accountFlow.setFlowNo(String.valueOf(idWorker.getId()));
-		accountFlow.setId(IdGen.uuid());
+//		accountFlow.setId(IdGen.uuid());
 		accountFlow.setUserId(user.getId());
 		accountFlow.setType("1");//收入
-		accountFlow.setMode("1");//消费
+		accountFlow.setMode("1");//充值
+		accountFlow.setIncomeExpenditureMode("2");//打款转账
 		accountFlow.setCheckStatus("1");
 		accountFlow.setCreateDate(new Date());
 		accountFlowService.save(accountFlow);
 		addMessage(redirectAttributes, "充值记录提交成功");
-		return "redirect:"+Global.getAdminPath()+"/account/accountFlow/?repage";
+		return "redirect:"+Global.getAdminPath()+"/account/accountFlow/merchantRechargeFlow?repage";
 	}
 
 	
