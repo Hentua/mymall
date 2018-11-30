@@ -129,7 +129,8 @@
 			number,
 			union_id,
 			settlement_id,
-			create_date
+			create_date,
+			status
 		) VALUES (
 			#{id},
 			#{type},
@@ -141,7 +142,8 @@
 			#{number},
 			#{unionId},
 			#{settlementId},
-			#{createDate}
+			#{createDate},
+			#{status}
 		)
 	</insert>
 	
