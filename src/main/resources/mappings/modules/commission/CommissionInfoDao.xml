@@ -18,7 +18,12 @@
 		mu.nickname as "userName",
 		a.mode AS "mode",
 		a.number AS "number",
-		pu.mobile as "produceUserMobile"
+		pu.mobile as "produceUserMobile",
+		a.bank_account as "bankAccount",
+		a.bank_account_name as "bankAccountName",
+		a.bank_name as "bankName",
+		a.check_status as "checkStatus",
+		a.check_remark as "checkRemark"
 	</sql>
 	
 	<sql id="commissionInfoJoins">
@@ -56,6 +61,18 @@
 			</if>
 			<if test="userMobile != null and userMobile != ''">
 				and u.mobile = #{userMobile}
+			</if>
+			<if test="bankAccount != null and bankAccount != ''">
+				AND a.bank_account = #{bankAccount}
+			</if>
+			<if test="bankAccountName != null and bankAccountName != ''">
+				AND a.bank_account_name = #{bankAccountName}
+			</if>
+			<if test="bankName != null and bankName != ''">
+				AND a.bank_name = #{bankName}
+			</if>
+			<if test="checkStatus != null and checkStatus != ''">
+				AND a.check_status = #{checkStatus}
 			</if>
 		</where>
 		<choose>
@@ -130,7 +147,12 @@
 			union_id,
 			settlement_id,
 			create_date,
-			status
+			status,
+			bank_account,
+			bank_account_name,
+			bank_name,
+			check_status,
+			check_remark
 		) VALUES (
 			#{id},
 			#{type},
@@ -143,7 +165,12 @@
 			#{unionId},
 			#{settlementId},
 			#{createDate},
-			#{status}
+			#{status},
+			#{bankAccount},
+			#{bankAccountName},
+			#{bankName},
+			#{checkStatus},
+			#{checkRemark}
 		)
 	</insert>
 	
@@ -155,7 +182,12 @@
 			origin_amount = #{originAmount},
 			amount = #{amount},
 			union_id = #{unionId},
-			settlement_id = #{settlementId}
+			settlement_id = #{settlementId},
+			bank_account = #{bankAccount},
+			bank_account_name = #{bankAccountName},
+			bank_name = #{bankName},
+			check_status = #{checkStatus},
+			check_remark = #{checkRemark}
 		WHERE id = #{id}
 	</update>
 	

@@ -1,5 +1,6 @@
 package com.mall.modules.account.web;
 
+import com.alibaba.druid.support.json.JSONUtils;
 import com.mall.common.config.Global;
 import com.mall.common.persistence.Page;
 import com.mall.common.utils.IdGen;
@@ -10,7 +11,9 @@ import com.mall.modules.account.service.AccountFlowService;
 import com.mall.modules.account.service.AccountService;
 import com.mall.modules.member.entity.MemberInfo;
 import com.mall.modules.member.service.MemberInfoService;
+import com.mall.modules.sys.entity.PlatBankAccount;
 import com.mall.modules.sys.entity.User;
+import com.mall.modules.sys.service.PlatBankAccountService;
 import com.mall.modules.sys.utils.DictUtils;
 import com.mall.modules.sys.utils.UserUtils;
 import com.sohu.idcenter.IdWorker;
@@ -26,6 +29,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 账户流水Controller
@@ -56,7 +60,15 @@ public class AccountFlowController extends BaseController {
 		}
 		return entity;
 	}
-	
+
+	/**
+	 * 营运端-充值审核流水
+	 * @param accountFlow
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @return
+	 */
 	@RequiresPermissions("account:accountFlow:view")
 	@RequestMapping(value = {"list", ""})
 	public String list(AccountFlow accountFlow, HttpServletRequest request, HttpServletResponse response, Model model) {
@@ -68,6 +80,14 @@ public class AccountFlowController extends BaseController {
 		return "modules/account/accountFlowList";
 	}
 
+	/**
+	 * 商家端流水
+	 * @param accountFlow
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping(value = {"merchantList", ""})
 	public String merchantList(AccountFlow accountFlow, HttpServletRequest request, HttpServletResponse response, Model model) {
 		User user = UserUtils.getUser();
@@ -85,17 +105,20 @@ public class AccountFlowController extends BaseController {
 		return "modules/account/accountFlowForm";
 	}
 
+	@Autowired
+	private PlatBankAccountService platBankAccountService;
 
 	/**
-	 *
+	 * 充值页面
 	 * @param accountFlow
 	 * @param model
 	 * @return
 	 */
 	@RequestMapping(value = "recharge")
 	public String recharge(AccountFlow accountFlow, Model model) {
-
-
+		List<PlatBankAccount> platBankAccountList =platBankAccountService.findList(new PlatBankAccount());
+		model.addAttribute("platBankAccountList",platBankAccountList);
+		model.addAttribute("platBankAccountListJson",JSONUtils.toJSONString(platBankAccountList));
 		return "modules/account/accountRecharge";
 	}
 

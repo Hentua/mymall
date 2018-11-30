@@ -39,6 +39,9 @@
 			<label class="control-label">转账至：</label>
 			<div class="controls">
 				<form:select path="platBankAccount" cssStyle="width: 283px">
+					<c:forEach items="${platBankAccountList}" var="p">
+						<form:option value="${p.bankAccount}" label="${p.title}" />
+					</c:forEach>
 					<form:options items="${fns:getDictList('plat_bank_account')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
 				</form:select>
 				<span class="help-inline"><font color="red">*</font> </span>
