@@ -228,7 +228,7 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 							amount+= 0.0;
 						}
 						//按交易金额 计算百分比
-						amount+= gc.getCommissionNumber()/og.getGoodsPrice()*100;
+						amount+= og.getGoodsPrice()*gc.getCommissionNumber()/100;
 					}
 
 					String goodsRecommendId = og.getGoodsRecommendId();
@@ -341,13 +341,13 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 	public void accumulation(String userId,Double balance,Double commission){
 		MemberInfo m = new MemberInfo();
 		m.setId(userId);
-		m = memberInfoDao.get(userId);
+		m = memberInfoDao.get(m);
 		Map<String,Object> paramMap = new HashMap<>();
 		if(null != balance){
 			paramMap.put("balance",m.getBalance() + balance);
 		}
 		if(null != commission){
-			paramMap.put("commission",null);
+			paramMap.put("commission",commission);
 		}
 		paramMap.put("userId",userId);
 		dao.editAccount(paramMap);

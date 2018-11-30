@@ -96,7 +96,7 @@ public class CommissionConfigService extends CrudService<CommissionConfigDao, Co
 						return 0.0;
 					}
 					//按交易金额 计算百分比+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-					return config.getNumber()/amountTotal*100;
+					return amountTotal*config.getNumber()/100;
 				}
 			}
 		}
