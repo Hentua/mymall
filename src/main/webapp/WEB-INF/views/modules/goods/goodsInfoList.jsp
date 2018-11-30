@@ -120,7 +120,6 @@
 					</c:if>
 				</td>
 				<shiro:hasPermission name="goods:goodsInfo:edit"><td>
-					<a href="${ctx}/goods/goodsEvaluate/list?goodsId=${goodsInfo.id}">查看评价</a>
 					<c:if test="${goodsInfo.status == '1'}">
 						<a href="${ctx}/goods/goodsInfo/updateStatus?id=${goodsInfo.id}&status=2">提交上架</a>
 						<a href="${ctx}/goods/goodsInfo/form?id=${goodsInfo.id}">修改</a>
@@ -132,7 +131,7 @@
 					<c:if test="${goodsInfo.status == '3'}">
 						<a href="${ctx}/goods/goodsInfo/updateStatus?id=${goodsInfo.id}&status=1" onclick="return confirmx('确认要下架该商品信息吗？', this.href)">下架</a>
 					</c:if>
-
+					<a href="${ctx}/goods/goodsEvaluate/list?goodsId=${goodsInfo.id}">查看评价</a>
 				</td></shiro:hasPermission>
 			</tr>
 		</c:forEach>

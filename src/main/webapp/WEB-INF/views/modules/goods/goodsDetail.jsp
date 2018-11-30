@@ -96,11 +96,21 @@
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">备注信息：</label>
+			<label class="control-label">商品备注信息：</label>
 			<div class="controls">
 				<form:textarea path="remarks" htmlEscape="false" rows="4" maxlength="500" class="input-xxlarge " readonly="true"/>
 			</div>
 		</div>
+		<c:if test="${!empty goodsInfo.checkRemarks}">
+			<div class="control-group">
+				<div class="control-group">
+					<label class="control-label">审核备注：</label>
+					<div class="controls">
+						<form:textarea path="checkRemarks" cssStyle="border: 1px solid red" htmlEscape="false" rows="4" maxlength="500" class="input-xxlarge " readonly="false"/>
+					</div>
+				</div>
+			</div>
+		</c:if>
 		<div class="form-actions">
 			<input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
 		</div>

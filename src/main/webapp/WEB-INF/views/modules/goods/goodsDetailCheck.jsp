@@ -100,7 +100,7 @@
 								<td>名称：${goodsStandard.name}，</td>
 								<td>价格： ${goodsStandard.price}，</td>
 								<c:if test="${goodsInfo.status == '2'}">
-									<td>结算金额：<form:input path="settlementsAmounts" htmlEscape="false" class="input-xlarge  number required"/></td>
+									<td>结算金额：<form:input path="settlementsAmounts" htmlEscape="false" class="input-xlarge  number "/></td>
 								</c:if>
 								<c:if test="${goodsInfo.status != '2'}">
 									<td>结算金额：${goodsStandard.settlementsAmount}</td>
@@ -138,6 +138,12 @@
 			<label class="control-label">备注信息：</label>
 			<div class="controls">
 				<form:textarea path="remarks" htmlEscape="false" rows="4" maxlength="500" class="input-xxlarge " readonly="true"/>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">审核备注：</label>
+			<div class="controls">
+				<form:textarea path="checkRemarks" htmlEscape="false" rows="4" maxlength="500" class="input-xxlarge "/>
 			</div>
 		</div>
 		<div class="form-actions">

@@ -287,6 +287,7 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 		}
 		if("1".equals(merchantQualification)){
 			//卖家推荐人佣金
+			CommissionConfig config = commissionConfigService.getConfig("3");
 			CommissionInfo merchantRefereeCommission = new CommissionInfo();
 			//1：推荐用户消费返佣 2：推荐商家销售返佣 3：推荐商家入驻返佣 4：推荐商家送出礼包返佣 5：商家送出礼包返佣
 			merchantRefereeCommission.setType("3");
@@ -295,10 +296,15 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 			merchantRefereeCommission.setOriginAmount(amount);
 			merchantRefereeCommission.setAmount(commissionConfigService.getCommissionAmount("3",amount));
 			merchantRefereeCommission.setUnionId(giftId);
+			merchantRefereeCommission.setMode(config.getMode());
+			merchantRefereeCommission.setNumber(config.getNumber());
+			merchantRefereeCommission.setStatus("1");
 			commissionInfoService.save(merchantRefereeCommission);
+			accumulation(customerRefereeUser.getId(),null,merchantRefereeCommission.getAmount());
 		}else{
 			//新增佣金记录
 			//卖家推荐人佣金
+			CommissionConfig config = commissionConfigService.getConfig("4");
 			CommissionInfo merchantRefereeCommission = new CommissionInfo();
 			//1：推荐用户消费返佣 2：推荐商家销售返佣 3：推荐商家入驻返佣 4：推荐商家送出礼包返佣 5：商家送出礼包返佣
 			merchantRefereeCommission.setType("4");
@@ -307,8 +313,13 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 			merchantRefereeCommission.setOriginAmount(amount);
 			merchantRefereeCommission.setAmount(commissionConfigService.getCommissionAmount("4",amount));
 			merchantRefereeCommission.setUnionId(giftId);
+			merchantRefereeCommission.setMode(config.getMode());
+			merchantRefereeCommission.setNumber(config.getNumber());
+			merchantRefereeCommission.setStatus("1");
 			commissionInfoService.save(merchantRefereeCommission);
+			accumulation(merchantRefereeUser.getId(),null,merchantRefereeCommission.getAmount());
 
+			config = commissionConfigService.getConfig("5");
 			CommissionInfo merchantCommission = new CommissionInfo();
 			//1：推荐用户消费返佣 2：推荐商家销售返佣 3：推荐商家入驻返佣 4：推荐商家送出礼包返佣 5：商家送出礼包返佣
 			merchantCommission.setType("5");
@@ -317,9 +328,29 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 			merchantCommission.setOriginAmount(amount);
 			merchantCommission.setAmount(commissionConfigService.getCommissionAmount("5",amount));
 			merchantCommission.setUnionId(giftId);
+			merchantCommission.setMode(config.getMode());
+			merchantCommission.setNumber(config.getNumber());
+			merchantCommission.setStatus("1");
 			commissionInfoService.save(merchantCommission);
+			accumulation(merchant.getId(),null,merchantCommission.getAmount());
 		}
         commissionConfigService.setConfigs(null);
+	}
+
+
+	public void accumulation(String userId,Double balance,Double commission){
+		MemberInfo m = new MemberInfo();
+		m.setId(userId);
+		m = memberInfoDao.get(userId);
+		Map<String,Object> paramMap = new HashMap<>();
+		if(null != balance){
+			paramMap.put("balance",m.getBalance() + balance);
+		}
+		if(null != commission){
+			paramMap.put("commission",null);
+		}
+		paramMap.put("userId",userId);
+		dao.editAccount(paramMap);
 	}
 
 

@@ -231,8 +231,9 @@ public class GoodsInfoController extends BaseController {
 				goodsStandardService.save(goodsStandards.get(i));
 			}
 		}
-		if(0 == goodsInfo.getStatus()){
+		if(1 == goodsInfo.getStatus()){
 			g.setOnlinetime(null);
+			g.setCheckRemarks(goodsInfo.getCheckRemarks());
 		}
 		g.setStatus(goodsInfo.getStatus());
 		goodsInfoService.save(g);

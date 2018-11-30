@@ -26,7 +26,8 @@
 		a.merchant_id as "merchantId",
 		gc.category_name as "goodsCategoryName",
 		merchant.nickname as "merchantName",
-		a.discount_Type as "discountType"
+		a.discount_Type as "discountType",
+		a.check_remarks as "checkRemarks"
 	</sql>
 	
 	<sql id="goodsInfoJoins">
@@ -362,7 +363,8 @@
 			update_by = #{updateBy.id},
 			update_date = #{updateDate},
 			remarks = #{remarks},
-			discount_Type = #{discountType}
+			discount_Type = #{discountType},
+			check_remarks = #{checkRemarks}
 		WHERE id = #{id}
 	</update>
 	

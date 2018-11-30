@@ -54,6 +54,7 @@ public class GoodsInfo extends DataEntity<GoodsInfo> {
     private String standardId; // 商品规格ID
     private String standardName; // 商品规格名称
     private String keyWord;
+    private String checkRemarks;
 
     //商品规格
     private List<GoodsStandard> goodsStandards = new ArrayList<GoodsStandard>();
@@ -62,6 +63,15 @@ public class GoodsInfo extends DataEntity<GoodsInfo> {
     private Double[] goodsStandardsPrice;
 
     private String goodsCategoryName;
+
+
+    public String getCheckRemarks() {
+        return checkRemarks;
+    }
+
+    public void setCheckRemarks(String checkRemarks) {
+        this.checkRemarks = checkRemarks;
+    }
 
     public GoodsInfo() {
         super();
