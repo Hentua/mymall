@@ -95,7 +95,10 @@
 					</c:if>
 				</td>
 				<shiro:hasPermission name="commission:commissionTakeOut:edit"><td>
-					<a href="${ctx}/commission/commissionTakeOut/updateStatus?id=${commissionTakeOut.id}" onclick="return confirmx('确认该笔佣金提现已打款吗？', this.href)">打款完成</a>
+					<c:if test="${commissionTakeOut.checkStatus == '1'}">
+						<a href="${ctx}/commission/commissionTakeOut/updateStatus?id=${commissionTakeOut.id}" onclick="return confirmx('确认该笔佣金提现已打款吗？', this.href)">打款完成</a>
+
+					</c:if>
 				</td></shiro:hasPermission>
 			</tr>
 		</c:forEach>
