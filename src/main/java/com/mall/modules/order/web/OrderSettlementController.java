@@ -57,8 +57,8 @@ public class OrderSettlementController extends BaseController {
 		Double settlementAmountTotal = 0.00;
 		Double orderAmountTotal = 0.00;
 		for (OrderSettlement o : page.getList()) {
-			settlementAmountTotal += o.getGoodsSettlementAmount();
-			orderAmountTotal += o.getSubtotal();
+			settlementAmountTotal += o.getSettlementAmount();
+			orderAmountTotal += o.getOrderAmount();
 		}
 		total.put("orderAmountTotal", String.valueOf(orderAmountTotal));
 		total.put("settlementAmountTotal", String.valueOf(settlementAmountTotal));
@@ -76,8 +76,8 @@ public class OrderSettlementController extends BaseController {
 		Double settlementAmountTotal = 0.00;
 		Double orderAmountTotal = 0.00;
 		for (OrderSettlement o : page.getList()) {
-			settlementAmountTotal += o.getGoodsSettlementAmount();
-			orderAmountTotal += o.getSubtotal();
+			settlementAmountTotal += o.getSettlementAmount();
+			orderAmountTotal += o.getOrderAmount();
 		}
 		total.put("orderAmountTotal", String.valueOf(orderAmountTotal));
 		total.put("settlementAmountTotal", String.valueOf(settlementAmountTotal));
