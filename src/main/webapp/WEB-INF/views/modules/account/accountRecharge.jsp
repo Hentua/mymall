@@ -28,8 +28,10 @@
 <body>
 	<ul class="nav nav-tabs">
 		<li  ><a href="${ctx}/sys/user/merchantInfo">首页</a></li>
-		<li ><a href="${ctx}/account/accountFlow/merchantList">账户余额</a></li>
-		<li class="active" ><a href="${ctx}/account/accountFlow/recharge">打款充值</a></li>	</ul><br/>
+		<li ><a href="${ctx}/account/accountFlow/merchantList">余额明细</a></li>
+		<li class="active" ><a href="${ctx}/account/accountFlow/recharge">打款充值</a></li>
+        <li  ><a href="${ctx}/account/accountFlow/merchantRechargeFlow">打款充值记录</a></li>
+    </ul><br/>
 	<form:form id="inputForm" modelAttribute="accountFlow" action="${ctx}/account/accountFlow/rechargeSave" method="post" class="form-horizontal">
 		<form:hidden path="id"/>
 		<sys:message content="${message}"/>
