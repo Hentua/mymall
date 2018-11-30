@@ -230,6 +230,7 @@ public class GoodsInfoController extends BaseController {
 				goodsStandards.get(i).setSettlementsAmount(goodsInfo.getSettlementsAmounts()[i]);
 				goodsStandardService.save(goodsStandards.get(i));
 			}
+			g.setDiscountType(goodsInfo.getDiscountType());
 		}
 		if(1 == goodsInfo.getStatus()){
 			g.setOnlinetime(null);
