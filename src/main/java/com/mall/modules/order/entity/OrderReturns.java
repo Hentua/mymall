@@ -34,6 +34,8 @@ public class OrderReturns extends DataEntity<OrderReturns> {
 	private String customerCode;		// 申请人
 	private String orderId;		// 原订单ID
 	private Date checkTime;		// 审核时间
+	private String platformReply;		// 运营回复
+	private String merchantServicePhone;		// 商户联系方式
 
 	private String customerName;
 	private String customerMobile;
@@ -46,6 +48,22 @@ public class OrderReturns extends DataEntity<OrderReturns> {
 
 	public OrderReturns(String id){
 		super(id);
+	}
+
+	public String getMerchantServicePhone() {
+		return merchantServicePhone;
+	}
+
+	public void setMerchantServicePhone(String merchantServicePhone) {
+		this.merchantServicePhone = merchantServicePhone;
+	}
+
+	public String getPlatformReply() {
+		return platformReply;
+	}
+
+	public void setPlatformReply(String platformReply) {
+		this.platformReply = platformReply;
 	}
 
 	public OrderInfo getOrderInfo() {

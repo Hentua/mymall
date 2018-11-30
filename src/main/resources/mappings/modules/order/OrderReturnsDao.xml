@@ -29,11 +29,15 @@
 		a.order_id AS "orderId",
 		u.name AS "customerName",
 		u.login_name AS "customerMobile",
-		a.check_time AS "checkTime"
+		a.check_time AS "checkTime",
+		a.platform_reply AS "platformReply",
+		m.merchant_service_phone AS "merchantServicePhone"
 	</sql>
 	
 	<sql id="orderReturnsJoins">
 		left join sys_user u on u.id = a.customer_code
+		left join order_info o on o.id = a.order_id
+		left join member_info m on m.id = o.merchant_code
 	</sql>
     
 	<select id="get" resultType="OrderReturns">
@@ -132,7 +136,8 @@
 			update_date,
 			remarks,
 			customer_code,
-			order_id
+			order_id,
+			platform_reply
 		) VALUES (
 			#{id},
 			#{returnsNo},
@@ -157,7 +162,8 @@
 			#{updateDate},
 			#{remarks},
 			#{customerCode},
-			#{orderId}
+			#{orderId},
+			#{platformReply}
 		)
 	</insert>
 	

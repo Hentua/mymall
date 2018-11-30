@@ -93,7 +93,14 @@
                     ${orderSettlement.customerAccount}
             </td>
             <td>
-                    ${orderSettlement.goodsName}
+                    <c:choose>
+                        <c:when test="${fn:length(orderSettlement.goodsName) > 8}">
+                            ${fn:substring(orderSettlement.goodsName, 0, 8)} ...
+                        </c:when>
+                        <c:otherwise>
+                            ${orderSettlement.goodsName}
+                        </c:otherwise>
+                    </c:choose>
             </td>
             <td>
                     ${orderSettlement.goodsCount}
