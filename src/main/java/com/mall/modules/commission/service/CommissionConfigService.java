@@ -96,7 +96,7 @@ public class CommissionConfigService extends CrudService<CommissionConfigDao, Co
 						return 0.0;
 					}
 					//按交易金额 计算百分比+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-					return amountTotal*config.getNumber()/100;
+					return config.getNumber()/100*amountTotal;
 				}
 			}
 		}
@@ -152,7 +152,7 @@ public class CommissionConfigService extends CrudService<CommissionConfigDao, Co
 						amount+= 0.0;
 					}
 					//按交易金额 计算百分比
-					amount+= gc.getCommissionNumber()/og.getSubtotal()*100;
+					amount+= gc.getCommissionNumber()/100*og.getSubtotal();
 				}
 				amountTotal+=amount;
 		}
