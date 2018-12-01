@@ -89,7 +89,7 @@ public class CheckAccountTimer {
                     orderSettlement.setOrderId(orderInfo.getId());
                     List<OrderSettlement> orderSettlements = orderSettlementService.findList(orderSettlement);
                     for (OrderSettlement os: orderSettlements) {
-                        os.setStatus("1");
+                        os.setStatus("2");
                         orderSettlementService.save(os);
                     }
                 }

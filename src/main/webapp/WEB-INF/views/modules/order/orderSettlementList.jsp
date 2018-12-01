@@ -69,7 +69,8 @@
         <th>下单人账号</th>
         <th>订单金额</th>
         <th>结算金额</th>
-        <th>状态</th>
+        <th>清算状态</th>
+        <th>订单状态</th>
         <shiro:hasPermission name="order:orderSettlement:edit"><th>操作</th></shiro:hasPermission>
     </tr>
     </thead>
@@ -110,6 +111,9 @@
                 <c:if test="${orderSettlement.status == '3'}">
                     已结算
                 </c:if>
+            </td>
+            <td>
+                    ${orderSettlement.orderStatusZh}
             </td>
             <shiro:hasPermission name="order:orderSettlement:edit"><td>
                 <c:if test="${orderSettlement.orderStatus == '3' || orderSettlement.orderStatus == '6'}">

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.mall.common.persistence.DataEntity;
 import com.mall.common.utils.StringUtils;
 import com.mall.common.utils.excel.annotation.ExcelField;
+import com.mall.modules.order.utils.OrderStatus;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotNull;
@@ -72,6 +73,10 @@ public class OrderSettlement extends DataEntity<OrderSettlement> {
 	@ExcelField(title = "商品结算金额", sort = 13, groups = {1})
 	public Double getGoodsSettlementAmount() {
 		return goodsSettlementAmount;
+	}
+
+	public String getOrderStatusZh() {
+		return OrderStatus.status2Zh(this.orderStatus);
 	}
 
 	public void setGoodsSettlementAmount(Double goodsSettlementAmount) {
