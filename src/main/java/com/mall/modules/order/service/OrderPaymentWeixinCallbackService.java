@@ -5,8 +5,10 @@ import java.util.List;
 import com.github.binarywang.wxpay.bean.notify.WxPayOrderNotifyCoupon;
 import com.github.binarywang.wxpay.bean.notify.WxPayOrderNotifyResult;
 import com.google.common.collect.Lists;
+import com.mall.common.utils.excel.annotation.ExcelField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.mall.common.persistence.Page;
@@ -71,6 +73,7 @@ public class OrderPaymentWeixinCallbackService extends CrudService<OrderPaymentW
 		orderPaymentWeixinCallbackCouponDao.delete(new OrderPaymentWeixinCallbackCoupon(orderPaymentWeixinCallback));
 	}
 
+	@Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
 	public void save(WxPayOrderNotifyResult result) {
 		OrderPaymentWeixinCallback orderPaymentWeixinCallback = new OrderPaymentWeixinCallback();
 		orderPaymentWeixinCallback.setReturnCode(result.getReturnCode());

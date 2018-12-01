@@ -91,6 +91,7 @@ public class OrderPaymentInfoApi extends BaseController {
                 orderPaymentInfo.setPaymentStatus("2");
             }
             if(!"SUCCESS".equalsIgnoreCase(notifyResult.getReturnCode()) || !"SUCCESS".equalsIgnoreCase(notifyResult.getResultCode())) {
+                wxPayService.closeOrder(paymentNo);
                 orderPaymentInfo.setPaymentStatus("2");
             }else {
                 orderPaymentInfo.setPaymentStatus("1");

@@ -138,7 +138,7 @@ public class MemberMerchantCheckController extends BaseController {
 			roleList.add(new Role("1001"));
 			user.setRoleList(roleList);
 			systemService.saveUser(user);
-			UserUtils.clearCache();
+			UserUtils.clearCache(user);
 			//  商户入驻返佣金
 			//商家信息
 			/*memberInfo = memberInfoService.get(memberInfo);

@@ -117,7 +117,7 @@ public class OrderPaymentInfoService extends CrudService<OrderPaymentInfoDao, Or
 		this.modifyPaymentInfoStatus(orderPaymentInfo);
 	}
 
-	@Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+	@Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
 	public void weixinPayResult(OrderPaymentInfo orderPaymentInfo) {
 		orderPaymentInfoDao.weixinPayResult(orderPaymentInfo);
 	}
