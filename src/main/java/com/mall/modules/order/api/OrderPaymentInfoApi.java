@@ -88,7 +88,7 @@ public class OrderPaymentInfoApi extends BaseController {
                 wxPayService.closeOrder(paymentNo);
             }
             int totalAmount = notifyResult.getTotalFee();
-            if (!BaseWxPayResult.fenToYuan(totalAmount).equals(String.valueOf(orderPaymentInfo.getAmountTotal()))) {
+            if (!String.valueOf(totalAmount).equals(String.valueOf(BaseWxPayRequest.yuanToFen(String.valueOf(orderPaymentInfo.getAmountTotal()))))) {
                 orderPaymentInfo.setPaymentStatus("2");
             }
             if (!"SUCCESS".equalsIgnoreCase(notifyResult.getReturnCode()) || !"SUCCESS".equalsIgnoreCase(notifyResult.getResultCode())) {
