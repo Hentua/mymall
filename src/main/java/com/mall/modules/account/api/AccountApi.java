@@ -215,12 +215,6 @@ public class AccountApi extends BaseController {
             accountFlow.setCheckStatus("2");
             accountFlowService.save(accountFlow);
 
-            //累加金额
-            MemberInfo m =new MemberInfo();
-            m.setId(currUser.getId());
-            m = memberInfoService.get(m);
-            accountService.editAccount( m.getBalance()+amountDouble,null,m.getId());
-
             renderString(response, ResultGenerator.genSuccessResult(orderPaymentInfo));
         } catch (NumberFormatException e) {
             renderString(response, ResultGenerator.genFailResult("不合法的充值金额"));
