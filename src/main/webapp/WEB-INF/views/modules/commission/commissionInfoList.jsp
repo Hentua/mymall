@@ -91,7 +91,15 @@
 					</c:if>
 				</td>
 				<td>${commissionInfo.originAmount}</td>
-				<td>${commissionInfo.amount}</td>
+				<td>
+					<c:if test="${commissionInfo.type == '6' || commissionInfo.type == '7'}">
+						<span style="color: red">-${commissionInfo.amount}</span>
+					</c:if>
+					<c:if test="${commissionInfo.type != '6' && commissionInfo.type != '7'}">
+						 ${commissionInfo.amount}
+					</c:if>
+				</td>
+
 				<td>
 					<c:if test="${commissionInfo.type == '1'}">
 						推荐用户消费返佣

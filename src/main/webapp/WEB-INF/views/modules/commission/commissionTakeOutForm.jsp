@@ -70,6 +70,12 @@
 			</div>
 		</div>
 		<div class="control-group">
+			<label class="control-label">提现金额：</label>
+			<div class="controls">
+					${commissionInfo.amount}
+			</div>
+		</div>
+		<div class="control-group">
 			<label class="control-label">审核备注：</label>
 			<div class="controls">
 				<form:textarea path="checkRemark" htmlEscape="false" rows="4" maxlength="500" class="input-xxlarge "/>
