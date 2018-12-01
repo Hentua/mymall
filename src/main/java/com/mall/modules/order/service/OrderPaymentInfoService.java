@@ -11,6 +11,7 @@ import com.mall.modules.gift.service.GiftMerchantService;
 import com.mall.modules.gift.service.GiftPurchaseLogService;
 import com.mall.modules.member.entity.MemberInfo;
 import com.mall.modules.member.service.MemberInfoService;
+import com.mall.modules.order.dao.OrderInfoDao;
 import com.mall.modules.order.dao.OrderPaymentInfoDao;
 import com.mall.modules.order.entity.OrderInfo;
 import com.mall.modules.order.entity.OrderPaymentInfo;
@@ -47,6 +48,9 @@ public class OrderPaymentInfoService extends CrudService<OrderPaymentInfoDao, Or
 	private GiftPurchaseLogService giftPurchaseLogService;
 	@Autowired
 	private GiftMerchantService giftMerchantService;
+
+	@Autowired
+	private OrderInfoDao orderInfoDao;
 
 	public OrderPaymentInfo get(String id) {
 		return super.get(id);
@@ -115,6 +119,19 @@ public class OrderPaymentInfoService extends CrudService<OrderPaymentInfoDao, Or
 		// 修改支付单状态
 		orderPaymentInfo.setPaymentStatus("1");
 		this.modifyPaymentInfoStatus(orderPaymentInfo);
+
+		//产生佣金
+
+		List<OrderInfo> orderInfos =orderInfoDao.findOrderNos(orderInfo);
+		for (OrderInfo o: orderInfos) {
+			//订单完成生成佣金信息 根据订单信息创建账单流水
+			try{
+				accountService.createAccountFlow(orderInfo);
+			}catch (Exception e){
+				e.printStackTrace();
+				logger.error("创建佣金失败["+orderInfo.getPaymentNo()+"]");
+			}
+		}
 	}
 
 	@Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)

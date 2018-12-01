@@ -263,6 +263,7 @@
 			<if test="endDate != null">
 				and a.end_date &lt;= #{endDate}
 			</if>
+
 		</where>
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
@@ -290,6 +291,15 @@
 				order by a.create_date desc
 			</otherwise>
 		</choose>
+	</select>
+
+	<select id="findOrderNos" resultType="OrderInfo">
+		select <include refid="orderInfoColumns"/> from order_info a
+		<where>
+			<if test="paymentNo != null and paymentNo != ''">
+				a.payment_no = #{paymentNo}
+			</if>
+		</where>
 	</select>
 
 	<insert id="insert">

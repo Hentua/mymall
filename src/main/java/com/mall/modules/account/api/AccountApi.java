@@ -212,7 +212,7 @@ public class AccountApi extends BaseController {
             accountFlow.setType("1");//收入
             accountFlow.setMode("1");//充值
             accountFlow.setIncomeExpenditureMode("1");// 收支方式 1：微信 2：用户转账
-            accountFlow.setCheckStatus("2");
+            accountFlow.setCheckStatus("1");
             accountFlowService.save(accountFlow);
 
             renderString(response, ResultGenerator.genSuccessResult(orderPaymentInfo));

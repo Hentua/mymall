@@ -117,4 +117,11 @@ public interface OrderInfoDao extends CrudDao<OrderInfo> {
      */
     void autoOrderCancel(String id);
 
+    /**
+     * 按支付批次号查询订单
+     * @param orderInfo
+     * @return
+     */
+    List<OrderInfo> findOrderNos(OrderInfo orderInfo);
+
 }
