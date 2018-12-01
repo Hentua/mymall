@@ -285,7 +285,7 @@ public class MemberInfoController extends BaseController {
         } else if (UserUtils.getByLoginName(mobile) != null) {
             flag = false;
             message = "用户已存在";
-        } else if (!memberVerifyCodeService.validVerifyCode(message, verifyCode, "0")) {
+        } else if (!memberVerifyCodeService.validVerifyCode(mobile, verifyCode, "0")) {
             flag = false;
             message = "验证码不正确";
         }
