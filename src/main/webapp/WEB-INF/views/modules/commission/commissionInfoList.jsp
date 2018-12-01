@@ -35,6 +35,8 @@
 					<form:option value="3" label="推荐商家入驻返佣" />
 					<form:option value="4" label="推荐商家送出礼包返佣" />
 					<form:option value="5" label="商家送出礼包返佣" />
+					<form:option value="6" label="提现" />
+					<form:option value="7" label="佣金转余额" />
 				</form:select>
 			</li>
 			<li><label>状态：</label>

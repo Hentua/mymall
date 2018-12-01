@@ -126,7 +126,7 @@ public class OrderPaymentInfoService extends CrudService<OrderPaymentInfoDao, Or
 		for (OrderInfo o: orderInfos) {
 			//订单完成生成佣金信息 根据订单信息创建账单流水
 			try{
-				accountService.createAccountFlow(orderInfo);
+				accountService.createAccountFlow(o);
 			}catch (Exception e){
 				e.printStackTrace();
 				logger.error("创建佣金失败["+orderInfo.getPaymentNo()+"]");
