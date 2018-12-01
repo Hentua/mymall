@@ -73,6 +73,8 @@ public class OrderPaymentInfoApi extends BaseController {
     public String successCallback(@RequestBody String xmlData) {
         try {
             final WxPayOrderNotifyResult notifyResult = wxPayService.parseOrderNotifyResult(xmlData);
+            // 保存回调信息
+            orderPaymentWeixinCallbackService.save(notifyResult);
             String paymentNo = notifyResult.getOutTradeNo();
             if (StringUtils.isBlank(paymentNo)) {
                 throw new ServiceException("支付单号不能为空");
@@ -82,18 +84,16 @@ public class OrderPaymentInfoApi extends BaseController {
             OrderPaymentInfo orderPaymentInfo = orderPaymentInfoService.getByCondition(queryCondition);
             if (null == orderPaymentInfo) {
                 throw new ServiceException("获取支付信息失败");
-            }else if(!"0".equals(orderPaymentInfo.getPaymentStatus())) {
+            } else if (!"0".equals(orderPaymentInfo.getPaymentStatus())) {
                 wxPayService.closeOrder(paymentNo);
             }
             int totalAmount = notifyResult.getTotalFee();
-            if(!BaseWxPayResult.fenToYuan(totalAmount).equals(String.valueOf(orderPaymentInfo.getAmountTotal()))) {
-                wxPayService.closeOrder(paymentNo);
+            if (!BaseWxPayResult.fenToYuan(totalAmount).equals(String.valueOf(orderPaymentInfo.getAmountTotal()))) {
                 orderPaymentInfo.setPaymentStatus("2");
             }
-            if(!"SUCCESS".equalsIgnoreCase(notifyResult.getReturnCode()) || !"SUCCESS".equalsIgnoreCase(notifyResult.getResultCode())) {
-                wxPayService.closeOrder(paymentNo);
+            if (!"SUCCESS".equalsIgnoreCase(notifyResult.getReturnCode()) || !"SUCCESS".equalsIgnoreCase(notifyResult.getResultCode())) {
                 orderPaymentInfo.setPaymentStatus("2");
-            }else {
+            } else {
                 orderPaymentInfo.setPaymentStatus("1");
             }
             orderPaymentInfo.setDeviceInfo(notifyResult.getDeviceInfo());
@@ -104,23 +104,23 @@ public class OrderPaymentInfoApi extends BaseController {
             orderPaymentInfo.setTradeType(notifyResult.getTradeType());
             orderPaymentInfo.setResultCode(notifyResult.getResultCode());
             orderPaymentInfoService.weixinPayResult(orderPaymentInfo);
-            // 保存回调信息
-            orderPaymentWeixinCallbackService.save(notifyResult);
             // 支付成功
-            if("1".equalsIgnoreCase(orderPaymentInfo.getPaymentStatus())) {
+            if ("1".equalsIgnoreCase(orderPaymentInfo.getPaymentStatus())) {
                 String paymentType = orderPaymentInfo.getPaymentType();
                 // 普通订单
-                if("0".equalsIgnoreCase(paymentType)) {
+                if ("0".equalsIgnoreCase(paymentType)) {
                     orderPaymentInfoService.normalOrderPaySuccess(orderPaymentInfo, DateUtils.parseDate(notifyResult.getTimeEnd(), "yyyyMMddHHmmss"));
                 }
                 // 充值订单
-                else if("2".equalsIgnoreCase(paymentType)) {
+                else if ("2".equalsIgnoreCase(paymentType)) {
                     orderPaymentInfoService.rechargeOrderPaySuccess(orderPaymentInfo);
                 }
                 // 礼包购买
-                else if("1".equalsIgnoreCase(paymentType)) {
+                else if ("1".equalsIgnoreCase(paymentType)) {
                     orderPaymentInfoService.giftOrderPaySuccess(orderPaymentInfo);
                 }
+            } else {
+                wxPayService.closeOrder(paymentNo);
             }
             return WxPayNotifyResponse.success("成功");
         } catch (Exception e) {
@@ -141,16 +141,16 @@ public class OrderPaymentInfoApi extends BaseController {
         String paymentNo = request.getParameter("paymentNo");
         Date now = new Date();
         try {
-            if(StringUtils.isBlank(paymentNo)) {
+            if (StringUtils.isBlank(paymentNo)) {
                 throw new ServiceException("支付单号不能为空");
             }
             OrderPaymentInfo queryCondition = new OrderPaymentInfo();
             queryCondition.setPaymentNo(paymentNo);
             OrderPaymentInfo orderPaymentInfo = orderPaymentInfoService.getByCondition(queryCondition);
-            if(null == orderPaymentInfo) {
+            if (null == orderPaymentInfo) {
                 throw new ServiceException("获取支付信息失败");
             }
-            if(!"0".equals(orderPaymentInfo.getPaymentStatus())) {
+            if (!"0".equals(orderPaymentInfo.getPaymentStatus())) {
                 throw new ServiceException("支付信息不合法，订单已支付或关闭");
             }
             // 调用微信统一下单
@@ -166,7 +166,7 @@ public class OrderPaymentInfoApi extends BaseController {
             orderRequest.setTimeExpire(DateUtils.formatDate(calendar.getTime(), "yyyyMMddHHmmss"));
             orderRequest.setNotifyUrl(Global.getConfig("server.baseUrl") + Global.getConfig("adminPath") + "/api/paySuccessCallback");
             orderRequest.setTradeType(WxPayConstants.TradeType.APP);
-            if(wxPayService.getConfig().isUseSandboxEnv()) {
+            if (wxPayService.getConfig().isUseSandboxEnv()) {
                 orderRequest.setSignType(WxPayConstants.SignType.MD5);
                 orderRequest.setSign(wxPayService.getSandboxSignKey());
             }
@@ -175,7 +175,7 @@ public class OrderPaymentInfoApi extends BaseController {
             orderPaymentInfo.setPrepayId(result.getPrepayId());
             orderPaymentInfoService.modifyPaymentInfoStatus(orderPaymentInfo);
             renderString(response, ResultGenerator.genSuccessResult(result));
-        }catch (Exception e) {
+        } catch (Exception e) {
             renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
         }
     }
@@ -211,16 +211,16 @@ public class OrderPaymentInfoApi extends BaseController {
                 throw new ServiceException("不合法的支付信息");
             }
             Double amountTotal = orderPaymentInfo.getAmountTotal();
-            accountService.consumption(amountTotal, paymentNo, userId,orderPaymentInfo.getPaymentType());
+            accountService.consumption(amountTotal, paymentNo, userId, orderPaymentInfo.getPaymentType());
             orderPaymentInfo.setPayChannel("3");
             // 支付成功
             String paymentType = orderPaymentInfo.getPaymentType();
             // 普通订单
-            if("0".equalsIgnoreCase(paymentType)) {
+            if ("0".equalsIgnoreCase(paymentType)) {
                 orderPaymentInfoService.normalOrderPaySuccess(orderPaymentInfo, new Date());
             }
             // 礼包购买
-            else if("1".equalsIgnoreCase(paymentType)) {
+            else if ("1".equalsIgnoreCase(paymentType)) {
                 orderPaymentInfoService.giftOrderPaySuccess(orderPaymentInfo);
             }
             renderString(response, ResultGenerator.genSuccessResult());
