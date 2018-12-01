@@ -348,7 +348,7 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 			paramMap.put("balance",m.getBalance() + balance);
 		}
 		if(null != commission){
-			paramMap.put("commission",commission);
+			paramMap.put("commission",m.getCommission()+commission);
 		}
 		paramMap.put("userId",userId);
 		dao.editAccount(paramMap);
