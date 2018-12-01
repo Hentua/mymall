@@ -231,7 +231,7 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 							amount+= 0.0;
 						}
 						//按交易金额 计算百分比
-						amount+= og.getGoodsPrice()*gc.getCommissionNumber()/100;
+						amount+= gc.getCommissionNumber()/100*og.getGoodsPrice();
 					}
 
 					String goodsRecommendId = og.getGoodsRecommendId();
