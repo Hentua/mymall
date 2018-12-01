@@ -7,6 +7,7 @@ import javax.validation.constraints.NotNull;
 
 import com.mall.common.persistence.DataEntity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,7 +33,7 @@ public class GoodsCategory extends DataEntity<GoodsCategory> implements TreeNode
 	/**
 	 * 子节点集合
 	 */
-	private List<GoodsCategory> childrens;
+	private List<GoodsCategory> childrens = new ArrayList<>();
 
 	//佣金产生方式
 	private String commissionMode;

@@ -33,6 +33,9 @@ public class CommissionInfoService extends CrudService<CommissionInfoDao, Commis
 	
 	@Transactional(readOnly = false)
 	public void save(CommissionInfo commissionInfo) {
+		if(commissionInfo.getStatus() == null){
+			commissionInfo.setStatus("0");
+		}
 		super.save(commissionInfo);
 //		dao.accumulation(commissionInfo);
 	}
