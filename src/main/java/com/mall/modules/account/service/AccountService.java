@@ -279,17 +279,17 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 		}
 		//卖家推荐人
 		merchantRefereeUser = UserUtils.getNoCache(merchant.getMerchantRefereeId());
-		customerRefereeUser = UserUtils.getNoCache(receiverId);
 		//买家推荐人
 		if(null == merchantRefereeUser){
 			logger.error("创建佣金流水失败：卖家推荐入驻人为空");
 			return ;
 		}
-		if(null == customerRefereeUser){
-			logger.error("创建佣金流水失败：买家推荐入驻人为空");
-			return ;
-		}
 		if("1".equals(merchantQualification)){
+			customerRefereeUser = UserUtils.getNoCache(receiverId);
+			if(null == customerRefereeUser){
+				logger.error("创建佣金流水失败：买家推荐入驻人为空");
+				return ;
+			}
 			//卖家推荐人佣金
 			CommissionConfig config = commissionConfigService.getConfig("3");
 			CommissionInfo merchantRefereeCommission = new CommissionInfo();

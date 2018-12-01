@@ -106,7 +106,7 @@
             </td>
             <shiro:hasPermission name="order:orderSettlement:edit"><td>
                 <c:if test="${orderSettlement.orderStatus == '3' || orderSettlement.orderStatus == '6'}">
-                    <a href="${ctx}/order/orderSettlement/updateStatus?id=${orderSettlement.id}" onclick="return confirmx('确认要结算该笔信息吗？', this.href)">删除</a>
+                    <a href="${ctx}/order/orderSettlement/updateStatus?id=${orderSettlement.id}" onclick="return confirmx('确认要结算该笔信息吗？', this.href)">结算</a>
                 </c:if>
             </td></shiro:hasPermission>
         </tr>
