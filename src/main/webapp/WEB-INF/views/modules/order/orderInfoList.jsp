@@ -52,8 +52,8 @@
 					<form:option value="2" label="待收货"/>
 					<form:option value="3" label="交易完成"/>
 					<form:option value="4" label="交易关闭"/>
-					<form:option value="5" label="退款申请"/>
-					<form:option value="6" label="已退款"/>
+					<form:option value="5" label="售后处理中"/>
+					<form:option value="6" label="售后处理完成"/>
 				</form:select>
 			</li>
 			<li><label>订单类型：</label>

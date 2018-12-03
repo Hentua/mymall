@@ -1,9 +1,12 @@
 package com.mall.modules.gift.web;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.mall.common.config.Global;
+import com.mall.common.persistence.Page;
+import com.mall.common.utils.StringUtils;
+import com.mall.common.web.BaseController;
+import com.mall.modules.gift.entity.GiftConfigCategory;
 import com.mall.modules.gift.entity.GiftPurchaseLog;
+import com.mall.modules.gift.service.GiftConfigCategoryService;
 import com.mall.modules.sys.entity.User;
 import com.mall.modules.sys.utils.UserUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -15,12 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.mall.common.config.Global;
-import com.mall.common.persistence.Page;
-import com.mall.common.web.BaseController;
-import com.mall.common.utils.StringUtils;
-import com.mall.modules.gift.entity.GiftConfigCategory;
-import com.mall.modules.gift.service.GiftConfigCategoryService;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 礼包类别Controller
@@ -133,6 +132,8 @@ public class GiftConfigCategoryController extends BaseController {
 			if (null == merchantUser) {
 				model.addAttribute("message", "商家不存在");
 				return form(giftConfigCategory, model);
+			}else {
+				giftConfigCategory.setMerchantCode(merchantUser.getId());
 			}
 		}
 		if (StringUtils.isNotBlank(giftConfigCategory.getId())) {

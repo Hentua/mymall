@@ -21,6 +21,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -35,6 +36,8 @@ public class OrderSettlementController extends BaseController {
 
 	@Autowired
 	private OrderSettlementService orderSettlementService;
+
+	private static DecimalFormat df = new DecimalFormat("#0.00");
 	
 	@ModelAttribute
 	public OrderSettlement get(@RequestParam(required=false) String id) {
@@ -60,8 +63,8 @@ public class OrderSettlementController extends BaseController {
 			settlementAmountTotal += o.getSettlementAmount();
 			orderAmountTotal += o.getOrderAmount();
 		}
-		total.put("orderAmountTotal", String.valueOf(orderAmountTotal));
-		total.put("settlementAmountTotal", String.valueOf(settlementAmountTotal));
+		total.put("orderAmountTotal", df.format(orderAmountTotal));
+		total.put("settlementAmountTotal", df.format(settlementAmountTotal));
 		model.addAttribute("total", total);
 		model.addAttribute("page", page);
 		return "modules/order/orderSettlementList";
@@ -79,8 +82,8 @@ public class OrderSettlementController extends BaseController {
 			settlementAmountTotal += o.getSettlementAmount();
 			orderAmountTotal += o.getOrderAmount();
 		}
-		total.put("orderAmountTotal", String.valueOf(orderAmountTotal));
-		total.put("settlementAmountTotal", String.valueOf(settlementAmountTotal));
+		total.put("orderAmountTotal", df.format(orderAmountTotal));
+		total.put("settlementAmountTotal", df.format(settlementAmountTotal));
 		model.addAttribute("total", total);
 		model.addAttribute("page", page);
 		return "modules/order/orderSettlementFrozenList";
@@ -99,8 +102,8 @@ public class OrderSettlementController extends BaseController {
 			settlementAmountTotal += o.getGoodsSettlementAmount();
 			orderAmountTotal += o.getSubtotal();
 		}
-		total.put("orderAmountTotal", String.valueOf(orderAmountTotal));
-		total.put("settlementAmountTotal", String.valueOf(settlementAmountTotal));
+		total.put("orderAmountTotal", df.format(orderAmountTotal));
+		total.put("settlementAmountTotal", df.format(settlementAmountTotal));
 		model.addAttribute("total", total);
 		model.addAttribute("page", page);
 		return "modules/order/orderSettlementListMerchant";

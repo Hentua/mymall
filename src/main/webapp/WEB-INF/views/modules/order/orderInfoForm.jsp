@@ -25,7 +25,6 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li><a href="${ctx}/order/orderInfo/">订单信息列表</a></li>
 		<li class="active"><a href="${ctx}/order/orderInfo/form?id=${orderInfo.id}">订单详情</a></li>
 	</ul><br/>
 	<form:form id="inputForm" modelAttribute="orderInfo" action="" method="post"
