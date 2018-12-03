@@ -153,4 +153,32 @@ public class OrderReturnsApi extends BaseController {
         }
     }
 
+    /**
+     * 售后完成 确认收货
+     *
+     * @param request  请求体
+     * @param response 响应体
+     */
+    @RequestMapping(value = "orderReturnsComplete", method = RequestMethod.POST)
+    public void orderReturnsComplete(HttpServletRequest request, HttpServletResponse response) {
+        String id = request.getParameter("id");
+        try {
+            if (StringUtils.isBlank(id)) {
+                throw new ServiceException("未选择确认收货的售后单");
+            }
+            OrderReturns orderReturns = orderReturnsService.get(id);
+            if (null == orderReturns) {
+                throw new ServiceException("未查询到售后记录");
+            }
+            if (!"2".equals(orderReturns.getHandlingWay())) {
+                throw new ServiceException("该售后单不需要确认");
+            }
+            orderReturnsService.complete(orderReturns);
+            // todo 订单清算
+            renderString(response, ResultGenerator.genSuccessResult());
+        } catch (Exception e) {
+            renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
+        }
+    }
+
 }

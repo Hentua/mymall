@@ -132,6 +132,7 @@ public class OrderReturnsController extends BaseController {
 		}
 		orderReturns.setExpressNo(expressNo);
 		orderReturns.setLogisticsType(logistics);
+		orderReturns.setStatus("2");
 		TaskRequest req = new TaskRequest();
 		req.setCompany(orderReturns.getLogisticsType());
 		// todo 填写发货地址
@@ -172,6 +173,7 @@ public class OrderReturnsController extends BaseController {
 			return "redirect:"+Global.getAdminPath()+"/order/orderReturns/?repage";
 		}
 		try {
+			orderReturns.setStatus("3");
 			orderReturnsService.handle(orderReturns);
 			addMessage(redirectAttributes, "退款成功");
 			return "redirect:"+Global.getAdminPath()+"/order/orderReturns/?repage";

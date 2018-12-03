@@ -27,4 +27,11 @@ public interface OrderReturnsDao extends CrudDao<OrderReturns> {
      */
     void handle(OrderReturns orderReturns);
 
+    /**
+     * 处理完成
+     *
+     * @param orderReturns 售后申请实体
+     */
+    void complete(OrderReturns orderReturns);
+
 }

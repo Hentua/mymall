@@ -31,7 +31,8 @@
 		u.login_name AS "customerMobile",
 		a.check_time AS "checkTime",
 		a.platform_reply AS "platformReply",
-		m.merchant_service_phone AS "merchantServicePhone"
+		m.merchant_service_phone AS "merchantServicePhone",
+		a.complete_date AS "completeDate"
 	</sql>
 	
 	<sql id="orderReturnsJoins">
@@ -137,7 +138,8 @@
 			remarks,
 			customer_code,
 			order_id,
-			platform_reply
+			platform_reply,
+			complete_date
 		) VALUES (
 			#{id},
 			#{returnsNo},
@@ -163,7 +165,8 @@
 			#{remarks},
 			#{customerCode},
 			#{orderId},
-			#{platformReply}
+			#{platformReply},
+			#{completeDate}
 		)
 	</insert>
 	
@@ -202,7 +205,11 @@
 	</update>
 
 	<update id="handle" parameterType="OrderReturns">
-		update order_returns set status='3',handling_time=now(),logistics_type=#{logisticsType},express_no=#{expressNo} where id=#{id}
+		update order_returns set status=#{status},handling_time=now(),logistics_type=#{logisticsType},express_no=#{expressNo} where id=#{id}
+	</update>
+
+	<update id="complete" parameterType="OrderReturns">
+		update order_returns set complete_date=now(),status='3' where id=#{id}
 	</update>
 	
 </mapper>

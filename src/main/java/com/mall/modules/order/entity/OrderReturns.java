@@ -40,6 +40,8 @@ public class OrderReturns extends DataEntity<OrderReturns> {
 	private String customerName;
 	private String customerMobile;
 
+	private Date completeDate; // 完成时间
+
 	private OrderInfo orderInfo;
 
 	public OrderReturns() {

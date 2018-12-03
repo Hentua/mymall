@@ -115,6 +115,14 @@ public class OrderReturnsService extends CrudService<OrderReturnsDao, OrderRetur
         }
         orderInfoService.orderCompleteReturns(orderInfo);
         dao.handle(orderReturns);
+        if("0".equals(orderReturns.getHandlingWay())) {
+            this.complete(orderReturns);
+        }
+    }
+
+    @Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    public void complete(OrderReturns orderReturns) {
+        dao.complete(orderReturns);
     }
 
     public Page<OrderReturns> findOrderReturnList(Page<OrderReturns> page, OrderReturns orderReturns) {
