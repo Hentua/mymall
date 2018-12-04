@@ -174,7 +174,7 @@ public class OrderReturnsApi extends BaseController {
                 throw new ServiceException("该售后单不需要确认");
             }
             if (!"1".equals(orderReturns.getHandlingWay())) {
-                throw new ServiceException("该售后单不执行此操作");
+                throw new ServiceException("该售后单不可执行此操作");
             }
             orderReturnsService.complete(orderReturns);
             // todo 订单清算
