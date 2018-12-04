@@ -101,11 +101,31 @@ public class MemberInfoController extends BaseController {
         return "modules/member/merchantMemberInfoList";
     }
 
+    @RequiresPermissions("member:memberInfo:view")
+    @RequestMapping(value = {"operatorMemberInfo"})
+    public String operatorMemberInfo(MemberInfo memberInfo, HttpServletRequest request, HttpServletResponse response, Model model) {
+        Page<MemberInfo> page = memberInfoService.findPage(new Page<MemberInfo>(request, response), memberInfo);
+        model.addAttribute("page", page);
+        return "modules/member/operatorMemberInfoList";
+    }
+
     @RequestMapping(value = {"exportMerchantMemberInfo"})
     public void exportMerchantMemberInfo(MemberInfo memberInfo, HttpServletRequest request, HttpServletResponse response, Model model) {
         User currUser = UserUtils.getUser();
         String refereeId = currUser.getId();
         memberInfo.setRefereeId(refereeId);
+        List<MemberInfo> memberInfos = memberInfoService.findList(memberInfo);
+        ExportExcel exportExcel = new ExportExcel("会员信息", MemberInfo.class);
+        try {
+            exportExcel.setDataList(memberInfos);
+            exportExcel.write(response, "会员信息.xlsx");
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @RequestMapping(value = {"exportOperatorMemberInfo"})
+    public void exportOperatorMemberInfo(MemberInfo memberInfo, HttpServletRequest request, HttpServletResponse response, Model model) {
         List<MemberInfo> memberInfos = memberInfoService.findList(memberInfo);
         ExportExcel exportExcel = new ExportExcel("会员信息", MemberInfo.class);
         try {

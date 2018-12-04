@@ -2,6 +2,7 @@ package com.mall.modules.order.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.mall.common.persistence.DataEntity;
+import com.mall.common.utils.excel.annotation.ExcelField;
 import org.hibernate.validator.constraints.Length;
 
 import java.util.Date;
@@ -50,6 +51,7 @@ public class OrderLogistics extends DataEntity<OrderLogistics> {
 		this.orderNo = orderNo;
 	}
 
+	@ExcelField(title = "省", sort = 4)
 	public String getProvinceName() {
 		return provinceName;
 	}
@@ -66,6 +68,7 @@ public class OrderLogistics extends DataEntity<OrderLogistics> {
 		this.countryName = countryName;
 	}
 
+	@ExcelField(title = "区", sort = 6)
 	public String getAreaName() {
 		return areaName;
 	}
@@ -74,6 +77,7 @@ public class OrderLogistics extends DataEntity<OrderLogistics> {
 		this.areaName = areaName;
 	}
 
+	@ExcelField(title = "市", sort = 5)
 	public String getCityName() {
 		return cityName;
 	}
@@ -99,7 +103,8 @@ public class OrderLogistics extends DataEntity<OrderLogistics> {
 	public void setExpressNo(String expressNo) {
 		this.expressNo = expressNo;
 	}
-	
+
+	@ExcelField(title = "收货人姓名", sort = 1)
 	@Length(min=0, max=100, message="收货人姓名长度必须介于 0 和 100 之间")
 	public String getConsigneeRealname() {
 		return consigneeRealname;
@@ -108,7 +113,8 @@ public class OrderLogistics extends DataEntity<OrderLogistics> {
 	public void setConsigneeRealname(String consigneeRealname) {
 		this.consigneeRealname = consigneeRealname;
 	}
-	
+
+	@ExcelField(title = "收货人联系电话", sort = 2)
 	@Length(min=0, max=20, message="收货人联系电话长度必须介于 0 和 20 之间")
 	public String getConsigneeTelphone() {
 		return consigneeTelphone;
@@ -126,7 +132,8 @@ public class OrderLogistics extends DataEntity<OrderLogistics> {
 	public void setConsigneeTelphoneBackup(String consigneeTelphoneBackup) {
 		this.consigneeTelphoneBackup = consigneeTelphoneBackup;
 	}
-	
+
+	@ExcelField(title = "详细地址", sort = 7)
 	@Length(min=0, max=200, message="收货地址长度必须介于 0 和 200 之间")
 	public String getConsigneeAddress() {
 		return consigneeAddress;
@@ -285,5 +292,14 @@ public class OrderLogistics extends DataEntity<OrderLogistics> {
 	public void setReconciliationTime(Date reconciliationTime) {
 		this.reconciliationTime = reconciliationTime;
 	}
-	
+
+	@ExcelField(title = "托寄物内容", sort = 8)
+	public String getContent() {
+		return "商品";
+	}
+
+	@ExcelField(title = "快递产品", sort = 9)
+	public String getProduct() {
+		return "顺丰标快";
+	}
 }

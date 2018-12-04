@@ -1,6 +1,7 @@
 package com.mall.modules.order.web;
 
 import com.alibaba.fastjson.JSON;
+import com.google.common.collect.Lists;
 import com.mall.common.config.Global;
 import com.mall.common.persistence.Page;
 import com.mall.common.utils.StringUtils;
@@ -82,6 +83,46 @@ public class OrderInfoController extends BaseController {
 		try {
 			exportExcel.setDataList(orderInfos);
 			exportExcel.write(response, "订单信息.xlsx");
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@RequestMapping(value = {"exportPendingDeliver"})
+	public void exportPendingDeliver(OrderInfo orderInfo, HttpServletRequest request, HttpServletResponse response, Model model) {
+		orderInfo.setMerchantCode(UserUtils.getUser().getId());
+		orderInfo.setOrderStatus("1");
+		List<OrderInfo> orderInfos = orderInfoService.findList(orderInfo);
+		List<String> headList = Lists.newArrayList();
+		headList.add("收件人姓名");
+		headList.add("收件人联系电话");
+		headList.add("收件人公司");
+		headList.add("省");
+		headList.add("市");
+		headList.add("区");
+		headList.add("详细地址");
+		headList.add("托寄物内容");
+		headList.add("数量");
+		headList.add("重量");
+		headList.add("件数");
+		headList.add("快递产品");
+		headList.add("付款方式");
+		headList.add("月结卡号");
+		headList.add("是否保价");
+		headList.add("声明价值");
+		headList.add("是否自取");
+		headList.add("行业型增值服务");
+		headList.add("扩展字段1");
+		headList.add("扩展字段2");
+		headList.add("扩展字段3");
+		ExportExcel exportExcel = new ExportExcel(null, headList);
+		try {
+			List<OrderLogistics> orderLogistics = Lists.newArrayList();
+			for (OrderInfo o : orderInfos) {
+				orderLogistics.add(o.getOrderLogistics());
+			}
+			exportExcel.setDataList(orderLogistics);
+			exportExcel.write(response, "待发货物流信息.xlsx");
 		}catch (Exception e) {
 			e.printStackTrace();
 		}

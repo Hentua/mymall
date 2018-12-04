@@ -47,6 +47,8 @@
         <th>手机号码</th>
         <th>注册途径</th>
         <th>申请时间</th>
+        <th>商户推荐人</th>
+        <th>商户推荐人账号</th>
         <th>审核状态</th>
         <th>审核人</th>
         <th>审核时间</th>
@@ -77,6 +79,12 @@
             </td>
             <td>
                 <fmt:formatDate value="${memberMerchantCheck.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
+            </td>
+            <td>
+                    ${memberMerchantCheck.memberInfo.merchantRefereeName}
+            </td>
+            <td>
+                    ${memberMerchantCheck.memberInfo.merchantRefereeAccount}
             </td>
             <td>
                 <c:choose>

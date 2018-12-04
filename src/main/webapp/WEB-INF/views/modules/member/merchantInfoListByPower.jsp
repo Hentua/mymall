@@ -63,6 +63,8 @@
 				<th>注册途径</th>
 				<th>注册时间</th>
 				<th>归属督导经理</th>
+				<th>商户推荐人</th>
+				<th>商户推荐人账号</th>
 				<th>商户审核状态</th>
 				<th>登录状态</th>
 				<th>备注</th>
@@ -96,6 +98,12 @@
 				</td>
 				<td>
 					${memberInfo.operatorName}
+				</td>
+				<td>
+					${memberInfo.merchantRefereeName}
+				</td>
+				<td>
+					${memberInfo.merchantRefereeAccount}
 				</td>
 				<td>
 					<c:choose>

@@ -24,10 +24,10 @@
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<ul class="ul-form">
-			<li><label>昵称：</label>
+			<li><label>商户名称：</label>
 				<form:input path="nickname" htmlEscape="false" maxlength="20" class="input-medium"/>
 			</li>
-			<li><label>手机号码：</label>
+			<li><label>商户账号：</label>
 				<form:input path="mobile" htmlEscape="false" maxlength="20" class="input-medium"/>
 			</li>
 			<li><label>注册途径：</label>
@@ -53,12 +53,14 @@
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
 		<thead>
 			<tr>
-				<th>昵称</th>
-				<th>手机号码</th>
+				<th>商户名称</th>
+				<th>商户账号</th>
 				<th>用户类型</th>
 				<th>注册途径</th>
 				<th>注册时间</th>
 				<th>商户类型</th>
+				<th>商户推荐人</th>
+				<th>商户推荐人账号</th>
 				<th>商户审核状态</th>
 				<th>登录状态</th>
 				<th>备注</th>
@@ -101,6 +103,12 @@
 							商家
 						</c:when>
 					</c:choose>
+				</td>
+				<td>
+						${memberMerchantCheck.memberInfo.merchantRefereeName}
+				</td>
+				<td>
+						${memberMerchantCheck.memberInfo.merchantRefereeAccount}
 				</td>
 				<td>
 					<c:choose>

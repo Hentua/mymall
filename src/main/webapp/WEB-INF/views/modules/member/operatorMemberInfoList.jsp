@@ -15,16 +15,15 @@
         	return false;
         }
 		function exportData() {
-			window.open('${ctx}/member/memberInfo/exportMerchantMemberInfo?' + $('#searchForm').serialize());
+			window.open('${ctx}/member/memberInfo/exportOperatorMemberInfo?' + $('#searchForm').serialize());
 		}
 	</script>
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li class="active"><a href="${ctx}/member/memberInfo/merchantMemberInfo">会员列表</a></li>
-		<shiro:hasPermission name="member:memberInfo:edit"><li><a href="${ctx}/member/memberInfo/form">会员添加</a></li></shiro:hasPermission>
+		<li class="active"><a href="${ctx}/member/memberInfo/operatorMemberInfo">会员列表</a></li>
 	</ul>
-	<form:form id="searchForm" modelAttribute="memberInfo" action="${ctx}/member/memberInfo/merchantMemberInfo" method="post" class="breadcrumb form-search">
+	<form:form id="searchForm" modelAttribute="memberInfo" action="${ctx}/member/memberInfo/operatorMemberInfo" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<ul class="ul-form">

@@ -81,10 +81,16 @@
 	<select id="findList" resultType="MemberInfo">
 		SELECT 
 			<include refid="memberInfoColumns"/>,
-		    m.nickname AS "refereeName"
+		    m.nickname AS "refereeName",
+		    ur.login_name AS "refereeAccount",
+		    mm.nickname AS "merchantRefereeName",
+		    um.login_name AS "merchantRefereeAccount"
 		FROM member_info a
 		<include refid="memberInfoJoins"/>
 		left join member_info m on m.id = a.referee_id
+		left join sys_user ur on ur.id = m.id
+		left join member_info mm on mm.id = a.merchant_referee_id
+		left join sys_user um on um.id = mm.id
 		<where>
 		     <if test="refereeId != null and refereeId != ''">
 				 and a.referee_id = #{refereeId}
@@ -131,11 +137,17 @@
 	<select id="findListByPower" resultType="MemberInfo">
 		SELECT
 			<include refid="memberInfoColumns"/>,
-		    m.nickname AS "refereeName"
+			m.nickname AS "refereeName",
+			ur.login_name AS "refereeAccount",
+			mm.nickname AS "merchantRefereeName",
+			um.login_name AS "merchantRefereeAccount"
 		FROM member_info a
 		<include refid="memberInfoJoins"/>
 		left join member_info m on m.id = a.referee_id
 		left join sys_office o on o.id = u1.office_id
+		left join sys_user ur on ur.id = m.id
+		left join member_info mm on mm.id = a.merchant_referee_id
+		left join sys_user um on um.id = mm.id
 		<where>
 		     <if test="refereeId != null and refereeId != ''">
 				 and a.referee_id = #{refereeId}

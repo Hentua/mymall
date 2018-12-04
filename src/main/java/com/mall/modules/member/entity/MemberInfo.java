@@ -44,6 +44,10 @@ public class MemberInfo extends DataEntity<MemberInfo> {
 	private String headimgurl; // 用户头像，最后一个数值代表正方形头像大小（有0、46、64、96、132数值可选，0代表640*640正方形头像），用户没有头像时该项为空
 	private String merchantRefereeId; // 推荐商户邀请人
 
+	private String refereeAccount;
+	private String merchantRefereeName;
+	private String merchantRefereeAccount;
+
 	@JsonIgnore
 	private String password;
 	@JsonIgnore
@@ -93,6 +97,30 @@ public class MemberInfo extends DataEntity<MemberInfo> {
 
 	//店铺联系电话
 	private String merchantServicePhone;
+
+	public String getRefereeAccount() {
+		return refereeAccount;
+	}
+
+	public void setRefereeAccount(String refereeAccount) {
+		this.refereeAccount = refereeAccount;
+	}
+
+	public String getMerchantRefereeName() {
+		return merchantRefereeName;
+	}
+
+	public void setMerchantRefereeName(String merchantRefereeName) {
+		this.merchantRefereeName = merchantRefereeName;
+	}
+
+	public String getMerchantRefereeAccount() {
+		return merchantRefereeAccount;
+	}
+
+	public void setMerchantRefereeAccount(String merchantRefereeAccount) {
+		this.merchantRefereeAccount = merchantRefereeAccount;
+	}
 
 	public String getPermit() {
 		return permit;

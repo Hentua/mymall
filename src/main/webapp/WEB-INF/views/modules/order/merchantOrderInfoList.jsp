@@ -18,6 +18,9 @@
         function exportData() {
             window.open('${ctx}/order/orderInfo/exportMerchantData?' + $('#searchForm').serialize());
         }
+        function exportPendingDeliverData() {
+            window.open('${ctx}/order/orderInfo/exportPendingDeliver?' + $('#searchForm').serialize());
+        }
     </script>
 </head>
 <body>
@@ -64,6 +67,7 @@
         </li>
         <li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
         <li class="btns"><input id="btnExport" class="btn btn-primary" type="button" value="导出" onclick="exportData()"/></li>
+        <li class="btns"><input id="btnExportPendingDeliver" class="btn btn-primary" type="button" value="导出待发货数据" onclick="exportPendingDeliverData()"/></li>
         <li class="clearfix"></li>
     </ul>
 </form:form>
