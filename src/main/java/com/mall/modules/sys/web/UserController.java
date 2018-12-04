@@ -71,6 +71,7 @@ public class UserController extends BaseController {
 	@RequiresPermissions("sys:user:view")
 	@RequestMapping(value = {"list", ""})
 	public String list(User user, HttpServletRequest request, HttpServletResponse response, Model model) {
+		user.setUserType("2");
 		Page<User> page = systemService.findUser(new Page<User>(request, response), user);
         model.addAttribute("page", page);
 		return "modules/sys/userList";
