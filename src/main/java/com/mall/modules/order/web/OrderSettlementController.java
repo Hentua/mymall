@@ -158,7 +158,7 @@ public class OrderSettlementController extends BaseController {
 	@RequestMapping(value = "updateStatus")
 	public String updateStatus(OrderSettlement orderSettlement, Model model, RedirectAttributes redirectAttributes) {
 		orderSettlement = orderSettlementService.get(orderSettlement.getId());
-		orderSettlement.setStatus("2");
+		orderSettlement.setStatus("3");
 		orderSettlementService.save(orderSettlement);
 		addMessage(redirectAttributes, "保存订单结算成功");
 		return "redirect:"+Global.getAdminPath()+"/order/orderSettlement/list?repage";
