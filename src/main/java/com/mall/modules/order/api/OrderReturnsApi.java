@@ -170,8 +170,11 @@ public class OrderReturnsApi extends BaseController {
             if (null == orderReturns) {
                 throw new ServiceException("未查询到售后记录");
             }
-            if (!"2".equals(orderReturns.getHandlingWay())) {
+            if (!"2".equals(orderReturns.getStatus())) {
                 throw new ServiceException("该售后单不需要确认");
+            }
+            if (!"1".equals(orderReturns.getHandlingWay())) {
+                throw new ServiceException("该售后单不执行此操作");
             }
             orderReturnsService.complete(orderReturns);
             // todo 订单清算
