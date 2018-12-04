@@ -17,6 +17,7 @@ import com.mall.modules.order.entity.TaskResponse;
 import com.mall.modules.order.service.OrderInfoService;
 import com.mall.modules.order.utils.HttpRequest;
 import com.mall.modules.sys.utils.UserUtils;
+import org.apache.poi.ss.usermodel.Row;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -123,9 +124,16 @@ public class OrderInfoController extends BaseController {
 		try {
 			List<OrderLogistics> orderLogistics = Lists.newArrayList();
 			for (OrderInfo o : orderInfos) {
-				orderLogistics.add(o.getOrderLogistics());
+				Row row = exportExcel.addRow();
+				exportExcel.addCell(row, 1, o.getOrderLogistics().getConsigneeRealname());
+				exportExcel.addCell(row, 2, o.getOrderLogistics().getConsigneeTelphone());
+				exportExcel.addCell(row, 4, o.getOrderLogistics().getProvinceName());
+				exportExcel.addCell(row, 5, o.getOrderLogistics().getCityName());
+				exportExcel.addCell(row, 6, o.getOrderLogistics().getAreaName());
+				exportExcel.addCell(row, 7, o.getOrderLogistics().getConsigneeAddress());
+				exportExcel.addCell(row, 8, o.getOrderLogistics().getContent());
+				exportExcel.addCell(row, 9, o.getOrderLogistics().getProduct());
 			}
-			exportExcel.setDataList(orderLogistics);
 			exportExcel.write(response, "待发货物流信息.xlsx");
 		}catch (Exception e) {
 			e.printStackTrace();
