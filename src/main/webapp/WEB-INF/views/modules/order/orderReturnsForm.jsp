@@ -165,15 +165,15 @@
         </div>
     </div>
     <div class="control-group">
-        <label class="control-label">平台回复：</label>
-        <div class="controls">
-            <form:textarea path="platformReply" htmlEscape="false" rows="4" maxlength="500" class="input-xxlarge required" readonly="true"/>
-        </div>
-    </div>
-    <div class="control-group">
         <label class="control-label">备注：</label>
         <div class="controls">
             <form:textarea path="remarks" htmlEscape="false" rows="4" maxlength="500" class="input-xxlarge "/>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">平台回复：</label>
+        <div class="controls">
+            <form:textarea path="platformReply" htmlEscape="false" rows="4" maxlength="500" class="input-xxlarge" readonly="true"/>
         </div>
     </div>
     <div class="form-actions">

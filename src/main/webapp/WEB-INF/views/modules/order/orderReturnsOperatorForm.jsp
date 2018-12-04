@@ -158,7 +158,7 @@
                 <div class="controls">
                     <c:choose>
                         <c:when test="${orderReturns.status == '1'}">
-                            <form:input path="expressNo" htmlEscape="false" maxlength="100" class="input-xlarge required"/>
+                            <form:input path="expressNo" htmlEscape="false" maxlength="100" class="input-xlarge "/>
                             <span class="help-inline"><font color="red">*</font> </span>
                         </c:when>
                         <c:otherwise>
@@ -172,20 +172,20 @@
     <div class="control-group">
         <label class="control-label">售后回复：</label>
         <div class="controls">
-            <form:textarea path="reply" htmlEscape="false" rows="4" maxlength="500" class="input-xxlarge required" readonly="true"/>
+            <form:textarea path="reply" htmlEscape="false" rows="4" maxlength="500" class="input-xxlarge" readonly="true"/>
             <span class="help-inline"><font color="red">*</font> </span>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">备注：</label>
+        <div class="controls">
+            <form:textarea path="remarks" htmlEscape="false" rows="4" maxlength="500" class="input-xxlarge " readonly="true"/>
         </div>
     </div>
     <div class="control-group">
         <label class="control-label">平台回复：</label>
         <div class="controls">
             <form:textarea path="platformReply" htmlEscape="false" rows="4" maxlength="500" class="input-xxlarge required"/>
-        </div>
-    </div>
-    <div class="control-group">
-        <label class="control-label">备注：</label>
-        <div class="controls">
-            <form:textarea path="remarks" htmlEscape="false" rows="4" maxlength="500" class="input-xxlarge "/>
         </div>
     </div>
     <div class="form-actions">
