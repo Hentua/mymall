@@ -97,7 +97,7 @@ public class OrderInfoController extends BaseController {
 	public void exportPendingDeliver(OrderInfo orderInfo, HttpServletRequest request, HttpServletResponse response, Model model) {
 		orderInfo.setMerchantCode(UserUtils.getUser().getId());
 		orderInfo.setOrderStatus("1");
-		List<OrderInfo> orderInfos = orderInfoService.findList(orderInfo);
+		List<OrderInfo> orderInfos = orderInfoService.findOrderDetailList(new Page<>(), orderInfo).getList();
 		List<String> headList = Lists.newArrayList();
 		headList.add("收件人姓名");
 		headList.add("收件人联系电话");
@@ -125,14 +125,15 @@ public class OrderInfoController extends BaseController {
 			List<OrderLogistics> orderLogistics = Lists.newArrayList();
 			for (OrderInfo o : orderInfos) {
 				Row row = exportExcel.addRow();
-				exportExcel.addCell(row, 1, o.getOrderLogistics().getConsigneeRealname());
-				exportExcel.addCell(row, 2, o.getOrderLogistics().getConsigneeTelphone());
-				exportExcel.addCell(row, 4, o.getOrderLogistics().getProvinceName());
-				exportExcel.addCell(row, 5, o.getOrderLogistics().getCityName());
-				exportExcel.addCell(row, 6, o.getOrderLogistics().getAreaName());
-				exportExcel.addCell(row, 7, o.getOrderLogistics().getConsigneeAddress());
-				exportExcel.addCell(row, 8, o.getOrderLogistics().getContent());
-				exportExcel.addCell(row, 9, o.getOrderLogistics().getProduct());
+				exportExcel.addCell(row, 0, o.getOrderLogistics().getConsigneeRealname());
+				exportExcel.addCell(row, 1, o.getOrderLogistics().getConsigneeTelphone());
+				exportExcel.addCell(row, 3, o.getOrderLogistics().getProvinceName());
+				exportExcel.addCell(row, 4, o.getOrderLogistics().getCityName());
+				exportExcel.addCell(row, 5, o.getOrderLogistics().getAreaName());
+				exportExcel.addCell(row, 6, o.getOrderLogistics().getConsigneeAddress());
+				exportExcel.addCell(row, 7, o.getOrderLogistics().getContent());
+				exportExcel.addCell(row, 8, o.getGoodsCount());
+				exportExcel.addCell(row, 11, o.getOrderLogistics().getProduct());
 			}
 			exportExcel.write(response, "待发货物流信息.xlsx");
 		}catch (Exception e) {
