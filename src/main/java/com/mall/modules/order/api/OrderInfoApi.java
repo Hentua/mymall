@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import com.mall.common.persistence.Page;
 import com.mall.common.service.ServiceException;
 import com.mall.common.utils.ResultGenerator;
@@ -52,10 +53,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.DecimalFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 订单API
@@ -230,7 +228,7 @@ public class OrderInfoApi extends BaseController {
                 String goodsRecommendId = "";
                 if (StringUtils.isNotBlank(shoppingCartId)) {
                     OrderShoppingCart orderShoppingCart = orderShoppingCartService.get(shoppingCartId);
-                    if(null != orderShoppingCart) {
+                    if (null != orderShoppingCart) {
                         goodsRecommendId = orderShoppingCart.getGoodsRecommendId();
                     }
                 }
@@ -246,7 +244,7 @@ public class OrderInfoApi extends BaseController {
                 }
                 GoodsInfo goodsInfo = goodsInfoService.get(goodsId);
                 GoodsStandard goodsStandard = goodsStandardService.get(goodsStandardId);
-                if (null == goodsStandard || null == goodsInfo || !goodsStandard.getGoodsId().equals(goodsInfo.getId())) {
+                if (null == goodsStandard || null == goodsInfo || !goodsStandard.getGoodsId().equals(goodsInfo.getId()) || goodsInfo.getStatus() != 3) {
                     throw new ServiceException("不合法的商品信息");
                 }
                 String merchantCode = goodsInfo.getMerchantId();
@@ -379,7 +377,7 @@ public class OrderInfoApi extends BaseController {
                 orderInfoMap.put(merchantCode, orderInfo);
 
                 // 删除购物车数据
-                if(StringUtils.isNotBlank(shoppingCartId)) {
+                if (StringUtils.isNotBlank(shoppingCartId)) {
                     OrderShoppingCart deleteCondition = new OrderShoppingCart();
                     deleteCondition.setId(shoppingCartId);
                     orderShoppingCartService.delete(deleteCondition);
@@ -767,6 +765,40 @@ public class OrderInfoApi extends BaseController {
             orderInfoService.remind(orderId);
             renderString(response, ResultGenerator.genSuccessResult());
         } catch (Exception e) {
+            renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
+        }
+    }
+
+    /**
+     * 验证商品信息
+     *
+     * @param request  请求体
+     * @param response 响应体
+     */
+    @RequestMapping(value = "validateGoodsInfo", method = RequestMethod.POST)
+    public void validateGoodsInfo(HttpServletRequest request, HttpServletResponse response) {
+        String goodsInfoIds = request.getParameter("goodsInfo");
+        try {
+            if(StringUtils.isBlank(goodsInfoIds)) {
+                throw new ServiceException("参数不能为空");
+            }
+            JSONArray goodsInfoArr = JSONArray.parseArray(goodsInfoIds);
+            if(null == goodsInfoArr || goodsInfoArr.size() <= 0) {
+                throw new ServiceException("未选择商品");
+            }
+            Set<String> notEnoughGoodsId = Sets.newHashSet();
+            for (Object goodIdObj : goodsInfoArr) {
+                String goodId = (String) goodIdObj;
+                GoodsInfo goodsInfo = goodsInfoService.get(goodId);
+                if(null == goodsInfo) {
+                    throw new ServiceException("商品信息不合法");
+                }
+                if (goodsInfo.getStatus() != 3) {
+                    notEnoughGoodsId.add(goodsInfo.getId());
+                }
+            }
+            renderString(response, ResultGenerator.genSuccessResult(notEnoughGoodsId));
+        }catch (Exception e) {
             renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
         }
     }
