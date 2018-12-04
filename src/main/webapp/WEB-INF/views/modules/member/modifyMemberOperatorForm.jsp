@@ -128,6 +128,12 @@
             </div>
         </div>
         <div class="control-group">
+            <label class="control-label">营业执照注册号：</label>
+            <div class="controls">
+                    ${memberInfo.productLicense}
+            </div>
+        </div>
+        <div class="control-group">
             <label class="control-label">对公账户：</label>
             <div class="controls">
                     ${memberInfo.publicAccount}
@@ -146,9 +152,9 @@
             </div>
         </div>
         <div class="control-group">
-            <label class="control-label">产品许可证：</label>
+            <label class="control-label">开户许可证：</label>
             <div class="controls">
-                    ${memberInfo.productLicense}
+                <img src="${memberInfo.permit}" alt="开户许可证" width="400" onclick="showImage('${memberInfo.permit}')"/>
             </div>
         </div>
         <div class="control-group">
@@ -200,7 +206,8 @@
         <label class="control-label">归属督导经理：</label>
         <div class="controls">
             <sys:treeselect id="operatorCode" name="operatorCode" value="${memberInfo.operatorCode}" labelName="operatorName" labelValue="${memberInfo.operatorName}"
-                            title="归属督导经理" url="/sys/office/treeData?type=4" cssClass="input-small" allowClear="true" notAllowSelectParent="true"/>
+                            title="归属督导经理" url="/sys/office/treeData?type=4" cssClass="input-small required" allowClear="true" notAllowSelectParent="true"/>
+            <span class="help-inline"><font color="red">*</font> </span>
         </div>
     </div>
     <div class="control-group">

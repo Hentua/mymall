@@ -27,11 +27,11 @@
 </head>
 <body>
 <ul class="nav nav-tabs">
-    <li><a href="${ctx}/order/orderReturns/">售后申请列表</a></li>
-    <li class="active"><a href="${ctx}/order/orderReturns/form?id=${orderReturns.id}">售后申请详情</a></li>
+    <li><a href="${ctx}/order/orderReturns/operatorList">售后申请列表</a></li>
+    <li class="active"><a href="${ctx}/order/orderReturns/operatorForm?id=${orderReturns.id}">售后申请详情</a></li>
 </ul>
 <br/>
-<form:form id="inputForm" modelAttribute="orderReturns" method="post"
+<form:form id="inputForm" modelAttribute="orderReturns" method="post" action="${ctx}/order/orderReturns/operatorSave"
            class="form-horizontal">
     <form:hidden path="id"/>
     <sys:message content="${message}"/>
@@ -45,6 +45,18 @@
         <label class="control-label">原订单号：</label>
         <div class="controls">
                 ${orderReturns.orderNo}
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">商家：</label>
+        <div class="controls">
+                ${orderReturns.merchantName}
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">商家账号：</label>
+        <div class="controls">
+                ${orderReturns.merchantAccount}
         </div>
     </div>
     <div class="control-group">
@@ -160,14 +172,14 @@
     <div class="control-group">
         <label class="control-label">售后回复：</label>
         <div class="controls">
-            <form:textarea path="reply" htmlEscape="false" rows="4" maxlength="500" class="input-xxlarge required"/>
+            <form:textarea path="reply" htmlEscape="false" rows="4" maxlength="500" class="input-xxlarge required" readonly="true"/>
             <span class="help-inline"><font color="red">*</font> </span>
         </div>
     </div>
     <div class="control-group">
         <label class="control-label">平台回复：</label>
         <div class="controls">
-            <form:textarea path="platformReply" htmlEscape="false" rows="4" maxlength="500" class="input-xxlarge required" readonly="true"/>
+            <form:textarea path="platformReply" htmlEscape="false" rows="4" maxlength="500" class="input-xxlarge required"/>
         </div>
     </div>
     <div class="control-group">
@@ -177,25 +189,8 @@
         </div>
     </div>
     <div class="form-actions">
-        <c:if test="${orderReturns.status == '0'}">
-            <shiro:hasPermission name="order:orderReturns:check">
-                <input id="btnSubmit" class="btn btn-primary" type="submit" onclick="this.form.action='${ctx}/order/orderReturns/checkPass';"
-                       value="审核通过"/>&nbsp;
-            </shiro:hasPermission>
-            <shiro:hasPermission name="order:orderReturns:check">
-                <input id="btnSubmit" class="btn btn-primary" type="submit" onclick="this.form.action='${ctx}/order/orderReturns/checkNotPass';"
-                       value="审核不通过"/>&nbsp;
-            </shiro:hasPermission>
-        </c:if>
         <shiro:hasPermission name="order:orderReturns:send">
-            <c:choose>
-                <c:when test="${orderReturns.status == '1' && orderReturns.handlingWay == '1'}">
-                    <input id="btnSubmit" class="btn btn-primary" type="submit" value="发货" onclick="this.form.action='${ctx}/order/orderReturns/delivery';"/>&nbsp;
-                </c:when>
-                <c:when test="${orderReturns.status == '1' && orderReturns.handlingWay == '0'}">
-                    <input id="btnSubmit" class="btn btn-primary" type="submit" value="退款" onclick="this.form.action='${ctx}/order/orderReturns/refund';"/>&nbsp;
-                </c:when>
-            </c:choose>
+            <input id="btnSubmit" class="btn btn-primary" type="submit" value="保 存"/>&nbsp;
         </shiro:hasPermission>
         <input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
     </div>

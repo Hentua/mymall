@@ -62,6 +62,8 @@ public class MemberInfo extends DataEntity<MemberInfo> {
 	@JsonIgnore
 	private String productLicense; // 产品许可证
 	@JsonIgnore
+	private String permit; // 开户许可证
+	@JsonIgnore
 	private String publicAccountName; // 对公账户名称
 	@JsonIgnore
 	private String publicAccountBank; // 开户行
@@ -91,6 +93,14 @@ public class MemberInfo extends DataEntity<MemberInfo> {
 
 	//店铺联系电话
 	private String merchantServicePhone;
+
+	public String getPermit() {
+		return permit;
+	}
+
+	public void setPermit(String permit) {
+		this.permit = permit;
+	}
 
 	public Date getStartDate() {
 		return startDate;

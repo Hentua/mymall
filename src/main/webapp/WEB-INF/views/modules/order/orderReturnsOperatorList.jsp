@@ -19,13 +19,16 @@
 </head>
 <body>
 <ul class="nav nav-tabs">
-    <li class="active"><a href="${ctx}/order/orderReturns/">售后申请列表</a></li>
+    <li class="active"><a href="${ctx}/order/orderReturns/operatorList">售后申请列表</a></li>
 </ul>
-<form:form id="searchForm" modelAttribute="orderReturns" action="${ctx}/order/orderReturns/" method="post"
+<form:form id="searchForm" modelAttribute="orderReturns" action="${ctx}/order/orderReturns/operatorList" method="post"
            class="breadcrumb form-search">
     <input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
     <input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
     <ul class="ul-form">
+        <li><label>商家账号：</label>
+            <form:input path="merchantAccount" htmlEscape="false" maxlength="32" class="input-medium"/>
+        </li>
         <li><label>售后单号：</label>
             <form:input path="returnsNo" htmlEscape="false" maxlength="32" class="input-medium"/>
         </li>
@@ -67,6 +70,8 @@
     <tr>
         <th>售后单号</th>
         <th>原订单号</th>
+        <th>商家</th>
+        <th>商家账号</th>
         <th>申请人</th>
         <th>申请人账号</th>
         <th>处理方式</th>
@@ -88,6 +93,12 @@
             <td><a href="${ctx}/order/orderInfo/form?id=${orderReturns.orderId}">
                     ${orderReturns.orderNo}
             </a></td>
+            <td>
+                    ${orderReturns.merchantName}
+            </td>
+            <td>
+                    ${orderReturns.merchantAccount}
+            </td>
             <td>
                     ${orderReturns.customerName}
             </td>
@@ -120,24 +131,7 @@
             </td>
             <shiro:hasPermission name="order:orderReturns:edit">
                 <td>
-                    <c:choose>
-                        <c:when test="${orderReturns.status == '0'}">
-                            <shiro:hasPermission name="order:orderReturns:check">
-                                <a href="${ctx}/order/orderReturns/form?id=${orderReturns.id}">审核</a>
-                            </shiro:hasPermission>
-                        </c:when>
-                        <c:when test="${orderReturns.status == '1' && orderReturns.handlingWay == '1'}">
-                            <shiro:hasPermission name="order:orderReturns:send">
-                                <a href="${ctx}/order/orderReturns/form?id=${orderReturns.id}">发货</a>
-                            </shiro:hasPermission>
-                        </c:when>
-                        <c:when test="${orderReturns.status == '1' && orderReturns.handlingWay == '0'}">
-                            <shiro:hasPermission name="order:orderReturns:send">
-                                <a href="${ctx}/member/memberInfo/checkPayPasswordForm?id=${fns:getUser().id}&failedCallbackUrl=${ctx}/order/orderReturns/&successCallbackUrl=${ctx}/order/orderReturns/form?id=${orderReturns.id}">退款</a>
-                            </shiro:hasPermission>
-                        </c:when>
-                        <c:otherwise><a href="${ctx}/order/orderReturns/form?id=${orderReturns.id}">详情</a></c:otherwise>
-                    </c:choose>
+                    <a href="${ctx}/order/orderReturns/operatorForm?id=${orderReturns.id}">详情</a>
                 </td>
             </shiro:hasPermission>
         </tr>

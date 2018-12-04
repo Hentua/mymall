@@ -1,8 +1,10 @@
 package com.mall.modules.gift.service;
 
+import com.mall.common.config.Global;
 import com.mall.common.persistence.Page;
 import com.mall.common.service.CrudService;
 import com.mall.common.service.ServiceException;
+import com.mall.common.utils.SmsAliyunUtils;
 import com.mall.common.utils.StringUtils;
 import com.mall.modules.account.service.AccountService;
 import com.mall.modules.gift.dao.GiftConfigCategoryDao;
@@ -89,7 +91,7 @@ public class GiftMerchantService extends CrudService<GiftMerchantDao, GiftMercha
         giftTransferLog.setCustomerCode(customerCode);
         Integer stock = giftMerchant.getStock();
         Integer givenCount = giftMerchant.getGivenCount();
-        if(stock < 1) {
+        if (stock < 1) {
             throw new ServiceException("可赠送余量不足");
         }
         giftMerchant.setStock(--stock);
@@ -100,7 +102,7 @@ public class GiftMerchantService extends CrudService<GiftMerchantDao, GiftMercha
         giftTransferLogService.save(giftTransferLog);
         String merchantQualification = giftConfigCategory.getMerchantQualification();
         String receiverId = "";
-        if("1".equals(merchantQualification)) {
+        if ("1".equals(merchantQualification)) {
             // 如果用户当前不是商户 赋予用户未审核商户权限
             if ("0".equals(customer.getUserType()) && StringUtils.isBlank(memberInfo.getMerchantRefereeId())) {
                 List<Role> roleList = customer.getRoleList();
@@ -114,7 +116,15 @@ public class GiftMerchantService extends CrudService<GiftMerchantDao, GiftMercha
                 memberInfoCondition.setMerchantRefereeId(merchantRefereeId);
                 memberInfoService.modifyMerchantRefereeId(memberInfoCondition);
                 receiverId = merchantRefereeId;
-            }else {
+                // 发送短信通知接收用户
+                String templateCode = Global.getConfig("sms.template.merchant.gift");
+                String templateParam = "{\"customerAccount\":\"" + customer.getLoginName() + "\"}";
+                try {
+                    SmsAliyunUtils.sendMessage(customer.getLoginName(), templateCode, templateParam);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else {
                 receiverId = memberInfo.getMerchantRefereeId();
             }
         }

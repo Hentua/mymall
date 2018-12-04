@@ -11,6 +11,8 @@ import com.mall.modules.order.entity.TaskRequest;
 import com.mall.modules.order.entity.TaskResponse;
 import com.mall.modules.order.service.OrderReturnsService;
 import com.mall.modules.order.utils.HttpRequest;
+import com.mall.modules.sys.entity.User;
+import com.mall.modules.sys.utils.UserUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -51,6 +53,8 @@ public class OrderReturnsController extends BaseController {
 	@RequiresPermissions("order:orderReturns:view")
 	@RequestMapping(value = {"list", ""})
 	public String list(OrderReturns orderReturns, HttpServletRequest request, HttpServletResponse response, Model model) {
+		User currUser = UserUtils.getUser();
+		orderReturns.setMerchantCode(currUser.getId());
 		Page<OrderReturns> page = orderReturnsService.findPage(new Page<OrderReturns>(request, response), orderReturns); 
 		model.addAttribute("page", page);
 		return "modules/order/orderReturnsList";
@@ -61,6 +65,36 @@ public class OrderReturnsController extends BaseController {
 	public String form(OrderReturns orderReturns, Model model) {
 		model.addAttribute("orderReturns", orderReturns);
 		return "modules/order/orderReturnsForm";
+	}
+
+	@RequiresPermissions("order:orderReturns:view")
+	@RequestMapping(value = {"operatorList"})
+	public String operatorList(OrderReturns orderReturns, HttpServletRequest request, HttpServletResponse response, Model model) {
+		Page<OrderReturns> page = orderReturnsService.findPage(new Page<OrderReturns>(request, response), orderReturns);
+		model.addAttribute("page", page);
+		return "modules/order/orderReturnsOperatorList";
+	}
+
+	@RequiresPermissions("order:orderReturns:view")
+	@RequestMapping(value = "operatorForm")
+	public String operatorForm(OrderReturns orderReturns, Model model) {
+		model.addAttribute("orderReturns", orderReturns);
+		return "modules/order/orderReturnsOperatorForm";
+	}
+
+	@RequiresPermissions("order:orderReturns:view")
+	@RequestMapping(value = "operatorSave")
+	public String operatorSave(OrderReturns orderReturns, Model model, RedirectAttributes redirectAttributes) {
+		String platformReply = orderReturns.getPlatformReply();
+		orderReturns = this.get(orderReturns.getId());
+		if(StringUtils.isBlank(platformReply)) {
+		    model.addAttribute("message", "回复不能为空");
+		    return form(orderReturns, model);
+        }
+		orderReturns.setPlatformReply(platformReply);
+		orderReturnsService.save(orderReturns);
+        addMessage(redirectAttributes, "保存售后申请成功");
+        return "redirect:"+Global.getAdminPath()+"/order/orderReturns/operatorList?repage";
 	}
 
 	@RequiresPermissions("order:orderReturns:edit")

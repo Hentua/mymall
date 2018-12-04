@@ -99,7 +99,7 @@ public class OrderReturnsApi extends BaseController {
             if (StringUtils.isBlank(reason)) {
                 throw new ServiceException("请填写售后原因");
             } else if (reason.length() > 500) {
-                throw new ServiceException("您填写的售后原因过长，最大只支持500");
+                throw new ServiceException("您填写的售后原因过长，最大只支持500字");
             }
             String returnsNo = String.valueOf(idWorker.getId());
             OrderReturns orderReturns = new OrderReturns();

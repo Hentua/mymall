@@ -1,8 +1,5 @@
 package com.mall.modules.coupon.api;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.mall.common.service.ServiceException;
@@ -73,12 +70,14 @@ public class CouponCustomerApi extends BaseController {
             }
             CouponCustomer queryCondition = new CouponCustomer();
             queryCondition.setCustomerCode(customerCode);
-            boolean allCoupon = discountType.contains("3") || (discountType.contains("1") && discountType.contains("2"));
+            boolean allCoupon = discountType.contains("3") || discountType.contains("1") || discountType.contains("2");
             if (allCoupon) {
-                if (discountType.contains("1")) {
-                    queryCondition.setCouponType("0");
-                } else if (discountType.contains("2")) {
-                    queryCondition.setCouponType("1");
+                if(!discountType.contains("3") && !(discountType.contains("1") && discountType.contains("2"))) {
+                    if (discountType.contains("1")) {
+                        queryCondition.setCouponType("0");
+                    } else if (discountType.contains("2")) {
+                        queryCondition.setCouponType("1");
+                    }
                 }
             } else {
                 renderString(response, ResultGenerator.genSuccessResult(Lists.newArrayList()));

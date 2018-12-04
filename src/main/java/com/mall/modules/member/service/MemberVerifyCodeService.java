@@ -2,6 +2,7 @@ package com.mall.modules.member.service;
 
 import com.aliyuncs.dysmsapi.model.v20170525.SendSmsResponse;
 import com.aliyuncs.exceptions.ClientException;
+import com.mall.common.config.Global;
 import com.mall.common.persistence.Page;
 import com.mall.common.service.CrudService;
 import com.mall.common.service.ServiceException;
@@ -57,7 +58,7 @@ public class MemberVerifyCodeService extends CrudService<MemberVerifyCodeDao, Me
 
     @Transactional(readOnly = false, propagation = Propagation.NOT_SUPPORTED)
     public void sendVerifyCodeSms(String telPhone, String type) throws ClientException, ServiceException {
-        String templateCode = "SMS_149365075";
+        String templateCode = Global.getConfig("sms.template.member.registry");
         // 0-注册验证码 1-忘记密码短信验证码 2-修改用户敏感信息验证码
         if (StringUtils.isBlank(type)) {
             type = "0";
@@ -66,13 +67,13 @@ public class MemberVerifyCodeService extends CrudService<MemberVerifyCodeDao, Me
             if(null == user) {
                 throw new ServiceException("用户不存在");
             }
-            templateCode = "SMS_149365074";
+            templateCode = Global.getConfig("sms.template.member.forgetpassword");
         }else if("2".equals(type)) {
             User user = UserUtils.getByLoginName(telPhone);
             if(null == user) {
                 throw new ServiceException("用户不存在");
             }
-            templateCode = "SMS_149365078";
+            templateCode = Global.getConfig("sms.template.member.modifyinfo");
         }
         //生成短信验证码
         String verifyCode = String.valueOf(new Random().nextInt(899999) + 100000);

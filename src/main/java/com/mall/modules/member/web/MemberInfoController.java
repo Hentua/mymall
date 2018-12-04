@@ -243,6 +243,10 @@ public class MemberInfoController extends BaseController {
                 model.addAttribute("message", "营业执照不能为空");
                 return merchantData(memberInfo, model);
             }
+            if (StringUtils.isBlank(memberInfo.getPermit())) {
+                model.addAttribute("message", "开户许可证不能为空");
+                return merchantData(memberInfo, model);
+            }
         }else{
             if (StringUtils.isBlank(memberInfo.getPersonAccount())) {
                 model.addAttribute("message", "个人银行账户不能为空");

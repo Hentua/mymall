@@ -69,7 +69,7 @@
 					${giftConfigCategory.remarks}
 				</td>
 				<td>
-					<a href="${ctx}/gift/giftConfigCategory/giftConfigCategoryBuyDetail?id=${giftConfigCategory.id}" onclick="return confirmx('确认要购买该礼包吗？', this.href)">购买</a>
+					<a href="${ctx}/member/memberInfo/checkPayPasswordForm?id=${fns:getUser().id}&failedCallbackUrl=${ctx}/gift/giftConfigCategory/buyList&successCallbackUrl=${ctx}/gift/giftConfigCategory/giftConfigCategoryBuyDetail?id=${giftConfigCategory.id}" onclick="return confirmx('确认要购买该礼包吗？', this.href)">购买</a>
 				</td>
 			</tr>
 		</c:forEach>

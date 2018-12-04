@@ -77,6 +77,20 @@
             </div>
         </div>
         <div class="control-group">
+            <label class="control-label">营业执照注册号：</label>
+            <div class="controls">
+                <c:choose>
+                    <c:when test="${memberInfo.status == '1' || memberInfo.status == '3'}">
+                        ${memberInfo.productLicense}
+                    </c:when>
+                    <c:otherwise>
+                        <form:input path="productLicense" htmlEscape="false" class="input-xlarge "/>
+                        <span class="help-inline"><font color="red">*</font> </span>
+                    </c:otherwise>
+                </c:choose>
+            </div>
+        </div>
+        <div class="control-group">
             <label class="control-label">对公账户：</label>
             <div class="controls">
                 <c:choose>
@@ -119,14 +133,18 @@
             </div>
         </div>
         <div class="control-group">
-            <label class="control-label">产品许可证：</label>
+            <label class="control-label">开户许可证：</label>
             <div class="controls">
+                <form:hidden id="permit" path="permit" htmlEscape="false" maxlength="255"
+                             class="input-xlarge "/>
                 <c:choose>
                     <c:when test="${memberInfo.status == '1' || memberInfo.status == '3'}">
-                        ${memberInfo.productLicense}
+                        <sys:ckfinder input="permit" type="images" uploadPath="/merchant"
+                                      selectMultiple="false" maxWidth="100" maxHeight="100" readonly="true"/>
                     </c:when>
                     <c:otherwise>
-                        <form:input path="productLicense" htmlEscape="false" class="input-xlarge "/>
+                        <sys:ckfinder input="permit" type="images" uploadPath="/merchant"
+                                      selectMultiple="false" maxWidth="100" maxHeight="100"/>
                         <span class="help-inline"><font color="red">*</font> </span>
                     </c:otherwise>
                 </c:choose>

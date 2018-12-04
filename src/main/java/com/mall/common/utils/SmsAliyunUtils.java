@@ -9,6 +9,8 @@ import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.profile.IClientProfile;
 import com.mall.modules.sys.entity.SysSmsLog;
 import com.mall.modules.sys.service.SysSmsLogService;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 阿里云短信发送工具
@@ -32,6 +34,7 @@ public class SmsAliyunUtils {
     static final String accessKeySecret = loader.getProperty("aliyun.accessSecret");
     static final String signName = loader.getProperty("aliyun.signName");
 
+    @Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public static SendSmsResponse sendMessage(String telPhone, String templateCode, String templateParam) throws ClientException {
 
         SysSmsLog sysSmsLog = new SysSmsLog();

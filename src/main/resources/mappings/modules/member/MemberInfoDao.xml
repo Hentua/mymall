@@ -43,7 +43,8 @@
 		a.merchant_type as "merchantType",
 		a.idcard_front as "idcardFront",
 		a.idcard_back as "idcardBack",
-		a.special_qualification as "specialQualification"
+		a.special_qualification as "specialQualification",
+		a.permit as "permit"
 	</sql>
 	
 	<sql id="memberInfoJoins">
@@ -232,7 +233,8 @@
 			company_name,
 			product_license,
 			operator_code,
-			merchant_referee_id
+			merchant_referee_id,
+			permit
 		) VALUES (
 			#{id},
 			#{referee},
@@ -256,7 +258,8 @@
 		    #{companyName},
 		    #{productLicense},
 		    #{operatorCode},
-		    #{merchantRefereeId}
+		    #{merchantRefereeId},
+		    #{permit}
 		)
 	</insert>
 	
@@ -282,6 +285,7 @@
 			idcard_front = #{idcardFront},
 			idcard_back = #{idcardBack},
 			special_qualification = #{specialQualification},
+			permit = #{permit},
 			status = #{status}
 		WHERE id = #{id}
 	</update>

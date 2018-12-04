@@ -32,13 +32,16 @@
 		a.check_time AS "checkTime",
 		a.platform_reply AS "platformReply",
 		m.merchant_service_phone AS "merchantServicePhone",
-		a.complete_date AS "completeDate"
+		a.complete_date AS "completeDate",
+		m.nickname AS "merchantName",
+		um.login_name AS "merchantAccount"
 	</sql>
 	
 	<sql id="orderReturnsJoins">
 		left join sys_user u on u.id = a.customer_code
 		left join order_info o on o.id = a.order_id
 		left join member_info m on m.id = o.merchant_code
+		left join sys_user um on um.id = o.merchant_code
 	</sql>
     
 	<select id="get" resultType="OrderReturns">
@@ -82,6 +85,12 @@
 			</if>
 			<if test="customerCode != null and customerCode != ''">
 				AND a.customer_code = #{customerCode}
+			</if>
+			<if test="merchantCode != null and merchantCode != ''">
+				AND o.merchant_code = #{merchantCode}
+			</if>
+			<if test="merchantAccount != null and merchantAccount != ''">
+				AND um.login_name = #{merchantAccount}
 			</if>
 		</where>
 		<choose>

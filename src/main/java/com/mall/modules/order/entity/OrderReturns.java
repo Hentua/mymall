@@ -39,6 +39,9 @@ public class OrderReturns extends DataEntity<OrderReturns> {
 
 	private String customerName;
 	private String customerMobile;
+	private String merchantCode;
+	private String merchantName;
+	private String merchantAccount;
 
 	private Date completeDate; // 完成时间
 
@@ -50,6 +53,38 @@ public class OrderReturns extends DataEntity<OrderReturns> {
 
 	public OrderReturns(String id){
 		super(id);
+	}
+
+    public String getMerchantName() {
+        return merchantName;
+    }
+
+    public void setMerchantName(String merchantName) {
+        this.merchantName = merchantName;
+    }
+
+    public String getMerchantAccount() {
+        return merchantAccount;
+    }
+
+    public void setMerchantAccount(String merchantAccount) {
+        this.merchantAccount = merchantAccount;
+    }
+
+    public String getMerchantCode() {
+		return merchantCode;
+	}
+
+	public void setMerchantCode(String merchantCode) {
+		this.merchantCode = merchantCode;
+	}
+
+	public Date getCompleteDate() {
+		return completeDate;
+	}
+
+	public void setCompleteDate(Date completeDate) {
+		this.completeDate = completeDate;
 	}
 
 	public String getMerchantServicePhone() {

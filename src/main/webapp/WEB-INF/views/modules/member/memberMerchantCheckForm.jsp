@@ -148,6 +148,12 @@
             </div>
         </div>
         <div class="control-group">
+            <label class="control-label">营业执照注册号：</label>
+            <div class="controls">
+                    ${memberMerchantCheck.memberInfo.productLicense}
+            </div>
+        </div>
+        <div class="control-group">
             <label class="control-label">对公账户：</label>
             <div class="controls">
                     ${memberMerchantCheck.memberInfo.publicAccount}
@@ -166,9 +172,9 @@
             </div>
         </div>
         <div class="control-group">
-            <label class="control-label">产品许可证：</label>
+            <label class="control-label">开户许可证：</label>
             <div class="controls">
-                    ${memberMerchantCheck.memberInfo.productLicense}
+                <img src="${memberMerchantCheck.memberInfo.permit}" alt="开户许可证" width="400" onclick="showImage('${memberMerchantCheck.memberInfo.permit}')"/>
             </div>
         </div>
         <div class="control-group">
