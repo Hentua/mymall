@@ -84,6 +84,10 @@
 			<result property="logisticsResult" column="logistics.logisticsResult"/>
 			<result property="logisticsCreateTime" column="logistics.logisticsCreateTime"/>
 			<result property="logisticsUpdateTime" column="logistics.logisticsUpdateTime"/>
+			<result property="provinceName" column="logistics.provinceName"/>
+			<result property="countryName" column="logistics.countryName"/>
+			<result property="cityName" column="logistics.cityName"/>
+			<result property="areaName" column="logistics.areaName"/>
 		</association>
 		<collection property="orderGoodsList" ofType="OrderGoods">
 			<id property="id" column="orderGoodsList.id"/>
@@ -150,7 +154,10 @@
 		l.logistics_result_last AS "logistics.logisticsResultLast",
 		l.logistics_result AS "logistics.logisticsResult",
 		l.logistics_create_time AS "logistics.logisticsCreateTime",
-		l.logistics_update_time AS "logistics.logisticsUpdateTime"
+		l.province_name AS "logistics.provinceName",
+		l.country_name AS "logistics.countryName",
+		l.city_name AS "logistics.cityName",
+		l.area_name AS "logistics.areaName"
 	</sql>
 
 	<sql id="orderInfoJoins">

@@ -26,7 +26,11 @@
 		a.logistics_pay_channel AS "logisticsPayChannel",
 		a.logistics_pay_no AS "logisticsPayNo",
 		a.reconciliation_status AS "reconciliationStatus",
-		a.reconciliation_time AS "reconciliationTime"
+		a.reconciliation_time AS "reconciliationTime",
+		a.province_name AS "provinceName",
+		a.country_name AS "countryName",
+		a.city_name AS "cityName",
+		a.area_name AS "areaName"
 	</sql>
 	
 	<sql id="orderLogisticsJoins">
