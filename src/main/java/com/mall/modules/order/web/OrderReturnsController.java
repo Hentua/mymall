@@ -6,6 +6,8 @@ import com.mall.common.config.Global;
 import com.mall.common.persistence.Page;
 import com.mall.common.utils.StringUtils;
 import com.mall.common.web.BaseController;
+import com.mall.modules.member.entity.MemberInfo;
+import com.mall.modules.member.service.MemberInfoService;
 import com.mall.modules.order.entity.OrderReturns;
 import com.mall.modules.order.entity.TaskRequest;
 import com.mall.modules.order.entity.TaskResponse;
@@ -37,6 +39,8 @@ public class OrderReturnsController extends BaseController {
 
 	@Autowired
 	private OrderReturnsService orderReturnsService;
+	@Autowired
+	private MemberInfoService memberInfoService;
 	
 	@ModelAttribute
 	public OrderReturns get(@RequestParam(required=false) String id) {
@@ -167,10 +171,12 @@ public class OrderReturnsController extends BaseController {
 		orderReturns.setExpressNo(expressNo);
 		orderReturns.setLogisticsType(logistics);
 		orderReturns.setStatus("2");
+		MemberInfo queryCondition = new MemberInfo();
+		queryCondition.setId(orderReturns.getMerchantCode());
+		MemberInfo memberInfo = memberInfoService.get(queryCondition);
 		TaskRequest req = new TaskRequest();
 		req.setCompany(orderReturns.getLogisticsType());
-		// todo 填写发货地址
-		req.setFrom("发货地址");
+		req.setFrom(memberInfo.getShippingAddress());
 		req.setTo(orderReturns.getConsigneeAddress());
 		req.setNumber(orderReturns.getExpressNo());
 		req.getParameters().put("callbackurl", Global.getConfig("server.baseUrl") + Global.getConfig("adminPath") + "/api/kuaidi100Callback");

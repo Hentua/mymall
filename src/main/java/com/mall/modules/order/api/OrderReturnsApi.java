@@ -192,7 +192,6 @@ public class OrderReturnsApi extends BaseController {
                 throw new ServiceException("该售后单不可执行此操作");
             }
             orderReturnsService.complete(orderReturns);
-            // todo 订单清算
             //修改订单结算状态
             accountInfoService.toAccount(orderReturns.getOrderId());
             CommissionInfo c = new CommissionInfo();

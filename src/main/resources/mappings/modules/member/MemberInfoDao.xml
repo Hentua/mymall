@@ -44,7 +44,8 @@
 		a.idcard_front as "idcardFront",
 		a.idcard_back as "idcardBack",
 		a.special_qualification as "specialQualification",
-		a.permit as "permit"
+		a.permit as "permit",
+		a.shipping_address as "shppingAddress"
 	</sql>
 	
 	<sql id="memberInfoJoins">

@@ -47,6 +47,7 @@ public class MemberInfo extends DataEntity<MemberInfo> {
 	private String refereeAccount;
 	private String merchantRefereeName;
 	private String merchantRefereeAccount;
+	private String shippingAddress; // 商家发货地址
 
 	@JsonIgnore
 	private String password;
@@ -97,6 +98,14 @@ public class MemberInfo extends DataEntity<MemberInfo> {
 
 	//店铺联系电话
 	private String merchantServicePhone;
+
+	public String getShippingAddress() {
+		return shippingAddress;
+	}
+
+	public void setShippingAddress(String shippingAddress) {
+		this.shippingAddress = shippingAddress;
+	}
 
 	public String getRefereeAccount() {
 		return refereeAccount;

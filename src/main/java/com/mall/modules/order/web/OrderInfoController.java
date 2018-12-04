@@ -8,6 +8,8 @@ import com.mall.common.utils.StringUtils;
 import com.mall.common.utils.excel.ExportExcel;
 import com.mall.common.web.BaseController;
 import com.mall.modules.member.entity.MemberFeedback;
+import com.mall.modules.member.entity.MemberInfo;
+import com.mall.modules.member.service.MemberInfoService;
 import com.mall.modules.order.entity.OrderInfo;
 import com.mall.modules.order.entity.OrderLogistics;
 import com.mall.modules.order.entity.TaskRequest;
@@ -42,6 +44,8 @@ public class OrderInfoController extends BaseController {
 
 	@Autowired
 	private OrderInfoService orderInfoService;
+	@Autowired
+	private MemberInfoService memberInfoService;
 
 	@ModelAttribute
 	public OrderInfo get(@RequestParam(required=false) String id) {
@@ -185,10 +189,12 @@ public class OrderInfoController extends BaseController {
 			model.addAttribute("message", message);
 			return orderDelivery(this.get(orderInfo.getId()), model);
 		}
+		MemberInfo queryCondition = new MemberInfo();
+		queryCondition.setId(orderInfo.getMerchantCode());
+		MemberInfo memberInfo = memberInfoService.get(queryCondition);
 		TaskRequest req = new TaskRequest();
 		req.setCompany(orderLogistics.getLogisticsType());
-		// todo 填写发货地址
-		req.setFrom("发货地址");
+		req.setFrom(memberInfo.getShippingAddress());
 		req.setTo(orderLogistics.getConsigneeAddress());
 		req.setNumber(orderLogistics.getExpressNo());
 		req.getParameters().put("callbackurl", Global.getConfig("server.baseUrl") + Global.getConfig("adminPath") + "/api/kuaidi100Callback");
