@@ -22,6 +22,7 @@
 				${adminPath}/api/appLogin = api
 				${adminPath}/registration = anon
 				${adminPath}/api/register = anon
+				${adminPath}/api/upgrade = anon
 				${adminPath}/api/genVerifyCode = anon
 				${adminPath}/api/resetPassword = anon
 				${adminPath}/api/kuaidi100Callback = anon

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.modules.sys.dao.SysUpgradeDao">
+    
+	<sql id="sysUpgradeColumns">
+		a.id AS "id",
+		a.title AS "title",
+		a.version AS "version",
+		a.url AS "url",
+		a.content AS "content",
+		a.create_date AS "createDate",
+		a.os AS "os",
+		a.is_force AS "isForce"
+	</sql>
+	
+	<sql id="sysUpgradeJoins">
+	</sql>
+    
+	<select id="get" resultType="SysUpgrade">
+		SELECT 
+			<include refid="sysUpgradeColumns"/>
+		FROM sys_upgrade a
+		<include refid="sysUpgradeJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="SysUpgrade">
+		SELECT 
+			<include refid="sysUpgradeColumns"/>
+		FROM sys_upgrade a
+		<include refid="sysUpgradeJoins"/>
+		<where>
+			
+			<if test="title != null and title != ''">
+				AND a.title LIKE 
+					<if test="dbName == 'oracle'">'%'||#{title}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{title}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{title},'%')</if>
+			</if>
+			<if test="version != null and version != ''">
+				AND a.version LIKE 
+					<if test="dbName == 'oracle'">'%'||#{version}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{version}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{version},'%')</if>
+			</if>
+			<if test="url != null and url != ''">
+				AND a.url = #{url}
+			</if>
+			<if test="content != null and content != ''">
+				AND a.content = #{content}
+			</if>
+			<if test="createDate != null and createDate != ''">
+				AND a.create_date = #{createDate}
+			</if>
+			<if test="os != null and os != ''">
+				AND a.os = #{os}
+			</if>
+			<if test="isForce != null and isForce != ''">
+				AND a.is_force = #{isForce}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date desc
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SysUpgrade">
+		SELECT 
+			<include refid="sysUpgradeColumns"/>
+		FROM sys_upgrade a
+		<include refid="sysUpgradeJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO sys_upgrade(
+			id,
+			title,
+			version,
+			url,
+			content,
+			create_date,
+			os,
+			is_force
+		) VALUES (
+			#{id},
+			#{title},
+			#{version},
+			#{url},
+			#{content},
+			#{createDate},
+			#{os},
+			#{isForce}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE sys_upgrade SET 	
+			title = #{title},
+			version = #{version},
+			url = #{url},
+			content = #{content},
+			os = #{os},
+			is_force = #{isForce}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM sys_upgrade
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
