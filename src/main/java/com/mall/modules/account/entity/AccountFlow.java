@@ -37,7 +37,24 @@ public class AccountFlow extends DataEntity<AccountFlow> {
 	private String org;
 
 
+	private Date startDate; //筛选开始时间
+	private Date endDate;  //筛选结束时间
 
+	public Date getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
 
 	public AccountFlow() {
 		super();

@@ -7,12 +7,17 @@ import com.mall.common.utils.StringUtils;
 import com.mall.common.utils.api.ApiExceptionHandleUtil;
 import com.mall.common.utils.api.ApiPageEntityHandleUtil;
 import com.mall.common.web.BaseController;
+import com.mall.modules.account.service.AccountInfoService;
+import com.mall.modules.commission.entity.CommissionInfo;
+import com.mall.modules.commission.service.CommissionInfoService;
 import com.mall.modules.member.entity.MemberDeliveryAddress;
 import com.mall.modules.member.service.MemberDeliveryAddressService;
 import com.mall.modules.order.entity.OrderInfo;
 import com.mall.modules.order.entity.OrderReturns;
+import com.mall.modules.order.entity.OrderSettlement;
 import com.mall.modules.order.service.OrderInfoService;
 import com.mall.modules.order.service.OrderReturnsService;
+import com.mall.modules.order.service.OrderSettlementService;
 import com.mall.modules.sys.entity.User;
 import com.mall.modules.sys.utils.UserUtils;
 import com.sohu.idcenter.IdWorker;
@@ -26,6 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 订单售后API
@@ -153,6 +159,15 @@ public class OrderReturnsApi extends BaseController {
         }
     }
 
+    @Autowired
+    private AccountInfoService accountInfoService;
+
+    @Autowired
+    private CommissionInfoService commissionInfoService;
+
+    @Autowired
+    private OrderSettlementService orderSettlementService;
+
     /**
      * 售后完成 确认收货
      *
@@ -175,6 +190,22 @@ public class OrderReturnsApi extends BaseController {
             }
             orderReturnsService.complete(orderReturns);
             // todo 订单清算
+            //修改订单结算状态
+            accountInfoService.toAccount(orderReturns.getOrderId());
+            CommissionInfo c = new CommissionInfo();
+            c.setUnionId(orderReturns.getOrderNo());
+            //遍历累加金额
+            List<CommissionInfo> commissionInfos = commissionInfoService.findList(c);
+            for (CommissionInfo ci: commissionInfos) {
+                commissionInfoService.editStatus(ci);
+            }
+            OrderSettlement orderSettlement = new OrderSettlement();
+            orderSettlement.setOrderId(orderReturns.getOrderId());
+            List<OrderSettlement> orderSettlements = orderSettlementService.findList(orderSettlement);
+            for (OrderSettlement os: orderSettlements) {
+                os.setStatus("2");
+                orderSettlementService.save(os);
+            }
             renderString(response, ResultGenerator.genSuccessResult());
         } catch (Exception e) {
             renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));

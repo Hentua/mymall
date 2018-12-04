@@ -34,7 +34,7 @@
             $("#platBankAccount_input").val(x.bankAccount);
             $("#bankAccountName").val(x.bankAccountName);
             $("#bankName").val(x.bankName);
-            $("#platBankAccount_hide").val(x.bankAccount);
+            $("#platBankAccount_hide").val(x.title);
         })
 
         function chesel(t) {
@@ -49,7 +49,7 @@
             $("#platBankAccount_input").val(x.bankAccount);
             $("#bankAccountName").val(x.bankAccountName);
             $("#bankName").val(x.bankName);
-            $("#platBankAccount_hide").val(x.bankAccount);
+            $("#platBankAccount_hide").val(x.title);
 
         }
 	</script>
@@ -77,28 +77,42 @@
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">平台银行账户：</label>
+			<label class="control-label">平台收款账户：</label>
 			<div class="controls">
 				<form:input id="platBankAccount_input" path="" htmlEscape="false" maxlength="50"  disabled="true"  class="input-xlarge required"/>
 				<form:hidden id="platBankAccount_hide" path="platBankAccount" />
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">开户人名称：</label>
+			<label class="control-label">平台收款人名称：</label>
 			<div class="controls">
-				<form:input id="bankAccountName" path="bankAccountName" htmlEscape="false" disabled="true" maxlength="50" class="input-xlarge required"/>
+				<form:input id="bankAccountName" path="" htmlEscape="false" disabled="true" maxlength="50" class="input-xlarge required"/>
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">开户行：</label>
+			<label class="control-label">平台收款银行：</label>
 			<div class="controls">
-				<form:input id="bankName" path="bankName" htmlEscape="false" maxlength="200" disabled="true" class="input-xlarge required"/>
+				<form:input id="bankName" path="" htmlEscape="false" maxlength="200" disabled="true" class="input-xlarge required"/>
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">转账银行账户：</label>
+			<label class="control-label">付款账号：</label>
 			<div class="controls">
 				<form:input path="bankAccount" htmlEscape="false" maxlength="100" class="input-xlarge required"/>
+				<span class="help-inline"><font color="red">*</font> </span>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">付款人名称：</label>
+			<div class="controls">
+				<form:input path="bankAccountName" htmlEscape="false" maxlength="100" class="input-xlarge required"/>
+				<span class="help-inline"><font color="red">*</font> </span>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">付款银行：</label>
+			<div class="controls">
+				<form:input path="bankName" htmlEscape="false" maxlength="100" class="input-xlarge required"/>
 				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>

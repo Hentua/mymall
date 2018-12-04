@@ -18,7 +18,7 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li class="active"><a href="${ctx}/account/accountFlow/list">充值提现审核</a></li>
+		<li class="active"><a href="${ctx}/account/accountFlow/list">余额充值审核</a></li>
 	</ul>
 	<form:form id="searchForm" modelAttribute="accountFlow" action="${ctx}/account/accountFlow/list" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
@@ -47,9 +47,9 @@
 			<th>操作时间</th>
 			<th>转账时间</th>
 			<th>平台收款账户</th>
-			<th>转账银行账户</th>
-			<%--<th>开户人名称</th>--%>
-			<%--<th>开户行地址</th>--%>
+			<th>付款账号</th>
+			<th>付款人名称</th>
+			<th>付款银行</th>
 			<th>转账截图</th>
 			<th>审核状态</th>
 			<shiro:hasPermission name="account:accountFlow:edit"><th>操作</th></shiro:hasPermission>
@@ -97,8 +97,8 @@
 				<td><fmt:formatDate value="${accountFlow.transferDate}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
 				<td>${accountFlow.platBankAccount}</td>
 				<td>${accountFlow.bankAccount}</td>
-				<%--<td>${accountFlow.bankAccountName}</td>--%>
-				<%--<td>${accountFlow.bankName}</td>--%>
+				<td>${accountFlow.bankAccountName}</td>
+				<td>${accountFlow.bankName}</td>
 				<td><a href="${accountFlow.transferImage}" target="view_window"><img width="50" src="${accountFlow.transferImage}"></a></td>
 				<td>
 					<c:if test="${accountFlow.checkStatus == '1'}">

@@ -72,6 +72,12 @@
 			<if test="userMobile != null and userMobile != ''">
 				and u.mobile = #{userMobile}
 			</if>
+			<if test="startDate != null ">
+				<![CDATA[ and u.create_date >= #{startDate} ]]>
+			</if>
+			<if test="endDate != null ">
+				<![CDATA[ and u.create_date <= #{endDate} ]]>
+			</if>
 		</where>
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">

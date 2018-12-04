@@ -68,35 +68,40 @@ public class CheckAccountTimer {
                     completedTime = orderInfo.getAutoCompletedTime();
                 }
                 if((date.getTime() - completedTime.getTime())>dayTime){
-                    //清算
-                    logger.info("清算订单号："+orderInfo.getOrderNo());
-//                    try{
-////                        accountService.createAccountFlow(orderInfo);
-//                    }catch (Exception e){
-//                        e.printStackTrace();
-//                        logger.error("创建佣金流水错误");
-//                    }
-                    //修改订单结算状态
-                    accountInfoService.toAccount(orderInfo.getId());
-                    CommissionInfo c = new CommissionInfo();
-                    c.setUnionId(orderInfo.getOrderNo());
-                    //遍历累加金额
-                    List<CommissionInfo> commissionInfos = commissionInfoService.findList(c);
-                    for (CommissionInfo ci: commissionInfos) {
-                        commissionInfoService.editStatus(ci);
-                    }
-                    OrderSettlement orderSettlement = new OrderSettlement();
-                    orderSettlement.setOrderId(orderInfo.getId());
-                    List<OrderSettlement> orderSettlements = orderSettlementService.findList(orderSettlement);
-                    for (OrderSettlement os: orderSettlements) {
-                        os.setStatus("2");
-                        orderSettlementService.save(os);
-                    }
+                    liquidation(orderInfo);
                 }
             }
             logger.info("订单号："+orderInfo.getOrderNo());
             setCount++;
         }
         logger.info("==================执行清算定时器结束,清算订单数："+setCount+"===================");
+    }
+
+    public void liquidation(OrderInfo orderInfo){
+
+        //清算
+        logger.info("清算订单号："+orderInfo.getOrderNo());
+//                    try{
+////                        accountService.createAccountFlow(orderInfo);
+//                    }catch (Exception e){
+//                        e.printStackTrace();
+//                        logger.error("创建佣金流水错误");
+//                    }
+        //修改订单结算状态
+        accountInfoService.toAccount(orderInfo.getId());
+        CommissionInfo c = new CommissionInfo();
+        c.setUnionId(orderInfo.getOrderNo());
+        //遍历累加金额
+        List<CommissionInfo> commissionInfos = commissionInfoService.findList(c);
+        for (CommissionInfo ci: commissionInfos) {
+            commissionInfoService.editStatus(ci);
+        }
+        OrderSettlement orderSettlement = new OrderSettlement();
+        orderSettlement.setOrderId(orderInfo.getId());
+        List<OrderSettlement> orderSettlements = orderSettlementService.findList(orderSettlement);
+        for (OrderSettlement os: orderSettlements) {
+            os.setStatus("2");
+            orderSettlementService.save(os);
+        }
     }
 }

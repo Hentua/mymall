@@ -31,6 +31,14 @@
 			<li><label>用户账号：</label>
 				<form:input path="userMobile" htmlEscape="false" maxlength="100" class="input-medium" />
 			</li>
+			<li><label>时间：</label>
+				<input id="startDate" style="width: 186px;" name="startDate" type="text" readonly="readonly" maxlength="20" class="input-small Wdate"
+					   onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});" value="<fmt:formatDate value="${accountFlow.startDate}" pattern="yyyy-MM-dd HH:mm:ss"/>"/>
+				-
+				<input id="endDate" style="width: 186px;" name="endDate" type="text" readonly="readonly" maxlength="20" class="input-small Wdate"
+					   onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});" value="<fmt:formatDate value="${accountFlow.endDate}" pattern="yyyy-MM-dd HH:mm:ss"/>"/>
+					<%--<form:input path="userMobile" htmlEscape="false" maxlength="100" class="input-medium" />--%>
+			</li>
 			<li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
 			<li class="clearfix"></li>
 		</ul>
