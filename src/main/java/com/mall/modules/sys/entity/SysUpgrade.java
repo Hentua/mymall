@@ -1,5 +1,6 @@
 package com.mall.modules.sys.entity;
 
+import com.mall.common.config.Global;
 import org.hibernate.validator.constraints.Length;
 
 import com.mall.common.persistence.DataEntity;
@@ -49,6 +50,16 @@ public class SysUpgrade extends DataEntity<SysUpgrade> {
 	public String getUrl() {
 		return url;
 	}
+
+	public String getFullUrl() {
+
+		String fullImageUrl = "";
+		if (null != url) {
+			fullImageUrl = Global.getConfig("userfiles.baseURL") + url;
+		}
+		return fullImageUrl;
+	}
+
 
 	public void setUrl(String url) {
 		this.url = url;

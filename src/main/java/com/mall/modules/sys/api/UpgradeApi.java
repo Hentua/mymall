@@ -35,7 +35,8 @@ public class UpgradeApi extends BaseController {
         sysUpgrade.setOs(request.getParameter("os"));
         List<SysUpgrade> list = sysUpgradeService.findList(sysUpgrade);
         if(null == list ||  list.size() ==0 ){
-            renderString(response, ResultGenerator.genFailResult("暂无升级信息"));
+            renderString(response, ResultGenerator.genSuccessResult("暂无升级信息"));
+            return;
         }
         renderString(response, ResultGenerator.genSuccessResult(list.get(0)));
     }

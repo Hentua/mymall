@@ -22,12 +22,12 @@
 				${adminPath}/api/appLogin = api
 				${adminPath}/registration = anon
 				${adminPath}/api/register = anon
-				${adminPath}/api/upgrade = anon
 				${adminPath}/api/genVerifyCode = anon
 				${adminPath}/api/resetPassword = anon
 				${adminPath}/api/kuaidi100Callback = anon
 				${adminPath}/api/paySuccessCallback = anon
 				${adminPath}/api/goods/** = anon
+				${adminPath}/api/upgrade/** = anon
 				${adminPath}/api/billboard/** = anon
 				${adminPath}/api/merchant/** = anon
 				${adminPath}/cas = cas
