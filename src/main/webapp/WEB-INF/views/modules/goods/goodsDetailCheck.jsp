@@ -100,7 +100,7 @@
 								<td>名称：${goodsStandard.name}，</td>
 								<td>价格： ${goodsStandard.price}，</td>
 								<c:if test="${goodsInfo.status == '2'}">
-									<td>结算金额：<form:input path="settlementsAmounts" htmlEscape="false" class="input-xlarge  number "/></td>
+									<td>结算金额：<form:input path="settlementsAmounts" value="${goodsStandard.price}" htmlEscape="false" class="input-xlarge  number "/></td>
 								</c:if>
 								<c:if test="${goodsInfo.status != '2'}">
 									<td>结算金额：${goodsStandard.settlementsAmount}</td>
