@@ -115,6 +115,7 @@ public class MemberMerchantCheckController extends BaseController {
 		memberMerchantCheck.setRemarks(remarks);
 		MemberInfo memberInfo = new MemberInfo();
 		memberInfo.setId(memberMerchantCheck.getMerchantCode());
+		memberInfo = memberInfoService.get(memberInfo);
 		memberInfo.setStatus("1");
 		User user = UserUtils.get(memberInfo.getId());
 		if(null == user) {
