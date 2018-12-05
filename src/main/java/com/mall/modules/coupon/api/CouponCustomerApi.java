@@ -81,6 +81,7 @@ public class CouponCustomerApi extends BaseController {
                 }
             } else {
                 renderString(response, ResultGenerator.genSuccessResult(Lists.newArrayList()));
+                return;
             }
             List<CouponCustomer> couponCustomers = couponCustomerService.findList(queryCondition);
             renderString(response, ResultGenerator.genSuccessResult(couponCustomers));
