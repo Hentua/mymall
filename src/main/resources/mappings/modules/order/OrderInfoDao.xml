@@ -268,7 +268,7 @@
 				and a.create_date &gt;= #{startDate}
 			</if>
 			<if test="endDate != null">
-				and a.end_date &lt;= #{endDate}
+				and a.create_date &lt;= #{endDate}
 			</if>
 
 		</where>
