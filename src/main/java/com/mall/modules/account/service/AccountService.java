@@ -194,7 +194,10 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 			merchantRefereeCommission.setMode(config.getMode());
 			merchantRefereeCommission.setNumber(config.getNumber());
 			merchantRefereeCommission.setStatus("0");
-			commissionInfoService.save(merchantRefereeCommission);
+			if(merchantRefereeCommission.getAmount()>0){
+				commissionInfoService.save(merchantRefereeCommission);
+			}
+
 
 			//买家推荐人佣金
 			config = commissionConfigService.getConfig("1");
@@ -208,7 +211,9 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 			customerRefereeCommission.setMode(config.getMode());
 			customerRefereeCommission.setNumber(config.getNumber());
 			merchantRefereeCommission.setStatus("0");
-			commissionInfoService.save(customerRefereeCommission);
+			if(customerRefereeCommission.getAmount()>0){
+				commissionInfoService.save(customerRefereeCommission);
+			}
 
 			List<OrderGoods> list = null;
 			if(null != orderInfo.getOrderGoodsList() && orderInfo.getOrderGoodsList().size()!=0 ) {
@@ -223,7 +228,11 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 					Double amount = 0.0;
 					//按固定金额计算
 					if("1".equals(gc.getCommissionMode())){
-						amount+= gc.getCommissionNumber();
+						if(null == gc.getCommissionNumber()){
+							amount +=0;
+						}else{
+							amount+= gc.getCommissionNumber();
+						}
 					}
 					//按百分比计算
 					if("2".equals(gc.getCommissionMode())){
@@ -246,7 +255,10 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 					commissionInfo.setNumber(gc.getCommissionNumber());
 					commissionInfo.setUnionId(orderInfo.getOrderNo());
 					commissionInfo.setStatus("0");
-					commissionInfoService.save(commissionInfo);
+					if(commissionInfo.getAmount()  > 0){
+						commissionInfoService.save(commissionInfo);
+					}
+
 				}
 				orderGoodsDao.editGoodsSalesTotal(og);
 			}
