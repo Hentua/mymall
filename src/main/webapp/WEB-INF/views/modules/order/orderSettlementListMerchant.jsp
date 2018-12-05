@@ -21,7 +21,7 @@
             return false;
         }
         function exportData() {
-            window.open('${ctx}/order/orderSettlement/merchantExportOrderSettlement?' + $('#searchForm').serialize() + '&' + $('input[name="itemId"]').val());
+            window.open('${ctx}/order/orderSettlement/merchantExportOrderSettlement?' + $('#searchForm').serialize() + '&' + $('input[name="itemId"]:checked').val());
         }
     </script>
 </head>
