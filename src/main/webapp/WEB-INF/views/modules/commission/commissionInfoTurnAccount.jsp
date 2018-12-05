@@ -29,52 +29,17 @@
 	<ul class="nav nav-tabs">
 		<li  ><a href="${ctx}/sys/user/merchantInfo">首页</a></li>
 		<li ><a href="${ctx}/commission/commissionInfo/merchantList">佣金明细列表</a></li>
-		<li ><a href="${ctx}/commission/commissionInfo/commissionInfoTakeOut">佣金提现</a></li>
+		<li ><a href="${ctx}/commission/commissionInfo/merchantCommissionTakeOut">佣金提现</a></li>
 		<li  class="active"><a href="${ctx}/commission/commissionInfo/commissionInfoTurnAccount">佣金转余额</a></li>
 	</ul><br/>
-	<form:form id="inputForm" modelAttribute="commissionInfo" action="${ctx}/commission/commissionInfo/save" method="post" class="form-horizontal">
+	<form:form id="inputForm" modelAttribute="commissionInfo" action="${ctx}/commission/commissionInfo/commissionInfoTurnAccountSave" method="post" class="form-horizontal">
 		<form:hidden path="id"/>
 		<sys:message content="${message}"/>		
 		<div class="control-group">
-			<label class="control-label">1：推荐用户消费返佣 2：推荐商家销售返佣 3：推荐商家入驻返佣 4：推荐商家送出礼包返佣 5：商家送出礼包返佣：</label>
+			<label class="control-label">转出金额：</label>
 			<div class="controls">
-				<form:input path="type" htmlEscape="false" maxlength="10" class="input-xlarge "/>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">佣金收入人ID：</label>
-			<div class="controls">
-				<form:input path="userId" htmlEscape="false" maxlength="64" class="input-xlarge "/>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">被推荐人ID：</label>
-			<div class="controls">
-				<form:input path="produceUserId" htmlEscape="false" maxlength="64" class="input-xlarge "/>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">产生佣金金额：</label>
-			<div class="controls">
-				<form:input path="originAmount" htmlEscape="false" class="input-xlarge  number"/>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">佣金金额：</label>
-			<div class="controls">
-				<form:input path="amount" htmlEscape="false" class="input-xlarge  number"/>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">关联订单号 【推荐商家入驻无订单号】：</label>
-			<div class="controls">
-				<form:input path="unionId" htmlEscape="false" maxlength="64" class="input-xlarge "/>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">提现结算单ID：</label>
-			<div class="controls">
-				<form:input path="settlementId" htmlEscape="false" maxlength="64" class="input-xlarge "/>
+				<form:input path="amount" htmlEscape="false" class="input-xlarge  number required"/>
+				&nbsp;&nbsp;&nbsp;<span>可转出余额：${memberInfo.commission}</span>
 			</div>
 		</div>
 		<div class="form-actions">

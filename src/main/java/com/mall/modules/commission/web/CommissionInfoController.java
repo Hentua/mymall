@@ -90,14 +90,46 @@ public class CommissionInfoController extends BaseController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(value = {"commissionInfoTakeOut", ""})
+	@RequestMapping(value = {"merchantCommissionTakeOut", ""})
 	public String commissionInfoTakeOut(CommissionInfo commissionInfo, HttpServletRequest request, HttpServletResponse response, Model model) {
 		User user = UserUtils.getUser();
 		MemberInfo memberInfo = new MemberInfo();
 		memberInfo.setId(user.getId());
 		memberInfo = memberInfoService.get(memberInfo);
 		model.addAttribute("memberInfo", memberInfo);
-		return "modules/commission/commissionInfoTakeOut";
+		return "modules/commission/merchantCommissionTakeOut";
+	}
+
+	@RequestMapping(value = {"commissionInfoTakeOutSave", ""})
+	public String commissionInfoTakeOutSave(CommissionInfo commissionInfo,
+											HttpServletRequest request, HttpServletResponse response,
+											Model model, RedirectAttributes redirectAttributes) {
+		User user = UserUtils.getUser();
+		MemberInfo m = new MemberInfo();
+		m.setId(user.getId());
+		MemberInfo memberInfo = memberInfoService.get(m);
+		Double amount = commissionInfo.getAmount();
+		if (1 > amount) {
+			addMessage(model,"提现失败：提现金额必须大于等于1");
+			return "modules/commission/commissionTakeOutForm";
+		}
+		if (memberInfo.getCommission() < amount) {
+			addMessage(model,"提现失败：余额不足");
+			return "modules/commission/commissionTakeOutForm";
+		}
+		//新增提现记录
+		CommissionInfo c = new CommissionInfo();
+		c.setType("6");
+		c.setAmount(amount);
+		c.setUserId(user.getId());
+		c.setBankAccount(commissionInfo.getBankAccount());
+		c.setBankAccountName(commissionInfo.getBankAccountName());
+		c.setBankName(commissionInfo.getBankName());
+		c.setCheckStatus("1");
+		c.setStatus("1");
+		commissionInfoService.save(c);
+		addMessage(redirectAttributes, "提现申请成功");
+		return "redirect:"+Global.getAdminPath()+"/commission/commissionInfo/merchantList";
 	}
 
 	/**
@@ -130,15 +162,22 @@ public class CommissionInfoController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(value = {"commissionInfoTurnAccountSave", ""})
-	public String commissionInfoTurnAccountSave(CommissionInfo commissionInfo, HttpServletRequest request, HttpServletResponse response, Model model) {
+	public String commissionInfoTurnAccountSave(CommissionInfo commissionInfo, HttpServletRequest request,
+												HttpServletResponse response,
+												Model model, RedirectAttributes redirectAttributes) {
 		User user = UserUtils.getUser();
 		MemberInfo m = new MemberInfo();
 		m.setId(user.getId());
 		MemberInfo memberInfo = memberInfoService.get(m);
 		String amountStr = request.getParameter("amount");
 		Double amount = Double.valueOf(amountStr);
+		if (1 > amount) {
+			addMessage(model,"转出失败：转出金额必须大于等于1");
+			return "modules/commission/commissionInfoTurnAccount";
+		}
 		if (memberInfo.getCommission() < amount) {
-			renderString(response, ResultGenerator.genFailResult("佣金余额不足"));
+			addMessage(model,"转出失败：余额不足");
+			return "modules/commission/commissionInfoTurnAccount";
 		}
 		AccountFlow accountFlow = new AccountFlow();
 		accountFlow.setFlowNo(String.valueOf(idWorker.getId()));
@@ -169,7 +208,8 @@ public class CommissionInfoController extends BaseController {
 		commissionInfoService.save(c);
 		//操作余额
 		accountService.editAccount(memberInfo.getBalance() + amount, memberInfo.getCommission() - amount, user.getId());
-		return "modules/commission/commissionInfoTurnAccountSave";
+		addMessage(redirectAttributes, "提现申请成功");
+		return "redirect:"+Global.getAdminPath()+"/commission/commissionInfo/merchantList";
 	}
 
 

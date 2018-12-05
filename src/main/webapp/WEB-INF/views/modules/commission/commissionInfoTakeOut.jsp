@@ -27,10 +27,7 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li  ><a href="${ctx}/sys/user/merchantInfo">首页</a></li>
-		<li ><a href="${ctx}/commission/commissionInfo/merchantList">佣金明细列表</a></li>
-		<li class="active" ><a href="${ctx}/commission/commissionInfo/commissionInfoTakeOut">佣金提现</a></li>
-		<li  ><a href="${ctx}/commission/commissionInfo/commissionInfoTurnAccount">佣金转余额</a></li>
+
 	</ul><br/>
 	<form:form id="inputForm" modelAttribute="commissionInfo" action="${ctx}/commission/commissionInfo/save" method="post" class="form-horizontal">
 		<form:hidden path="id"/>
