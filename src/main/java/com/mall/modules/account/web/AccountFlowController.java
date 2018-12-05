@@ -104,6 +104,7 @@ public class AccountFlowController extends BaseController {
 	public String merchantList(AccountFlow accountFlow, HttpServletRequest request, HttpServletResponse response, Model model) {
 		User user = UserUtils.getUser();
 		accountFlow.setUserId(user.getId());
+		accountFlow.setCheckStatus("2");
 		Page<AccountFlow> page = accountFlowService.findPage(new Page<AccountFlow>(request, response), accountFlow);
 		model.addAttribute("page", page);
 		model.addAttribute("accountFlow",accountFlow);

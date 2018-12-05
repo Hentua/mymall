@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.modules.member.dao.MerchantInfoCheckDao">
+    
+	<sql id="merchantInfoCheckColumns">
+		a.id AS "id",
+		a.merchant_id AS "merchantId",
+		a.merchant_name AS "merchantName",
+		a.avatar AS "avatar",
+		a.merchant_head_img AS "merchantHeadImg",
+		a.merchant_service_phone AS "merchantServicePhone",
+		a.create_date AS "createDate",
+		a.check_status AS "checkStatus",
+		a.check_remark AS "checkRemark"
+	</sql>
+	
+	<sql id="merchantInfoCheckJoins">
+	</sql>
+    
+	<select id="get" resultType="MerchantInfoCheck">
+		SELECT 
+			<include refid="merchantInfoCheckColumns"/>
+		FROM merchant_info_check a
+		<include refid="merchantInfoCheckJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="MerchantInfoCheck">
+		SELECT 
+			<include refid="merchantInfoCheckColumns"/>
+		FROM merchant_info_check a
+		<include refid="merchantInfoCheckJoins"/>
+		<where>
+			
+			<if test="merchantName != null and merchantName != ''">
+				AND a.merchant_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{merchantName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{merchantName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{merchantName},'%')</if>
+			</if>
+			<if test="merchantServicePhone != null and merchantServicePhone != ''">
+				AND a.merchant_service_phone LIKE 
+					<if test="dbName == 'oracle'">'%'||#{merchantServicePhone}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{merchantServicePhone}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{merchantServicePhone},'%')</if>
+			</if>
+			<if test="checkStatus != null and checkStatus != ''">
+				AND a.check_status = #{checkStatus}
+			</if>
+			<if test="checkRemark != null and checkRemark != ''">
+				AND a.check_remark = #{checkRemark}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="MerchantInfoCheck">
+		SELECT 
+			<include refid="merchantInfoCheckColumns"/>
+		FROM merchant_info_check a
+		<include refid="merchantInfoCheckJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO merchant_info_check(
+			id,
+			merchant_id,
+			merchant_name,
+			avatar,
+			merchant_head_img,
+			merchant_service_phone,
+			create_date,
+			check_status,
+			check_remark
+		) VALUES (
+			#{id},
+			#{merchantId},
+			#{merchantName},
+			#{avatar},
+			#{merchantHeadImg},
+			#{merchantServicePhone},
+			#{createDate},
+			#{checkStatus},
+			#{checkRemark}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE merchant_info_check SET 	
+			merchant_id = #{merchantId},
+			merchant_name = #{merchantName},
+			avatar = #{avatar},
+			merchant_head_img = #{merchantHeadImg},
+			merchant_service_phone = #{merchantServicePhone},
+			check_remark = #{checkRemark}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM merchant_info_check
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
