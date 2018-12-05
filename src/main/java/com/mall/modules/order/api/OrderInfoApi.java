@@ -402,16 +402,18 @@ public class OrderInfoApi extends BaseController {
                     amountTotal += orderAmountTotal;
                     orderInfo.setOrderAmountTotal(orderAmountTotal);
                     // 保存优惠券使用日志
-                    CouponLog couponLog = new CouponLog();
-                    couponLog.setCouponType(couponType);
-                    couponLog.setRemarks("订单消费使用");
-                    couponLog.setAmount(orderInfo.getDiscountAmountTotal());
-                    couponLog.setProduceChannel("5");
-                    couponLog.setType("1");
-                    couponLog.setCustomerCode(customerCode);
-                    couponLog.setProduceAmount(orderInfo.getGoodsAmountTotal());
-                    couponLog.setOrderNo(orderInfo.getOrderNo());
-                    couponLogService.save(couponLog);
+                    if(discountAmountTotal > 0) {
+                        CouponLog couponLog = new CouponLog();
+                        couponLog.setCouponType(couponType);
+                        couponLog.setRemarks("订单消费使用");
+                        couponLog.setAmount(orderInfo.getDiscountAmountTotal());
+                        couponLog.setProduceChannel("5");
+                        couponLog.setType("1");
+                        couponLog.setCustomerCode(customerCode);
+                        couponLog.setProduceAmount(orderInfo.getGoodsAmountTotal());
+                        couponLog.setOrderNo(orderInfo.getOrderNo());
+                        couponLogService.save(couponLog);
+                    }
                 }
                 orderInfoService.save(orderInfo);
             }
