@@ -107,6 +107,7 @@ public class MemberInfoService extends CrudService<MemberInfoDao, MemberInfo> {
         }
     }
 
+    @Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public String genRefereeId() {
         List<MemberRefereeIdMax> memberRefereeIdMaxes = memberRefereeIdMaxDao.findList(new MemberRefereeIdMax());
         Integer maxId = 0;
