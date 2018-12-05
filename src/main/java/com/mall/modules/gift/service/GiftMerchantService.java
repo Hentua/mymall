@@ -129,7 +129,7 @@ public class GiftMerchantService extends CrudService<GiftMerchantDao, GiftMercha
             }
         }
         // 生成礼包佣金
-        accountService.createCommissionInfo(giftCustomer.getTransferMerchantCode(), receiverId, giftConfigCategory.getGiftPrice(), giftCustomer.getId(), merchantQualification);
+        accountService.createCommissionInfo(giftCustomer.getTransferMerchantCode(), receiverId, giftConfigCategory.getGiftPrice(), giftCustomer.getId(), merchantQualification,customer);
     }
 
 }

@@ -86,6 +86,7 @@ public class AccountFlowController extends BaseController {
 //		accountFlow.setType("1");
 //		accountFlow.setMode("1");
 //		accountFlow.setIncomeExpenditureMode("2");
+		accountFlow.setCheckStatus("2");
 		Page<AccountFlow> page = accountFlowService.findPage(new Page<AccountFlow>(request, response), accountFlow);
 		model.addAttribute("page", page);
 		return "modules/account/memberAccountFlowList";

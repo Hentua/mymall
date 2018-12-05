@@ -265,7 +265,7 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 	 * @throws Exception
 	 */
 	@Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
-	public void createCommissionInfo(String senUserId,String receiverId,Double amount,String giftId,String  merchantQualification) throws Exception{
+	public void createCommissionInfo(String senUserId,String receiverId,Double amount,String giftId,String  merchantQualification,User customer) throws Exception{
 		User merchantRefereeUser = null ;
 		User customerRefereeUser = null;
 		User merchant = null;
@@ -296,7 +296,7 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 			//1：推荐用户消费返佣 2：推荐商家销售返佣 3：推荐商家入驻返佣 4：推荐商家送出礼包返佣 5：商家送出礼包返佣
 			merchantRefereeCommission.setType("3");
 			merchantRefereeCommission.setUserId(customerRefereeUser.getId());
-			merchantRefereeCommission.setProduceUserId(merchant.getId());
+			merchantRefereeCommission.setProduceUserId(customer.getId());
 			merchantRefereeCommission.setOriginAmount(amount);
 			merchantRefereeCommission.setAmount(commissionConfigService.getCommissionAmount("3",amount));
 			merchantRefereeCommission.setUnionId(giftId);
