@@ -93,6 +93,18 @@ public class MemberInfoController extends BaseController {
     }
 
     @RequiresPermissions("member:memberInfo:view")
+    @RequestMapping(value = {"merchantList"})
+    public String merchantList(MemberInfo memberInfo, HttpServletRequest request, HttpServletResponse response, Model model) {
+        User currUser = UserUtils.getUser();
+        String merchantRefereeId = currUser.getId();
+        memberInfo.setMerchantRefereeId(merchantRefereeId);
+        memberInfo.setUserType("1");
+        Page<MemberInfo> page = memberInfoService.findPage(new Page<MemberInfo>(request, response), memberInfo);
+        model.addAttribute("page", page);
+        return "modules/member/merchantInfoList";
+    }
+
+    @RequiresPermissions("member:memberInfo:view")
     @RequestMapping(value = {"merchantMemberInfo"})
     public String merchantMemberInfo(MemberInfo memberInfo, HttpServletRequest request, HttpServletResponse response, Model model) {
         User currUser = UserUtils.getUser();
@@ -410,6 +422,14 @@ public class MemberInfoController extends BaseController {
         model.addAttribute("failedCallbackUrl", failedCallbackUrl);
         model.addAttribute("successCallbackUrl", successCallbackUrl);
         return "modules/member/checkPayPassword";
+    }
+
+    @RequestMapping(value = "checkPayPasswordResultDialog")
+    public String checkPayPasswordFormDialog(HttpServletRequest request, Model model, HttpServletResponse response) {
+
+        String checkResult = request.getParameter("checkResult");
+        model.addAttribute("checkResult", checkResult);
+        return "modules/member/checkPayPasswordResultDialog";
     }
 
 }

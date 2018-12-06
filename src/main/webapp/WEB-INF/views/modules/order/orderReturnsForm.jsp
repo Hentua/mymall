@@ -5,12 +5,32 @@
     <title>售后申请管理</title>
     <meta name="decorator" content="default"/>
     <script type="text/javascript">
+        var checkResult = '';
+        var type = '';
         $(document).ready(function () {
             //$("#name").focus();
             $("#inputForm").validate({
                 submitHandler: function (form) {
-                    loading('正在提交，请稍等...');
-                    form.submit();
+                    if(type == 'refund') {
+                        $.jBox.open("iframe:${ctx}/member/memberInfo/checkPayPasswordForm?id=${fns:getUser().id}&failedCallbackUrl=${ctx}/member/memberInfo/checkPayPasswordResultDialog?checkResult=0&successCallbackUrl=${ctx}/member/memberInfo/checkPayPasswordResultDialog?checkResult=1", "美易验证", 1200, $(top.document).height() - 280, {
+                            buttons: {"确定": "ok", "关闭": true}, submit: function (v, h, f) {
+                            }, loaded: function (h) {
+                                $(".jbox-content", top.document).css("overflow-y", "hidden");
+                            },
+                            closed: function() {
+                                if(checkResult == '1') {
+                                    loading('正在提交，请稍等...');
+                                    form.submit();
+                                }else {
+                                    jBox.close();
+                                    closeLoading();
+                                }
+                            }
+                        });
+                    }else {
+                        loading('正在提交，请稍等...');
+                        form.submit();
+                    }
                 },
                 errorContainer: "#messageBox",
                 errorPlacement: function (error, element) {
@@ -193,7 +213,7 @@
                     <input id="btnSubmit" class="btn btn-primary" type="submit" value="发货" onclick="this.form.action='${ctx}/order/orderReturns/delivery';"/>&nbsp;
                 </c:when>
                 <c:when test="${orderReturns.status == '1' && orderReturns.handlingWay == '0'}">
-                    <input id="btnSubmit" class="btn btn-primary" type="submit" value="退款" onclick="this.form.action='${ctx}/order/orderReturns/refund';"/>&nbsp;
+                    <input id="btnSubmit" class="btn btn-primary" type="submit" value="退款" onclick="this.form.action='${ctx}/order/orderReturns/refund';type = 'refund';"/>&nbsp;
                 </c:when>
             </c:choose>
         </shiro:hasPermission>

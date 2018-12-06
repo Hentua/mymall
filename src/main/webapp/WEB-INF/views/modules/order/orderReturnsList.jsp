@@ -133,7 +133,7 @@
                         </c:when>
                         <c:when test="${orderReturns.status == '1' && orderReturns.handlingWay == '0'}">
                             <shiro:hasPermission name="order:orderReturns:send">
-                                <a href="${ctx}/member/memberInfo/checkPayPasswordForm?id=${fns:getUser().id}&failedCallbackUrl=${ctx}/order/orderReturns/&successCallbackUrl=${ctx}/order/orderReturns/form?id=${orderReturns.id}">退款</a>
+                                <a href="${ctx}/order/orderReturns/form?id=${orderReturns.id}">退款</a>
                             </shiro:hasPermission>
                         </c:when>
                         <c:otherwise><a href="${ctx}/order/orderReturns/form?id=${orderReturns.id}">详情</a></c:otherwise>

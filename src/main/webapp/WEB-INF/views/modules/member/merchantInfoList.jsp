@@ -18,9 +18,9 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li class="active"><a href="${ctx}/member/memberInfo/merchantInfoListByPower">商户列表</a></li>
+		<li class="active"><a href="${ctx}/member/memberInfo/merchantList">商户列表</a></li>
 	</ul>
-	<form:form id="searchForm" modelAttribute="memberInfo" action="${ctx}/member/memberInfo/merchantInfoListByPower" method="post" class="breadcrumb form-search">
+	<form:form id="searchForm" modelAttribute="memberInfo" action="${ctx}/member/memberInfo/merchantList" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<ul class="ul-form">
@@ -29,10 +29,6 @@
 			</li>
 			<li><label>手机号码：</label>
 				<form:input path="mobile" htmlEscape="false" maxlength="20" class="input-medium"/>
-			</li>
-			<li><label>督导经理：</label>
-				<sys:treeselect id="operatorCode" name="operatorCode" value="${memberInfo.operatorCode}" labelName="operatorName" labelValue="${memberInfo.operatorName}"
-								title="归属督导经理" url="/sys/office/treeData?type=4" cssClass="input-small" allowClear="true" notAllowSelectParent="true"/>
 			</li>
 			<li><label>注册途径：</label>
 				<form:select path="registerWay" class="input-medium">
@@ -62,13 +58,9 @@
 				<th>商户类型</th>
 				<th>注册途径</th>
 				<th>注册时间</th>
-				<th>归属督导经理</th>
-				<th>商户推荐人</th>
-				<th>商户推荐人账号</th>
 				<th>商户审核状态</th>
 				<th>登录状态</th>
 				<th>备注</th>
-				<th>操作</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -95,15 +87,6 @@
 				</td>
 				<td>
 					<fmt:formatDate value="${memberInfo.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
-				</td>
-				<td>
-					${memberInfo.operatorName}
-				</td>
-				<td>
-					${memberInfo.merchantRefereeName}
-				</td>
-				<td>
-					${memberInfo.merchantRefereeAccount}
 				</td>
 				<td>
 					<c:choose>
@@ -133,18 +116,6 @@
 				</td>
 				<td>
 					${memberInfo.remarks}
-				</td>
-				<td>
-					<c:if test="${memberInfo.loginFlag == '0'}">
-						<a href="${ctx}/member/memberInfo/enableUser?id=${memberInfo.id}" onclick="return confirmx('确定允许该用户登录吗？', this.href)">允许登录</a>
-					</c:if>
-					<c:if test="${memberInfo.loginFlag == '1'}">
-						<a href="${ctx}/member/memberInfo/disableUser?id=${memberInfo.id}" onclick="return confirmx('确定禁止该用户登录吗？', this.href)">禁止登录</a>
-					</c:if>
-					<c:if test="${memberInfo.status == '1'}">
-						<a href="${ctx}/member/memberInfo/uncheckMerchant?id=${memberInfo.id}" onclick="return confirmx('确定要取消该商户审核状态吗？如果类型为商户，将下架该商户的所有商品', this.href)">取消审核</a>
-					</c:if>
-					<shiro:hasPermission name="member:memberInfo:modify"><a href="${ctx}/member/memberInfo/allListForm?id=${memberInfo.id}">修改归属督导经理</a></shiro:hasPermission>
 				</td>
 			</tr>
 		</c:forEach>
