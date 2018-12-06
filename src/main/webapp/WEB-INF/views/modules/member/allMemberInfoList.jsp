@@ -53,11 +53,13 @@
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
 		<thead>
 			<tr>
-				<th>昵称</th>
-				<th>手机号码</th>
+				<th>商户昵称</th>
+				<th>商户账号</th>
 				<th>商户类型</th>
 				<th>注册途径</th>
 				<th>注册时间</th>
+				<th>商户推荐人</th>
+				<th>商户推荐人账号</th>
 				<th>归属督导经理</th>
 				<th>商户审核状态</th>
 				<th>登录状态</th>
@@ -89,6 +91,12 @@
 				</td>
 				<td>
 					<fmt:formatDate value="${memberInfo.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
+				</td>
+				<td>
+						${memberInfo.merchantRefereeName}
+				</td>
+				<td>
+						${memberInfo.merchantRefereeAccount}
 				</td>
 				<td>
 					${memberInfo.operatorName}

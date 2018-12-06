@@ -156,7 +156,7 @@
                 return realValue;
             }
         }
-    })()
+    })();
     boxInput.init(function () {
         getValue();
     });
@@ -176,10 +176,10 @@
                 $('body').html('验证成功，即将跳转页面');
                 setTimeout(function () {
                     location.href = '${successCallbackUrl}';
-                }, 5000);
+                }, 3000);
             }
         });
-    }
+    };
 
     function getValue() {
         // document.getElementById("showValue").innerText = boxInput.getBoxInputValue();
