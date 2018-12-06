@@ -40,6 +40,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.DecimalFormat;
+import java.util.List;
 
 /**
  * 账户明细Controller
@@ -392,11 +393,16 @@ public class AccountApi extends BaseController {
         if (memberInfo.getCommission() < amount) {
             renderString(response, ResultGenerator.genFailResult("佣金余额不足"));
         }
-        //新增提现记录
         CommissionInfo commissionInfo = new CommissionInfo();
+        commissionInfo.setUserId(user.getId());
+        commissionInfo.setStatus("1");
+        List<CommissionInfo> list = commissionInfoService.findList(commissionInfo);
+        if(null != list && list.size()>0){
+            renderString(response, ResultGenerator.genFailResult("您的提现申请正在审核，请等审核通过后再提交新的申请！"));
+        }
+        //新增提现记录
         commissionInfo.setType("6");
         commissionInfo.setAmount(amount);
-        commissionInfo.setUserId(user.getId());
         commissionInfo.setBankAccount(request.getParameter("bankAccount"));
         commissionInfo.setBankAccountName(request.getParameter("bankAccountName"));
         commissionInfo.setBankName(request.getParameter("bankName"));
