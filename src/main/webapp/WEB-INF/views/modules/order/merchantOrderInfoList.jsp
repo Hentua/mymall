@@ -6,7 +6,12 @@
     <meta name="decorator" content="default"/>
     <script type="text/javascript">
         $(document).ready(function () {
-
+            $('#allCheck').click(function () {
+                var isAllCheck = this.checked;
+                $('input[name="itemId"]').each(function() {
+                    this.checked = isAllCheck;
+                });
+            })
         });
 
         function page(n, s) {
@@ -16,10 +21,17 @@
             return false;
         }
         function exportData() {
-            window.open('${ctx}/order/orderInfo/exportMerchantData?' + $('#searchForm').serialize());
+            window.open('${ctx}/order/orderInfo/exportMerchantData?' + $('#searchForm').serialize() + itemCheckBoxVal());
         }
         function exportPendingDeliverData() {
-            window.open('${ctx}/order/orderInfo/exportPendingDeliver?' + $('#searchForm').serialize());
+            window.open('${ctx}/order/orderInfo/exportPendingDeliver?' + $('#searchForm').serialize() + itemCheckBoxVal());
+        }
+        function itemCheckBoxVal() {
+            var itemStr = '';
+            $('input[name="itemId"]:checked').each(function () {
+                itemStr += '&itemIds=' + $(this).val();
+            });
+            return itemStr;
         }
     </script>
 </head>
@@ -75,6 +87,7 @@
 <table id="contentTable" class="table table-striped table-bordered table-condensed">
     <thead>
     <tr>
+        <th><input type="checkbox" id="allCheck"/></th>
         <th>订单号</th>
         <th>订单状态</th>
         <th>订单类型</th>
@@ -99,6 +112,9 @@
     <tbody>
     <c:forEach items="${page.list}" var="orderInfo">
         <tr>
+            <td>
+                    <input type="checkbox" name="itemId" value="${orderInfo.id}"/>
+            </td>
             <td>
                     ${orderInfo.orderNo}
             </td>

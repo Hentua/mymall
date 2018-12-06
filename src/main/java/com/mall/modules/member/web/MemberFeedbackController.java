@@ -1,5 +1,6 @@
 package com.mall.modules.member.web;
 
+import com.google.common.collect.Lists;
 import com.mall.common.config.Global;
 import com.mall.common.persistence.Page;
 import com.mall.common.utils.StringUtils;
@@ -54,7 +55,17 @@ public class MemberFeedbackController extends BaseController {
 
 	@RequestMapping(value = {"exportData"})
 	public void exportData(MemberFeedback memberFeedback, HttpServletRequest request, HttpServletResponse response, Model model) {
-		List<MemberFeedback> feedbackList = memberFeedbackService.findList(memberFeedback);
+		String [] itemIds = request.getParameterValues("itemIds");
+		List<MemberFeedback> feedbackList;
+		if(null != itemIds && itemIds.length > 0) {
+			feedbackList = Lists.newArrayList();
+			for (String itemId : itemIds) {
+				feedbackList.add(this.get(itemId));
+			}
+		}else {
+			feedbackList = memberFeedbackService.findList(memberFeedback);
+		}
+
 		ExportExcel exportExcel = new ExportExcel("反馈信息", MemberFeedback.class);
 		try {
 			exportExcel.setDataList(feedbackList);

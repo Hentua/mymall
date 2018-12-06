@@ -21,7 +21,14 @@
             return false;
         }
         function exportData() {
-            window.open('${ctx}/order/orderSettlement/merchantExportOrderSettlement?' + $('#searchForm').serialize() + '&' + $('input[name="itemId"]:checked').val());
+            window.open('${ctx}/order/orderSettlement/merchantExportOrderSettlement?' + $('#searchForm').serialize() + itemCheckBoxVal());
+        }
+        function itemCheckBoxVal() {
+            var itemStr = '';
+            $('input[name="itemId"]:checked').each(function () {
+                itemStr += '&itemIds=' + $(this).val();
+            });
+            return itemStr;
         }
     </script>
 </head>

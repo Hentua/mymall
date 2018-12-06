@@ -1,5 +1,6 @@
 package com.mall.modules.order.web;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.mall.common.config.Global;
 import com.mall.common.persistence.Page;
@@ -111,7 +112,16 @@ public class OrderSettlementController extends BaseController {
 
 	@RequestMapping(value = "exportOrderSettlement")
 	public void exportSettlementList(OrderSettlement orderSettlement, HttpServletRequest request, HttpServletResponse response) {
-		List<OrderSettlement> orderSettlementList = orderSettlementService.findList(orderSettlement);
+		String [] itemIds = request.getParameterValues("itemIds");
+		List<OrderSettlement> orderSettlementList;
+		if(null != itemIds && itemIds.length > 0) {
+			orderSettlementList = Lists.newArrayList();
+			for (String itemId : itemIds) {
+				orderSettlementList.add(orderSettlementService.get(itemId));
+			}
+		}else {
+			orderSettlementList = orderSettlementService.findList(orderSettlement);
+		}
 		ExportExcel exportExcel = new ExportExcel("货款结算", OrderSettlement.class, 1, 0);
 		try {
 			exportExcel.setDataList(orderSettlementList);
@@ -125,8 +135,17 @@ public class OrderSettlementController extends BaseController {
 	public void merchantExportOrderSettlement(OrderSettlement orderSettlement, HttpServletRequest request, HttpServletResponse response) {
 		User currUser = UserUtils.getUser();
 		orderSettlement.setUserId(currUser.getId());
-		Page<OrderSettlement> page = orderSettlementService.findListWithGoods(new Page<>(request, response, -1), orderSettlement);
-		List<OrderSettlement> orderSettlementList = page.getList();
+		String [] itemIds = request.getParameterValues("itemIds");
+		List<OrderSettlement> orderSettlementList;
+		if(null != itemIds && itemIds.length > 0) {
+			orderSettlementList = Lists.newArrayList();
+			for (String itemId : itemIds) {
+				orderSettlementList.add(orderSettlementService.getWithGoods(itemId));
+			}
+		}else {
+			Page<OrderSettlement> page = orderSettlementService.findListWithGoods(new Page<>(request, response, -1), orderSettlement);
+			orderSettlementList = page.getList();
+		}
 		ExportExcel exportExcel = new ExportExcel("货款结算", OrderSettlement.class, 1, 0, 1);
 		try {
 			exportExcel.setDataList(orderSettlementList);

@@ -1,16 +1,14 @@
 package com.mall.modules.order.service;
 
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.core.annotation.Order;
+import com.mall.common.persistence.Page;
+import com.mall.common.service.CrudService;
+import com.mall.modules.order.dao.OrderSettlementDao;
+import com.mall.modules.order.entity.OrderSettlement;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.mall.common.persistence.Page;
-import com.mall.common.service.CrudService;
-import com.mall.modules.order.entity.OrderSettlement;
-import com.mall.modules.order.dao.OrderSettlementDao;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 订单结算Service
@@ -50,6 +48,10 @@ public class OrderSettlementService extends CrudService<OrderSettlementDao, Orde
 
 	public Map<String, String> findTotal(OrderSettlement orderSettlement) {
 		return dao.findTotal(orderSettlement);
+	}
+
+	public OrderSettlement getWithGoods(String id) {
+		return dao.getWithGoods(id);
 	}
 	
 }

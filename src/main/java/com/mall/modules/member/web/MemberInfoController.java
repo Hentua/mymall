@@ -113,10 +113,20 @@ public class MemberInfoController extends BaseController {
 
     @RequestMapping(value = {"exportMerchantMemberInfo"})
     public void exportMerchantMemberInfo(MemberInfo memberInfo, HttpServletRequest request, HttpServletResponse response, Model model) {
+        String [] itemIds = request.getParameterValues("itemIds");
         User currUser = UserUtils.getUser();
         String refereeId = currUser.getId();
         memberInfo.setRefereeId(refereeId);
-        List<MemberInfo> memberInfos = memberInfoService.findList(memberInfo);
+        List<MemberInfo> memberInfos;
+        if(null != itemIds && itemIds.length > 0) {
+            memberInfos = Lists.newArrayList();
+            for (String itemId : itemIds) {
+                memberInfos.add(this.get(itemId));
+            }
+        }else {
+            memberInfos = memberInfoService.findList(memberInfo);
+        }
+
         ExportExcel exportExcel = new ExportExcel("会员信息", MemberInfo.class);
         try {
             exportExcel.setDataList(memberInfos);
@@ -128,7 +138,16 @@ public class MemberInfoController extends BaseController {
 
     @RequestMapping(value = {"exportOperatorMemberInfo"})
     public void exportOperatorMemberInfo(MemberInfo memberInfo, HttpServletRequest request, HttpServletResponse response, Model model) {
-        List<MemberInfo> memberInfos = memberInfoService.findList(memberInfo);
+        String [] itemIds = request.getParameterValues("itemIds");
+        List<MemberInfo> memberInfos;
+        if(null != itemIds && itemIds.length > 0) {
+            memberInfos = Lists.newArrayList();
+            for (String itemId : itemIds) {
+                memberInfos.add(this.get(itemId));
+            }
+        }else {
+            memberInfos = memberInfoService.findList(memberInfo);
+        }
         ExportExcel exportExcel = new ExportExcel("会员信息", MemberInfo.class);
         try {
             exportExcel.setDataList(memberInfos);

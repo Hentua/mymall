@@ -1,12 +1,15 @@
 package com.mall.modules.gift.web;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.google.common.collect.Lists;
+import com.mall.common.config.Global;
+import com.mall.common.persistence.Page;
+import com.mall.common.utils.StringUtils;
 import com.mall.common.utils.excel.ExportExcel;
+import com.mall.common.web.BaseController;
 import com.mall.modules.gift.entity.GiftMerchant;
+import com.mall.modules.gift.entity.GiftPurchaseLog;
 import com.mall.modules.gift.service.GiftMerchantService;
-import com.mall.modules.member.entity.MemberFeedback;
+import com.mall.modules.gift.service.GiftPurchaseLogService;
 import com.mall.modules.sys.entity.User;
 import com.mall.modules.sys.utils.UserUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -20,13 +23,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.mall.common.config.Global;
-import com.mall.common.persistence.Page;
-import com.mall.common.web.BaseController;
-import com.mall.common.utils.StringUtils;
-import com.mall.modules.gift.entity.GiftPurchaseLog;
-import com.mall.modules.gift.service.GiftPurchaseLogService;
-
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.List;
 
@@ -69,10 +67,21 @@ public class GiftPurchaseLogController extends BaseController {
 
 	@RequestMapping(value = {"exportData"})
 	public void exportData(GiftPurchaseLog giftPurchaseLog, HttpServletRequest request, HttpServletResponse response, Model model) {
+		String [] itemIds = request.getParameterValues("itemIds");
 		User currUser = UserUtils.getUser();
 		giftPurchaseLog.setMerchantCode(currUser.getId());
 		giftPurchaseLog.setStatus("1");
-		List<GiftPurchaseLog> giftPurchaseLogs = giftPurchaseLogService.findList(giftPurchaseLog);
+		List<GiftPurchaseLog> giftPurchaseLogs;
+
+		if(null != itemIds && itemIds.length > 0) {
+			giftPurchaseLogs = Lists.newArrayList();
+			for (String itemId : itemIds) {
+				giftPurchaseLogs.add(this.get(itemId));
+			}
+		}else {
+			giftPurchaseLogs = giftPurchaseLogService.findList(giftPurchaseLog);
+		}
+
 		ExportExcel exportExcel = new ExportExcel("礼包购买记录", GiftPurchaseLog.class);
 		try {
 			exportExcel.setDataList(giftPurchaseLogs);
@@ -92,7 +101,17 @@ public class GiftPurchaseLogController extends BaseController {
 
 	@RequestMapping(value = {"operatorExportData"})
 	public void operatorExportData(GiftPurchaseLog giftPurchaseLog, HttpServletRequest request, HttpServletResponse response, Model model) {
-		List<GiftPurchaseLog> giftPurchaseLogs = giftPurchaseLogService.findList(giftPurchaseLog);
+		String [] itemIds = request.getParameterValues("itemIds");
+		List<GiftPurchaseLog> giftPurchaseLogs;
+
+		if(null != itemIds && itemIds.length > 0) {
+			giftPurchaseLogs = Lists.newArrayList();
+			for (String itemId : itemIds) {
+				giftPurchaseLogs.add(this.get(itemId));
+			}
+		}else {
+			giftPurchaseLogs = giftPurchaseLogService.findList(giftPurchaseLog);
+		}
 		ExportExcel exportExcel = new ExportExcel("礼包购买记录", GiftPurchaseLog.class);
 		try {
 			exportExcel.setDataList(giftPurchaseLogs);

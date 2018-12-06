@@ -6,7 +6,12 @@
 	<meta name="decorator" content="default"/>
 	<script type="text/javascript">
 		$(document).ready(function() {
-			
+			$('#allCheck').click(function () {
+				var isAllCheck = this.checked;
+				$('input[name="itemId"]').each(function() {
+					this.checked = isAllCheck;
+				});
+			})
 		});
 		function page(n,s){
 			$("#pageNo").val(n);
@@ -15,7 +20,14 @@
         	return false;
         }
 		function exportData() {
-			window.open('${ctx}/gift/giftTransferLog/operatorExportData?' + $('#searchForm').serialize());
+			window.open('${ctx}/gift/giftTransferLog/operatorExportData?' + $('#searchForm').serialize() + itemCheckBoxVal());
+		}
+		function itemCheckBoxVal() {
+			var itemStr = '';
+			$('input[name="itemId"]:checked').each(function () {
+				itemStr += '&itemIds=' + $(this).val();
+			});
+			return itemStr;
 		}
 	</script>
 </head>
@@ -57,6 +69,7 @@
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
 		<thead>
 			<tr>
+				<th><input type="checkbox" id="allCheck"/></th>
 				<th>礼包名称</th>
 				<th>商家</th>
 				<th>商家账号</th>
@@ -70,6 +83,9 @@
 		<tbody>
 		<c:forEach items="${page.list}" var="giftTransferLog">
 			<tr>
+				<td>
+					<input type="checkbox" name="itemId" value="${giftTransferLog.id}"/>
+				</td>
 				<td>
 					<a href="${ctx}/gift/giftConfigCategory/giftConfigCategoryDetail?id=${giftTransferLog.giftCategory}">${giftTransferLog.giftConfigCategoryName}</a>
 				</td>

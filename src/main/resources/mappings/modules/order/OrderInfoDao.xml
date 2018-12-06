@@ -227,6 +227,17 @@
         order by a.create_date desc
     </select>
 
+	<select id="getOrderDetail" resultMap="OrderInfoDetail">
+        select
+        <include refid="orderInfoDetailColumns"/>
+        from order_info a
+        left join member_info m on m.id=a.merchant_code
+        left join order_logistics l on l.order_no = a.order_no
+        <where>
+           a.id = #{id}
+        </where>
+    </select>
+
 	<select id="findList" resultType="OrderInfo">
 		SELECT
 			<include refid="orderInfoColumns"/>,

@@ -119,9 +119,18 @@ public interface OrderInfoDao extends CrudDao<OrderInfo> {
 
     /**
      * 按支付批次号查询订单
-     * @param orderInfo
-     * @return
+     *
+     * @param orderInfo 查询条件
+     * @return 订单列表
      */
     List<OrderInfo> findOrderNos(OrderInfo orderInfo);
+
+    /**
+     * 获取订单详情
+     *
+     * @param id 订单ID
+     * @return 订单实体
+     */
+    OrderInfo getOrderDetail(String id);
 
 }

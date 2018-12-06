@@ -6,7 +6,12 @@
 	<meta name="decorator" content="default"/>
 	<script type="text/javascript">
 		$(document).ready(function() {
-			
+			$('#allCheck').click(function () {
+				var isAllCheck = this.checked;
+				$('input[name="itemId"]').each(function() {
+					this.checked = isAllCheck;
+				});
+			})
 		});
 		function page(n,s){
 			$("#pageNo").val(n);
@@ -15,7 +20,14 @@
         	return false;
         }
 		function exportData() {
-			window.open('${ctx}/member/memberFeedback/exportData?' + $('#searchForm').serialize());
+			window.open('${ctx}/member/memberFeedback/exportData?' + $('#searchForm').serialize() + itemCheckBoxVal());
+		}
+		function itemCheckBoxVal() {
+			var itemStr = '';
+			$('input[name="itemId"]:checked').each(function () {
+				itemStr += '&itemIds=' + $(this).val();
+			});
+			return itemStr;
 		}
 	</script>
 </head>
@@ -57,6 +69,7 @@
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
 		<thead>
 			<tr>
+				<th><input type="checkbox" id="allCheck"/></th>
 				<th>会员昵称</th>
 				<th>会员ID</th>
 				<th>反馈信息</th>
@@ -69,6 +82,9 @@
 		<tbody>
 		<c:forEach items="${page.list}" var="memberFeedback">
 			<tr>
+				<td>
+					<input type="checkbox" name="itemId" value="${memberFeedback.id}"/>
+				</td>
 				<td>
 					${memberFeedback.customerName}
 				</td>

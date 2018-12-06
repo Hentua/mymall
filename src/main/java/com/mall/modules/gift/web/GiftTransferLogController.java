@@ -1,10 +1,13 @@
 package com.mall.modules.gift.web;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.google.common.collect.Lists;
+import com.mall.common.config.Global;
+import com.mall.common.persistence.Page;
+import com.mall.common.utils.StringUtils;
 import com.mall.common.utils.excel.ExportExcel;
-import com.mall.modules.member.entity.MemberFeedback;
+import com.mall.common.web.BaseController;
+import com.mall.modules.gift.entity.GiftTransferLog;
+import com.mall.modules.gift.service.GiftTransferLogService;
 import com.mall.modules.sys.entity.User;
 import com.mall.modules.sys.utils.UserUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -16,13 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.mall.common.config.Global;
-import com.mall.common.persistence.Page;
-import com.mall.common.web.BaseController;
-import com.mall.common.utils.StringUtils;
-import com.mall.modules.gift.entity.GiftTransferLog;
-import com.mall.modules.gift.service.GiftTransferLogService;
-
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -61,9 +59,19 @@ public class GiftTransferLogController extends BaseController {
 
 	@RequestMapping(value = {"exportData"})
 	public void exportData(GiftTransferLog giftTransferLog, HttpServletRequest request, HttpServletResponse response, Model model) {
+		String [] itemIds = request.getParameterValues("itemIds");
 		User currUser = UserUtils.getUser();
 		giftTransferLog.setMerchantCode(currUser.getId());
-		List<GiftTransferLog> giftTransferLogs = giftTransferLogService.findList(giftTransferLog);
+		List<GiftTransferLog> giftTransferLogs;
+		if(null != itemIds && itemIds.length > 0) {
+			giftTransferLogs = Lists.newArrayList();
+			for (String itemId : itemIds) {
+				giftTransferLogs.add(this.get(itemId));
+			}
+		}else {
+			giftTransferLogs = giftTransferLogService.findList(giftTransferLog);
+		}
+
 		ExportExcel exportExcel = new ExportExcel("礼包赠送记录", GiftTransferLog.class);
 		try {
 			exportExcel.setDataList(giftTransferLogs);
@@ -83,7 +91,17 @@ public class GiftTransferLogController extends BaseController {
 
 	@RequestMapping(value = {"operatorExportData"})
 	public void operatorExportData(GiftTransferLog giftTransferLog, HttpServletRequest request, HttpServletResponse response, Model model) {
-		List<GiftTransferLog> giftTransferLogs = giftTransferLogService.findList(giftTransferLog);
+		String [] itemIds = request.getParameterValues("itemIds");
+		List<GiftTransferLog> giftTransferLogs;
+		if(null != itemIds && itemIds.length > 0) {
+			giftTransferLogs = Lists.newArrayList();
+			for (String itemId : itemIds) {
+				giftTransferLogs.add(this.get(itemId));
+			}
+		}else {
+			giftTransferLogs = giftTransferLogService.findList(giftTransferLog);
+		}
+
 		ExportExcel exportExcel = new ExportExcel("礼包赠送记录", GiftTransferLog.class);
 		try {
 			exportExcel.setDataList(giftTransferLogs);

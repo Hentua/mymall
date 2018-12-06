@@ -99,6 +99,19 @@
 		</choose>
 	</select>
 
+	<select id="getWithGoods" resultType="OrderSettlement">
+		SELECT
+		<include refid="orderSettlementColumns"/>,
+		g.goods_name AS "goodsName",
+		g.settlements_amount AS "goodsSettlementAmount",
+		g.count AS "goodsCount",
+		g.subtotal AS "subtotal"
+		FROM order_settlement a
+		<include refid="orderSettlementJoins"/>
+		left join order_goods g on g.order_no = o.order_no
+		where a.id = #{id}
+	</select>
+
     <select id="findListWithGoods" resultType="OrderSettlement">
         SELECT
         <include refid="orderSettlementColumns"/>,

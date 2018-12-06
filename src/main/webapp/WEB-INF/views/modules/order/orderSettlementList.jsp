@@ -6,7 +6,12 @@
     <meta name="decorator" content="default"/>
     <script type="text/javascript">
         $(document).ready(function() {
-
+            $('#allCheck').click(function () {
+                var isAllCheck = this.checked;
+                $('input[name="itemId"]').each(function() {
+                    this.checked = isAllCheck;
+                });
+            })
         });
         function page(n,s){
             $("#pageNo").val(n);
@@ -15,7 +20,14 @@
             return false;
         }
         function exportData() {
-            window.open('${ctx}/order/orderSettlement/exportOrderSettlement?' + $('#searchForm').serialize());
+            window.open('${ctx}/order/orderSettlement/exportOrderSettlement?' + $('#searchForm').serialize() + itemCheckBoxVal());
+        }
+        function itemCheckBoxVal() {
+            var itemStr = '';
+            $('input[name="itemId"]:checked').each(function () {
+                itemStr += '&itemIds=' + $(this).val();
+            });
+            return itemStr;
         }
     </script>
 </head>
@@ -61,6 +73,7 @@
 <table id="contentTable" class="table table-striped table-bordered table-condensed">
     <thead>
     <tr>
+        <th><input type="checkbox" id="allCheck"/></th>
         <th>商家名称</th>
         <th>商家账号</th>
         <th>订单时间 </th>
@@ -77,6 +90,9 @@
     <tbody>
     <c:forEach items="${page.list}" var="orderSettlement">
         <tr>
+            <td>
+                    <input type="checkbox" name="itemId" value="${orderSettlement.id}"/>
+            </td>
             <td>
                     ${orderSettlement.merchantName}
             </td>

@@ -8,7 +8,6 @@ import com.mall.common.utils.DateUtils;
 import com.mall.common.utils.StringUtils;
 import com.mall.common.utils.excel.ExportExcel;
 import com.mall.common.web.BaseController;
-import com.mall.modules.member.entity.MemberFeedback;
 import com.mall.modules.member.entity.MemberInfo;
 import com.mall.modules.member.service.MemberInfoService;
 import com.mall.modules.order.entity.OrderInfo;
@@ -72,7 +71,17 @@ public class OrderInfoController extends BaseController {
 
 	@RequestMapping(value = {"exportData"})
 	public void exportData(OrderInfo orderInfo, HttpServletRequest request, HttpServletResponse response, Model model) {
-		List<OrderInfo> orderInfos = orderInfoService.findList(orderInfo);
+		String [] itemIds = request.getParameterValues("itemIds");
+		List<OrderInfo> orderInfos;
+		if(null != itemIds && itemIds.length > 0) {
+			orderInfos = Lists.newArrayList();
+			for (String itemId : itemIds) {
+				orderInfos.add(this.get(itemId));
+			}
+		}else {
+			orderInfos = orderInfoService.findList(orderInfo);
+		}
+
 		ExportExcel exportExcel = new ExportExcel("订单信息", OrderInfo.class);
 		try {
 			exportExcel.setDataList(orderInfos);
@@ -85,7 +94,16 @@ public class OrderInfoController extends BaseController {
 	@RequestMapping(value = {"exportMerchantData"})
 	public void exportMerchantData(OrderInfo orderInfo, HttpServletRequest request, HttpServletResponse response, Model model) {
 		orderInfo.setMerchantCode(UserUtils.getUser().getId());
-		List<OrderInfo> orderInfos = orderInfoService.findList(orderInfo);
+		String [] itemIds = request.getParameterValues("itemIds");
+		List<OrderInfo> orderInfos;
+		if(null != itemIds && itemIds.length > 0) {
+			orderInfos = Lists.newArrayList();
+			for (String itemId : itemIds) {
+				orderInfos.add(this.get(itemId));
+			}
+		}else {
+			orderInfos = orderInfoService.findList(orderInfo);
+		}
 		ExportExcel exportExcel = new ExportExcel("订单信息", OrderInfo.class);
 		try {
 			exportExcel.setDataList(orderInfos);
@@ -99,7 +117,17 @@ public class OrderInfoController extends BaseController {
 	public void exportPendingDeliver(OrderInfo orderInfo, HttpServletRequest request, HttpServletResponse response, Model model) {
 		orderInfo.setMerchantCode(UserUtils.getUser().getId());
 		orderInfo.setOrderStatus("1");
-		List<OrderInfo> orderInfos = orderInfoService.findOrderDetailList(new Page<>(), orderInfo).getList();
+		String [] itemIds = request.getParameterValues("itemIds");
+		List<OrderInfo> orderInfos;
+		if(null != itemIds && itemIds.length > 0) {
+			orderInfos = Lists.newArrayList();
+			for (String itemId : itemIds) {
+				orderInfos.add(orderInfoService.getOrderDetail(itemId));
+			}
+		}else {
+			orderInfos = orderInfoService.findOrderDetailList(new Page<>(), orderInfo).getList();
+		}
+
 		List<String> headList = Lists.newArrayList();
 		headList.add("收件人姓名");
 		headList.add("收件人联系电话");
