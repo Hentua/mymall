@@ -52,7 +52,12 @@
 		select ifnull(sum(if(coupon_type = '0', balance, 0)), 0) as "fiveDiscountCoupon", ifnull(sum(if(coupon_type = '1', balance, 0)), 0) as "sevenDiscountCoupon" from coupon_customer
 		where customer_code = #{customerCode}
 	</select>
-	
+
+
+	<select id="enabledCouponsCountByIndex" resultType="Map">
+		select ifnull(sum(if(coupon_type = '0', balance, 0)), 0) as "fiveDiscountCoupon", ifnull(sum(if(coupon_type = '1', balance, 0)), 0) as "sevenDiscountCoupon" from coupon_merchant
+		where merchant_code = #{customerCode}
+	</select>
 	<select id="findAllList" resultType="CouponCustomer">
 		SELECT 
 			<include refid="couponCustomerColumns"/>

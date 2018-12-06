@@ -56,8 +56,10 @@
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
 		<thead>
 			<tr>
-				<th>所属用户</th>
-				<th>生成用户</th>
+				<th>所属用户账号</th>
+				<th>所属用户名称</th>
+				<th>生成用户账号</th>
+				<th>生成用户名称</th>
 				<th>生成规则</th>
 				<th>产生金额</th>
 				<th>佣金金额</th>
@@ -71,14 +73,10 @@
 		<tbody>
 		<c:forEach items="${page.list}" var="commissionInfo">
 			<tr>
-				<td>${commissionInfo.userMobile}（${commissionInfo.userName}）</td>
-				<td>
-					<c:if test="${commissionInfo.type == '6' || commissionInfo.type == '7'}">
-					</c:if>
-					<c:if test="${commissionInfo.type != '6' && commissionInfo.type != '7'}">
-						${commissionInfo.produceUserMobile}（${commissionInfo.produceUserName}）
-					</c:if>
-				</td>
+				<td>${commissionInfo.userMobile}</td>
+				<td>${commissionInfo.userName}</td>
+				<td>${commissionInfo.produceUserMobile}</td>
+				<td>${commissionInfo.produceUserName}</td>
 				<td>
 					<c:if test="${commissionInfo.type == '1'}">
 						商品分类配置比例
@@ -94,11 +92,15 @@
 				</td>
 				<td>${commissionInfo.originAmount}</td>
 				<td>
-					<c:if test="${commissionInfo.type == '6' || commissionInfo.type == '7'}">-
+					<c:if test="${commissionInfo.type == '6' || commissionInfo.type == '7'}">
+						<span style="color: red">
+							- ${commissionInfo.amount}
+						</span>
 					</c:if>
-					<c:if test="${commissionInfo.type != '6' && commissionInfo.type != '7'}">+
+					<c:if test="${commissionInfo.type != '6' && commissionInfo.type != '7'}">
+						${commissionInfo.amount}
 					</c:if>
-						${commissionInfo.amount}</td>
+				</td>
 				<td>
 					<c:if test="${commissionInfo.type == '1'}">
 						推荐用户消费返佣

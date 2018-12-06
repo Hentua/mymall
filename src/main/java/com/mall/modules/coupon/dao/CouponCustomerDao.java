@@ -15,5 +15,8 @@ import java.util.Map;
 public interface CouponCustomerDao extends CrudDao<CouponCustomer> {
 
     Map<String, String> enabledCouponsCount(String customerCode);
-	
+
+
+    Map<String, String> enabledCouponsCountByIndex(String customerCode);
+
 }

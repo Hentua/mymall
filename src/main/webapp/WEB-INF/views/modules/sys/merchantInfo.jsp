@@ -130,7 +130,7 @@
 <body>
 	<div class="mr_index">
 		<div style="min-height: 85px">
-			<div class="mr_sts" style="background-color: #1190D9" onclick="actionGo('${ctx}/order/orderInfo/merchantList')">
+			<div class="mr_sts" style="background-color: #1190D9" onclick="actionGo('${ctx}/order/orderInfo/merchantList?org=1')">
 				<div class="mr_sts_icon"><img src="${ctxStatic}/images/icon-4.png" width="50px"></div>
 				<div class="mr_sts_title">当日货款金额</div>
 				<div class="mr_sts_amount">${stsObj.dayOrderAmountTotal}&nbsp;<span class="y">元</span></div>
@@ -145,7 +145,7 @@
 				<div class="mr_sts_title">未提现佣金</div>
 				<div class="mr_sts_amount">${member.commission}&nbsp;<span class="y">元</span></div>
 			</div>
-			<div class="mr_sts" style="background-color: #68B9F1">
+			<div class="mr_sts" style="background-color: #68B9F1" onclick="actionGo('${ctx}/coupon/couponMerchant')" >
 				<div class="mr_sts_icon" style="    padding-top: 11px;"><img src="${ctxStatic}/images/icon-3.png" width="50px"></div>
 				<div class="mr_sts_title">5折卡券金额</div>
 				<div class="mr_sts_amount">${stsObj.fiveDiscountCoupon}&nbsp;<span class="y">元</span></div>
