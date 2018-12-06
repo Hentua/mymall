@@ -34,7 +34,8 @@
 		m.merchant_service_phone AS "merchantServicePhone",
 		a.complete_date AS "completeDate",
 		m.nickname AS "merchantName",
-		um.login_name AS "merchantAccount"
+		um.login_name AS "merchantAccount",
+		o.merchant_code AS "merchantCode"
 	</sql>
 	
 	<sql id="orderReturnsJoins">
