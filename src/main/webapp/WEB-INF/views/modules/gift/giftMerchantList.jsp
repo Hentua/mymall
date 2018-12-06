@@ -70,7 +70,7 @@
 					<fmt:formatDate value="${giftMerchant.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
 				</td>
 				<td>
-					<c:if test="${giftMerchant.stock > 0}"><a href="${ctx}/member/memberInfo/checkPayPasswordForm?id=${fns:getUser().id}&failedCallbackUrl=${ctx}/gift/giftMerchant/&successCallbackUrl=${ctx}/gift/giftMerchant/giftTransferForm?id=${giftMerchant.id}" onclick="return confirmx('确认要赠送该礼包吗？', this.href)">赠送</a></c:if>
+					<c:if test="${giftMerchant.stock > 0}"><a href="${ctx}/gift/giftMerchant/giftTransferForm?id=${giftMerchant.id}" onclick="return confirmx('确认要赠送该礼包吗？', this.href)">赠送</a></c:if>
 				</td>
 			</tr>
 		</c:forEach>

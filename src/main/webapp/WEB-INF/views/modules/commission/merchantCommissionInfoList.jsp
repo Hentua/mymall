@@ -20,6 +20,8 @@
 <ul class="nav nav-tabs">
 	<li  ><a href="${ctx}/sys/user/merchantInfo">首页</a></li>
 	<li class="active"><a href="${ctx}/commission/commissionInfo/merchantList">佣金明细列表</a></li>
+	<li ><a href="${ctx}/commission/commissionInfo/merchantCommissionTakeOut">佣金提现</a></li>
+	<li ><a href="${ctx}/commission/commissionInfo/commissionInfoTurnAccount">佣金转余额</a></li>
 </ul>
 	<form:form id="searchForm" modelAttribute="commissionInfo" action="${ctx}/commission/commissionInfo/merchantList" method="post" class="breadcrumb form-search">
 		<input id="userId" name="userId" type="hidden" value="${commissionInfo.userId}"/>
@@ -61,6 +63,8 @@
 				<th>佣金金额</th>
 				<th>佣金类型</th>
 				<th>产生时间</th>
+				<th>审核状态</th>
+				<th>审核备注</th>
 				<%--<th>状态</th>--%>
 			</tr>
 		</thead>
@@ -68,7 +72,13 @@
 		<c:forEach items="${page.list}" var="commissionInfo">
 			<tr>
 				<td>${commissionInfo.userMobile}（${commissionInfo.userName}）</td>
-				<td>${commissionInfo.produceUserMobile}（${commissionInfo.produceUserName}）</td>
+				<td>
+					<c:if test="${commissionInfo.type == '6' || commissionInfo.type == '7'}">
+					</c:if>
+					<c:if test="${commissionInfo.type != '6' && commissionInfo.type != '7'}">
+						${commissionInfo.produceUserMobile}（${commissionInfo.produceUserName}）
+					</c:if>
+				</td>
 				<td>
 					<c:if test="${commissionInfo.type == '1'}">
 						商品分类配置比例
@@ -83,7 +93,12 @@
 					</c:if>
 				</td>
 				<td>${commissionInfo.originAmount}</td>
-				<td>${commissionInfo.amount}</td>
+				<td>
+					<c:if test="${commissionInfo.type == '6' || commissionInfo.type == '7'}">-
+					</c:if>
+					<c:if test="${commissionInfo.type != '6' && commissionInfo.type != '7'}">+
+					</c:if>
+						${commissionInfo.amount}</td>
 				<td>
 					<c:if test="${commissionInfo.type == '1'}">
 						推荐用户消费返佣
@@ -100,9 +115,27 @@
 					<c:if test="${commissionInfo.type == '5'}">
 						商家送出礼包返佣
 					</c:if>
+					<c:if test="${commissionInfo.type == '6'}">
+						提现
+					</c:if>
+					<c:if test="${commissionInfo.type == '7'}">
+						佣金转余额
+					</c:if>
 				</td>
 				<td><fmt:formatDate value="${commissionInfo.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
-				<%--<td>--%>
+				<td>
+					<c:if test="${commissionInfo.checkStatus == '1'}">
+						待审核
+					</c:if>
+					<c:if test="${commissionInfo.checkStatus == '2'}">
+						已完成
+					</c:if>
+					<c:if test="${commissionInfo.checkStatus == '3'}">
+						已驳回
+					</c:if>
+				</td>
+				<td>${commissionInfo.checkRemark}</td>
+					<%--<td>--%>
 					<%--<c:if test="${commissionInfo.status == '1'}">--%>
 						<%--已清算--%>
 					<%--</c:if>--%>

@@ -373,7 +373,7 @@
 	</update>
 
 	<update id="uncheckMerchant">
-		update goods_info set status = '0' where merchant_id = #{merchantId}
+		update goods_info set status = '1' where merchant_id = #{merchantId}
 	</update>
 	
 </mapper>

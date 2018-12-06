@@ -6,7 +6,12 @@
     <meta name="decorator" content="default"/>
     <script type="text/javascript">
         $(document).ready(function () {
-
+            $('#allCheck').click(function () {
+                var isAllCheck = this.checked;
+                $('input[name="itemId"]').each(function() {
+                    this.checked = isAllCheck;
+                });
+            })
         });
 
         function page(n, s) {
@@ -16,7 +21,7 @@
             return false;
         }
         function exportData() {
-            window.open('${ctx}/order/orderSettlement/merchantExportOrderSettlement?' + $('#searchForm').serialize());
+            window.open('${ctx}/order/orderSettlement/merchantExportOrderSettlement?' + $('#searchForm').serialize() + '&' + $('input[name="itemId"]:checked').val());
         }
     </script>
 </head>
@@ -64,6 +69,7 @@
 <table id="contentTable" class="table table-striped table-bordered table-condensed">
     <thead>
     <tr>
+        <th><input type="checkbox" id="allCheck"/></th>
         <th>订单时间</th>
         <th>订单编号</th>
         <th>下单人</th>
@@ -80,6 +86,9 @@
     <tbody>
     <c:forEach items="${page.list}" var="orderSettlement">
         <tr>
+            <td>
+                <input type="checkbox" name="itemId" value="${orderSettlement.id}"/>
+            </td>
             <td>
                 <fmt:formatDate value="${orderSettlement.orderDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
             </td>

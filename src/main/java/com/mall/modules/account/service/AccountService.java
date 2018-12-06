@@ -194,7 +194,10 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 			merchantRefereeCommission.setMode(config.getMode());
 			merchantRefereeCommission.setNumber(config.getNumber());
 			merchantRefereeCommission.setStatus("0");
-			commissionInfoService.save(merchantRefereeCommission);
+			if(merchantRefereeCommission.getAmount()>0){
+				commissionInfoService.save(merchantRefereeCommission);
+			}
+
 
 			//买家推荐人佣金
 			config = commissionConfigService.getConfig("1");
@@ -208,7 +211,9 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 			customerRefereeCommission.setMode(config.getMode());
 			customerRefereeCommission.setNumber(config.getNumber());
 			merchantRefereeCommission.setStatus("0");
-			commissionInfoService.save(customerRefereeCommission);
+			if(customerRefereeCommission.getAmount()>0){
+				commissionInfoService.save(customerRefereeCommission);
+			}
 
 			List<OrderGoods> list = null;
 			if(null != orderInfo.getOrderGoodsList() && orderInfo.getOrderGoodsList().size()!=0 ) {
@@ -223,7 +228,11 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 					Double amount = 0.0;
 					//按固定金额计算
 					if("1".equals(gc.getCommissionMode())){
-						amount+= gc.getCommissionNumber();
+						if(null == gc.getCommissionNumber()){
+							amount +=0;
+						}else{
+							amount+= gc.getCommissionNumber();
+						}
 					}
 					//按百分比计算
 					if("2".equals(gc.getCommissionMode())){
@@ -246,7 +255,10 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 					commissionInfo.setNumber(gc.getCommissionNumber());
 					commissionInfo.setUnionId(orderInfo.getOrderNo());
 					commissionInfo.setStatus("0");
-					commissionInfoService.save(commissionInfo);
+					if(commissionInfo.getAmount()  > 0){
+						commissionInfoService.save(commissionInfo);
+					}
+
 				}
 				orderGoodsDao.editGoodsSalesTotal(og);
 			}
@@ -265,7 +277,7 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 	 * @throws Exception
 	 */
 	@Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
-	public void createCommissionInfo(String senUserId,String receiverId,Double amount,String giftId,String  merchantQualification) throws Exception{
+	public void createCommissionInfo(String senUserId,String receiverId,Double amount,String giftId,String  merchantQualification,User customer) throws Exception{
 		User merchantRefereeUser = null ;
 		User customerRefereeUser = null;
 		User merchant = null;
@@ -296,7 +308,7 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 			//1：推荐用户消费返佣 2：推荐商家销售返佣 3：推荐商家入驻返佣 4：推荐商家送出礼包返佣 5：商家送出礼包返佣
 			merchantRefereeCommission.setType("3");
 			merchantRefereeCommission.setUserId(customerRefereeUser.getId());
-			merchantRefereeCommission.setProduceUserId(merchant.getId());
+			merchantRefereeCommission.setProduceUserId(customer.getId());
 			merchantRefereeCommission.setOriginAmount(amount);
 			merchantRefereeCommission.setAmount(commissionConfigService.getCommissionAmount("3",amount));
 			merchantRefereeCommission.setUnionId(giftId);

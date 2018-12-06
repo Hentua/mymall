@@ -59,7 +59,7 @@
 			<%--<th>开户人名称</th>--%>
 			<%--<th>开户行地址</th>--%>
 			<th>转账截图</th>
-			<th>审核状态</th>
+			<%--<th>审核状态</th>--%>
 			<%--<shiro:hasPermission name="account:accountFlow:edit"><th>操作</th></shiro:hasPermission>--%>
 		</tr>
 		</thead>
@@ -108,14 +108,14 @@
 				<%--<td>${accountFlow.bankAccountName}</td>--%>
 				<%--<td>${accountFlow.bankName}</td>--%>
 				<td><a href="${accountFlow.transferImage}" target="view_window"><img width="50" src="${accountFlow.transferImage}"></a></td>
-				<td>
-					<c:if test="${accountFlow.checkStatus == '1'}">
-						待审核
-					</c:if>
-					<c:if test="${accountFlow.checkStatus == '2'}">
-						已审核
-					</c:if>
-				</td>
+				<%--<td>--%>
+					<%--<c:if test="${accountFlow.checkStatus == '1'}">--%>
+						<%--待审核--%>
+					<%--</c:if>--%>
+					<%--<c:if test="${accountFlow.checkStatus == '2'}">--%>
+						<%--已审核--%>
+					<%--</c:if>--%>
+				<%--</td>--%>
 				<%--<shiro:hasPermission name="account:accountFlow:edit"><td>--%>
 					<%--<c:if test="${accountFlow.checkStatus == '1' && accountFlow.incomeExpenditureMode == '2'}">--%>
 						<%--<a href="${ctx}/account/accountFlow/check?id=${accountFlow.id}" onclick="return confirmx('确认要审核通过该笔记录吗？', this.href)">审核通过</a>--%>
