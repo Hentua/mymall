@@ -54,6 +54,12 @@ public class CouponCustomerService extends CrudService<CouponCustomerDao, Coupon
         return dao.enabledCouponsCount(customerCode);
     }
 
+    public Map<String, String> enabledCouponsCountByIndex(String customerCode) {
+        return dao.enabledCouponsCountByIndex(customerCode);
+    }
+
+
+
     @Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public void exchangeGiftGenCoupon(GiftConfig giftConfig, String giftCustomerId, String customerCode) {
         CouponCustomer halfCoupon = new CouponCustomer();

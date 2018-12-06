@@ -333,7 +333,7 @@ public class UserController extends BaseController {
 
 		//统计信息
 		JSONObject stsObj = new JSONObject();
-		stsObj.putAll(couponCustomerService.enabledCouponsCount(user.getId()));
+		stsObj.putAll(couponCustomerService.enabledCouponsCountByIndex(user.getId()));
 		stsObj.putAll(commissionInfoService.merchantIndexSts(user.getId()));
 		model.addAttribute("stsObj",stsObj);
 		//广告信息

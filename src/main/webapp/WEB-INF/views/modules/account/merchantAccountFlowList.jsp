@@ -64,7 +64,7 @@
 		<tbody>
 		<c:forEach items="${page.list}" var="accountFlow">
 			<tr>
-				<td>1
+				<td>
 					${accountFlow.flowNo}
 				 </td>
 				<%--<td>--%>

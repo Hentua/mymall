@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import com.mall.common.config.Global;
 import com.mall.common.persistence.Page;
+import com.mall.common.utils.DateUtils;
 import com.mall.common.utils.StringUtils;
 import com.mall.common.utils.excel.ExportExcel;
 import com.mall.common.web.BaseController;
@@ -31,6 +32,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -144,6 +146,12 @@ public class OrderInfoController extends BaseController {
 	@RequiresPermissions("order:orderInfo:view")
 	@RequestMapping(value = {"merchantList"})
 	public String merchantList(OrderInfo orderInfo, HttpServletRequest request, HttpServletResponse response, Model model) {
+		if("1".equals(request.getParameter("org"))){
+			String startDateStr = DateUtils.formatDate(new Date(),"yyyy-MM-dd")+" 00:00:00";
+			String endDateStr = DateUtils.formatDate(new Date(),"yyyy-MM-dd")+" 23:59:59";
+			orderInfo.setStartDate(DateUtils.parseDate(startDateStr));
+			orderInfo.setEndDate(DateUtils.parseDate(endDateStr));
+		}
 		orderInfo.setMerchantCode(UserUtils.getUser().getId());
 		Page<OrderInfo> page = orderInfoService.findPage(new Page<OrderInfo>(request, response), orderInfo);
 		model.addAttribute("page", page);
