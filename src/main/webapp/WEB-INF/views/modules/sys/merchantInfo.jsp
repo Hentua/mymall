@@ -47,21 +47,23 @@
 			padding-top: 10px;
 		}
 		.mr_notice{
-			border: 1px solid #008fd7;
-			height: 170px;
+			border: 3px solid #1190d9;
+			height: 183px;
 			margin-left: 1%;
 			width: 65%;
 			float: left;
 			margin-top: -188px;
+			border-radius: 17px;
 		}
 		.mr_info{
-			/*border: 1px solid #008fd7;*/
+			border: 3px solid #1190d9;
 			width: 29.3%;
 			margin-left: 1%;
 			float: left;
 			height: 478px;
 			padding: 1% 1%;
 			font-size: 14px;
+			border-radius: 17px;
 		}
 		.mr_info .mr_info_left{
 			font-weight: bold;
@@ -80,13 +82,17 @@
 
 		}
 		.mr_info table tr td{
-			padding-top: 15px;
+			/*padding-top: 15px;*/
 		}
 		.mr_info table tr td:first-child{
 			text-align: right;
-			font-size: 15px;
+			font-size: 14px;
 			font-weight: bold;
-			width: 120px;
+		}
+		.mr_info table tr td:last-child{
+			text-align: left;
+			font-size: 14px;
+			font-weight: bold;
 		}
 		.mr_ad img{
 			max-height: 255px;
@@ -178,51 +184,67 @@
 			<%--<div style="width: 100%">--%>
 				<%----%>
 			<%--</div>--%>
-				<div  style="    width: 100%;
-    text-align: center;">
-					<img style="border: 1px solid #1190d9;    border-radius: 50%;width: 108px" src="${member.fullAvatarUrl}" width="50%" >
+				<div  style="    border-top-right-radius: 32px;
+    border-top-left-radius: 32px;
+    width: 100%;
+    text-align: center;
+    background-color: #1190d9;    padding-top: 20px;
+    padding-bottom: 20px;">
+					<%--<div style="float: left;width: 40%">--%>
+						<%--<img style="border: 1px solid #1190d9;    border-radius: 50%;width: 108px" src="${member.fullAvatarUrl}" width="50%" >--%>
+					<%--</div>--%>
+					<%--<div style="float: left;width: 60%">--%>
+						<%--你好，xxx--%>
+					<%--</div>--%>
+					<table style="color: white">
+						<tr>
+							<td style="    width: 40%;padding-right: 30px;padding-left: 30px;" rowspan="5"><img style="border: 1px solid #1190d9;    border-radius: 50%;width: 108px" src="${member.fullAvatarUrl}" width="50%" ></td>
+						</tr>
+						<tr>
+							<td   >
+								<span style="font-size: 15px">您好，</span><span style="font-size: 25px">${user.name}</span>
+							</td>
+						</tr>
+						<tr>
+							<td>账号：${user.mobile}</td>
+						</tr>
+						<tr>
+							<td>类别：商家</td>
+						</tr>
+						<tr>
+							<td>店铺名：${member.nickname}</td>
+						</tr>
+					</table>
 				</div>
-				<div class="mr_info_left">
-					账号：
+				<div style="    border: 2px solid #1190d9;
+    height: 100px;
+    margin-top: 10px;        border-bottom-left-radius: 32px;
+    border-bottom-right-radius: 32px;padding: 0 10%">
+					<div style="    font-size: 19px;
+    font-weight: bold;
+    margin-top: 17px;
+    border-bottom: 2px solid #1190d9;
+    padding-bottom: 10px;
+    padding-left: 25%;">
+						月销售额：${stsObj.monthOrderAmountTotal}
+					</div>
+					<div  style="    font-size: 19px;
+    font-weight: bold;
+    margin-top: 15px;
+    padding-left: 25%;">
+						累计佣金：${stsObj.commissionTotal}
+					</div>
 				</div>
-				<div class="mr_info_right">
-					${user.mobile}
-				</div>
-				<div class="mr_info_left">
-					姓名：
-				</div>
-				<div class="mr_info_right">
-					${user.name}
-				</div>
-				<div class="mr_info_left">
-					类别：
-				</div>
-				<div class="mr_info_right">
-					商家
-				</div>
-				<div class="mr_info_left">
-					店铺名称：
-				</div>
-				<div class="mr_info_right">
-					${member.nickname}
-				</div>
-				<div class="mr_info_left">
-					月销售额：
-				</div>
-				<div class="mr_info_right">
-					${stsObj.monthOrderAmountTotal}
-				</div>
-				<div class="mr_info_left">
-					累计佣金：
-				</div>
-				<div class="mr_info_right">
-					${stsObj.commissionTotal}
-				</div>
-				<div class="mr_info_left">
-					我的推荐码：
-				</div>
-				<div class="mr_info_right">
-					${member.referee}
+				<div style="    margin-top: 10px;
+    font-size: 18px;
+    background-color: #68b9f1;
+    border-radius: 10px;
+    color: #ffffff;
+    font-weight: bold;
+    height: 34px;
+    padding-top: 13px;
+    padding-left: 27.5%;">
+					我的推荐码：${member.referee}
 				</div>
 				<div class="mr_info_left">
 					上次登录IP：
@@ -283,7 +305,7 @@
 		</div>
 		<!-- 公告 -->
 		<div class="mr_notice">
-			<div style="margin-left: 10px;font-weight: bold;margin-top: 20px">公告：</div>
+			<div style="margin-left: 10px;font-weight: bold;margin-top: 20px;text-align: center">最新公告</div>
 			<table>
                 <c:forEach items="${indexNotices}" var="i">
                     <tr>
