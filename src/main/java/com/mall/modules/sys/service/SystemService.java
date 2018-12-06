@@ -123,7 +123,7 @@ public class SystemService extends BaseService implements InitializingBean {
 		return list;
 	}
 	
-	@Transactional(readOnly = false)
+	@Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
 	public void saveUser(User user) {
 		if (StringUtils.isBlank(user.getId())){
 			user.preInsert();

@@ -1,13 +1,10 @@
 package com.mall.modules.order.api;
 
-import com.alibaba.fastjson.JSONObject;
 import com.github.binarywang.wxpay.bean.notify.WxPayNotifyResponse;
 import com.github.binarywang.wxpay.bean.notify.WxPayOrderNotifyResult;
 import com.github.binarywang.wxpay.bean.order.WxPayAppOrderResult;
 import com.github.binarywang.wxpay.bean.request.BaseWxPayRequest;
 import com.github.binarywang.wxpay.bean.request.WxPayUnifiedOrderRequest;
-import com.github.binarywang.wxpay.bean.result.BaseWxPayResult;
-import com.github.binarywang.wxpay.bean.result.WxPayUnifiedOrderResult;
 import com.github.binarywang.wxpay.constant.WxPayConstants;
 import com.github.binarywang.wxpay.service.WxPayService;
 import com.mall.common.config.Global;
@@ -85,7 +82,8 @@ public class OrderPaymentInfoApi extends BaseController {
             if (null == orderPaymentInfo) {
                 throw new ServiceException("获取支付信息失败");
             } else if (!"0".equals(orderPaymentInfo.getPaymentStatus())) {
-                wxPayService.closeOrder(paymentNo);
+//                wxPayService.closeOrder(paymentNo);
+                return WxPayNotifyResponse.success("成功");
             }
             int totalAmount = notifyResult.getTotalFee();
             if (!String.valueOf(totalAmount).equals(String.valueOf(BaseWxPayRequest.yuanToFen(String.valueOf(orderPaymentInfo.getAmountTotal()))))) {
@@ -207,8 +205,8 @@ public class OrderPaymentInfoApi extends BaseController {
             OrderPaymentInfo queryCondition = new OrderPaymentInfo();
             queryCondition.setPaymentNo(paymentNo);
             OrderPaymentInfo orderPaymentInfo = orderPaymentInfoService.getByCondition(queryCondition);
-            if (null == orderPaymentInfo) {
-                throw new ServiceException("不合法的支付信息");
+            if (null == orderPaymentInfo || !"0".equals(orderPaymentInfo.getPaymentStatus())) {
+                throw new ServiceException("订单不存在或已支付");
             }
             Double amountTotal = orderPaymentInfo.getAmountTotal();
             accountService.consumption(amountTotal, paymentNo, userId, orderPaymentInfo.getPaymentType());
