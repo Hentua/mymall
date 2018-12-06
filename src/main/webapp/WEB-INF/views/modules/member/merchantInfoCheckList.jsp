@@ -18,10 +18,9 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li class="active"><a href="${ctx}/member/merchantInfoCheck/">店铺信息审核列表</a></li>
-		<shiro:hasPermission name="member:merchantInfoCheck:edit"><li><a href="${ctx}/member/merchantInfoCheck/form">店铺信息审核添加</a></li></shiro:hasPermission>
+		<li class="active"><a href="${ctx}/member/merchantInfoCheck/list">店铺信息审核列表</a></li>
 	</ul>
-	<form:form id="searchForm" modelAttribute="merchantInfoCheck" action="${ctx}/member/merchantInfoCheck/" method="post" class="breadcrumb form-search">
+	<form:form id="searchForm" modelAttribute="merchantInfoCheck" action="${ctx}/member/merchantInfoCheck/list" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<ul class="ul-form">
@@ -31,12 +30,6 @@
 			<li><label>客服电话：</label>
 				<form:input path="merchantServicePhone" htmlEscape="false" maxlength="255" class="input-medium"/>
 			</li>
-			<li><label>审核状态1：待审核 2：已审核 3:已驳回：</label>
-				<form:radiobuttons path="checkStatus" items="${fns:getDictList('')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
-			</li>
-			<li><label>审核备注：</label>
-				<form:input path="checkRemark" htmlEscape="false" maxlength="500" class="input-medium"/>
-			</li>
 			<li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
 			<li class="clearfix"></li>
 		</ul>
@@ -44,49 +37,49 @@
 	<sys:message content="${message}"/>
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
 		<thead>
-			<tr>
-				<th>id</th>
-				<th>商家id</th>
-				<th>店铺名称</th>
-				<th>头像地址</th>
-				<th>头图</th>
-				<th>客服电话</th>
-				<th>审核状态1：待审核 2：已审核 3:已驳回</th>
-				<th>审核备注</th>
-				<shiro:hasPermission name="member:merchantInfoCheck:edit"><th>操作</th></shiro:hasPermission>
-			</tr>
+		<tr>
+			<th>店铺名称</th>
+			<th>头像地址</th>
+			<th>头图</th>
+			<th>客服电话</th>
+			<th>审核状态</th>
+			<th>审核备注</th>
+			<th>操作</th>
+		</tr>
 		</thead>
 		<tbody>
 		<c:forEach items="${page.list}" var="merchantInfoCheck">
 			<tr>
-				<td><a href="${ctx}/member/merchantInfoCheck/form?id=${merchantInfoCheck.id}">
-					${merchantInfoCheck.id}
-				</a></td>
 				<td>
-					${merchantInfoCheck.merchantId}
+						${merchantInfoCheck.merchantName}
 				</td>
 				<td>
-					${merchantInfoCheck.merchantName}
+					<a href="${merchantInfoCheck.avatar}"  target="_blank">
+						<img src="${merchantInfoCheck.avatar}" width="50">
+					</a>
+
 				</td>
 				<td>
-					${merchantInfoCheck.avatar}
+					<a href="${merchantInfoCheck.merchantHeadImg}"  target="_blank">
+						<img src="${merchantInfoCheck.merchantHeadImg}" width="50">
+					</a>
 				</td>
 				<td>
-					${merchantInfoCheck.merchantHeadImg}
+						${merchantInfoCheck.merchantServicePhone}
 				</td>
 				<td>
-					${merchantInfoCheck.merchantServicePhone}
+					<c:if test="${merchantInfoCheck.checkStatus == '1'}">待审核</c:if>
+					<c:if test="${merchantInfoCheck.checkStatus == '2'}">已审核</c:if>
+					<c:if test="${merchantInfoCheck.checkStatus == '3'}">已驳回</c:if>
 				</td>
 				<td>
-					${fns:getDictLabel(merchantInfoCheck.checkStatus, '', '')}
+						${merchantInfoCheck.checkRemark}
 				</td>
 				<td>
-					${merchantInfoCheck.checkRemark}
+					<c:if test="${merchantInfoCheck.checkStatus == '1'}">
+						<a href="${ctx}/member/merchantInfoCheck/checkform?id=${merchantInfoCheck.id}">审核</a>
+					</c:if>
 				</td>
-				<shiro:hasPermission name="member:merchantInfoCheck:edit"><td>
-    				<a href="${ctx}/member/merchantInfoCheck/form?id=${merchantInfoCheck.id}">修改</a>
-					<a href="${ctx}/member/merchantInfoCheck/delete?id=${merchantInfoCheck.id}" onclick="return confirmx('确认要删除该店铺信息审核吗？', this.href)">删除</a>
-				</td></shiro:hasPermission>
 			</tr>
 		</c:forEach>
 		</tbody>

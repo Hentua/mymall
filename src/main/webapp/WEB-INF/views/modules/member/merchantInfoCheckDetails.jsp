@@ -23,45 +23,45 @@
 				}
 			});
 		});
+
+        function go_a(status) {
+            $("#checkStatus").val(status);
+            $("#inputForm").submit();
+            <%--location.href = "${ctx}/goods/goodsInfo/updateStatusCheck?id=${goodsInfo.id}&status="+status;--%>
+        }
 	</script>
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li><a href="${ctx}/member/merchantInfoCheck/">店铺信息审核列表</a></li>
-		<li class="active"><a href="${ctx}/member/merchantInfoCheck/form?id=${merchantInfoCheck.id}">店铺信息审核<shiro:hasPermission name="member:merchantInfoCheck:edit">${not empty merchantInfoCheck.id?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="member:merchantInfoCheck:edit">查看</shiro:lacksPermission></a></li>
+		<li><a href="${ctx}/member/merchantInfoCheck/list">店铺信息审核列表</a></li>
+		<li class="active"><a href="${ctx}/member/merchantInfoCheck/checkform?id=${merchantInfoCheck.id}">店铺信息审核</a></li>
 	</ul><br/>
-	<form:form id="inputForm" modelAttribute="merchantInfoCheck" action="${ctx}/member/merchantInfoCheck/save" method="post" class="form-horizontal">
+	<form:form id="inputForm" modelAttribute="merchantInfoCheck" action="${ctx}/member/merchantInfoCheck/checkStatus" method="post" class="form-horizontal">
 		<form:hidden path="id"/>
-		<sys:message content="${message}"/>		
-		<div class="control-group">
-			<label class="control-label">商家id：</label>
-			<div class="controls">
-				<form:input path="merchantId" htmlEscape="false" maxlength="64" class="input-xlarge "/>
-			</div>
-		</div>
+		<input type="hidden" id="checkStatus" name="checkStatus" >
+		<sys:message content="${message}"/>
 		<div class="control-group">
 			<label class="control-label">店铺名称：</label>
 			<div class="controls">
-				<form:input path="merchantName" htmlEscape="false" maxlength="255" class="input-xlarge "/>
+				${merchantInfoCheck.merchantName}
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">头像地址：</label>
 			<div class="controls">
-				<form:input path="avatar" htmlEscape="false" maxlength="500" class="input-xlarge "/>
+				<img src="${merchantInfoCheck.avatar}" width="100">
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">头图：</label>
 			<div class="controls">
-				<form:input path="merchantHeadImg" htmlEscape="false" maxlength="500" class="input-xlarge "/>
+				<img src="${merchantInfoCheck.merchantHeadImg}" width="200" height="100">
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">客服电话：</label>
 			<div class="controls">
-				<form:input path="merchantServicePhone" htmlEscape="false" maxlength="255" class="input-xlarge required"/>
-				<span class="help-inline"><font color="red">*</font> </span>
+				${merchantInfoCheck.merchantServicePhone}
 			</div>
 		</div>
 		<div class="control-group">
@@ -71,8 +71,9 @@
 			</div>
 		</div>
 		<div class="form-actions">
-			<shiro:hasPermission name="member:merchantInfoCheck:edit"><input id="btnSubmit" class="btn btn-primary" type="submit" value="保 存"/>&nbsp;</shiro:hasPermission>
-			<input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
+				<input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
+				<input id="btnSubmit2" class="btn btn-primary" type="button" onclick="go_a('2')" value="上 架"/>
+				<input id="btnSubmit" class="btn btn-primary" type="button" onclick="go_a('3')" value="驳 回"/>
 		</div>
 	</form:form>
 </body>

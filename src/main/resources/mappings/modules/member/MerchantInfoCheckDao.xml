@@ -108,7 +108,8 @@
 			avatar = #{avatar},
 			merchant_head_img = #{merchantHeadImg},
 			merchant_service_phone = #{merchantServicePhone},
-			check_remark = #{checkRemark}
+			check_remark = #{checkRemark},
+			check_status = #{checkStatus}
 		WHERE id = #{id}
 	</update>
 	

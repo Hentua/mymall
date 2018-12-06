@@ -36,20 +36,20 @@
 		<div class="control-group">
 			<label class="control-label">店铺名称：</label>
 			<div class="controls">
-				<form:input path="merchantName" htmlEscape="false" maxlength="255" class="input-xlarge "/>
+				<form:input path="merchantName" htmlEscape="false" maxlength="255" class="input-xlarge required"/>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">头像地址：</label>
 				<div class="controls">
-					<form:hidden id="avatar" path="avatar" htmlEscape="false" maxlength="255" class="input-xlarge"/>
+					<form:hidden id="avatar" path="avatar" htmlEscape="false" maxlength="255" class="input-xlarge required"/>
 					<sys:ckfinder input="avatar" type="images" uploadPath="/头像" selectMultiple="false" maxWidth="100" maxHeight="100"/>
 				</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">头图：</label>
 			<div class="controls">
-				<form:hidden id="merchantHeadImg" path="merchantHeadImg" htmlEscape="false" maxlength="255" class="input-xlarge"/>
+				<form:hidden id="merchantHeadImg" path="merchantHeadImg" htmlEscape="false" maxlength="255" class="input-xlarge required"/>
 				<sys:ckfinder input="merchantHeadImg" type="images" uploadPath="/店铺头图" selectMultiple="false" maxWidth="100" maxHeight="100"/>
 			</div>
 		</div>

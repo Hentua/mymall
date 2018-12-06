@@ -3,6 +3,8 @@ package com.mall.modules.member.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.mall.modules.member.entity.MemberInfo;
+import com.mall.modules.member.service.MemberInfoService;
 import com.mall.modules.sys.entity.User;
 import com.mall.modules.sys.utils.UserUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -34,6 +36,9 @@ public class MerchantInfoCheckController extends BaseController {
 
 	@Autowired
 	private MerchantInfoCheckService merchantInfoCheckService;
+
+	@Autowired
+	private MemberInfoService memberInfoService;
 	
 	@ModelAttribute
 	public MerchantInfoCheck get(@RequestParam(required=false) String id) {
@@ -50,11 +55,20 @@ public class MerchantInfoCheckController extends BaseController {
 	@RequiresPermissions("member:merchantInfoCheck:view")
 	@RequestMapping(value = {"list", ""})
 	public String list(MerchantInfoCheck merchantInfoCheck, HttpServletRequest request, HttpServletResponse response, Model model) {
-		Page<MerchantInfoCheck> page = merchantInfoCheckService.findPage(new Page<MerchantInfoCheck>(request, response), merchantInfoCheck); 
+//		merchantInfoCheck.setCheckStatus("1");
+		Page<MerchantInfoCheck> page = merchantInfoCheckService.findPage(new Page<MerchantInfoCheck>(request, response), merchantInfoCheck);
 		model.addAttribute("page", page);
 		return "modules/member/merchantInfoCheckList";
 	}
 
+	/**
+	 * 商家列表
+	 * @param merchantInfoCheck
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @return
+	 */
 	@RequiresPermissions("member:merchantInfoCheck:view")
 	@RequestMapping(value = {"memberList", ""})
 	public String merchantList(MerchantInfoCheck merchantInfoCheck, HttpServletRequest request, HttpServletResponse response, Model model) {
@@ -65,6 +79,12 @@ public class MerchantInfoCheckController extends BaseController {
 		return "modules/member/memberMerchantInfoCheckList";
 	}
 
+	/**
+	 * 审核申请
+	 * @param merchantInfoCheck
+	 * @param model
+	 * @return
+	 */
 	@RequiresPermissions("member:merchantInfoCheck:view")
 	@RequestMapping(value = "form")
 	public String form(MerchantInfoCheck merchantInfoCheck, Model model) {
@@ -83,6 +103,70 @@ public class MerchantInfoCheckController extends BaseController {
 		return "modules/member/merchantInfoCheckForm";
 	}
 
+	/**
+	 * 审核详情
+	 * @param merchantInfoCheck
+	 * @param model
+	 * @return
+	 */
+	@RequiresPermissions("member:merchantInfoCheck:view")
+	@RequestMapping(value = "checkform")
+	public String checkform(MerchantInfoCheck merchantInfoCheck, Model model) {
+		merchantInfoCheck = merchantInfoCheckService.get(merchantInfoCheck.getId());
+		model.addAttribute("merchantInfoCheck", merchantInfoCheck);
+		return "modules/member/merchantInfoCheckDetails";
+	}
+
+	/**
+	 * 审核
+	 * @param merchantInfoCheck
+	 * @param model
+	 * @param redirectAttributes
+	 * @return
+	 */
+	@RequiresPermissions("member:merchantInfoCheck:view")
+	@RequestMapping(value = "checkStatus")
+	public String checkStatus(MerchantInfoCheck merchantInfoCheck, Model model, RedirectAttributes redirectAttributes) {
+
+//		User user = UserUtils.getUser();
+//		MerchantInfoCheck m = new MerchantInfoCheck();
+//		m.setCheckStatus("1");
+//		m.setMerchantId(user.getId());
+//		List<MerchantInfoCheck> list = merchantInfoCheckService.findList(m);
+//		if(null != list && list.size()>0){
+//			addMessage(model, "申请失败，已有在审核信息请耐心等待！");
+//			model.addAttribute("org","1");
+//			return "modules/member/merchantInfoCheckForm";
+//		}
+
+		MerchantInfoCheck mic = merchantInfoCheckService.get(merchantInfoCheck.getId());
+		mic.setCheckStatus(merchantInfoCheck.getCheckStatus());
+		mic.setCheckRemark(merchantInfoCheck.getCheckRemark());
+		merchantInfoCheckService.save(mic);
+		if("2".equals(mic.getCheckStatus())){
+			MemberInfo memberInfo = new MemberInfo();
+			memberInfo.setId(mic.getMerchantId());
+			memberInfo = memberInfoService.get(memberInfo);
+
+			memberInfo.setNickname(mic.getMerchantName());
+			memberInfo.setAvatar(mic.getAvatar());
+			memberInfo.setHeadimgurl(mic.getAvatar());
+			memberInfo.setMerchantHeadImg(mic.getMerchantHeadImg());
+			memberInfo.setMerchantServicePhone(mic.getMerchantServicePhone());
+			memberInfoService.save(memberInfo);
+		}
+		addMessage(redirectAttributes, "审核成功");
+		return "redirect:"+Global.getAdminPath()+"/member/merchantInfoCheck/list?repage";
+	}
+
+
+	/**
+	 * 提交审核
+	 * @param merchantInfoCheck
+	 * @param model
+	 * @param redirectAttributes
+	 * @return
+	 */
 	@RequiresPermissions("member:merchantInfoCheck:edit")
 	@RequestMapping(value = "save")
 	public String save(MerchantInfoCheck merchantInfoCheck, Model model, RedirectAttributes redirectAttributes) {
