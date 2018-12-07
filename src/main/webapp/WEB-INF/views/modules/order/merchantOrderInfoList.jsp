@@ -147,10 +147,10 @@
                     ${orderInfo.logisticsFee}
             </td>
             <td>
-                    ${orderInfo.settlementsAmount}
+                    ${orderInfo.orderAmountTotal}
             </td>
             <td>
-                    ${orderInfo.orderAmountTotal}
+                    ${orderInfo.settlementsAmount}
             </td>
             <td>
                     ${orderInfo.customerName}
