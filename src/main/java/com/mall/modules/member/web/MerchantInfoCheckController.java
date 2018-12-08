@@ -147,7 +147,6 @@ public class MerchantInfoCheckController extends BaseController {
 			MemberInfo memberInfo = new MemberInfo();
 			memberInfo.setId(mic.getMerchantId());
 			memberInfo = memberInfoService.get(memberInfo);
-
 			memberInfo.setNickname(mic.getMerchantName());
 			memberInfo.setAvatar(mic.getAvatar());
 			memberInfo.setHeadimgurl(mic.getAvatar());

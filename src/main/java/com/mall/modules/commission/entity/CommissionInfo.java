@@ -42,7 +42,7 @@ public class CommissionInfo extends DataEntity<CommissionInfo> {
 		if(serviceCharge<=0){
 			return amount;
 		}
-		return (double) Math.round(amount*serviceCharge * 100) / 100;
+		return amount-(double) Math.round(amount*serviceCharge * 100) / 100;
 	}
 
 

@@ -29,6 +29,8 @@ import com.mall.common.utils.StringUtils;
 import com.mall.modules.commission.entity.CommissionInfo;
 import com.mall.modules.commission.service.CommissionInfoService;
 
+import java.util.List;
+
 /**
  * 佣金明细Controller
  * @author hub
@@ -96,7 +98,17 @@ public class CommissionInfoController extends BaseController {
 		MemberInfo memberInfo = new MemberInfo();
 		memberInfo.setId(user.getId());
 		memberInfo = memberInfoService.get(memberInfo);
+
+		commissionInfo.setUserId(user.getId());
+		commissionInfo.setStatus("1");
+		commissionInfo.setType("6");
+		List<CommissionInfo> list = commissionInfoService.findList(commissionInfo);
 		model.addAttribute("memberInfo", memberInfo);
+		if(null != list && list.size()>0){
+			addMessage(model,"提现失败：您的提现申请正在审核，请等审核通过后再提交新的申请！");
+			model.addAttribute("org","1");
+			return "modules/commission/merchantCommissionTakeOut";
+		}
 		return "modules/commission/merchantCommissionTakeOut";
 	}
 
