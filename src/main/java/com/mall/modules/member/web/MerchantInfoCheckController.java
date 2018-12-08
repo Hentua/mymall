@@ -23,6 +23,7 @@ import com.mall.common.utils.StringUtils;
 import com.mall.modules.member.entity.MerchantInfoCheck;
 import com.mall.modules.member.service.MerchantInfoCheckService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -90,6 +91,9 @@ public class MerchantInfoCheckController extends BaseController {
 	public String form(MerchantInfoCheck merchantInfoCheck, Model model) {
 
         User user = UserUtils.getUser();
+        MemberInfo memberInfo = new MemberInfo();
+        memberInfo.setId(user.getId());
+        memberInfo = memberInfoService.get(memberInfo);
         MerchantInfoCheck m = new MerchantInfoCheck();
         m.setCheckStatus("1");
         m.setMerchantId(user.getId());
@@ -99,7 +103,12 @@ public class MerchantInfoCheckController extends BaseController {
             model.addAttribute("org","1");
             return "modules/member/merchantInfoCheckForm";
         }
-		model.addAttribute("merchantInfoCheck", merchantInfoCheck);
+		MerchantInfoCheck mm = new MerchantInfoCheck();
+		mm.setAvatar(memberInfo.getAvatar());
+		mm.setMerchantName(memberInfo.getNickname());
+		mm.setMerchantHeadImg(memberInfo.getMerchantHeadImg());
+		mm.setMerchantServicePhone(memberInfo.getMerchantServicePhone());
+		model.addAttribute("merchantInfoCheck",mm);
 		return "modules/member/merchantInfoCheckForm";
 	}
 
