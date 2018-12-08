@@ -398,7 +398,7 @@ public class AccountApi extends BaseController {
         }
         CommissionInfo commissionInfo = new CommissionInfo();
         commissionInfo.setUserId(user.getId());
-        commissionInfo.setStatus("1");
+        commissionInfo.setCheckStatus("1");
         commissionInfo.setType("6");
         List<CommissionInfo> list = commissionInfoService.findList(commissionInfo);
         if(null != list && list.size()>0){

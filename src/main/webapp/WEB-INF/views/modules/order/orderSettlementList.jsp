@@ -22,6 +22,10 @@
         function exportData() {
             window.open('${ctx}/order/orderSettlement/exportOrderSettlement?' + $('#searchForm').serialize() + itemCheckBoxVal());
         }
+        function sets() {
+            location.href="${ctx}/order/orderSettlement/checks?" + itemCheckBoxVal();
+        }
+        
         function itemCheckBoxVal() {
             var itemStr = '';
             $('input[name="itemId"]:checked').each(function () {
@@ -78,6 +82,8 @@
         </li>
         <li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
         <li class="btns"><input id="btnExport" class="btn btn-primary" type="button" value="导出" onclick="exportData()"/></li>
+        <li class="btns"><input id="btnChecks" class="btn btn-primary" type="button" value="批量结算" onclick="sets()"/></li>
+
         <li class="clearfix"></li>
     </ul>
 </form:form>
@@ -105,7 +111,9 @@
     <c:forEach items="${page.list}" var="orderSettlement">
         <tr>
             <td>
+                <c:if test="${orderSettlement.orderStatus == '3' &&  orderSettlement.status == '2' && orderSettlement.status != '3'}">
                     <input type="checkbox" name="itemId" value="${orderSettlement.id}"/>
+                </c:if>
             </td>
             <td>
                     ${orderSettlement.merchantName}
