@@ -80,8 +80,8 @@
 
 					<c:if test="${goodsInfo.goodsStandards == null ||  fn:length(goodsInfo.goodsStandards) == 0}">
 						<tr>
-							<td>名称：<form:input path="goodsStandardsName" htmlEscape="false" maxlength="10" class="input-xlarge required"/></td>
-							<td>价格：<form:input path="goodsStandardsPrice" htmlEscape="false" class="input-xlarge  number required"/></td>
+							<td>名称：<input path="goodsStandardsName" htmlEscape="false" maxlength="10" class="input-xlarge required"/></td>
+							<td>价格：<input path="goodsStandardsPrice" htmlEscape="false" class="input-xlarge  number required"/></td>
 							<td>&nbsp;&nbsp;<a style="cursor: pointer" onclick="delStandard(this)">×</a></td>
 						</tr>
 					</c:if>
