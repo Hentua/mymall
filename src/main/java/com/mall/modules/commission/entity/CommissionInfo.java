@@ -1,8 +1,12 @@
 package com.mall.modules.commission.entity;
 
 import com.mall.common.persistence.DataEntity;
+import com.mall.common.utils.DateUtils;
+import com.mall.common.utils.excel.annotation.ExcelField;
 import com.mall.modules.sys.utils.DictUtils;
 import org.hibernate.validator.constraints.Length;
+
+import java.util.Date;
 
 /**
  * 佣金明细Entity
@@ -36,6 +40,24 @@ public class CommissionInfo extends DataEntity<CommissionInfo> {
 	private String checkStatus;		// 提现审核状态：1未审核 2已审核 3驳回
 	private String checkRemark;     //审核备注
 
+	private Date startDate; // 查询开始时间
+	private Date endDate; // 查询结束时间
+
+	public Date getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
 
 	public Double getPayAmount(){
 		Double serviceCharge = Double.parseDouble(DictUtils.getDictValue("service_charge","service_charge","0"));
@@ -79,6 +101,18 @@ public class CommissionInfo extends DataEntity<CommissionInfo> {
 		this.checkStatus = checkStatus;
 	}
 
+	@ExcelField(title = "状态", sort = 10)
+	public String getStatusStr() {
+		if("1".equals(this.getStatus())){
+			return "已清算";
+		}
+		if("0".equals(this.getStatus())){
+			return "未清算";
+		}
+		return "";
+	}
+
+
 	public String getCheckRemark() {
 		return checkRemark;
 	}
@@ -87,6 +121,7 @@ public class CommissionInfo extends DataEntity<CommissionInfo> {
 		this.checkRemark = checkRemark;
 	}
 
+	@ExcelField(title = "所属用户名称", sort = 2)
 	public String getUserName() {
 		return userName;
 	}
@@ -119,6 +154,7 @@ public class CommissionInfo extends DataEntity<CommissionInfo> {
 		super(id);
 	}
 
+	@ExcelField(title = "所属用户账号", sort = 1)
 	public String getUserMobile() {
 		return userMobile;
 	}
@@ -127,6 +163,7 @@ public class CommissionInfo extends DataEntity<CommissionInfo> {
 		this.userMobile = userMobile;
 	}
 
+	@ExcelField(title = "生成用户账号", sort = 3)
 	public String getProduceUserMobile() {
 		return produceUserMobile;
 	}
@@ -166,6 +203,7 @@ public class CommissionInfo extends DataEntity<CommissionInfo> {
 		this.status = status;
 	}
 
+	@ExcelField(title = "生成用户名称", sort = 4)
 	public String getProduceUserName() {
 		return produceUserName;
 	}
@@ -179,6 +217,7 @@ public class CommissionInfo extends DataEntity<CommissionInfo> {
 		return type;
 	}
 
+	@ExcelField(title = "佣金类型", sort = 8)
 	public String getText(){
 		if("1".equals(this.getType())){
 			return "["+this.getProduceUserName()+"]消费返佣";
@@ -213,6 +252,11 @@ public class CommissionInfo extends DataEntity<CommissionInfo> {
 		return this.getType();
 	}
 
+	@ExcelField(title = "产生时间", sort = 9)
+	public String createDateStr(){
+		return DateUtils.formatDate(this.getCreateDate(),"yyyy-MM-dd HH:mm:ss");
+	}
+
 
 
 	public void setType(String type) {
@@ -236,7 +280,8 @@ public class CommissionInfo extends DataEntity<CommissionInfo> {
 	public void setProduceUserId(String produceUserId) {
 		this.produceUserId = produceUserId;
 	}
-	
+
+	@ExcelField(title = "产生金额", sort = 6)
 	public Double getOriginAmount() {
 		return originAmount;
 	}
@@ -244,7 +289,9 @@ public class CommissionInfo extends DataEntity<CommissionInfo> {
 	public void setOriginAmount(Double originAmount) {
 		this.originAmount = originAmount;
 	}
-	
+
+
+	@ExcelField(title = "佣金金额", sort = 7)
 	public Double getAmount() {
 		return amount;
 	}
@@ -252,7 +299,8 @@ public class CommissionInfo extends DataEntity<CommissionInfo> {
 	public void setAmount(Double amount) {
 		this.amount = amount;
 	}
-	
+
+	@ExcelField(title = "关联单号", sort = 10)
 	@Length(min=0, max=64, message="关联订单号 【推荐商家入驻无订单号】长度必须介于 0 和 64 之间")
 	public String getUnionId() {
 		return unionId;
@@ -270,5 +318,22 @@ public class CommissionInfo extends DataEntity<CommissionInfo> {
 	public void setSettlementId(String settlementId) {
 		this.settlementId = settlementId;
 	}
-	
+
+	//导出
+	@ExcelField(title = "生成规则", sort = 5)
+	public String getgz(){
+		String str = "";
+		if("1".equals(this.getType())){
+			str = "商品分类配置比例";
+		}
+		if("1".equals(this.getType())){
+			if("1".equals(this.getMode())){
+				str = "固定金额-"+this.getAmount();
+			}
+			if("2".equals(this.getMode())){
+				str = "总额百分比-"+this.getAmount()+"%";
+			}
+		}
+		return  str;
+	}
 }

@@ -74,6 +74,15 @@
 			<if test="checkStatus != null and checkStatus != ''">
 				AND a.check_status = #{checkStatus}
 			</if>
+			<if test="produceUserMobile != null and produceUserMobile != ''">
+				and pu.mobile = #{produceUserMobile}
+			</if>
+			<if test="startDate != null">
+				and a.create_date &gt;= #{startDate}
+			</if>
+			<if test="endDate != null">
+				and a.create_date &lt;= #{endDate}
+			</if>
 		</where>
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">

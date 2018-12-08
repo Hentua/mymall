@@ -3,13 +3,16 @@ package com.mall.modules.commission.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.common.collect.Lists;
 import com.mall.common.utils.ResultGenerator;
+import com.mall.common.utils.excel.ExportExcel;
 import com.mall.modules.account.entity.AccountFlow;
 import com.mall.modules.account.service.AccountFlowService;
 import com.mall.modules.account.service.AccountService;
 import com.mall.modules.coupon.service.CouponCustomerService;
 import com.mall.modules.member.entity.MemberInfo;
 import com.mall.modules.member.service.MemberInfoService;
+import com.mall.modules.order.entity.OrderInfo;
 import com.mall.modules.sys.entity.User;
 import com.mall.modules.sys.utils.UserUtils;
 import com.sohu.idcenter.IdWorker;
@@ -74,6 +77,37 @@ public class CommissionInfoController extends BaseController {
 		model.addAttribute("page", page);
 		return "modules/commission/commissionInfoList";
 	}
+
+	/**
+	 * 运营端-用户佣金流水导出
+	 * @param commissionInfo
+	 * @param request
+	 * @param response
+	 * @param model
+	 */
+	@RequestMapping(value = {"listExportData"})
+	public void exportData(CommissionInfo commissionInfo, HttpServletRequest request, HttpServletResponse response, Model model) {
+		String [] itemIds = request.getParameterValues("itemIds");
+		List<CommissionInfo> commissionInfos;
+		if(null != itemIds && itemIds.length > 0) {
+			commissionInfos = Lists.newArrayList();
+			for (String itemId : itemIds) {
+				commissionInfos.add(commissionInfoService.get(itemId));
+			}
+		}else {
+			commissionInfos = commissionInfoService.findList(commissionInfo);
+		}
+
+		ExportExcel exportExcel = new ExportExcel("订单信息", CommissionInfo.class);
+		try {
+			exportExcel.setDataList(commissionInfos);
+			exportExcel.write(response, "用户佣金明细.xlsx");
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+
 	@RequestMapping(value = {"merchantList", ""})
 	public String merchantList(CommissionInfo commissionInfo, HttpServletRequest request, HttpServletResponse response, Model model) {
 		User user = UserUtils.getUser();
