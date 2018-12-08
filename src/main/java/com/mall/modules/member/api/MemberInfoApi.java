@@ -615,6 +615,7 @@ public class MemberInfoApi extends BaseController {
             memberBaseInfo.put("avatar", Global.getConfig("userfiles.baseURL") + memberInfo.getAvatar());
             memberBaseInfo.put("mobile", memberInfo.getMobile());
             memberBaseInfo.put("referee", memberInfo.getReferee());
+            memberBaseInfo.put("sex", memberInfo.getSex());
 
             memberDataCount.putAll(memberBaseInfo);
             memberDataCount.putAll(orderCount);
