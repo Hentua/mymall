@@ -14,11 +14,11 @@
 		a.create_date AS "createDate",
 		mpu.nickname as "produceUserName",
 		a.status as "status",
-		u.mobile as "userMobile",
+		u.login_name as "userMobile",
 		mu.nickname as "userName",
 		a.mode AS "mode",
 		a.number AS "number",
-		pu.mobile as "produceUserMobile",
+		pu.login_name as "produceUserMobile",
 		a.bank_account as "bankAccount",
 		a.bank_account_name as "bankAccountName",
 		a.bank_name as "bankName",
@@ -62,7 +62,7 @@
 				and a.type = #{type}
 			</if>
 			<if test="userMobile != null and userMobile != ''">
-				and u.mobile = #{userMobile}
+				and u.login_name = #{userMobile}
 			</if>
 			<if test="bankAccount != null and bankAccount != ''">
 				AND a.bank_account = #{bankAccount}
@@ -77,7 +77,7 @@
 				AND a.check_status = #{checkStatus}
 			</if>
 			<if test="produceUserMobile != null and produceUserMobile != ''">
-				and pu.mobile = #{produceUserMobile}
+				and pu.login_name = #{produceUserMobile}
 			</if>
 			<if test="startDate != null">
 				and a.create_date &gt;= #{startDate}

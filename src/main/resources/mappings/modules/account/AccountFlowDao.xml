@@ -21,7 +21,7 @@
 		a.plat_bank_account as "platBankAccount",
 		a.transfer_date as "transferDate",
 		a.transfer_image as "transferImage",
-		u.mobile as "userMobile"
+		u.login_name as "userMobile"
 	</sql>
 	
 	<sql id="accountFlowJoins">
@@ -70,7 +70,7 @@
 				and a.income_expenditure_mode = #{incomeExpenditureMode}
 			</if>
 			<if test="userMobile != null and userMobile != ''">
-				and u.mobile = #{userMobile}
+				and u.login_name = #{userMobile}
 			</if>
 			<if test="startDate != null ">
 				<![CDATA[ and a.create_date >= #{startDate} ]]>

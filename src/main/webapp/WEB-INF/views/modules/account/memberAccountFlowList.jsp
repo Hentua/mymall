@@ -5,14 +5,30 @@
 	<title>充值提现审核</title>
 	<meta name="decorator" content="default"/>
 	<script type="text/javascript">
-		$(document).ready(function() {
-			
-		});
-		function page(n,s){
-			$("#pageNo").val(n);
-			$("#pageSize").val(s);
-			$("#searchForm").submit();
-        	return false;
+        $(document).ready(function() {
+            $('#allCheck').click(function () {
+                var isAllCheck = this.checked;
+                $('input[name="itemId"]').each(function() {
+                    this.checked = isAllCheck;
+                });
+            })
+        });
+        function page(n,s){
+            $("#pageNo").val(n);
+            $("#pageSize").val(s);
+            $("#searchForm").submit();
+            return false;
+        }
+
+        function exportData() {
+            window.open('${ctx}/account/accountFlow/memberListexportData?' + $('#searchForm').serialize() + itemCheckBoxVal());
+        }
+        function itemCheckBoxVal() {
+            var itemStr = '';
+            $('input[name="itemId"]:checked').each(function () {
+                itemStr += '&itemIds=' + $(this).val();
+            });
+            return itemStr;
         }
 	</script>
 </head>
@@ -31,6 +47,13 @@
 			<li><label>用户账号：</label>
 				<form:input path="userMobile" htmlEscape="false" maxlength="100" class="input-medium" />
 			</li>
+			<li><label>类型：</label>
+				<form:select path="type" cssStyle="width: 170px" class="input-medium">
+					<form:option value="" label="全部"/>
+					<form:option value="1" label="收入"/>
+					<form:option value="2" label="支出"/>
+				</form:select>
+			</li>
 			<li><label>时间：</label>
 				<input id="startDate" style="width: 186px;" name="startDate" type="text" readonly="readonly" maxlength="20" class="input-small Wdate"
 					   onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});" value="<fmt:formatDate value="${accountFlow.startDate}" pattern="yyyy-MM-dd HH:mm:ss"/>"/>
@@ -40,6 +63,7 @@
 					<%--<form:input path="userMobile" htmlEscape="false" maxlength="100" class="input-medium" />--%>
 			</li>
 			<li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
+			<li class="btns"><input id="btnExport" class="btn btn-primary" type="button" value="导出" onclick="exportData()"/></li>
 			<li class="clearfix"></li>
 		</ul>
 	</form:form>
@@ -47,6 +71,7 @@
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
 		<thead>
 		<tr>
+			<th><input type="checkbox" id="allCheck"/></th>
 			<th>用户账号</th>
 			<th>用户名称</th>
 			<th>流水单号</th>
@@ -66,6 +91,9 @@
 		<tbody>
 		<c:forEach items="${page.list}" var="accountFlow">
 			<tr>
+				<td>
+					<input type="checkbox" name="itemId" value="${accountFlow.id}"/>
+				</td>
 				<td>
 						${accountFlow.userMobile}
 				</td>

@@ -30,6 +30,9 @@
             });
             return itemStr;
         }
+        function flowchecks(){
+			location.href = '${ctx}/account/accountFlow/checks?' + itemCheckBoxVal();
+		}
 	</script>
 </head>
 <body>
@@ -66,6 +69,7 @@
 
 			<li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
 			<li class="btns"><input id="btnExport" class="btn btn-primary" type="button" value="导出" onclick="exportData()"/></li>
+			<li class="btns"><input id="btnCheck" class="btn btn-primary" type="button" value="批量审核" onclick="flowchecks()"/></li>
 			<li class="clearfix"></li>
 		</ul>
 	</form:form>
@@ -94,7 +98,9 @@
 		<c:forEach items="${page.list}" var="accountFlow">
 			<tr>
 				<td>
-					<input type="checkbox" name="itemId" value="${accountFlow.id}"/>
+                    <c:if test="${accountFlow.checkStatus == '1' && accountFlow.incomeExpenditureMode == '2'}">
+                        <input type="checkbox" name="itemId" value="${accountFlow.id}"/>
+                    </c:if>
 				</td>
 				<td>
 						${accountFlow.userMobile}
