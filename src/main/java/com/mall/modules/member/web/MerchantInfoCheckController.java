@@ -153,6 +153,16 @@ public class MerchantInfoCheckController extends BaseController {
 		mic.setCheckRemark(merchantInfoCheck.getCheckRemark());
 		merchantInfoCheckService.save(mic);
 		if("2".equals(mic.getCheckStatus())){
+			MerchantInfoCheck m = new MerchantInfoCheck();
+			m.setMerchantId(mic.getMerchantId());
+			m.setCheckStatus("2");
+			List<MerchantInfoCheck> list = merchantInfoCheckService.findList(m);
+			for (MerchantInfoCheck mc: list) {
+				merchantInfoCheckService.delete(mc);
+			}
+
+			mic.setId(null);
+			merchantInfoCheckService.save(mic);
 			MemberInfo memberInfo = new MemberInfo();
 			memberInfo.setId(mic.getMerchantId());
 			memberInfo = memberInfoService.get(memberInfo);

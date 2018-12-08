@@ -24,6 +24,9 @@
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<ul class="ul-form">
+			<li><label>用户账号：</label>
+				<form:input path="userMobile" htmlEscape="false" maxlength="255" class="input-medium"/>
+			</li>
 			<li><label>店铺名称：</label>
 				<form:input path="merchantName" htmlEscape="false" maxlength="255" class="input-medium"/>
 			</li>
@@ -44,6 +47,7 @@
 			<th>头像地址</th>
 			<th>头图</th>
 			<th>客服电话</th>
+			<th>提交时间</th>
 			<th>审核状态</th>
 			<th>审核备注</th>
 			<th>操作</th>
@@ -74,6 +78,9 @@
 				</td>
 				<td>
 						${merchantInfoCheck.merchantServicePhone}
+				</td>
+				<td>
+					<fmt:formatDate value="${merchantInfoCheck.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
 				</td>
 				<td>
 					<c:if test="${merchantInfoCheck.checkStatus == '1'}">待审核</c:if>
