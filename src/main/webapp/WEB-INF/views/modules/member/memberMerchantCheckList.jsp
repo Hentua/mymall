@@ -81,10 +81,10 @@
                 <fmt:formatDate value="${memberMerchantCheck.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
             </td>
             <td>
-                    ${memberMerchantCheck.memberInfo.merchantRefereeName}
+                    ${memberMerchantCheck.merchantRefereeName}
             </td>
             <td>
-                    ${memberMerchantCheck.memberInfo.merchantRefereeAccount}
+                    ${memberMerchantCheck.merchantRefereeAccount}
             </td>
             <td>
                 <c:choose>
