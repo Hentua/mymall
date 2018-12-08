@@ -115,6 +115,7 @@ public class MemberInfo extends DataEntity<MemberInfo> {
 		this.refereeAccount = refereeAccount;
 	}
 
+	@ExcelField(title = "商户推荐人", sort = 6, groups = 1)
 	public String getMerchantRefereeName() {
 		return merchantRefereeName;
 	}
@@ -123,6 +124,7 @@ public class MemberInfo extends DataEntity<MemberInfo> {
 		this.merchantRefereeName = merchantRefereeName;
 	}
 
+	@ExcelField(title = "商户推荐人账号", sort = 7, groups = 1)
 	public String getMerchantRefereeAccount() {
 		return merchantRefereeAccount;
 	}
@@ -275,6 +277,7 @@ public class MemberInfo extends DataEntity<MemberInfo> {
 		this.headimgurl = headimgurl;
 	}
 
+	@ExcelField(title = "归属督导经理", sort = 8, groups = 1)
 	public String getOperatorName() {
 		return operatorName;
 	}
@@ -395,7 +398,7 @@ public class MemberInfo extends DataEntity<MemberInfo> {
 		this.status = status;
 	}
 
-	@ExcelField(title = "备注", sort = 5)
+	@ExcelField(title = "备注", sort = 10)
 	@Override
 	public String getRemarks() {
 		return remarks;
@@ -432,7 +435,7 @@ public class MemberInfo extends DataEntity<MemberInfo> {
 		this.sex = sex;
 	}
 
-	@ExcelField(title = "会员账号", sort = 2)
+	@ExcelField(title = "会员账号", sort = 2, groups = 0)
 	public String getMobile() {
 		return mobile;
 	}
@@ -441,7 +444,7 @@ public class MemberInfo extends DataEntity<MemberInfo> {
 		this.mobile = mobile;
 	}
 
-	@ExcelField(title = "会员名称", sort = 1)
+	@ExcelField(title = "会员名称", sort = 1, groups = 0)
 	public String getNickname() {
 		return nickname;
 	}
@@ -510,7 +513,7 @@ public class MemberInfo extends DataEntity<MemberInfo> {
 		this.registerWay = registerWay;
 	}
 
-	@ExcelField(title = "注册途径", sort = 3)
+	@ExcelField(title = "注册途径", sort = 3, groups = 0)
 	public String getRegisterWayZh() {
 		String registerWayZh = "";
 		if(StringUtils.isNotBlank(this.registerWay)) {
@@ -523,10 +526,38 @@ public class MemberInfo extends DataEntity<MemberInfo> {
 		return registerWayZh;
 	}
 
-	@ExcelField(title = "注册时间", sort = 4)
+	@ExcelField(title = "注册时间", sort = 4, groups = 0)
 	@Override
 	public Date getCreateDate() {
 		return createDate;
+	}
+
+	@ExcelField(title = "商户类型", sort = 5, groups = 1)
+	public String getMerchantTypeZh() {
+		String merchantTypeZh = "";
+		if(StringUtils.isNotBlank(this.merchantType)) {
+			switch (this.merchantType) {
+				case "0": merchantTypeZh = "推广者";break;
+				case "1": merchantTypeZh = "商户";break;
+				default:;
+			}
+		}
+		return merchantTypeZh;
+	}
+
+	@ExcelField(title = "商户审核状态", sort = 9, groups = 1)
+	public String getStatusZh() {
+		String statusZh = "";
+		if(StringUtils.isNotBlank(this.status)) {
+			switch (this.status) {
+				case "0": statusZh = "未提交";break;
+				case "1": statusZh = "已生效";break;
+				case "2": statusZh = "审核未通过";break;
+				case "3": statusZh = "审核中";break;
+				default:;
+			}
+		}
+		return statusZh;
 	}
 
 }

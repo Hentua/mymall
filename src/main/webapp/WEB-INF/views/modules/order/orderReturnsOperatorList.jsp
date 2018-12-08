@@ -6,7 +6,12 @@
     <meta name="decorator" content="default"/>
     <script type="text/javascript">
         $(document).ready(function () {
-
+            $('#allCheck').click(function () {
+                var isAllCheck = this.checked;
+                $('input[name="itemId"]').each(function() {
+                    this.checked = isAllCheck;
+                });
+            })
         });
 
         function page(n, s) {
@@ -14,6 +19,16 @@
             $("#pageSize").val(s);
             $("#searchForm").submit();
             return false;
+        }
+        function exportData() {
+            window.open('${ctx}/order/orderReturns/exportOperatorList?' + $('#searchForm').serialize() + itemCheckBoxVal());
+        }
+        function itemCheckBoxVal() {
+            var itemStr = '';
+            $('input[name="itemId"]:checked').each(function () {
+                itemStr += '&itemIds=' + $(this).val();
+            });
+            return itemStr;
         }
     </script>
 </head>
@@ -64,6 +79,7 @@
             </form:select>
         </li>
         <li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
+        <li class="btns"><input id="btnExport" class="btn btn-primary" type="button" value="导出" onclick="exportData()"/></li>
         <li class="clearfix"></li>
     </ul>
 </form:form>
@@ -71,6 +87,7 @@
 <table id="contentTable" class="table table-striped table-bordered table-condensed">
     <thead>
     <tr>
+        <th><input type="checkbox" id="allCheck"/></th>
         <th>售后单号</th>
         <th>原订单号</th>
         <th>商家</th>
@@ -90,6 +107,9 @@
     <tbody>
     <c:forEach items="${page.list}" var="orderReturns">
         <tr>
+            <td>
+                <input type="checkbox" name="itemId" value="${orderSettlement.id}"/>
+            </td>
             <td>
                     ${orderReturns.returnsNo}
             </td>

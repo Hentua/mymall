@@ -57,6 +57,26 @@
         <li><label>下单人账号：</label>
             <form:input path="customerAccount" htmlEscape="false" maxlength="64" class="input-medium"/>
         </li>
+        <li><label>订单状态：</label>
+            <form:select path="orderStatus" class="input-medium">
+                <form:option value="" label="全部"/>
+                <form:option value="0" label="待付款"/>
+                <form:option value="1" label="待发货"/>
+                <form:option value="2" label="待收货"/>
+                <form:option value="3" label="交易完成"/>
+                <form:option value="4" label="交易关闭"/>
+                <form:option value="5" label="售后处理中"/>
+                <form:option value="6" label="售后处理完成"/>
+            </form:select>
+        </li>
+        <li><label>结算状态 ：</label>
+            <form:select path="status" class="input-medium">
+                <form:option value="" label="全部"/>
+                <form:option value="1" label="未清算" />
+                <form:option value="2" label="已清算" />
+                <form:option value="3" label="已结算" />
+            </form:select>
+        </li>
         <li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
         <li class="btns"><input id="btnExport" class="btn btn-primary" type="button" value="导出" onclick="exportData()"/></li>
         <li class="clearfix"></li>

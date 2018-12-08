@@ -83,6 +83,32 @@ public class MemberInfoController extends BaseController {
         return "modules/member/allMemberInfoList";
     }
 
+    @RequestMapping(value = {"exportMerchantInfoList"})
+    public void exportMerchantInfoList(MemberInfo memberInfo, HttpServletRequest request, HttpServletResponse response, Model model) {
+        String [] itemIds = request.getParameterValues("itemIds");
+        User currUser = UserUtils.getUser();
+        String refereeId = currUser.getId();
+        memberInfo.setRefereeId(refereeId);
+        memberInfo.setUserType("1");
+        List<MemberInfo> memberInfos;
+        if(null != itemIds && itemIds.length > 0) {
+            memberInfos = Lists.newArrayList();
+            for (String itemId : itemIds) {
+                memberInfos.add(this.get(itemId));
+            }
+        }else {
+            memberInfos = memberInfoService.findList(memberInfo);
+        }
+
+        ExportExcel exportExcel = new ExportExcel("商户信息", MemberInfo.class, 1, 0, 1);
+        try {
+            exportExcel.setDataList(memberInfos);
+            exportExcel.write(response, "商户信息.xlsx");
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @RequiresPermissions("member:memberInfo:view")
     @RequestMapping(value = {"merchantInfoListByPower"})
     public String merchantInfoListByPower(MemberInfo memberInfo, HttpServletRequest request, HttpServletResponse response, Model model) {
@@ -139,7 +165,7 @@ public class MemberInfoController extends BaseController {
             memberInfos = memberInfoService.findList(memberInfo);
         }
 
-        ExportExcel exportExcel = new ExportExcel("会员信息", MemberInfo.class);
+        ExportExcel exportExcel = new ExportExcel("会员信息", MemberInfo.class, 1, 0);
         try {
             exportExcel.setDataList(memberInfos);
             exportExcel.write(response, "会员信息.xlsx");
@@ -160,7 +186,7 @@ public class MemberInfoController extends BaseController {
         }else {
             memberInfos = memberInfoService.findList(memberInfo);
         }
-        ExportExcel exportExcel = new ExportExcel("会员信息", MemberInfo.class);
+        ExportExcel exportExcel = new ExportExcel("会员信息", MemberInfo.class, 1, 0);
         try {
             exportExcel.setDataList(memberInfos);
             exportExcel.write(response, "会员信息.xlsx");

@@ -2,6 +2,8 @@ package com.mall.modules.order.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.mall.common.persistence.DataEntity;
+import com.mall.common.utils.StringUtils;
+import com.mall.common.utils.excel.annotation.ExcelField;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotNull;
@@ -55,6 +57,7 @@ public class OrderReturns extends DataEntity<OrderReturns> {
 		super(id);
 	}
 
+	@ExcelField(title = "商家", sort = 3)
     public String getMerchantName() {
         return merchantName;
     }
@@ -63,6 +66,7 @@ public class OrderReturns extends DataEntity<OrderReturns> {
         this.merchantName = merchantName;
     }
 
+    @ExcelField(title = "商家账号", sort = 4)
     public String getMerchantAccount() {
         return merchantAccount;
     }
@@ -119,6 +123,7 @@ public class OrderReturns extends DataEntity<OrderReturns> {
 		this.checkTime = checkTime;
 	}
 
+	@ExcelField(title = "申请人", sort = 5)
 	public String getCustomerName() {
 		return customerName;
 	}
@@ -127,6 +132,7 @@ public class OrderReturns extends DataEntity<OrderReturns> {
 		this.customerName = customerName;
 	}
 
+	@ExcelField(title = "申请人账号", sort = 6)
 	public String getCustomerMobile() {
 		return customerMobile;
 	}
@@ -143,6 +149,7 @@ public class OrderReturns extends DataEntity<OrderReturns> {
 		this.orderId = orderId;
 	}
 
+	@ExcelField(title = "售后单号", sort = 1)
 	@Length(min=1, max=32, message="退款订单号长度必须介于 1 和 32 之间")
 	public String getReturnsNo() {
 		return returnsNo;
@@ -151,7 +158,8 @@ public class OrderReturns extends DataEntity<OrderReturns> {
 	public void setReturnsNo(String returnsNo) {
 		this.returnsNo = returnsNo;
 	}
-	
+
+	@ExcelField(title = "原订单号", sort = 2)
 	@Length(min=1, max=32, message="原订单号长度必须介于 1 和 32 之间")
 	public String getOrderNo() {
 		return orderNo;
@@ -232,7 +240,8 @@ public class OrderReturns extends DataEntity<OrderReturns> {
 	public void setHandlingWay(String handlingWay) {
 		this.handlingWay = handlingWay;
 	}
-	
+
+	@ExcelField(title = "退款金额", sort = 8)
 	public Double getReturnsAmount() {
 		return returnsAmount;
 	}
@@ -250,7 +259,8 @@ public class OrderReturns extends DataEntity<OrderReturns> {
 	public void setReturnSubmitTime(Date returnSubmitTime) {
 		this.returnSubmitTime = returnSubmitTime;
 	}
-	
+
+	@ExcelField(title = "处理时间", sort = 10)
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	public Date getHandlingTime() {
 		return handlingTime;
@@ -295,5 +305,39 @@ public class OrderReturns extends DataEntity<OrderReturns> {
 	public void setCustomerCode(String customerCode) {
 		this.customerCode = customerCode;
 	}
-	
+
+	@ExcelField(title = "处理方式", sort = 7)
+	public String getHandlingWayZh() {
+		String handlingWayZh = "";
+		if(StringUtils.isNotBlank(this.handlingWay)) {
+			switch (this.handlingWay) {
+				case "0": handlingWayZh = "退货退款";break;
+				case "1": handlingWayZh = "换新";break;
+				default:;
+			}
+		}
+		return handlingWayZh;
+	}
+
+	@ExcelField(title = "处理时间", sort = 9)
+	@Override
+	public Date getCreateDate() {
+		return this.createDate;
+	}
+
+	@ExcelField(title = "售后状态", sort = 11)
+	public String getStatusZh() {
+		String statusZh = "";
+		if(StringUtils.isNotBlank(this.status)) {
+			switch (this.status) {
+				case "0": statusZh = "待审核";break;
+				case "1": statusZh = "待处理";break;
+				case "2": statusZh = "待收货";break;
+				case "3": statusZh = "已完成";break;
+				case "4": statusZh = "审核未通过";break;
+				default:;
+			}
+		}
+		return statusZh;
+	}
 }

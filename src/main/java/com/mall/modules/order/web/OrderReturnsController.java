@@ -2,13 +2,16 @@ package com.mall.modules.order.web;
 
 import com.alibaba.fastjson.JSON;
 import com.github.binarywang.wxpay.exception.WxPayException;
+import com.google.common.collect.Lists;
 import com.mall.common.config.Global;
 import com.mall.common.persistence.Page;
 import com.mall.common.utils.StringUtils;
+import com.mall.common.utils.excel.ExportExcel;
 import com.mall.common.web.BaseController;
 import com.mall.modules.member.entity.MemberInfo;
 import com.mall.modules.member.service.MemberInfoService;
 import com.mall.modules.order.entity.OrderReturns;
+import com.mall.modules.order.entity.OrderSettlement;
 import com.mall.modules.order.entity.TaskRequest;
 import com.mall.modules.order.entity.TaskResponse;
 import com.mall.modules.order.service.OrderReturnsService;
@@ -27,6 +30,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * 订单售后申请Controller
@@ -77,6 +81,27 @@ public class OrderReturnsController extends BaseController {
 		Page<OrderReturns> page = orderReturnsService.findPage(new Page<OrderReturns>(request, response), orderReturns);
 		model.addAttribute("page", page);
 		return "modules/order/orderReturnsOperatorList";
+	}
+
+	@RequestMapping(value = "exportOperatorList")
+	public void exportOperatorList(OrderReturns orderReturns, HttpServletRequest request, HttpServletResponse response) {
+		String [] itemIds = request.getParameterValues("itemIds");
+		List<OrderReturns> orderReturnsList;
+		if(null != itemIds && itemIds.length > 0) {
+			orderReturnsList = Lists.newArrayList();
+			for (String itemId : itemIds) {
+				orderReturnsList.add(orderReturnsService.get(itemId));
+			}
+		}else {
+			orderReturnsList = orderReturnsService.findList(orderReturns);
+		}
+		ExportExcel exportExcel = new ExportExcel("售后列表", OrderReturns.class);
+		try {
+			exportExcel.setDataList(orderReturnsList);
+			exportExcel.write(response, "售后列表.xlsx");
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@RequiresPermissions("order:orderReturns:view")

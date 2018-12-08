@@ -39,11 +39,14 @@
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<ul class="ul-form">
-			<li><label>用户名称：</label>
+			<li><label>会员名称：</label>
 				<form:input path="nickname" htmlEscape="false" maxlength="20" class="input-medium"/>
 			</li>
-			<li><label>用户账号：</label>
+			<li><label>会员账号：</label>
 				<form:input path="mobile" htmlEscape="false" maxlength="20" class="input-medium"/>
+			</li>
+			<li><label>会员推荐人账号：</label>
+				<form:input path="refereeAccount" htmlEscape="false" maxlength="20" class="input-medium"/>
 			</li>
 			<li><label>注册途径：</label>
 				<form:select path="registerWay" class="input-medium">

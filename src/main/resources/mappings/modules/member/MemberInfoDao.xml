@@ -117,6 +117,15 @@
 			<if test="merchantRefereeId != null and merchantRefereeId != ''">
 				and a.merchant_referee_id = #{merchantRefereeId}
 			</if>
+			<if test="refereeAccount != null and refereeAccount != ''">
+				and ur.login_name = #{refereeAccount}
+			</if>
+			<if test="merchantRefereeAccount != null and merchantRefereeAccount != ''">
+				and um.login_name = #{merchantRefereeAccount}
+			</if>
+			<if test="merchantType != null and merchantType != ''">
+				and a.merchant_type = #{merchantType}
+			</if>
 			<if test="startDate != null">
 				and a.create_date &gt;= #{startDate}
 			</if>

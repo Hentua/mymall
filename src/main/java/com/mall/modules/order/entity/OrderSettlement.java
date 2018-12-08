@@ -94,6 +94,7 @@ public class OrderSettlement extends DataEntity<OrderSettlement> {
 		return goodsSettlementAmount;
 	}
 
+	@ExcelField(title = "订单状态", sort = 14, groups = {0})
 	public String getOrderStatusZh() {
 		return OrderStatus.status2Zh(this.orderStatus);
 	}

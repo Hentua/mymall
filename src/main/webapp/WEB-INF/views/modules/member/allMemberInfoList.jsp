@@ -6,7 +6,12 @@
 	<meta name="decorator" content="default"/>
 	<script type="text/javascript">
 		$(document).ready(function() {
-			
+			$('#allCheck').click(function () {
+				var isAllCheck = this.checked;
+				$('input[name="itemId"]').each(function() {
+					this.checked = isAllCheck;
+				});
+			})
 		});
 		function page(n,s){
 			$("#pageNo").val(n);
@@ -14,6 +19,16 @@
 			$("#searchForm").submit();
         	return false;
         }
+		function exportData() {
+			window.open('${ctx}/member/memberInfo/exportMerchantInfoList' + $('#searchForm').serialize() + itemCheckBoxVal());
+		}
+		function itemCheckBoxVal() {
+			var itemStr = '';
+			$('input[name="itemId"]:checked').each(function () {
+				itemStr += '&itemIds=' + $(this).val();
+			});
+			return itemStr;
+		}
 	</script>
 </head>
 <body>
@@ -24,11 +39,21 @@
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<ul class="ul-form">
-			<li><label>昵称：</label>
+			<li><label>商户昵称：</label>
 				<form:input path="nickname" htmlEscape="false" maxlength="20" class="input-medium"/>
 			</li>
-			<li><label>手机号码：</label>
+			<li><label>商户账号：</label>
 				<form:input path="mobile" htmlEscape="false" maxlength="20" class="input-medium"/>
+			</li>
+			<li><label>商户推荐人账号：</label>
+				<form:input path="merchantRefereeAccount" htmlEscape="false" maxlength="20" class="input-medium"/>
+			</li>
+			<li><label>商户类型：</label>
+				<form:select path="merchantType" class="input-medium">
+					<form:option value="" label="全部"/>
+					<form:option value="0" label="推广者"/>
+					<form:option value="1" label="商户"/>
+				</form:select>
 			</li>
 			<li><label>注册途径：</label>
 				<form:select path="registerWay" class="input-medium">
@@ -53,6 +78,7 @@
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
 		<thead>
 			<tr>
+				<th><input type="checkbox" id="allCheck"/></th>
 				<th>商户昵称</th>
 				<th>商户账号</th>
 				<th>商户类型</th>
@@ -70,6 +96,9 @@
 		<tbody>
 		<c:forEach items="${page.list}" var="memberInfo">
 			<tr>
+				<td>
+					<input type="checkbox" name="itemId" value="${orderSettlement.id}"/>
+				</td>
 				<td>
 					${memberInfo.nickname}
 				</td>
