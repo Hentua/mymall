@@ -223,7 +223,7 @@
 <script>
     function submitRefund() {
         type = 'refund';
-        $('#inputForm').val('action', '${ctx}/order/orderReturns/refund');
+        $('#inputForm')[0].form.action = '${ctx}/order/orderReturns/refund';
     }
 </script>
 </body>

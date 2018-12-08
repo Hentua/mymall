@@ -101,7 +101,9 @@
 				</td>
 				<shiro:hasPermission name="gift:giftConfig:edit"><td>
     				<a href="${ctx}/gift/giftConfig/form?id=${giftConfig.id}">详情</a>
+				<shiro:hasPermission name="gift:giftConfig:delete">
 					<a href="${ctx}/gift/giftConfig/delete?id=${giftConfig.id}" onclick="return confirmx('确认要删除该礼包配置吗？', this.href)">删除</a>
+				</shiro:hasPermission>
 				</td></shiro:hasPermission>
 			</tr>
 		</c:forEach>

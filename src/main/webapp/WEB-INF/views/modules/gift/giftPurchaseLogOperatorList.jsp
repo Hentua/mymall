@@ -102,13 +102,13 @@
 		<c:forEach items="${page.list}" var="giftPurchaseLog">
 			<tr>
 				<td>
+					<input type="checkbox" name="itemId" value="${giftTransferLog.id}"/>
+				</td>
+				<td>
 						${giftPurchaseLog.merchantName}
 				</td>
 				<td>
 						${giftPurchaseLog.merchantAccount}
-				</td>
-				<td>
-					<input type="checkbox" name="itemId" value="${giftTransferLog.id}"/>
 				</td>
 				<td>
 					${giftPurchaseLog.paymentNo}
