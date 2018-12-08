@@ -18,12 +18,16 @@
 		m.status AS "merchantStatus",
 		m.register_way AS "registerWay",
 		u.user_type AS "memberType",
-		m.merchant_type AS "merchantType"
+		m.merchant_type AS "merchantType",
+		mr.nickname AS "merchantRefereeName",
+		umr.logon_name AS "merchantRefereeAccount"
 	</sql>
 	
 	<sql id="memberMerchantCheckJoins">
 		left join member_info m on m.id = a.merchant_code
 		left join sys_user u on u.id = a.merchant_code
+		left join member_info mr on mr.id = m.merchant_referee_id
+		left join sys_user umr on umr.id = m.merchant_referee_id
 	</sql>
     
 	<select id="get" resultType="MemberMerchantCheck">

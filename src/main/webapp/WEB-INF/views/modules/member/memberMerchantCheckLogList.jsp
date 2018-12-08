@@ -48,7 +48,6 @@
 				<th>商户推荐人</th>
 				<th>商户推荐人账号</th>
 				<th>审核状态</th>
-				<th>审核人</th>
 				<th>审核时间</th>
 			</tr>
 		</thead>
@@ -78,10 +77,10 @@
 					<fmt:formatDate value="${memberMerchantCheck.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
 				</td>
 				<td>
-						${memberMerchantCheck.memberInfo.merchantRefereeName}
+						${memberMerchantCheck.merchantRefereeName}
 				</td>
 				<td>
-						${memberMerchantCheck.memberInfo.merchantRefereeAccount}
+						${memberMerchantCheck.merchantRefereeAccount}
 				</td>
 				<td>
 					<c:choose>
@@ -95,9 +94,6 @@
 							审核未通过
 						</c:when>
 					</c:choose>
-				</td>
-				<td>
-					${fns:getUserById(memberMerchantCheck.checkBy).name}
 				</td>
 				<td>
 					<fmt:formatDate value="${memberMerchantCheck.checkDate}" pattern="yyyy-MM-dd HH:mm:ss"/>

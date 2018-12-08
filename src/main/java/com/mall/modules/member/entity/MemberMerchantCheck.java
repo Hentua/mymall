@@ -25,6 +25,8 @@ public class MemberMerchantCheck extends DataEntity<MemberMerchantCheck> {
 	private String mobile; // 用户手机号码
 	private String registerWay; // 注册途径
 	private String merchantType; // 商户类型
+	private String merchantRefereeName; // 商户推荐人名称
+	private String merchantRefereeAccount; // 商户推荐人账号
 
 	private MemberInfo memberInfo;
 
@@ -34,6 +36,22 @@ public class MemberMerchantCheck extends DataEntity<MemberMerchantCheck> {
 
 	public MemberMerchantCheck(String id){
 		super(id);
+	}
+
+	public String getMerchantRefereeName() {
+		return merchantRefereeName;
+	}
+
+	public void setMerchantRefereeName(String merchantRefereeName) {
+		this.merchantRefereeName = merchantRefereeName;
+	}
+
+	public String getMerchantRefereeAccount() {
+		return merchantRefereeAccount;
+	}
+
+	public void setMerchantRefereeAccount(String merchantRefereeAccount) {
+		this.merchantRefereeAccount = merchantRefereeAccount;
 	}
 
 	public String getMerchantType() {
