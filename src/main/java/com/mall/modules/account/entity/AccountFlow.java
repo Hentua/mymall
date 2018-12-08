@@ -1,6 +1,8 @@
 package com.mall.modules.account.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.mall.common.persistence.DataEntity;
+import com.mall.common.utils.excel.annotation.ExcelField;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotNull;
@@ -40,6 +42,27 @@ public class AccountFlow extends DataEntity<AccountFlow> {
 	private Date startDate; //筛选开始时间
 	private Date endDate;  //筛选结束时间
 
+
+
+	private Date transferStartDate; //筛选开始时间
+	private Date transferEndDate;  //筛选结束时间
+
+	public Date getTransferStartDate() {
+		return transferStartDate;
+	}
+
+	public void setTransferStartDate(Date transferStartDate) {
+		this.transferStartDate = transferStartDate;
+	}
+
+	public Date getTransferEndDate() {
+		return transferEndDate;
+	}
+
+	public void setTransferEndDate(Date transferEndDate) {
+		this.transferEndDate = transferEndDate;
+	}
+
 	public Date getStartDate() {
 		return startDate;
 	}
@@ -65,6 +88,7 @@ public class AccountFlow extends DataEntity<AccountFlow> {
 	}
 
 
+	@ExcelField(title = "用户账号", sort = 1)
 	public String getUserMobile() {
 		return userMobile;
 	}
@@ -73,6 +97,7 @@ public class AccountFlow extends DataEntity<AccountFlow> {
 		this.userMobile = userMobile;
 	}
 
+	@ExcelField(title = "平台收款账户", sort = 8)
 	public String getPlatBankAccount() {
 		return platBankAccount;
 	}
@@ -80,7 +105,8 @@ public class AccountFlow extends DataEntity<AccountFlow> {
 	public void setPlatBankAccount(String platBankAccount) {
 		this.platBankAccount = platBankAccount;
 	}
-
+	@ExcelField(title = "转账时间", sort = 7)
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	public Date getTransferDate() {
 		return transferDate;
 	}
@@ -113,6 +139,7 @@ public class AccountFlow extends DataEntity<AccountFlow> {
 		this.org = org;
 	}
 
+	@ExcelField(title = "用户名称", sort = 2)
 	public String getNickname() {
 		return nickname;
 	}
@@ -122,6 +149,7 @@ public class AccountFlow extends DataEntity<AccountFlow> {
 	}
 
 
+	@ExcelField(title = "流水单号", sort = 3)
 	@Length(min=0, max=100, message="流水单号长度必须介于 0 和 100 之间")
 	public String getFlowNo() {
 		return flowNo;
@@ -139,7 +167,8 @@ public class AccountFlow extends DataEntity<AccountFlow> {
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
-	
+
+	@ExcelField(title = "金额", sort = 4)
 	@NotNull(message="金额不能为空")
 	public Double getAmount() {
 		return amount;
@@ -162,6 +191,37 @@ public class AccountFlow extends DataEntity<AccountFlow> {
 			return "支出";
 		}
 		return "";
+	}
+
+	@ExcelField(title = "类型", sort = 5)
+	public String getTypeStr(){
+		String str = "";
+		if("1".equals(this.getType())){
+			if("1".equals(this.getMode())){
+				return "收入-银行转账充值";
+			}
+			if("2".equals(this.getMode())){
+				return "收入-佣金转余额";
+			}
+			if("5".equals(this.getMode())){
+				return "收入-消费退款";
+			}
+		}
+		if("2".equals(this.getType())){
+			if("3".equals(this.getMode())){
+				return "支出-提现";
+			}
+			if("4".equals(this.getMode())){
+				return "支出-消费";
+			}
+		}
+
+		return str;
+	}
+	@ExcelField(title = "操作时间", sort = 6)
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	public Date createDateStr(){
+		return this.createDate;
 	}
 
 	public void setType(String type) {
@@ -225,7 +285,8 @@ public class AccountFlow extends DataEntity<AccountFlow> {
 	public void setIncomeExpenditureMode(String incomeExpenditureMode) {
 		this.incomeExpenditureMode = incomeExpenditureMode;
 	}
-	
+
+	@ExcelField(title = "付款账号", sort = 9)
 	@Length(min=0, max=100, message="银行账户长度必须介于 0 和 100 之间")
 	public String getBankAccount() {
 		return bankAccount;
@@ -234,7 +295,8 @@ public class AccountFlow extends DataEntity<AccountFlow> {
 	public void setBankAccount(String bankAccount) {
 		this.bankAccount = bankAccount;
 	}
-	
+
+	@ExcelField(title = "付款人名称", sort = 10)
 	@Length(min=0, max=50, message="开户人名称长度必须介于 0 和 50 之间")
 	public String getBankAccountName() {
 		return bankAccountName;
@@ -243,7 +305,8 @@ public class AccountFlow extends DataEntity<AccountFlow> {
 	public void setBankAccountName(String bankAccountName) {
 		this.bankAccountName = bankAccountName;
 	}
-	
+
+	@ExcelField(title = "付款银行", sort = 11)
 	@Length(min=0, max=200, message="开户行长度必须介于 0 和 200 之间")
 	public String getBankName() {
 		return bankName;
@@ -259,6 +322,7 @@ public class AccountFlow extends DataEntity<AccountFlow> {
 	}
 
 
+	@ExcelField(title = "审核状态", sort = 11)
 	public String getCheckStatusText() {
 		if("1".equals(this.getCheckStatus())){
 			return "待审核";

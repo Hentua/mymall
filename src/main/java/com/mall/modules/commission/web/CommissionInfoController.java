@@ -102,7 +102,7 @@ public class CommissionInfoController extends BaseController {
 			commissionInfos = commissionInfoService.findList(commissionInfo);
 		}
 
-		ExportExcel exportExcel = new ExportExcel("订单信息", CommissionInfo.class);
+		ExportExcel exportExcel = new ExportExcel("用户佣金明细", CommissionInfo.class);
 		try {
 			exportExcel.setDataList(commissionInfos);
 			exportExcel.write(response, "用户佣金明细.xlsx");
@@ -138,7 +138,7 @@ public class CommissionInfoController extends BaseController {
 		memberInfo = memberInfoService.get(memberInfo);
 
 		commissionInfo.setUserId(user.getId());
-		commissionInfo.setStatus("1");
+		commissionInfo.setCheckStatus("1");
 		commissionInfo.setType("6");
 		List<CommissionInfo> list = commissionInfoService.findList(commissionInfo);
 		model.addAttribute("memberInfo", memberInfo);

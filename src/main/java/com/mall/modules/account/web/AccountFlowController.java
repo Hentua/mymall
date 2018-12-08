@@ -1,17 +1,20 @@
 package com.mall.modules.account.web;
 
 import com.alibaba.druid.support.json.JSONUtils;
+import com.google.common.collect.Lists;
 import com.mall.common.config.Global;
 import com.mall.common.mapper.JsonMapper;
 import com.mall.common.persistence.Page;
 import com.mall.common.utils.IdGen;
 import com.mall.common.utils.StringUtils;
+import com.mall.common.utils.excel.ExportExcel;
 import com.mall.common.web.BaseController;
 import com.mall.modules.account.entity.AccountFlow;
 import com.mall.modules.account.service.AccountFlowService;
 import com.mall.modules.account.service.AccountService;
 import com.mall.modules.member.entity.MemberInfo;
 import com.mall.modules.member.service.MemberInfoService;
+import com.mall.modules.order.entity.OrderInfo;
 import com.mall.modules.sys.entity.PlatBankAccount;
 import com.mall.modules.sys.entity.User;
 import com.mall.modules.sys.service.PlatBankAccountService;
@@ -79,6 +82,32 @@ public class AccountFlowController extends BaseController {
 		Page<AccountFlow> page = accountFlowService.findPage(new Page<AccountFlow>(request, response), accountFlow); 
 		model.addAttribute("page", page);
 		return "modules/account/accountFlowList";
+	}
+
+
+	@RequestMapping(value = {"listexportData"})
+	public void exportData(AccountFlow accountFlow,  HttpServletRequest request, HttpServletResponse response, Model model) {
+		String [] itemIds = request.getParameterValues("itemIds");
+		List<AccountFlow> accountFlows;
+		if(null != itemIds && itemIds.length > 0) {
+			accountFlows = Lists.newArrayList();
+			for (String itemId : itemIds) {
+				accountFlows.add(this.get(itemId));
+			}
+		}else {
+			accountFlow.setType("1");
+			accountFlow.setMode("1");
+			accountFlow.setIncomeExpenditureMode("2");
+			accountFlows = accountFlowService.findList(accountFlow);
+		}
+
+		ExportExcel exportExcel = new ExportExcel("余额充值审核明细", AccountFlow.class);
+		try {
+			exportExcel.setDataList(accountFlows);
+			exportExcel.write(response, "余额充值审核明细.xlsx");
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@RequestMapping(value = {"memberList", ""})

@@ -73,10 +73,17 @@
 				and u.mobile = #{userMobile}
 			</if>
 			<if test="startDate != null ">
-				<![CDATA[ and u.create_date >= #{startDate} ]]>
+				<![CDATA[ and a.create_date >= #{startDate} ]]>
 			</if>
 			<if test="endDate != null ">
-				<![CDATA[ and u.create_date <= #{endDate} ]]>
+				<![CDATA[ and a.create_date <= #{endDate} ]]>
+			</if>
+
+			<if test="transferStartDate != null ">
+				<![CDATA[ and a.transfer_date >= #{transferStartDate} ]]>
+			</if>
+			<if test="transferEndDate != null ">
+				<![CDATA[ and a.transfer_date <= #{transferEndDate} ]]>
 			</if>
 		</where>
 		<choose>
