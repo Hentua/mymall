@@ -44,6 +44,8 @@
 	<select id="findList" resultType="CommissionInfo">
 		SELECT 
 			<include refid="commissionInfoColumns"/>
+		left join sys_user uo on uo.id = mu.operator_code
+		left join sys_office uoo on uoo.id = uo.office_id
 		FROM commission_info a
 		<include refid="commissionInfoJoins"/>
 		<where>
@@ -83,6 +85,8 @@
 			<if test="endDate != null">
 				and a.create_date &lt;= #{endDate}
 			</if>
+			<!-- 数据范围过滤 -->
+			${sqlMap.dsf}
 		</where>
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">

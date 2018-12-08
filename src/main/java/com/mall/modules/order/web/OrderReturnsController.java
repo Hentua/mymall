@@ -32,6 +32,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.List;
 
+import static com.mall.common.service.BaseService.dataScopeFilter;
+
 /**
  * 订单售后申请Controller
  * @author wankang
@@ -78,6 +80,7 @@ public class OrderReturnsController extends BaseController {
 	@RequiresPermissions("order:orderReturns:view")
 	@RequestMapping(value = {"operatorList"})
 	public String operatorList(OrderReturns orderReturns, HttpServletRequest request, HttpServletResponse response, Model model) {
+		orderReturns.getSqlMap().put("dsf", dataScopeFilter(UserUtils.getUser(), "uoo", "uo"));
 		Page<OrderReturns> page = orderReturnsService.findPage(new Page<OrderReturns>(request, response), orderReturns);
 		model.addAttribute("page", page);
 		return "modules/order/orderReturnsOperatorList";
@@ -85,6 +88,7 @@ public class OrderReturnsController extends BaseController {
 
 	@RequestMapping(value = "exportOperatorList")
 	public void exportOperatorList(OrderReturns orderReturns, HttpServletRequest request, HttpServletResponse response) {
+		orderReturns.getSqlMap().put("dsf", dataScopeFilter(UserUtils.getUser(), "uoo", "uo"));
 		String [] itemIds = request.getParameterValues("itemIds");
 		List<OrderReturns> orderReturnsList;
 		if(null != itemIds && itemIds.length > 0) {

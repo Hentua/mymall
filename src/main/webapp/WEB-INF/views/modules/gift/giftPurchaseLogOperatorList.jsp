@@ -44,7 +44,7 @@
 			</li>
 			<li><label>礼包名称：</label>
 				<form:select path="giftConfigCategoryName" class="input-xlarge ">
-					<form:options items="giftConfigCategoryList" itemLabel="categoryName" itemValue="categoryName"
+					<form:options items="${giftConfigCategoryList}" itemLabel="categoryName" itemValue="categoryName"
 								  htmlEscape="false"/>
 				</form:select>
 			</li>

@@ -45,6 +45,8 @@
 	<select id="findList" resultType="OrderSettlement">
 		SELECT 
 			<include refid="orderSettlementColumns"/>
+		left join sys_user uo on uo.id = m.operator_code
+		left join sys_office uoo on uoo.id = uo.office_id
 		FROM order_settlement a
 		<include refid="orderSettlementJoins"/>
 		<where>
@@ -95,6 +97,8 @@
 				AND um.login_name = #{merchantAccount}
 			</if>
 			and ((returns.handling_way = '0' and returns.status = '4') or (returns.handling_way != '0') or (returns.handling_way is null ))
+			<!-- 数据范围过滤 -->
+			${sqlMap.dsf}
 		</where>
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">

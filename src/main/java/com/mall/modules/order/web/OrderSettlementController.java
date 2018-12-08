@@ -26,6 +26,8 @@ import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
 
+import static com.mall.common.service.BaseService.dataScopeFilter;
+
 /**
  * 订单结算Controller
  * @author hub
@@ -55,6 +57,7 @@ public class OrderSettlementController extends BaseController {
 	@RequiresPermissions("order:orderSettlement:view")
 	@RequestMapping(value = {"list", ""})
 	public String list(OrderSettlement orderSettlement, HttpServletRequest request, HttpServletResponse response, Model model) {
+		orderSettlement.getSqlMap().put("dsf", dataScopeFilter(UserUtils.getUser(), "uoo", "uo"));
 		Page<OrderSettlement> page = orderSettlementService.findPage(new Page<OrderSettlement>(request, response), orderSettlement);
 //		Map<String, String> total = orderSettlementService.findTotal(orderSettlement);
 		Map<String, String> total = Maps.newHashMap();
@@ -74,6 +77,7 @@ public class OrderSettlementController extends BaseController {
 	@RequiresPermissions("order:orderSettlement:view")
 	@RequestMapping(value = {"frozenList"})
 	public String frozenList(OrderSettlement orderSettlement, HttpServletRequest request, HttpServletResponse response, Model model) {
+		orderSettlement.getSqlMap().put("dsf", dataScopeFilter(UserUtils.getUser(), "uoo", "uo"));
 		Page<OrderSettlement> page = orderSettlementService.findPage(new Page<OrderSettlement>(request, response), orderSettlement);
 //		Map<String, String> total = orderSettlementService.findTotal(orderSettlement);
 		Map<String, String> total = Maps.newHashMap();
@@ -112,6 +116,7 @@ public class OrderSettlementController extends BaseController {
 
 	@RequestMapping(value = "exportOrderSettlement")
 	public void exportSettlementList(OrderSettlement orderSettlement, HttpServletRequest request, HttpServletResponse response) {
+		orderSettlement.getSqlMap().put("dsf", dataScopeFilter(UserUtils.getUser(), "uoo", "uo"));
 		String [] itemIds = request.getParameterValues("itemIds");
 		List<OrderSettlement> orderSettlementList;
 		if(null != itemIds && itemIds.length > 0) {

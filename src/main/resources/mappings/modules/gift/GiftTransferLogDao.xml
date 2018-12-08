@@ -47,6 +47,8 @@
 	<select id="findList" resultType="GiftTransferLog">
 		SELECT 
 			<include refid="giftTransferLogColumns"/>
+		left join sys_user uo on uo.id = m.operator_code
+		left join sys_office uoo on uoo.id = uo.office_id
 		FROM gift_transfer_log a
 		<include refid="giftTransferLogJoins"/>
 		<where>
@@ -77,6 +79,8 @@
 			<if test="status != null and status != ''">
 				AND gc.gift_count = #{status}
 			</if>
+			<!-- 数据范围过滤 -->
+			${sqlMap.dsf}
 		</where>
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">

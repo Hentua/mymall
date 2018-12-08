@@ -35,6 +35,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import static com.mall.common.service.BaseService.dataScopeFilter;
+
 /**
  * 订单信息Controller
  * @author wankang
@@ -64,6 +66,7 @@ public class OrderInfoController extends BaseController {
 	@RequiresPermissions("order:orderInfo:view")
 	@RequestMapping(value = {"list", ""})
 	public String list(OrderInfo orderInfo, HttpServletRequest request, HttpServletResponse response, Model model) {
+		orderInfo.getSqlMap().put("dsf", dataScopeFilter(UserUtils.getUser(), "uoo", "uo"));
 		Page<OrderInfo> page = orderInfoService.findPage(new Page<OrderInfo>(request, response), orderInfo); 
 		model.addAttribute("page", page);
 		return "modules/order/orderInfoList";
@@ -71,6 +74,7 @@ public class OrderInfoController extends BaseController {
 
 	@RequestMapping(value = {"exportData"})
 	public void exportData(OrderInfo orderInfo, HttpServletRequest request, HttpServletResponse response, Model model) {
+		orderInfo.getSqlMap().put("dsf", dataScopeFilter(UserUtils.getUser(), "uoo", "uo"));
 		String [] itemIds = request.getParameterValues("itemIds");
 		List<OrderInfo> orderInfos;
 		if(null != itemIds && itemIds.length > 0) {

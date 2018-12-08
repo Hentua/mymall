@@ -25,6 +25,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
+import static com.mall.common.service.BaseService.dataScopeFilter;
+
 /**
  * 礼包赠送记录Controller
  * @author wankang
@@ -88,6 +90,7 @@ public class GiftTransferLogController extends BaseController {
 	@RequiresPermissions("gift:giftTransferLog:view")
 	@RequestMapping(value = {"operatorList"})
 	public String operatorList(GiftTransferLog giftTransferLog, HttpServletRequest request, HttpServletResponse response, Model model) {
+		giftTransferLog.getSqlMap().put("dsf", dataScopeFilter(UserUtils.getUser(), "uoo", "uo"));
 		Page<GiftTransferLog> page = giftTransferLogService.findPage(new Page<GiftTransferLog>(request, response), giftTransferLog);
 		model.addAttribute("page", page);
 		model.addAttribute("giftConfigCategoryList", giftConfigCategoryService.findList(new GiftConfigCategory()));
@@ -96,6 +99,7 @@ public class GiftTransferLogController extends BaseController {
 
 	@RequestMapping(value = {"operatorExportData"})
 	public void operatorExportData(GiftTransferLog giftTransferLog, HttpServletRequest request, HttpServletResponse response, Model model) {
+		giftTransferLog.getSqlMap().put("dsf", dataScopeFilter(UserUtils.getUser(), "uoo", "uo"));
 		String [] itemIds = request.getParameterValues("itemIds");
 		List<GiftTransferLog> giftTransferLogs;
 		if(null != itemIds && itemIds.length > 0) {

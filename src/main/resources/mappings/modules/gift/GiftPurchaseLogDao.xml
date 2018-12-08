@@ -42,6 +42,8 @@
 	<select id="findList" resultType="GiftPurchaseLog">
 		SELECT 
 			<include refid="giftPurchaseLogColumns"/>
+			left join sys_user uo on uo.id = m.operator_code
+			left join sys_office uoo on uoo.id = uo.office_id
 		FROM gift_purchase_log a
 		<include refid="giftPurchaseLogJoins"/>
 		<where>
@@ -75,6 +77,8 @@
 			<if test="endPayDate != null">
 				and a.pay_time &lt;= #{endPayDate}
 			</if>
+			<!-- 数据范围过滤 -->
+			${sqlMap.dsf}
 		</where>
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">

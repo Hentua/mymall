@@ -34,6 +34,8 @@ import com.mall.modules.commission.service.CommissionInfoService;
 
 import java.util.List;
 
+import static com.mall.common.service.BaseService.dataScopeFilter;
+
 /**
  * 佣金明细Controller
  * @author hub
@@ -73,7 +75,8 @@ public class CommissionInfoController extends BaseController {
 	@RequiresPermissions("commission:commissionInfo:view")
 	@RequestMapping(value = {"list", ""})
 	public String list(CommissionInfo commissionInfo, HttpServletRequest request, HttpServletResponse response, Model model) {
-		Page<CommissionInfo> page = commissionInfoService.findPage(new Page<CommissionInfo>(request, response), commissionInfo); 
+        commissionInfo.getSqlMap().put("dsf", dataScopeFilter(UserUtils.getUser(), "uoo", "uo"));
+        Page<CommissionInfo> page = commissionInfoService.findPage(new Page<CommissionInfo>(request, response), commissionInfo);
 		model.addAttribute("page", page);
 		return "modules/commission/commissionInfoList";
 	}
@@ -87,7 +90,8 @@ public class CommissionInfoController extends BaseController {
 	 */
 	@RequestMapping(value = {"listExportData"})
 	public void exportData(CommissionInfo commissionInfo, HttpServletRequest request, HttpServletResponse response, Model model) {
-		String [] itemIds = request.getParameterValues("itemIds");
+        commissionInfo.getSqlMap().put("dsf", dataScopeFilter(UserUtils.getUser(), "uoo", "uo"));
+        String [] itemIds = request.getParameterValues("itemIds");
 		List<CommissionInfo> commissionInfos;
 		if(null != itemIds && itemIds.length > 0) {
 			commissionInfos = Lists.newArrayList();

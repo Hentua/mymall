@@ -30,6 +30,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.List;
 
+import static com.mall.common.service.BaseService.dataScopeFilter;
+
 /**
  * 礼包购买记录Controller
  * @author wankang
@@ -98,6 +100,7 @@ public class GiftPurchaseLogController extends BaseController {
 	@RequiresPermissions("gift:giftPurchaseLog:view")
 	@RequestMapping(value = {"operatorList"})
 	public String operatorList(GiftPurchaseLog giftPurchaseLog, HttpServletRequest request, HttpServletResponse response, Model model) {
+		giftPurchaseLog.getSqlMap().put("dsf", dataScopeFilter(UserUtils.getUser(), "uoo", "uo"));
 		Page<GiftPurchaseLog> page = giftPurchaseLogService.findPage(new Page<GiftPurchaseLog>(request, response), giftPurchaseLog);
 		model.addAttribute("page", page);
 		model.addAttribute("giftConfigCategoryList", giftConfigCategoryService.findList(new GiftConfigCategory()));
@@ -106,6 +109,7 @@ public class GiftPurchaseLogController extends BaseController {
 
 	@RequestMapping(value = {"operatorExportData"})
 	public void operatorExportData(GiftPurchaseLog giftPurchaseLog, HttpServletRequest request, HttpServletResponse response, Model model) {
+		giftPurchaseLog.getSqlMap().put("dsf", dataScopeFilter(UserUtils.getUser(), "uoo", "uo"));
 		String [] itemIds = request.getParameterValues("itemIds");
 		List<GiftPurchaseLog> giftPurchaseLogs;
 
