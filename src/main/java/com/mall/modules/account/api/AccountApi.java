@@ -149,6 +149,9 @@ public class AccountApi extends BaseController {
         MemberInfo memberInfo = memberInfoService.get(m);
         CommissionInfo c = new CommissionInfo();
         c.setUserId(memberInfo.getId());
+        if(StringUtils.isEmpty(request.getParameter("type"))){
+            c.setType(request.getParameter("type"));
+        }
         Page<CommissionInfo> page = new Page<>(request, response);
         page = commissionInfoService.findPage(page, c);
         renderString(response, ResultGenerator.genSuccessResult(page));
@@ -396,9 +399,11 @@ public class AccountApi extends BaseController {
         CommissionInfo commissionInfo = new CommissionInfo();
         commissionInfo.setUserId(user.getId());
         commissionInfo.setStatus("1");
+        commissionInfo.setType("6");
         List<CommissionInfo> list = commissionInfoService.findList(commissionInfo);
         if(null != list && list.size()>0){
             renderString(response, ResultGenerator.genFailResult("您的提现申请正在审核，请等审核通过后再提交新的申请！"));
+            return;
         }
         //新增提现记录
         commissionInfo.setType("6");
