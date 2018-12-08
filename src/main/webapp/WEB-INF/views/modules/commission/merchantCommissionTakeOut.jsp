@@ -49,7 +49,7 @@
 	<ul class="nav nav-tabs">
 		<li  ><a href="${ctx}/sys/user/merchantInfo">首页</a></li>
 		<li ><a href="${ctx}/commission/commissionInfo/merchantList">佣金明细列表</a></li>
-		<li class="active" ><a href="${ctx}/commission/commissionInfo/commissionInfoTakeOut">佣金提现</a></li>
+		<li class="active" ><a href="${ctx}/commission/commissionInfo/merchantCommissionTakeOut">佣金提现</a></li>
 		<li  ><a href="${ctx}/commission/commissionInfo/commissionInfoTurnAccount">佣金转余额</a></li>
 	</ul><br/>
 	<form:form id="inputForm" modelAttribute="commissionInfo" action="${ctx}/commission/commissionInfo/commissionInfoTakeOutSave" method="post" class="form-horizontal">
@@ -82,7 +82,14 @@
 			</div>
 		</div>
 		<div class="form-actions">
-			<input class="btn btn-primary" type="submit"    value="提 交"/>
+
+            <c:if test="${!empty message}">
+                <span style="color: red">您的提现申请正在审核，请等审核通过后再提交新的申请！</span>
+                <br/>
+            </c:if>
+            <c:if test="${org != '1'}">
+                <input class="btn btn-primary" type="submit"    value="提 交"/>
+            </c:if>
 			<input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
 		</div>
 	</form:form>
