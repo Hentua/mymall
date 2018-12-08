@@ -1,6 +1,7 @@
 package com.mall.modules.commission.entity;
 
 import com.mall.common.persistence.DataEntity;
+import com.mall.modules.sys.utils.DictUtils;
 import org.hibernate.validator.constraints.Length;
 
 /**
@@ -34,6 +35,16 @@ public class CommissionInfo extends DataEntity<CommissionInfo> {
 	private String bankName;		// 开户行
 	private String checkStatus;		// 提现审核状态：1未审核 2已审核 3驳回
 	private String checkRemark;     //审核备注
+
+
+	public Double getPayAmount(){
+		Double serviceCharge = Double.parseDouble(DictUtils.getDictValue("service_charge","service_charge","0"));
+		if(serviceCharge<=0){
+			return amount;
+		}
+		return (double) Math.round(amount*serviceCharge * 100) / 100;
+	}
+
 
 
 	public String getBankAccount() {

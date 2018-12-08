@@ -86,12 +86,12 @@
 		}
 		.mr_info table tr td:first-child{
 			text-align: right;
-			font-size: 14px;
+			font-size: 15px;
 			font-weight: bold;
 		}
 		.mr_info table tr td:last-child{
 			text-align: left;
-			font-size: 14px;
+			font-size: 15px;
 			font-weight: bold;
 		}
 		.mr_ad img{
@@ -217,21 +217,25 @@
 					</table>
 				</div>
 				<div style="    border: 2px solid #1190d9;
-    height: 100px;
+    height: 174px;
     margin-top: 10px;        border-bottom-left-radius: 32px;
     border-bottom-right-radius: 32px;padding: 0 10%">
-					<div style="    font-size: 19px;
+					<div style="
+    font-size: 32px;
     font-weight: bold;
-    margin-top: 17px;
+    margin-top: 50px;
     border-bottom: 2px solid #1190d9;
-    padding-bottom: 10px;
-    padding-left: 25%;">
+    padding-bottom: 18px;
+    padding-left: 15%;
+    ">
 						月销售额：${stsObj.monthOrderAmountTotal}
 					</div>
-					<div  style="    font-size: 19px;
+					<div  style="
+    font-size: 32px;
     font-weight: bold;
-    margin-top: 15px;
-    padding-left: 25%;">
+    margin-top: 18px;
+    padding-left: 15%;
+    ">
 						累计佣金：${stsObj.commissionTotal}
 					</div>
 				</div>

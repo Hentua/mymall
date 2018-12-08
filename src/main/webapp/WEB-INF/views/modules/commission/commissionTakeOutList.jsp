@@ -55,6 +55,7 @@
 				<th>用户账号</th>
 				<th>用户名称</th>
 				<th>提现金额</th>
+				<th>应付金额</th>
 				<th>创建时间</th>
 				<th>银行账户</th>
 				<th>开户人名称</th>
@@ -74,7 +75,10 @@
 						${commissionTakeOut.userName}
 				</td>
 				<td>
-					${commissionTakeOut.amount}
+						${commissionTakeOut.amount}
+				</td>
+				<td>
+						${commissionTakeOut.payAmount}
 				</td>
 				<td>
 					<fmt:formatDate value="${commissionTakeOut.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/>

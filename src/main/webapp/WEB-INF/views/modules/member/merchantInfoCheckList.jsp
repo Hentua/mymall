@@ -38,6 +38,8 @@
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
 		<thead>
 		<tr>
+			<th>用户账号</th>
+			<th>用户名称</th>
 			<th>店铺名称</th>
 			<th>头像地址</th>
 			<th>头图</th>
@@ -50,6 +52,12 @@
 		<tbody>
 		<c:forEach items="${page.list}" var="merchantInfoCheck">
 			<tr>
+				<td>
+						${merchantInfoCheck.userMobile}
+				</td>
+				<td>
+						${merchantInfoCheck.userName}
+				</td>
 				<td>
 						${merchantInfoCheck.merchantName}
 				</td>

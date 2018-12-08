@@ -19,7 +19,26 @@ public class MerchantInfoCheck extends DataEntity<MerchantInfoCheck> {
 	private String merchantServicePhone;		// 客服电话
 	private String checkStatus;		// 审核状态1：待审核 2：已审核 3:已驳回
 	private String checkRemark;		// 审核备注
-	
+	private String userMobile;
+	private String userName;
+
+
+	public String getUserMobile() {
+		return userMobile;
+	}
+
+	public void setUserMobile(String userMobile) {
+		this.userMobile = userMobile;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
 	public MerchantInfoCheck() {
 		super();
 	}

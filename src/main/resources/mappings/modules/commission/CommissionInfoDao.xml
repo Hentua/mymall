@@ -113,6 +113,8 @@
 			order_info o
 		WHERE
 			o.merchant_code = #{userId}
+			and o.order_status != 0
+			and o.order_status != 4
 			AND DATE_FORMAT( o.create_date, '%Y-%m-%d' ) = DATE_FORMAT( now( ), '%Y-%m-%d' )
 			),
 			0
@@ -125,6 +127,8 @@
 			order_info o
 		WHERE
 			o.merchant_code = #{userId}
+			and o.order_status != 0
+			and o.order_status != 4
 			AND DATE_FORMAT( o.create_date, '%Y-%m' ) = DATE_FORMAT( now( ), '%Y-%m' )
 			),
 			0

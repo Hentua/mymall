@@ -11,10 +11,13 @@
 		a.merchant_service_phone AS "merchantServicePhone",
 		a.create_date AS "createDate",
 		a.check_status AS "checkStatus",
-		a.check_remark AS "checkRemark"
+		a.check_remark AS "checkRemark",
+		u.login_name as "userMobile",
+		u.name as "userName"
 	</sql>
 	
 	<sql id="merchantInfoCheckJoins">
+		left join sys_user u on u.id = a.merchant_id
 	</sql>
     
 	<select id="get" resultType="MerchantInfoCheck">

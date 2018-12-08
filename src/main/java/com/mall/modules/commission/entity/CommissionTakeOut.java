@@ -1,5 +1,6 @@
 package com.mall.modules.commission.entity;
 
+import com.mall.modules.sys.utils.DictUtils;
 import org.hibernate.validator.constraints.Length;
 
 import com.mall.common.persistence.DataEntity;
