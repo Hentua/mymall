@@ -20,7 +20,7 @@
 		u.user_type AS "memberType",
 		m.merchant_type AS "merchantType",
 		mr.nickname AS "merchantRefereeName",
-		umr.logon_name AS "merchantRefereeAccount"
+		umr.login_name AS "merchantRefereeAccount"
 	</sql>
 	
 	<sql id="memberMerchantCheckJoins">
