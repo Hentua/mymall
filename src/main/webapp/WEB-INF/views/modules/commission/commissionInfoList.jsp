@@ -68,10 +68,10 @@
 			</li>
 			<li><label>生成时间：</label>
 				<input name="startDate" id="startDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
-					   value="<fmt:formatDate value="${memberInfo.startDate}" pattern="yyyy-MM-dd HH:mm:ss"/>"
+					   value="<fmt:formatDate value="${commissionInfo.startDate}" pattern="yyyy-MM-dd HH:mm:ss"/>"
 					   onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});"/> -
 				<input name="endDate" id="endDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
-					   value="<fmt:formatDate value="${memberInfo.endDate}" pattern="yyyy-MM-dd HH:mm:ss"/>"
+					   value="<fmt:formatDate value="${commissionInfo.endDate}" pattern="yyyy-MM-dd HH:mm:ss"/>"
 					   onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});"/>
 			</li>
 			<li><label>状态：</label>
