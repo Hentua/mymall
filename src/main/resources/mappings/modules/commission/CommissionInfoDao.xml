@@ -108,7 +108,7 @@
 			ROUND(ifnull(
 			(
 		SELECT
-			sum( o.order_amount_total )
+			sum( o.settlements_amount )
 		FROM
 			order_info o
 		WHERE
@@ -122,7 +122,7 @@
 			ROUND(ifnull(
 			(
 		SELECT
-			sum( o.order_amount_total )
+			sum( o.settlements_amount )
 		FROM
 			order_info o
 		WHERE

@@ -21,7 +21,7 @@
 		<li class="active"><a href="${ctx}/member/merchantInfoCheck/memberList">店铺信息审核列表</a></li>
 		<shiro:hasPermission name="member:merchantInfoCheck:edit"><li><a href="${ctx}/member/merchantInfoCheck/form">店铺信息审核申请</a></li></shiro:hasPermission>
 	</ul>
-	<form:form id="searchForm" modelAttribute="merchantInfoCheck" action="${ctx}/member/merchantInfoCheck/" method="post" class="breadcrumb form-search">
+	<form:form id="searchForm" modelAttribute="merchantInfoCheck" action="${ctx}/member/merchantInfoCheck/memberList" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<ul class="ul-form">

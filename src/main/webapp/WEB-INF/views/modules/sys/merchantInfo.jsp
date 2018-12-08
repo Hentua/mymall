@@ -48,11 +48,11 @@
 		}
 		.mr_notice{
 			border: 3px solid #1190d9;
-			height: 183px;
+			height: 300px;
 			margin-left: 1%;
 			width: 65%;
 			float: left;
-			margin-top: -188px;
+			margin-top: -304px;
 			border-radius: 17px;
 		}
 		.mr_info{
@@ -60,7 +60,7 @@
 			width: 29.3%;
 			margin-left: 1%;
 			float: left;
-			height: 478px;
+			height: 600px;
 			padding: 1% 1%;
 			font-size: 14px;
 			border-radius: 17px;
@@ -85,14 +85,13 @@
 			/*padding-top: 15px;*/
 		}
 		.mr_info table tr td:first-child{
-			text-align: right;
-			font-size: 15px;
-			font-weight: bold;
+			text-align: left;
+			font-size: 18px;
+			padding: 0px 0px 6px 0px;
 		}
 		.mr_info table tr td:last-child{
 			text-align: left;
-			font-size: 15px;
-			font-weight: bold;
+			font-size: 18px;
 		}
 		.mr_ad img{
 			max-height: 255px;
@@ -102,11 +101,14 @@
 			width: 98%;
 		}
 		.mr_notice table tr td{
-			font-size: 14px;
+			font-size: 18px;
 			padding-top: 12px;
-			border-bottom: 1px solid #008fd7;
-			cursor:pointer;
+			/* border-bottom: 1px solid #008fd7; */
+			cursor: pointer;
 			color: black;
+			padding-left: 10px;
+			padding-bottom: 12px;
+			border-radius: 10px;
 		}
 		.mr_notice table tr td:hover{
 			font-weight: bold;
@@ -188,21 +190,21 @@
     border-top-left-radius: 32px;
     width: 100%;
     text-align: center;
-    background-color: #1190d9;    padding-top: 20px;
-    padding-bottom: 20px;">
+    background-color: #1190d9;       padding-top: 25px;
+    padding-bottom: 25px">
 					<%--<div style="float: left;width: 40%">--%>
 						<%--<img style="border: 1px solid #1190d9;    border-radius: 50%;width: 108px" src="${member.fullAvatarUrl}" width="50%" >--%>
 					<%--</div>--%>
 					<%--<div style="float: left;width: 60%">--%>
 						<%--你好，xxx--%>
 					<%--</div>--%>
-					<table style="color: white">
+					<table style="color: white;    margin-left: 50px;">
 						<tr>
-							<td style="    width: 40%;padding-right: 30px;padding-left: 30px;" rowspan="5"><img style="border: 1px solid #1190d9;    border-radius: 50%;width: 108px" src="${member.fullAvatarUrl}" width="50%" ></td>
+							<td style="    width: 40%;padding-right: 30px;padding-left: 30px;" rowspan="5"><img style="border: 1px solid #1190d9;    margin-right: 40px;    border-radius: 50%;width: 108px" src="${member.fullAvatarUrl}" width="50%" ></td>
 						</tr>
 						<tr>
-							<td   >
-								<span style="font-size: 15px">您好，</span><span style="font-size: 25px">${user.name}</span>
+							<td style="font-weight: bold"  >
+								<span style="font-size: 20px">您好，</span><span style="font-size: 25px">${user.name}</span>
 							</td>
 						</tr>
 						<tr>
@@ -216,16 +218,17 @@
 						</tr>
 					</table>
 				</div>
-				<div style="    border: 2px solid #1190d9;
-    height: 174px;
-    margin-top: 10px;        border-bottom-left-radius: 32px;
-    border-bottom-right-radius: 32px;padding: 0 10%">
-					<div style="
-    font-size: 32px;
+				<div style=" border: 2px solid #1190d9;
+    height: 241px;
+    margin-top: 10px;
+    border-bottom-left-radius: 32px;
+    border-bottom-right-radius: 32px;
+    padding: 0 10%;">
+					<div style="    font-size: 32px;
     font-weight: bold;
-    margin-top: 50px;
+    margin-top: 60px;
     border-bottom: 2px solid #1190d9;
-    padding-bottom: 18px;
+    padding-bottom: 40px;
     padding-left: 15%;
     ">
 						月销售额：${stsObj.monthOrderAmountTotal}
@@ -233,7 +236,7 @@
 					<div  style="
     font-size: 32px;
     font-weight: bold;
-    margin-top: 18px;
+    margin-top: 40px;
     padding-left: 15%;
     ">
 						累计佣金：${stsObj.commissionTotal}
@@ -247,20 +250,18 @@
     font-weight: bold;
     height: 34px;
     padding-top: 13px;
-    padding-left: 27.5%;">
+    text-align: center;">
 					我的推荐码：${member.referee}
 				</div>
-				<div class="mr_info_left">
-					上次登录IP：
+				<div style="margin-top: 40px;
+    width: 100%;
+    text-align: center;
+    font-size: 18px;
+    margin-bottom: 10px;">
+					上次登录IP ：${user.oldLoginIp}
 				</div>
-				<div class="mr_info_right">
-					${user.oldLoginIp}
-				</div>
-				<div class="mr_info_left">
-					上次登录时间：
-				</div>
-				<div class="mr_info_right">
-					<fmt:formatDate value="${user.oldLoginDate}" type="both" dateStyle="full"/>
+				<div style="width: 100%;text-align: center;font-size: 18px;">
+					上次登录时间 ：<fmt:formatDate value="${user.oldLoginDate}" type="both" dateStyle="full"/>
 				</div>
 
 
@@ -309,12 +310,19 @@
 		</div>
 		<!-- 公告 -->
 		<div class="mr_notice">
-			<div style="margin-left: 10px;font-weight: bold;margin-top: 20px;text-align: center">最新公告</div>
+			<div style="margin-left: 10px;padding-bottom: 20px;font-weight: bold;margin-top: 20px;text-align: center;    font-size: 22px;">最新公告</div>
 			<table>
-                <c:forEach items="${indexNotices}" var="i">
-                    <tr>
-                        <td  nowrap="nowrap"><a href="${ctx}/notice/indexNotice/info?id=${i.id}">${i.title}</a></td>
-                    </tr>
+                <c:forEach items="${indexNotices}" var="i" varStatus="index" >
+					<c:if test="${index.index % 2 ==0}">
+						<tr>
+							<td  style="background-color: #D0E8FA" nowrap="nowrap"><a href="${ctx}/notice/indexNotice/info?id=${i.id}">${i.title}</a></td>
+						</tr>
+					</c:if>
+					<c:if test="${index.index % 2 !=0}">
+						<tr>
+							<td  nowrap="nowrap"><a href="${ctx}/notice/indexNotice/info?id=${i.id}">${i.title}</a></td>
+						</tr>
+					</c:if>
                 </c:forEach>
 
 				<%--<tr>--%>
