@@ -179,12 +179,34 @@ public class OrderSettlementController extends BaseController {
 	}
 
 	@RequiresPermissions("order:orderSettlement:edit")
+	@RequestMapping(value = "checks")
+	public String checks(OrderSettlement orderSettlement, HttpServletRequest request, RedirectAttributes redirectAttributes) {
+		orderSettlement.getSqlMap().put("dsf", dataScopeFilter(UserUtils.getUser(), "uoo", "uo"));
+		String [] itemIds = request.getParameterValues("itemIds");
+		List<OrderSettlement> orderSettlementList = Lists.newArrayList();
+		if(null != itemIds && itemIds.length > 0) {
+			for (String itemId : itemIds) {
+				orderSettlementList.add(orderSettlementService.get(itemId));
+			}
+		}
+
+		for (OrderSettlement orderSettlement1: orderSettlementList) {
+			orderSettlement1.setStatus("3");
+			orderSettlementService.save(orderSettlement1);
+		}
+		addMessage(redirectAttributes, "结算成功");
+		return "redirect:"+Global.getAdminPath()+"/order/orderSettlement/?repage";
+	}
+
+
+
+	@RequiresPermissions("order:orderSettlement:edit")
 	@RequestMapping(value = "updateStatus")
 	public String updateStatus(OrderSettlement orderSettlement, Model model, RedirectAttributes redirectAttributes) {
 		orderSettlement = orderSettlementService.get(orderSettlement.getId());
 		orderSettlement.setStatus("3");
 		orderSettlementService.save(orderSettlement);
-		addMessage(redirectAttributes, "保存订单结算成功");
+		addMessage(redirectAttributes, "结算成功");
 		return "redirect:"+Global.getAdminPath()+"/order/orderSettlement/list?repage";
 	}
 	

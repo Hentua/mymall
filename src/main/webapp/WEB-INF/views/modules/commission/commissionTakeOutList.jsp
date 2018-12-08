@@ -5,14 +5,34 @@
 	<title>佣金提现管理</title>
 	<meta name="decorator" content="default"/>
 	<script type="text/javascript">
-		$(document).ready(function() {
-			
-		});
-		function page(n,s){
-			$("#pageNo").val(n);
-			$("#pageSize").val(s);
-			$("#searchForm").submit();
-        	return false;
+        $(document).ready(function() {
+            $('#allCheck').click(function () {
+                var isAllCheck = this.checked;
+                $('input[name="itemId"]').each(function() {
+                    this.checked = isAllCheck;
+                });
+            })
+
+        });
+        function page(n,s){
+            $("#pageNo").val(n);
+            $("#pageSize").val(s);
+            $("#searchForm").submit();
+            return false;
+        }
+        function exportData() {
+            window.open('${ctx}/commission/commissionTakeOut/listExportData?' + $('#searchForm').serialize() + itemCheckBoxVal());
+        }
+        function itemCheckBoxVal() {
+            var itemStr = '';
+            $('input[name="itemId"]:checked').each(function () {
+                itemStr += '&itemIds=' + $(this).val();
+            });
+            return itemStr;
+        }
+        
+        function comichecks() {
+            location.href = '${ctx}/commission/commissionTakeOut/checks?' + itemCheckBoxVal();
         }
 	</script>
 </head>
@@ -20,7 +40,7 @@
 	<ul class="nav nav-tabs">
 		<li class="active"><a href="${ctx}/commission/commissionTakeOut/">佣金提现列表</a></li>
 	</ul>
-	<form:form id="searchForm" modelAttribute="commissionTakeOut" action="${ctx}/commission/commissionTakeOut/" method="post" class="breadcrumb form-search">
+	<form:form id="searchForm" modelAttribute="commissionInfo" action="${ctx}/commission/commissionTakeOut/" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<ul class="ul-form">
@@ -36,6 +56,14 @@
 			<li><label>开户行：</label>
 				<form:input path="bankName" htmlEscape="false" maxlength="200" class="input-medium"/>
 			</li>
+			<li><label>创建时间：</label>
+				<input name="startDate" id="startDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
+					   value="<fmt:formatDate value="${commissionInfo.startDate}" pattern="yyyy-MM-dd HH:mm:ss"/>"
+					   onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});"/> -
+				<input name="endDate" id="endDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
+					   value="<fmt:formatDate value="${commissionInfo.endDate}" pattern="yyyy-MM-dd HH:mm:ss"/>"
+					   onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});"/>
+			</li>
 			<li><label>状态：</label>
 				<form:select path="checkStatus" cssClass="select-multiple" cssStyle="width: 170px">
 					<form:option value="" label="全部" />
@@ -45,6 +73,8 @@
 				</form:select>
 			</li>
 			<li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
+			<li class="btns"><input id="btnExport" class="btn btn-primary" type="button" value="导出" onclick="exportData()"/></li>
+			<li class="btns"><input id="btnCheck" class="btn btn-primary" type="button" value="批量审核" onclick="comichecks()"/></li>
 			<li class="clearfix"></li>
 		</ul>
 	</form:form>
@@ -52,6 +82,7 @@
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
 		<thead>
 			<tr>
+				<th><input type="checkbox" id="allCheck"/></th>
 				<th>用户账号</th>
 				<th>用户名称</th>
 				<th>提现金额</th>
@@ -68,6 +99,11 @@
 		<tbody>
 		<c:forEach items="${page.list}" var="commissionTakeOut">
 			<tr>
+				<td>
+					<c:if test="${commissionTakeOut.checkStatus == '1'}">
+						<input type="checkbox" name="itemId" value="${commissionTakeOut.id}"/>
+					</c:if>
+				</td>
 				<td>
 						${commissionTakeOut.userMobile}
 				</td>
@@ -110,7 +146,6 @@
 				<shiro:hasPermission name="commission:commissionTakeOut:edit"><td>
 					<c:if test="${commissionTakeOut.checkStatus == '1'}">
 						<a href="${ctx}/commission/commissionTakeOut/form?id=${commissionTakeOut.id}"  >打款审核</a>
-
 					</c:if>
 				</td></shiro:hasPermission>
 			</tr>
