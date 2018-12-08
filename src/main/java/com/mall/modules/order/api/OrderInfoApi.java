@@ -244,7 +244,7 @@ public class OrderInfoApi extends BaseController {
                 }
                 GoodsInfo goodsInfo = goodsInfoService.get(goodsId);
                 GoodsStandard goodsStandard = goodsStandardService.get(goodsStandardId);
-                if (null == goodsStandard || null == goodsInfo || !goodsStandard.getGoodsId().equals(goodsInfo.getId()) || goodsInfo.getStatus() != 3) {
+                if (!"1".equals(orderType) && (null == goodsStandard || null == goodsInfo || !goodsStandard.getGoodsId().equals(goodsInfo.getId()) || goodsInfo.getStatus() != 3)) {
                     throw new ServiceException("不合法的商品信息");
                 }
                 String merchantCode = goodsInfo.getMerchantId();
