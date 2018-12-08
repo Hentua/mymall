@@ -311,7 +311,7 @@
 			idcard_back = #{idcardBack},
 			special_qualification = #{specialQualification},
 			permit = #{permit},
-			status = #{status},
+			status = #{status}
 
 
 
