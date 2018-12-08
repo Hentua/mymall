@@ -44,14 +44,14 @@ public class OrderSettlement extends DataEntity<OrderSettlement> {
 	private Double subtotal; // 小计
 
 	private String orderReturnsStatus; // 售后状态
-	private String orderReturnsHandingWay; // 售后类型
+	private String orderReturnsHandlingWay; // 售后类型
 
-	public String getOrderReturnsHandingWay() {
-		return orderReturnsHandingWay;
+	public String getOrderReturnsHandlingWay() {
+		return orderReturnsHandlingWay;
 	}
 
-	public void setOrderReturnsHandingWay(String orderReturnsHandingWay) {
-		this.orderReturnsHandingWay = orderReturnsHandingWay;
+	public void setOrderReturnsHandlingWay(String orderReturnsHandlingWay) {
+		this.orderReturnsHandlingWay = orderReturnsHandlingWay;
 	}
 
 	public String getOrderReturnsStatus() {

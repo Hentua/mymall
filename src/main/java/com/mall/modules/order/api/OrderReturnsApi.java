@@ -99,7 +99,7 @@ public class OrderReturnsApi extends BaseController {
             if (null == orderInfo) {
                 throw new ServiceException("订单信息不合法");
             }
-            if (!"3".equals(orderInfo.getOrderStatus()) || !"0".equals(orderInfo.getSetFlag())) {
+            if (!"0".equals(orderInfo.getOrderType()) || !"3".equals(orderInfo.getOrderStatus()) || !"0".equals(orderInfo.getSetFlag())) {
                 throw new ServiceException("当前订单不可申请售后，如有需要请联系客服");
             }
             if (StringUtils.isBlank(reason)) {

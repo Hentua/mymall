@@ -135,8 +135,8 @@
             </td>
             <td>
                 <c:choose>
-                    <c:when test="${orderSettlement.orderReturnsHandingWay == '0'}">退货退款</c:when>
-                    <c:when test="${orderSettlement.orderReturnsHandingWay == '1'}">换新</c:when>
+                    <c:when test="${orderSettlement.orderReturnsHandlingWay == '0'}">退货退款</c:when>
+                    <c:when test="${orderSettlement.orderReturnsHandlingWay == '1'}">换新</c:when>
                 </c:choose>
             </td>
             <td>
