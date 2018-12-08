@@ -176,7 +176,7 @@
                 $('body').html('验证成功，即将跳转页面');
                 setTimeout(function () {
                     location.href = '${successCallbackUrl}';
-                }, 3000);
+                }, 500);
             }
         });
     };
