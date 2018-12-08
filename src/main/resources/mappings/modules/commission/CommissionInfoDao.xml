@@ -44,10 +44,10 @@
 	<select id="findList" resultType="CommissionInfo">
 		SELECT 
 			<include refid="commissionInfoColumns"/>
-		left join sys_user uo on uo.id = mu.operator_code
-		left join sys_office uoo on uoo.id = uo.office_id
 		FROM commission_info a
 		<include refid="commissionInfoJoins"/>
+		left join sys_user uo on uo.id = mu.operator_code
+		left join sys_office uoo on uoo.id = uo.office_id
 		<where>
 			<if test="unionId != null and unionId != ''">
 				and a.union_id = #{unionId}
