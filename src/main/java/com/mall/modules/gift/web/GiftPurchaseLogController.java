@@ -6,8 +6,10 @@ import com.mall.common.persistence.Page;
 import com.mall.common.utils.StringUtils;
 import com.mall.common.utils.excel.ExportExcel;
 import com.mall.common.web.BaseController;
+import com.mall.modules.gift.entity.GiftConfigCategory;
 import com.mall.modules.gift.entity.GiftMerchant;
 import com.mall.modules.gift.entity.GiftPurchaseLog;
+import com.mall.modules.gift.service.GiftConfigCategoryService;
 import com.mall.modules.gift.service.GiftMerchantService;
 import com.mall.modules.gift.service.GiftPurchaseLogService;
 import com.mall.modules.sys.entity.User;
@@ -41,6 +43,8 @@ public class GiftPurchaseLogController extends BaseController {
 	private GiftPurchaseLogService giftPurchaseLogService;
 	@Autowired
 	private GiftMerchantService giftMerchantService;
+	@Autowired
+	private GiftConfigCategoryService giftConfigCategoryService;
 	
 	@ModelAttribute
 	public GiftPurchaseLog get(@RequestParam(required=false) String id) {
@@ -96,6 +100,7 @@ public class GiftPurchaseLogController extends BaseController {
 	public String operatorList(GiftPurchaseLog giftPurchaseLog, HttpServletRequest request, HttpServletResponse response, Model model) {
 		Page<GiftPurchaseLog> page = giftPurchaseLogService.findPage(new Page<GiftPurchaseLog>(request, response), giftPurchaseLog);
 		model.addAttribute("page", page);
+		model.addAttribute("giftConfigCategoryList", giftConfigCategoryService.findList(new GiftConfigCategory()));
 		return "modules/gift/giftPurchaseLogOperatorList";
 	}
 

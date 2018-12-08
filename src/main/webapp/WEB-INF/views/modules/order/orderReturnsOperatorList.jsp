@@ -29,6 +29,9 @@
         <li><label>商家账号：</label>
             <form:input path="merchantAccount" htmlEscape="false" maxlength="32" class="input-medium"/>
         </li>
+        <li><label>申请人账号：</label>
+            <form:input path="customerMobile" htmlEscape="false" maxlength="32" class="input-medium"/>
+        </li>
         <li><label>售后单号：</label>
             <form:input path="returnsNo" htmlEscape="false" maxlength="32" class="input-medium"/>
         </li>

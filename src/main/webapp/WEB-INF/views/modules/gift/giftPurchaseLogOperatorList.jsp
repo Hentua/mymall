@@ -39,11 +39,14 @@
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<ul class="ul-form">
-			<li><label>礼包名称：</label>
-				<form:input path="giftConfigCategoryName" htmlEscape="false" maxlength="20" class="input-medium"/>
-			</li>
 			<li><label>商家账号：</label>
 				<form:input path="merchantAccount" htmlEscape="false" maxlength="20" class="input-medium"/>
+			</li>
+			<li><label>礼包名称：</label>
+				<form:select path="giftConfigCategoryName" class="input-xlarge ">
+					<form:options items="giftConfigCategoryList" itemLabel="categoryName" itemValue="categoryName"
+								  htmlEscape="false"/>
+				</form:select>
 			</li>
 			<li><label>订单号：</label>
 				<form:input path="paymentNo" htmlEscape="false" maxlength="20" class="input-medium"/>
@@ -82,6 +85,8 @@
 		<thead>
 			<tr>
 				<th><input type="checkbox" id="allCheck"/></th>
+				<th>商家名称</th>
+				<th>商家账号</th>
 				<th>订单号</th>
 				<th>礼包名称</th>
 				<th>购买数量</th>
@@ -91,13 +96,17 @@
 				<th>购买时间</th>
 				<th>支付时间</th>
 				<th>购买状态</th>
-				<th>商家名称</th>
-				<th>商家账号</th>
 			</tr>
 		</thead>
 		<tbody>
 		<c:forEach items="${page.list}" var="giftPurchaseLog">
 			<tr>
+				<td>
+						${giftPurchaseLog.merchantName}
+				</td>
+				<td>
+						${giftPurchaseLog.merchantAccount}
+				</td>
 				<td>
 					<input type="checkbox" name="itemId" value="${giftTransferLog.id}"/>
 				</td>
@@ -127,12 +136,6 @@
 				</td>
 				<td>
 					${giftPurchaseLog.statusZh}
-				</td>
-				<td>
-					${giftPurchaseLog.merchantName}
-				</td>
-				<td>
-					${giftPurchaseLog.merchantAccount}
 				</td>
 			</tr>
 		</c:forEach>

@@ -39,11 +39,17 @@
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<ul class="ul-form">
-			<li><label>礼包名称：</label>
-				<form:input path="giftConfigCategoryName" htmlEscape="false" maxlength="20" class="input-medium"/>
-			</li>
 			<li><label>商家账号：</label>
 				<form:input path="merchantAccount" htmlEscape="false" maxlength="20" class="input-medium"/>
+			</li>
+			<li><label>会员账号：</label>
+				<form:input path="customerAccount" htmlEscape="false" maxlength="20" class="input-medium"/>
+			</li>
+			<li><label>礼包名称：</label>
+				<form:select path="giftConfigCategoryName" class="input-xlarge ">
+					<form:options items="giftConfigCategoryList" itemLabel="categoryName" itemValue="categoryName"
+								  htmlEscape="false"/>
+				</form:select>
 			</li>
 			<li><label>赠送时间：</label>
 				<input name="beginCreateDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"

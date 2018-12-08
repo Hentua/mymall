@@ -93,6 +93,9 @@
 			<if test="merchantAccount != null and merchantAccount != ''">
 				AND um.login_name = #{merchantAccount}
 			</if>
+			<if test="customerMobile != null and customerMobile != ''">
+				and u.login_name = #{customerMobile}
+			</if>
 		</where>
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">

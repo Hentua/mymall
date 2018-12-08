@@ -6,7 +6,9 @@ import com.mall.common.persistence.Page;
 import com.mall.common.utils.StringUtils;
 import com.mall.common.utils.excel.ExportExcel;
 import com.mall.common.web.BaseController;
+import com.mall.modules.gift.entity.GiftConfigCategory;
 import com.mall.modules.gift.entity.GiftTransferLog;
+import com.mall.modules.gift.service.GiftConfigCategoryService;
 import com.mall.modules.gift.service.GiftTransferLogService;
 import com.mall.modules.sys.entity.User;
 import com.mall.modules.sys.utils.UserUtils;
@@ -34,6 +36,8 @@ public class GiftTransferLogController extends BaseController {
 
 	@Autowired
 	private GiftTransferLogService giftTransferLogService;
+	@Autowired
+	private GiftConfigCategoryService giftConfigCategoryService;
 	
 	@ModelAttribute
 	public GiftTransferLog get(@RequestParam(required=false) String id) {
@@ -86,6 +90,7 @@ public class GiftTransferLogController extends BaseController {
 	public String operatorList(GiftTransferLog giftTransferLog, HttpServletRequest request, HttpServletResponse response, Model model) {
 		Page<GiftTransferLog> page = giftTransferLogService.findPage(new Page<GiftTransferLog>(request, response), giftTransferLog);
 		model.addAttribute("page", page);
+		model.addAttribute("giftConfigCategoryList", giftConfigCategoryService.findList(new GiftConfigCategory()));
 		return "modules/gift/giftTransferLogOperatorList";
 	}
 
