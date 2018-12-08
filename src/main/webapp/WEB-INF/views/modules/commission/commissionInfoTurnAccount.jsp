@@ -9,8 +9,22 @@
 			//$("#name").focus();
 			$("#inputForm").validate({
 				submitHandler: function(form){
-					loading('正在提交，请稍等...');
-					form.submit();
+					// form.submit();
+					$.jBox.open("iframe:${ctx}/member/memberInfo/checkPayPasswordForm?id=${fns:getUser().id}&failedCallbackUrl=${ctx}/member/memberInfo/checkPayPasswordResultDialog?checkResult=0&successCallbackUrl=${ctx}/member/memberInfo/checkPayPasswordResultDialog?checkResult=1", "美易验证", 1200, $(top.document).height() - 280, {
+						buttons: {"关闭": true}, submit: function (v, h, f) {
+						}, loaded: function (h) {
+							$(".jbox-content", top.document).css("overflow-y", "hidden");
+						},
+						closed: function() {
+							if(checkResult == '1') {
+								loading('正在提交，请稍等...');
+								form.submit();
+							}else {
+								jBox.close();
+								closeLoading();
+							}
+						}
+					});
 				},
 				errorContainer: "#messageBox",
 				errorPlacement: function(error, element) {
