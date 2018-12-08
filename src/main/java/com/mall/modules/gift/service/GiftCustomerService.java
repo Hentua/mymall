@@ -2,6 +2,7 @@ package com.mall.modules.gift.service;
 
 import java.util.List;
 
+import com.mall.common.service.ServiceException;
 import com.mall.modules.gift.entity.GiftMerchant;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -33,7 +34,7 @@ public class GiftCustomerService extends CrudService<GiftCustomerDao, GiftCustom
 		return super.findPage(page, giftCustomer);
 	}
 	
-	@Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+	@Transactional(readOnly = false, rollbackFor = {Exception.class, ServiceException.class}, propagation = Propagation.REQUIRED)
 	public void save(GiftCustomer giftCustomer) {
 		super.save(giftCustomer);
 	}

@@ -107,7 +107,7 @@ public class OrderInfoApi extends BaseController {
      * @param response 响应体
      */
     @RequestMapping(value = "submitOrder", method = RequestMethod.POST)
-    @Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    @Transactional(readOnly = false, rollbackFor = {Exception.class, ServiceException.class}, propagation = Propagation.REQUIRED)
     public void submitOrder(HttpServletRequest request, HttpServletResponse response) {
         // 基础数据初始化及基本工具定义
         DecimalFormat df = new DecimalFormat("#.00");

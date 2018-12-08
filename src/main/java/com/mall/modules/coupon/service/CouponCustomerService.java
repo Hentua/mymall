@@ -2,6 +2,7 @@ package com.mall.modules.coupon.service;
 
 import com.mall.common.persistence.Page;
 import com.mall.common.service.CrudService;
+import com.mall.common.service.ServiceException;
 import com.mall.modules.coupon.dao.CouponCustomerDao;
 import com.mall.modules.coupon.entity.CouponCustomer;
 import com.mall.modules.coupon.entity.CouponLog;
@@ -60,7 +61,7 @@ public class CouponCustomerService extends CrudService<CouponCustomerDao, Coupon
 
 
 
-    @Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    @Transactional(readOnly = false, rollbackFor = {Exception.class, ServiceException.class}, propagation = Propagation.REQUIRED)
     public void exchangeGiftGenCoupon(GiftConfig giftConfig, String giftCustomerId, String customerCode) {
         CouponCustomer halfCoupon = new CouponCustomer();
         // 保存礼包五折券
