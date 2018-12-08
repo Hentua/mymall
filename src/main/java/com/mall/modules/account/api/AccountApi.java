@@ -149,7 +149,7 @@ public class AccountApi extends BaseController {
         MemberInfo memberInfo = memberInfoService.get(m);
         CommissionInfo c = new CommissionInfo();
         c.setUserId(memberInfo.getId());
-        if(StringUtils.isEmpty(request.getParameter("type"))){
+        if(!StringUtils.isEmpty(request.getParameter("type"))){
             c.setType(request.getParameter("type"));
         }
         Page<CommissionInfo> page = new Page<>(request, response);
