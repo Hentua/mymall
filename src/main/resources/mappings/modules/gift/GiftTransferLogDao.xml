@@ -47,10 +47,10 @@
 	<select id="findList" resultType="GiftTransferLog">
 		SELECT 
 			<include refid="giftTransferLogColumns"/>
-		left join sys_user uo on uo.id = m.operator_code
-		left join sys_office uoo on uoo.id = uo.office_id
 		FROM gift_transfer_log a
 		<include refid="giftTransferLogJoins"/>
+		left join sys_user uo on uo.id = m.operator_code
+		left join sys_office uoo on uoo.id = uo.office_id
 		<where>
 			<if test="merchantCode != null and merchantCode != ''">
 				and a.merchant_code = #{merchantCode}

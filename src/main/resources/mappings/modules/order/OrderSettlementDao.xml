@@ -45,10 +45,10 @@
 	<select id="findList" resultType="OrderSettlement">
 		SELECT 
 			<include refid="orderSettlementColumns"/>
-		left join sys_user uo on uo.id = m.operator_code
-		left join sys_office uoo on uoo.id = uo.office_id
 		FROM order_settlement a
 		<include refid="orderSettlementJoins"/>
+		left join sys_user uo on uo.id = m.operator_code
+		left join sys_office uoo on uoo.id = uo.office_id
 		<where>
 			
 			<if test="orderId != null and orderId != ''">

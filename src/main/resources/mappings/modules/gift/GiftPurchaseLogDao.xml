@@ -42,10 +42,10 @@
 	<select id="findList" resultType="GiftPurchaseLog">
 		SELECT 
 			<include refid="giftPurchaseLogColumns"/>
-			left join sys_user uo on uo.id = m.operator_code
-			left join sys_office uoo on uoo.id = uo.office_id
 		FROM gift_purchase_log a
 		<include refid="giftPurchaseLogJoins"/>
+		left join sys_user uo on uo.id = m.operator_code
+		left join sys_office uoo on uoo.id = uo.office_id
 		<where>
 			<if test="giftConfigCategoryName != null and giftConfigCategoryName != ''">
 				and c.category_name like concat('%',#{giftConfigCategoryName},'%')

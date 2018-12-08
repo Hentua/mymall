@@ -56,10 +56,10 @@
 	<select id="findList" resultType="OrderReturns">
 		SELECT 
 			<include refid="orderReturnsColumns"/>
-			left join sys_user uo on uo.id = m.operator_code
-			left join sys_office uoo on uoo.id = uo.office_id
 		FROM order_returns a
 		<include refid="orderReturnsJoins"/>
+		left join sys_user uo on uo.id = m.operator_code
+		left join sys_office uoo on uoo.id = uo.office_id
 		<where>
 			
 			<if test="returnsNo != null and returnsNo != ''">

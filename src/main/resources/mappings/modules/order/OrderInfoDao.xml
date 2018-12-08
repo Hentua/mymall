@@ -253,6 +253,8 @@
 		     left join sys_user um on um.id = a.merchant_code
 		     left join sys_user uc on uc.id = a.customer_code
 		     left join order_settlement s on s.order_id = a.id
+			 left join sys_user uo on uo.id = m.operator_code
+			 left join sys_office uoo on uoo.id = uo.office_id
 		<where>
 			<if test="customerCode != null and customerCode != ''">
 				and a.customer_code = #{customerCode}

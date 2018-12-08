@@ -213,12 +213,18 @@
                     <input id="btnSubmit" class="btn btn-primary" type="submit" value="发货" onclick="this.form.action='${ctx}/order/orderReturns/delivery';"/>&nbsp;
                 </c:when>
                 <c:when test="${orderReturns.status == '1' && orderReturns.handlingWay == '0'}">
-                    <input id="btnSubmit" class="btn btn-primary" type="submit" value="退款" onclick="type = 'refund';this.form.action='${ctx}/order/orderReturns/refund';"/>&nbsp;
+                    <input id="btnSubmit" class="btn btn-primary" type="submit" value="退款" onclick="submitRefund()"/>&nbsp;
                 </c:when>
             </c:choose>
         </shiro:hasPermission>
         <input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
     </div>
 </form:form>
+<script>
+    function submitRefund() {
+        type = 'refund';
+        $('#inputForm').val('action', '${ctx}/order/orderReturns/refund');
+    }
+</script>
 </body>
 </html>
