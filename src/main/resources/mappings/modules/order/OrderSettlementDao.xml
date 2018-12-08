@@ -21,7 +21,7 @@
 		o.order_status as "orderStatus",
 		um.login_name AS "merchantAccount",
 		uc.login_name AS "customerAccount",
-		returns.handing_way AS "orderReturnsHandlingWay",
+		returns.handling_way AS "orderReturnsHandlingWay",
 		returns.status as "orderReturnsStatus"
 	</sql>
 	
