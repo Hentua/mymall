@@ -121,13 +121,20 @@ public class CommissionInfoController extends BaseController {
 		m.setId(user.getId());
 		MemberInfo memberInfo = memberInfoService.get(m);
 		Double amount = commissionInfo.getAmount();
+
+
 		if (1 > amount) {
 			addMessage(model,"提现失败：提现金额必须大于等于1");
-			return "modules/commission/commissionTakeOutForm";
+			return "modules/commission/merchantCommissionTakeOut";
 		}
+		if (amount%1 !=0) {
+			addMessage(model,"提现失败：提现金额必须以1元为基础单位");
+			return "modules/commission/merchantCommissionTakeOut";
+		}
+
 		if (memberInfo.getCommission() < amount) {
 			addMessage(model,"提现失败：余额不足");
-			return "modules/commission/commissionTakeOutForm";
+			return "modules/commission/merchantCommissionTakeOut";
 		}
 		//新增提现记录
 		CommissionInfo c = new CommissionInfo();

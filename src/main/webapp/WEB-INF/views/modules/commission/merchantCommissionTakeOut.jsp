@@ -38,8 +38,11 @@
 			});
 		});
 
-        function go_a(status) {
-            $("#checkStatus").val(status);
+        function go_a() {
+            if($("#amount").val()%1 !=0){
+                $("#wa_span").show();
+                return;
+			}
             $("#inputForm").submit();
             <%--location.href = "${ctx}/goods/goodsInfo/updateStatusCheck?id=${goodsInfo.id}&status="+status;--%>
         }
@@ -77,8 +80,9 @@
 		<div class="control-group">
 			<label class="control-label">提现金额：</label>
 			<div class="controls">
-				<form:input path="amount" htmlEscape="false" maxlength="200" class="input-xlarge number required"/>
+				<form:input id="amount" path="amount" htmlEscape="false" maxlength="200" class="input-xlarge number required"/>
 				&nbsp;&nbsp;&nbsp;<span>可提现余额：${memberInfo.commission}</span>
+				<br/><span id="wa_span" style="color: red;display: none">提现金额以1元为基础单位</span>
 			</div>
 		</div>
 		<div class="form-actions">
@@ -88,7 +92,7 @@
                 <br/>
             </c:if>
             <c:if test="${org != '1'}">
-                <input class="btn btn-primary" type="submit"    value="提 交"/>
+                <input class="btn btn-primary" type="button" onclick="go_a()"    value="提 交"/>
             </c:if>
 			<input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
 		</div>

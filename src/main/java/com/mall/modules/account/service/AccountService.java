@@ -173,14 +173,15 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 		}
 		//1：推荐用户消费返佣 2：推荐商家销售返佣 3：推荐商家入驻返佣 4：推荐商家送出礼包返佣 5：商家送出礼包返佣
 		//订单类型（0-平台自主下单，1-礼包兑换）
+		//创建订单结算信息
+		OrderSettlement orderSettlement = new OrderSettlement();
+		orderSettlement.setOrderId(orderInfo.getId());
+		orderSettlement.setSettlementAmount(orderInfo.getSettlementsAmount());
+		orderSettlement.setUserId(orderInfo.getMerchantCode());
+		orderSettlement.setStatus("1");
+		orderSettlementService.save(orderSettlement);
 		if("0".equals(orderInfo.getOrderType())){
-			//创建订单结算信息
-			OrderSettlement orderSettlement = new OrderSettlement();
-			orderSettlement.setOrderId(orderInfo.getId());
-			orderSettlement.setSettlementAmount(orderInfo.getSettlementsAmount());
-			orderSettlement.setUserId(orderInfo.getMerchantCode());
-			orderSettlement.setStatus("1");
-			orderSettlementService.save(orderSettlement);
+
 			//新增佣金记录
 			//卖家推荐人佣金
 			CommissionConfig config = commissionConfigService.getConfig("2");
