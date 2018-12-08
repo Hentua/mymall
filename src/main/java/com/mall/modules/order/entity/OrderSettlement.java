@@ -43,6 +43,25 @@ public class OrderSettlement extends DataEntity<OrderSettlement> {
 	private Integer goodsCount; // 商品数量
 	private Double subtotal; // 小计
 
+	private String orderReturnsStatus; // 售后状态
+	private String orderReturnsHandingWay; // 售后类型
+
+	public String getOrderReturnsHandingWay() {
+		return orderReturnsHandingWay;
+	}
+
+	public void setOrderReturnsHandingWay(String orderReturnsHandingWay) {
+		this.orderReturnsHandingWay = orderReturnsHandingWay;
+	}
+
+	public String getOrderReturnsStatus() {
+		return orderReturnsStatus;
+	}
+
+	public void setOrderReturnsStatus(String orderReturnsStatus) {
+		this.orderReturnsStatus = orderReturnsStatus;
+	}
+
 	@ExcelField(title = "商品购买数量", sort = 11, groups = {1})
 	public Integer getGoodsCount() {
 		return goodsCount;

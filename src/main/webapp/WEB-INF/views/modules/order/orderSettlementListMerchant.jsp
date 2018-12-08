@@ -88,6 +88,8 @@
         <th>订单金额</th>
         <th>订单结算金额</th>
         <th>状态</th>
+        <th>售后处理方式</th>
+        <th>售后状态</th>
     </tr>
     </thead>
     <tbody>
@@ -143,6 +145,21 @@
                 <c:if test="${orderSettlement.status == '3'}">
                     已结算
                 </c:if>
+            </td>
+            <td>
+                <c:choose>
+                    <c:when test="${orderSettlement.orderReturnsHandingWay == '0'}">退货退款</c:when>
+                    <c:when test="${orderSettlement.orderReturnsHandingWay == '1'}">换新</c:when>
+                </c:choose>
+            </td>
+            <td>
+                <c:choose>
+                    <c:when test="${orderSettlement.orderReturnsStatus == '0'}">待审核</c:when>
+                    <c:when test="${orderSettlement.orderReturnsStatus == '1'}">待处理</c:when>
+                    <c:when test="${orderSettlement.orderReturnsStatus == '2'}">待收货</c:when>
+                    <c:when test="${orderSettlement.orderReturnsStatus == '3'}">已完成</c:when>
+                    <c:when test="${orderSettlement.orderReturnsStatus == '4'}">审核未通过</c:when>
+                </c:choose>
             </td>
         </tr>
     </c:forEach>

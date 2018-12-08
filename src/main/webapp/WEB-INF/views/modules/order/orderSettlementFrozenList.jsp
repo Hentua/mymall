@@ -71,6 +71,9 @@
         <th>商家账号</th>
         <th>订单时间 </th>
         <th>订单编号</th>
+        <th>订单状态</th>
+        <th>售后处理方式</th>
+        <th>售后状态</th>
         <th>下单人</th>
         <th>下单人账号</th>
         <th>订单金额</th>
@@ -96,6 +99,24 @@
             </td>
             <td>
                 <a href="${ctx}/order/orderInfo/form?id=${orderSettlement.orderId}">${orderSettlement.orderNo}</a>
+            </td>
+            <td>
+                    ${orderSettlement.orderStatusZh}
+            </td>
+            <td>
+                <c:choose>
+                    <c:when test="${orderSettlement.orderReturnsHandingWay == '0'}">退货退款</c:when>
+                    <c:when test="${orderSettlement.orderReturnsHandingWay == '1'}">换新</c:when>
+                </c:choose>
+            </td>
+            <td>
+                <c:choose>
+                    <c:when test="${orderSettlement.orderReturnsStatus == '0'}">待审核</c:when>
+                    <c:when test="${orderSettlement.orderReturnsStatus == '1'}">待处理</c:when>
+                    <c:when test="${orderSettlement.orderReturnsStatus == '2'}">待收货</c:when>
+                    <c:when test="${orderSettlement.orderReturnsStatus == '3'}">已完成</c:when>
+                    <c:when test="${orderSettlement.orderReturnsStatus == '4'}">审核未通过</c:when>
+                </c:choose>
             </td>
             <td>
                     ${orderSettlement.customerName}

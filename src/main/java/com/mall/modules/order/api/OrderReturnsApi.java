@@ -175,6 +175,7 @@ public class OrderReturnsApi extends BaseController {
      * @param response 响应体
      */
     @RequestMapping(value = "orderReturnsComplete", method = RequestMethod.POST)
+    @Transactional(readOnly = false, rollbackFor = {Exception.class, ServiceException.class}, propagation = Propagation.REQUIRED)
     public void orderReturnsComplete(HttpServletRequest request, HttpServletResponse response) {
         String id = request.getParameter("id");
         try {

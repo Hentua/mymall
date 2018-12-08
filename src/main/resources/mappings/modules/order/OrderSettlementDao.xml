@@ -20,7 +20,9 @@
 		o.order_amount_total AS "orderAmount",
 		o.order_status as "orderStatus",
 		um.login_name AS "merchantAccount",
-		uc.login_name AS "customerAccount"
+		uc.login_name AS "customerAccount",
+		return.handing_way AS "orderReturnsHandingWay",
+		return.status as "orderReturnsStatus"
 	</sql>
 	
 	<sql id="orderSettlementJoins">
@@ -29,6 +31,7 @@
 		LEFT JOIN sys_user uc ON uc.id = o.customer_code
 		LEFT JOIN member_info m on m.id = o.merchant_code
 		LEFT JOIN member_info mc on mc.id = o.customer_code
+		left join order_returns return on return.order_no = o.order_no
 	</sql>
     
 	<select id="get" resultType="OrderSettlement">
@@ -88,6 +91,7 @@
 			<if test="merchantAccount != null and merchantAccount != ''">
 				AND um.login_name = #{merchantAccount}
 			</if>
+			and (return.handing_way = '0' and return.status = '4')
 		</where>
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
@@ -169,6 +173,7 @@
             <if test="goodsName != null and goodsName != ''">
                 AND g.goods_name like concat('%', #{goodsName}, '%')
             </if>
+			and (return.handing_way = '0' and return.status = '4')
         </where>
         <choose>
             <when test="page !=null and page.orderBy != null and page.orderBy != ''">
@@ -212,6 +217,7 @@
             <if test="goodsName != null and goodsName != ''">
                 AND g.goods_name like concat('%', #{goodsName}, '%')
             </if>
+			and (return.handing_way = '0' and return.status = '4')
 		</where>
 	</select>
 	

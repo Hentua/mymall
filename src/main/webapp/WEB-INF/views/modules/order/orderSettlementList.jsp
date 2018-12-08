@@ -84,6 +84,8 @@
         <th>结算金额</th>
         <th>清算状态</th>
         <th>订单状态</th>
+        <th>售后处理方式</th>
+        <th>售后状态</th>
         <shiro:hasPermission name="order:orderSettlement:edit"><th>操作</th></shiro:hasPermission>
     </tr>
     </thead>
@@ -130,6 +132,21 @@
             </td>
             <td>
                     ${orderSettlement.orderStatusZh}
+            </td>
+            <td>
+                <c:choose>
+                    <c:when test="${orderSettlement.orderReturnsHandingWay == '0'}">退货退款</c:when>
+                    <c:when test="${orderSettlement.orderReturnsHandingWay == '1'}">换新</c:when>
+                </c:choose>
+            </td>
+            <td>
+                <c:choose>
+                    <c:when test="${orderSettlement.orderReturnsStatus == '0'}">待审核</c:when>
+                    <c:when test="${orderSettlement.orderReturnsStatus == '1'}">待处理</c:when>
+                    <c:when test="${orderSettlement.orderReturnsStatus == '2'}">待收货</c:when>
+                    <c:when test="${orderSettlement.orderReturnsStatus == '3'}">已完成</c:when>
+                    <c:when test="${orderSettlement.orderReturnsStatus == '4'}">审核未通过</c:when>
+                </c:choose>
             </td>
             <shiro:hasPermission name="order:orderSettlement:edit"><td>
                 <c:if test="${orderSettlement.orderStatus == '3' &&  orderSettlement.status == '2' && orderSettlement.status != '3'}">
