@@ -213,7 +213,7 @@
                     <input id="btnSubmit" class="btn btn-primary" type="submit" value="发货" onclick="this.form.action='${ctx}/order/orderReturns/delivery';"/>&nbsp;
                 </c:when>
                 <c:when test="${orderReturns.status == '1' && orderReturns.handlingWay == '0'}">
-                    <input id="btnSubmit" class="btn btn-primary" type="submit" value="退款" onclick="submitRefund()"/>&nbsp;
+                    <input id="btnSubmit" class="btn btn-primary" type="button" value="退款" onclick="submitRefund()"/>&nbsp;
                 </c:when>
             </c:choose>
         </shiro:hasPermission>
@@ -223,7 +223,9 @@
 <script>
     function submitRefund() {
         type = 'refund';
-        $('#inputForm')[0].form.action = '${ctx}/order/orderReturns/refund';
+        var inputForm = $('#inputForm');
+        inputForm[0].action = '${ctx}/order/orderReturns/refund';
+        inputForm.submit();
     }
 </script>
 </body>
