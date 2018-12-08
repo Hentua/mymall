@@ -212,7 +212,12 @@ public class AccountFlow extends DataEntity<AccountFlow> {
 				return "支出-提现";
 			}
 			if("4".equals(this.getMode())){
-				return "支出-消费";
+				if("0".equals(this.getPaymentType())){
+					return "支出-订单消费";
+				}
+				if("1".equals(this.getPaymentType())){
+					return "支出-礼包消费";
+				}
 			}
 		}
 

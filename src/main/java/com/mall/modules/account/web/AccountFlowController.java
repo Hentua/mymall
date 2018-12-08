@@ -121,6 +121,30 @@ public class AccountFlowController extends BaseController {
 		return "modules/account/memberAccountFlowList";
 	}
 
+
+	@RequestMapping(value = {"memberListexportData"})
+	public void memberListexportData(AccountFlow accountFlow,  HttpServletRequest request, HttpServletResponse response, Model model) {
+		String [] itemIds = request.getParameterValues("itemIds");
+		List<AccountFlow> accountFlows;
+		if(null != itemIds && itemIds.length > 0) {
+			accountFlows = Lists.newArrayList();
+			for (String itemId : itemIds) {
+				accountFlows.add(this.get(itemId));
+			}
+		}else {
+			accountFlow.setCheckStatus("2");
+			accountFlows = accountFlowService.findList(accountFlow);
+		}
+
+		ExportExcel exportExcel = new ExportExcel("用户余额明细", AccountFlow.class);
+		try {
+			exportExcel.setDataList(accountFlows);
+			exportExcel.write(response, "用户余额明细.xlsx");
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	/**
 	 * 商家端流水
 	 * @param accountFlow

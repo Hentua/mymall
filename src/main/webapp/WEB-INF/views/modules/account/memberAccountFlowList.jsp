@@ -21,7 +21,7 @@
         }
 
         function exportData() {
-            window.open('${ctx}/account/accountFlow/listexportData?' + $('#searchForm').serialize() + itemCheckBoxVal());
+            window.open('${ctx}/account/accountFlow/memberListexportData?' + $('#searchForm').serialize() + itemCheckBoxVal());
         }
         function itemCheckBoxVal() {
             var itemStr = '';
@@ -63,6 +63,7 @@
 					<%--<form:input path="userMobile" htmlEscape="false" maxlength="100" class="input-medium" />--%>
 			</li>
 			<li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
+			<li class="btns"><input id="btnExport" class="btn btn-primary" type="button" value="导出" onclick="exportData()"/></li>
 			<li class="clearfix"></li>
 		</ul>
 	</form:form>
