@@ -111,7 +111,7 @@
     </thead>
     <tbody>
     <c:forEach items="${page.list}" var="orderInfo">
-        <tr ${orderInfo.remingFlag == '1' ? 'style="background-color: red;"' : ''}>
+        <tr ${orderInfo.remindFlag == '1' ? 'style="background-color: red;"' : ''}>
             <td>
                     <input type="checkbox" name="itemId" value="${orderInfo.id}"/>
             </td>
