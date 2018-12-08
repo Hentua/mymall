@@ -8,7 +8,8 @@
 		a.price AS "price",
 		a.goods_id AS "goodsId",
 		a.category_id AS "categoryId",
-		a.settlements_amount as "settlementsAmount"
+		a.settlements_amount as "settlementsAmount",
+		a.create_date as "createDate"
 	</sql>
 	
 	<sql id="goodsStandardJoins">
@@ -50,6 +51,7 @@
 				ORDER BY ${page.orderBy}
 			</when>
 			<otherwise>
+				order by a.create_date asc
 			</otherwise>
 		</choose>
 	</select>
