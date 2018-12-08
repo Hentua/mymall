@@ -225,7 +225,9 @@ public class AccountFlowController extends BaseController {
 
 	@RequiresPermissions("account:accountFlow:edit")
 	@RequestMapping(value = "check")
-	public String check(AccountFlow accountFlow, RedirectAttributes redirectAttributes) {
+	public String check(AccountFlow accountFlow, HttpServletRequest request,  RedirectAttributes redirectAttributes) {
+
+
 		AccountFlow ac =  accountFlowService.get(accountFlow);
 		ac.setCheckStatus("2");
 		accountFlowService.save(ac);
@@ -250,6 +252,32 @@ public class AccountFlowController extends BaseController {
 		addMessage(redirectAttributes, "审核成功");
 		return "redirect:"+Global.getAdminPath()+"/account/accountFlow/list?repage";
 	}
+
+	@RequiresPermissions("account:accountFlow:edit")
+	@RequestMapping(value = "checks")
+	public String checks(HttpServletRequest request,  RedirectAttributes redirectAttributes) {
+		String [] itemIds = request.getParameterValues("itemIds");
+		if(null != itemIds && itemIds.length > 0) {
+			for (String itemId : itemIds) {
+				AccountFlow ac =  accountFlowService.get(itemId);
+				ac.setCheckStatus("2");
+				accountFlowService.save(ac);
+				//新增余额
+				MemberInfo m = new  MemberInfo();
+				m.setId(ac.getUserId());
+				m = memberInfoService.get(m);
+				Double balance = null;
+				//1：充值，2：佣金转余额）支出（3：提现，4：消费）
+				if("1".equals(ac.getMode())){
+					balance = m.getBalance()+ac.getAmount();
+				}
+				accountService.editAccount(balance,null,m.getId());
+			}
+		}
+		addMessage(redirectAttributes, "审核成功");
+		return "redirect:"+Global.getAdminPath()+"/account/accountFlow/list?repage";
+	}
+
 
 
 
