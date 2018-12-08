@@ -46,6 +46,7 @@
 				<th>头像地址</th>
 				<th>头图</th>
 				<th>客服电话</th>
+				<th>提交时间</th>
 				<th>审核状态</th>
 				<th>审核备注</th>
 			</tr>
@@ -69,6 +70,9 @@
 				</td>
 				<td>
 					${merchantInfoCheck.merchantServicePhone}
+				</td>
+				<td>
+					<fmt:formatDate value="${merchantInfoCheck.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
 				</td>
 				<td>
 					<c:if test="${merchantInfoCheck.checkStatus == '1'}">待审核</c:if>

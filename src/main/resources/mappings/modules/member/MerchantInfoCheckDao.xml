@@ -53,6 +53,9 @@
 			<if test="checkRemark != null and checkRemark != ''">
 				AND a.check_remark = #{checkRemark}
 			</if>
+			<if test="userMobile != null and userMobile != ''">
+				AND u.login_name = #{userMobile}
+			</if>
 		</where>
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
