@@ -107,6 +107,7 @@ public class MemberInfo extends DataEntity<MemberInfo> {
 		this.shippingAddress = shippingAddress;
 	}
 
+	@ExcelField(title = "会员推荐人账号", sort = 12, groups = 0)
 	public String getRefereeAccount() {
 		return refereeAccount;
 	}
@@ -382,6 +383,7 @@ public class MemberInfo extends DataEntity<MemberInfo> {
 		this.commission = commission;
 	}
 
+	@ExcelField(title = "会员推荐人", sort = 11, groups = 0)
 	public String getRefereeName() {
 		return refereeName;
 	}
@@ -486,7 +488,7 @@ public class MemberInfo extends DataEntity<MemberInfo> {
 
 	public String getFullAvatarUrl() {
 		String fullImageUrl = "";
-		if (null != avatar) {
+		if (StringUtils.isNotBlank(this.avatar)) {
 			fullImageUrl = Global.getConfig("userfiles.baseURL") + avatar;
 		}
 		return fullImageUrl;
@@ -494,8 +496,8 @@ public class MemberInfo extends DataEntity<MemberInfo> {
 
 	public String getFullMerchantHeadImgUrl() {
 		String fullImageUrl = "";
-		if (null != merchantHeadImg) {
-			fullImageUrl = Global.getConfig("userfiles.baseURL") + merchantHeadImg;
+		if (StringUtils.isNotBlank(this.merchantHeadImg)) {
+			fullImageUrl = Global.getConfig("userfiles.baseURL") + this.merchantHeadImg;
 		}
 		return fullImageUrl;
 	}

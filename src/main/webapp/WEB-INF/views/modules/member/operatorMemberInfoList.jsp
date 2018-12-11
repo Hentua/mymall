@@ -45,7 +45,7 @@
 			<li><label>会员账号：</label>
 				<form:input path="mobile" htmlEscape="false" maxlength="20" class="input-medium"/>
 			</li>
-			<li><label>会员推荐人账号：</label>
+			<li><label style="width: 100px;">会员推荐人账号：</label>
 				<form:input path="refereeAccount" htmlEscape="false" maxlength="20" class="input-medium"/>
 			</li>
 			<li><label>注册途径：</label>

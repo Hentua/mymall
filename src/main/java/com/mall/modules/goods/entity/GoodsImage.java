@@ -45,11 +45,11 @@ public class GoodsImage extends DataEntity<GoodsImage> {
 //		}
         this.imageUrl = imageUrl;
     }
-    private String fullImageUrl = "";
 
     public String getFullImageUrl() {
-        if (StringUtils.isEmpty(this.fullImageUrl)) {
-            this.fullImageUrl = Global.getConfig("userfiles.baseURL") + imageUrl;
+        String fullImageUrl = "";
+        if (StringUtils.isNotBlank(this.imageUrl)) {
+            fullImageUrl = Global.getConfig("userfiles.baseURL") + imageUrl;
         }
         return fullImageUrl;
     }
