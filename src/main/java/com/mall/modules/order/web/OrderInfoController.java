@@ -230,7 +230,7 @@ public class OrderInfoController extends BaseController {
 		if(null == orderLogistics) {
 			flag = false;
 			message = "非法操作";
-		}else if (StringUtils.isBlank(orderLogistics.getLogisticsType()) || StringUtils.isBlank(orderLogistics.getExpressNo())) {
+		}else if (StringUtils.isBlank(orderLogistics.getLogisticsType()) || (!"_none".equals(orderLogistics.getLogisticsType()) && StringUtils.isBlank(orderLogistics.getExpressNo()))) {
 			message = "快递信息有误";
 			flag = false;
 		}
@@ -252,20 +252,28 @@ public class OrderInfoController extends BaseController {
 		p.put("schema", "json");
 		p.put("param", req.toString());
 		try {
-			String ret = HttpRequest.postData("http://www.kuaidi100.com/poll", p, "UTF-8");
-			TaskResponse resp = JSON.parseObject(ret, TaskResponse.class);
-			if(resp.getResult()) {
+			if(!"_none".equals(orderLogistics.getLogisticsType())) {
+				String ret = HttpRequest.postData("http://www.kuaidi100.com/poll", p, "UTF-8");
+				TaskResponse resp = JSON.parseObject(ret, TaskResponse.class);
+				if(resp.getResult()) {
+					boolean result = orderInfoService.orderDeliverySave(orderInfo);
+					if(!result) {
+						model.addAttribute("message", "订单不存在");
+						return orderDelivery(this.get(orderInfo.getId()), model);
+					}
+				}else {
+					model.addAttribute("message", "发货失败，物流信息有误");
+					return orderDelivery(this.get(orderInfo.getId()), model);
+				}
+			}else {
 				boolean result = orderInfoService.orderDeliverySave(orderInfo);
 				if(!result) {
 					model.addAttribute("message", "订单不存在");
 					return orderDelivery(this.get(orderInfo.getId()), model);
 				}
-				addMessage(redirectAttributes, "发货成功");
-				return "redirect:"+Global.getAdminPath()+"/order/orderInfo/merchantList/?repage";
-			}else {
-				model.addAttribute("message", "发货失败，物流信息有误");
-				return orderDelivery(this.get(orderInfo.getId()), model);
 			}
+			addMessage(redirectAttributes, "发货成功");
+			return "redirect:"+Global.getAdminPath()+"/order/orderInfo/merchantList/?repage";
 		}catch (Exception e) {
 			e.printStackTrace();
 			model.addAttribute("message", "发货失败，物流信息有误");

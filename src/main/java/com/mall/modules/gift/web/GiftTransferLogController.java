@@ -93,7 +93,9 @@ public class GiftTransferLogController extends BaseController {
 		giftTransferLog.getSqlMap().put("dsf", dataScopeFilter(UserUtils.getUser(), "uoo", "uo"));
 		Page<GiftTransferLog> page = giftTransferLogService.findPage(new Page<GiftTransferLog>(request, response), giftTransferLog);
 		model.addAttribute("page", page);
-		model.addAttribute("giftConfigCategoryList", giftConfigCategoryService.findList(new GiftConfigCategory()));
+		GiftConfigCategory queryCondition = new GiftConfigCategory();
+		queryCondition.getSqlMap().put("dsf", dataScopeFilter(UserUtils.getUser(), "uoo", "uo"));
+		model.addAttribute("giftConfigCategoryList", giftConfigCategoryService.findSelectListByPower(queryCondition));
 		return "modules/gift/giftTransferLogOperatorList";
 	}
 

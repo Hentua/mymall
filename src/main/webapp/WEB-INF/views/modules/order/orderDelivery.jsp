@@ -181,7 +181,7 @@
         <div class="controls">
             <c:choose>
                 <c:when test="${orderInfo.orderStatus eq '1'}">
-                    <form:input path="orderLogistics.expressNo" htmlEscape="false" class="input-xlarge required number"/>
+                    <form:input path="orderLogistics.expressNo" htmlEscape="false" class="input-xlarge"/>
                 </c:when>
                 <c:otherwise>
                     ${orderInfo.orderLogistics.expressNo}

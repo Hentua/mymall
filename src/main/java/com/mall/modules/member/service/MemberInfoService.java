@@ -229,7 +229,7 @@ public class MemberInfoService extends CrudService<MemberInfoDao, MemberInfo> {
         List<Role> roles = user.getRoleList();
         for (int i = 0; i < roles.size(); i++) {
             Role r = roles.get(i);
-            if("1001".equals(r.getId())) {
+            if("1001".equals(r.getId()) || "1002".equals(r.getId())) {
                 roles.remove(i);
             }
         }

@@ -50,7 +50,7 @@
 			<th>提交时间</th>
 			<th>审核状态</th>
 			<th>审核备注</th>
-			<th>操作</th>
+			<shiro:hasPermission name="member:merchantInfoCheck:edit"><th>操作</th></shiro:hasPermission>
 		</tr>
 		</thead>
 		<tbody>
@@ -90,11 +90,11 @@
 				<td>
 						${merchantInfoCheck.checkRemark}
 				</td>
-				<td>
+				<shiro:hasPermission name="member:merchantInfoCheck:edit"><td>
 					<c:if test="${merchantInfoCheck.checkStatus == '1'}">
 						<a href="${ctx}/member/merchantInfoCheck/checkform?id=${merchantInfoCheck.id}">审核</a>
 					</c:if>
-				</td>
+				</td></shiro:hasPermission>
 			</tr>
 		</c:forEach>
 		</tbody>

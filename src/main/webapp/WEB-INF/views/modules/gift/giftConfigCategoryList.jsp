@@ -76,19 +76,18 @@
 						<c:when test="${giftConfigCategory.status == '1'}">是</c:when>
 					</c:choose>
 				</td>
-				<shiro:hasPermission name="gift:giftConfigCategory:edit"><td>
+				<td>
+					<shiro:hasPermission name="gift:giftConfigCategory:modifyGiftCategory">
+						<c:choose>
+							<c:when test="${giftConfigCategory.status == '0'}"><a href="${ctx}/gift/giftConfigCategory/enableGiftCategory?id=${giftConfigCategory.id}">上架</a></c:when>
+							<c:when test="${giftConfigCategory.status == '1'}"><a href="${ctx}/gift/giftConfigCategory/disableGiftCategory?id=${giftConfigCategory.id}">下架</a></c:when>
+						</c:choose>
+					</shiro:hasPermission>
 
-				<shiro:hasPermission name="gift:giftConfigCategory:modifyGiftCategory">
-					<c:choose>
-						<c:when test="${giftConfigCategory.status == '0'}"><a href="${ctx}/gift/giftConfigCategory/enableGiftCategory?id=${giftConfigCategory.id}">上架</a></c:when>
-						<c:when test="${giftConfigCategory.status == '1'}"><a href="${ctx}/gift/giftConfigCategory/disableGiftCategory?id=${giftConfigCategory.id}">下架</a></c:when>
-					</c:choose>
-				</shiro:hasPermission>
-
-				<shiro:hasPermission name="gift:giftConfigCategory:delete">
-					<a href="${ctx}/gift/giftConfigCategory/delete?id=${giftConfigCategory.id}" onclick="return confirmx('确认要删除该礼包类别吗？', this.href)">删除</a>
-				</shiro:hasPermission>
-				</td></shiro:hasPermission>
+					<shiro:hasPermission name="gift:giftConfigCategory:delete">
+						<a href="${ctx}/gift/giftConfigCategory/delete?id=${giftConfigCategory.id}" onclick="return confirmx('确认要删除该礼包类别吗？', this.href)">删除</a>
+					</shiro:hasPermission>
+				</td>
 			</tr>
 		</c:forEach>
 		</tbody>
