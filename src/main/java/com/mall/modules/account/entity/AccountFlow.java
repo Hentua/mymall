@@ -291,7 +291,7 @@ public class AccountFlow extends DataEntity<AccountFlow> {
 		this.incomeExpenditureMode = incomeExpenditureMode;
 	}
 
-	@ExcelField(title = "付款账号", sort = 9)
+	@ExcelField(title = "付款账号", sort = 10)
 	@Length(min=0, max=100, message="银行账户长度必须介于 0 和 100 之间")
 	public String getBankAccount() {
 		return bankAccount;
@@ -301,7 +301,7 @@ public class AccountFlow extends DataEntity<AccountFlow> {
 		this.bankAccount = bankAccount;
 	}
 
-	@ExcelField(title = "付款人名称", sort = 10)
+	@ExcelField(title = "付款人名称", sort = 9)
 	@Length(min=0, max=50, message="开户人名称长度必须介于 0 和 50 之间")
 	public String getBankAccountName() {
 		return bankAccountName;

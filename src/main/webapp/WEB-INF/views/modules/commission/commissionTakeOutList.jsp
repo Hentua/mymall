@@ -88,8 +88,8 @@
 				<th>提现金额</th>
 				<th>应付金额</th>
 				<th>创建时间</th>
-				<th>银行账户</th>
 				<th>开户人名称</th>
+				<th>银行账户</th>
 				<th>开户行</th>
 				<th>状态</th>
 				<th>备注</th>
@@ -120,10 +120,10 @@
 					<fmt:formatDate value="${commissionTakeOut.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
 				</td>
 				<td>
-					${commissionTakeOut.bankAccount}
+						${commissionTakeOut.bankAccountName}
 				</td>
 				<td>
-					${commissionTakeOut.bankAccountName}
+					${commissionTakeOut.bankAccount}
 				</td>
 				<td>
 					${commissionTakeOut.bankName}

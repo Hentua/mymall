@@ -60,15 +60,15 @@
 		<input type="hidden" id="checkStatus" name="checkStatus" >
 		<sys:message content="${message}"/>
 		<div class="control-group">
-			<label class="control-label">收款人账户：</label>
-			<div class="controls">
-				<form:input path="bankAccount" htmlEscape="false" maxlength="200" class="input-xlarge "/>
-			</div>
-		</div>
-		<div class="control-group">
 			<label class="control-label">收款人名称：</label>
 			<div class="controls">
 				<form:input path="bankAccountName" htmlEscape="false" maxlength="200" class="input-xlarge "/>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">收款人账户：</label>
+			<div class="controls">
+				<form:input path="bankAccount" htmlEscape="false" maxlength="200" class="input-xlarge "/>
 			</div>
 		</div>
 		<div class="control-group">

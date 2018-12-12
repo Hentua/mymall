@@ -96,16 +96,16 @@
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">付款账号：</label>
+			<label class="control-label">付款人名称：</label>
 			<div class="controls">
-				<form:input path="bankAccount" htmlEscape="false" maxlength="100" class="input-xlarge required"/>
+				<form:input path="bankAccountName" htmlEscape="false" maxlength="100" class="input-xlarge required"/>
 				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">付款人名称：</label>
+			<label class="control-label">付款账号：</label>
 			<div class="controls">
-				<form:input path="bankAccountName" htmlEscape="false" maxlength="100" class="input-xlarge required"/>
+				<form:input path="bankAccount" htmlEscape="false" maxlength="100" class="input-xlarge required"/>
 				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>
