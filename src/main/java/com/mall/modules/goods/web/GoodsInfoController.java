@@ -259,6 +259,10 @@ public class GoodsInfoController extends BaseController {
 		}
 		goodsInfo.setMerchantId(UserUtils.getUser().getId());
 		goodsInfo.setStatus(1);
+		String desp = goodsInfo.getGoodsDesp();
+		desp=desp.replace("&quot;/userfiles/","&quot;"+Global.getConfig("userfiles.baseURL")+"/userfiles/");
+		goodsInfo.setGoodsDesp(desp);
+
 		goodsInfoService.save(goodsInfo);
 		if(null != goodsInfo.getDespImages() && goodsInfo.getDespImages().size()>0){
 			for (String image : goodsInfo.getDespImages() ) {
