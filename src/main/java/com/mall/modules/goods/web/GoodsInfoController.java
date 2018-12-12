@@ -268,7 +268,7 @@ public class GoodsInfoController extends BaseController {
 			for (String image : goodsInfo.getDespImages() ) {
 				GoodsImage goodsImage = new GoodsImage();
 				goodsImage.setGoodsId(goodsInfo.getId());
-				goodsImage.setImageUrl(image.substring(1,image.length()));
+				goodsImage.setImageUrl(image);
 				goodsImageService.save(goodsImage);
 			}
 		}
