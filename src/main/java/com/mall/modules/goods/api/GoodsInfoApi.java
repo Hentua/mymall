@@ -156,6 +156,9 @@ public class GoodsInfoApi extends BaseController {
         String[] goodsImageArray = goodsImagesStr.split("\\|");
         goodsImages = new ArrayList<>();
         for (String img: goodsImageArray) {
+            if(StringUtils.isEmpty(img)){
+                continue;
+            }
             GoodsImage goodsImage = new GoodsImage();
             goodsImage.setImageUrl(img);
             goodsImage.setGoodsId(goodsInfo.getId());
