@@ -50,7 +50,7 @@
 			<if test="giftCategory != null and giftCategory != ''">
 				and a.gift_category = #{giftCategory}
 			</if>
-			<if test="gift != null and giftConfigCategoryName != ''">
+			<if test="giftConfigCategoryName != null and giftConfigCategoryName != ''">
 				and c.category_name like concat('%',#{giftConfigCategoryName},'%')
 			</if>
 			<if test="paymentNo != null and paymentNo != ''">
