@@ -65,6 +65,33 @@ public class GoodsInfo extends DataEntity<GoodsInfo> {
 
     private String goodsCategoryName;
 
+    /**
+     * 七折价格
+     * @return
+     */
+    public Double getSevenDiscountPrice(){
+        if("2".equals(this.getDiscountType()) || "3".equals(this.getDiscountType())){
+            if(null == this.getGoodsPrice() || 0 ==this.getGoodsPrice()){
+                return 0.0;
+            }
+            return 0.7*this.getGoodsPrice();
+        }
+        return null;
+    }
+
+    /**
+     * 五折价格
+     * @return
+     */
+    public Double getFiveDiscountPrice(){
+        if("1".equals(this.getDiscountType()) || "3".equals(this.getDiscountType())){
+            if(null == this.getGoodsPrice() || 0 ==this.getGoodsPrice()){
+                return 0.0;
+            }
+            return 0.5*this.getGoodsPrice();
+        }
+        return null;
+    }
 
     public String getCheckRemarks() {
         return checkRemarks;
