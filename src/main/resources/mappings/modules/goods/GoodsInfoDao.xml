@@ -8,7 +8,7 @@
 		a.goods_name AS "goodsName",
 		a.goods_barcode AS "goodsBarcode",
 		a.goods_title AS "goodsTitle",
-		a.goods_type AS "goodsType",
+		a.goods_type AS "go	odsType",
 		a.status AS "status",
 		a.unit AS "unit",
 		a.original_price AS "originalPrice",
@@ -141,7 +141,7 @@
 				AND a.goods_barcode = #{goodsBarcode}
 			</if>
 			<if test="goodsTitle != null and goodsTitle != ''">
-				AND a.goods_title = LIKE CONCAT('%',#{goodsTitle},'%')
+				AND a.goods_title LIKE CONCAT('%',#{goodsTitle},'%')
 			</if>
 			<if test="merchantName != null and merchantName != ''">
 				and merchant.nickname LIKE CONCAT('%',#{merchantName},'%')
