@@ -204,7 +204,7 @@ public class GoodsInfoController extends BaseController {
 		g.setStatus(goodsInfo.getStatus());
 		goodsInfoService.save(g);
 		addMessage(redirectAttributes, "操作成功");
-		if(2 == goodsInfo.getGoodsType()){
+		if(2 == g.getGoodsType()){
 			return "redirect:"+Global.getAdminPath()+"/goods/goodsInfo/platList?repage";
 		}else{
 			return "redirect:"+Global.getAdminPath()+"/goods/goodsInfo/list?repage";

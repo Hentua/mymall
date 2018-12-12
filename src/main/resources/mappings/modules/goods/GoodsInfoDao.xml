@@ -8,7 +8,7 @@
 		a.goods_name AS "goodsName",
 		a.goods_barcode AS "goodsBarcode",
 		a.goods_title AS "goodsTitle",
-		a.goods_type AS "go	odsType",
+		a.goods_type AS "goodsType",
 		a.status AS "status",
 		a.unit AS "unit",
 		a.original_price AS "originalPrice",
