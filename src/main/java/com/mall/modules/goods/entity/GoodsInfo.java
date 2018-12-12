@@ -6,6 +6,7 @@ import com.mall.common.persistence.DataEntity;
 import com.mall.common.utils.StringUtils;
 import org.hibernate.validator.constraints.Length;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -17,6 +18,8 @@ import java.util.List;
  * @version 2018-10-12
  */
 public class GoodsInfo extends DataEntity<GoodsInfo> {
+
+    private static DecimalFormat df = new DecimalFormat("#.00");
 
     private static final long serialVersionUID = 1L;
     private String goodsCategoryId;        // 商品分类 二级分类
@@ -69,12 +72,12 @@ public class GoodsInfo extends DataEntity<GoodsInfo> {
      * 七折价格
      * @return
      */
-    public Double getSevenDiscountPrice(){
+    public String getSevenDiscountPrice(){
         if("2".equals(this.getDiscountType()) || "3".equals(this.getDiscountType())){
             if(null == this.getGoodsPrice() || 0 ==this.getGoodsPrice()){
-                return 0.0;
+                return "0.0";
             }
-            return 0.7*this.getGoodsPrice();
+            return df.format(0.7*this.getGoodsPrice());
         }
         return null;
     }
@@ -83,12 +86,12 @@ public class GoodsInfo extends DataEntity<GoodsInfo> {
      * 五折价格
      * @return
      */
-    public Double getFiveDiscountPrice(){
+    public String getFiveDiscountPrice(){
         if("1".equals(this.getDiscountType()) || "3".equals(this.getDiscountType())){
             if(null == this.getGoodsPrice() || 0 ==this.getGoodsPrice()){
-                return 0.0;
+                return "0.0";
             }
-            return 0.5*this.getGoodsPrice();
+            return df.format(0.5*this.getGoodsPrice());
         }
         return null;
     }
