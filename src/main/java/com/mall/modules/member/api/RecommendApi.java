@@ -52,6 +52,11 @@ public class RecommendApi extends BaseController {
 		return "modules/sys/registration";
 	}
 
+	@RequestMapping(value = "customerSchool")
+	public String customerSchool(HttpServletRequest request, Model model) {
+		return "modules/sys/customerSchool";
+	}
+
 	/**
 	 * 推荐二维码获取注册url地址接口
 	 * @param request
