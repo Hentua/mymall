@@ -154,9 +154,10 @@ public class CommissionConfigService extends CrudService<CommissionConfigDao, Co
 				if("2".equals(gc.getCommissionMode())){
 					if(null == gc.getCommissionNumber() || gc.getCommissionNumber() <= 0.0){
 						amount+= 0.0;
+					}else {
+						//按交易金额 计算百分比
+						amount+= gc.getCommissionNumber()/100*og.getSubtotal();
 					}
-					//按交易金额 计算百分比
-					amount+= gc.getCommissionNumber()/100*og.getSubtotal();
 				}
 				amountTotal+=amount;
 		}
