@@ -25,7 +25,7 @@
 		a.product_license as "productLicense",
 		a.company_name as "companyName",
 		a.commission as "commission",
-		u.mobile AS "mobile",
+		u.login_name AS "mobile",
 		u.user_type AS "userType",
 		u.login_flag AS "loginFlag",
 		a.operator_code AS "operatorCode",
