@@ -60,6 +60,20 @@
 			</otherwise>
 		</choose>
 	</select>
+
+	<select id="findSelectListByPower" resultType="GiftConfigCategory">
+		SELECT
+			<include refid="giftConfigCategoryColumns"/>
+		FROM gift_config_category a
+		<include refid="giftConfigCategoryJoins"/>
+		left join sys_user uo on uo.id = a.merchant_code
+		left join sys_office uoo on uoo.id = uo.office_id
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		    and (1=1 ${sqlMap.dsf} or a.merchant_code is null or a.merchant_code = '')
+		</where>
+		ORDER BY a.update_date DESC
+	</select>
 	
 	<select id="findAllList" resultType="GiftConfigCategory">
 		SELECT 

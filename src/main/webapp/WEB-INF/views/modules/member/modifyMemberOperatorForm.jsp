@@ -42,7 +42,7 @@
         </div>
     </div>
     <div class="control-group">
-        <label class="control-label">手机号码：</label>
+        <label class="control-label">商户账号：</label>
         <div class="controls">
                 ${memberInfo.mobile}
         </div>

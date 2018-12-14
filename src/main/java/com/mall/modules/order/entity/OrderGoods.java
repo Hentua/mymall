@@ -2,6 +2,7 @@ package com.mall.modules.order.entity;
 
 import com.mall.common.config.Global;
 import com.mall.common.persistence.DataEntity;
+import com.mall.common.utils.StringUtils;
 import org.hibernate.validator.constraints.Length;
 
 /**
@@ -212,7 +213,7 @@ public class OrderGoods extends DataEntity<OrderGoods> {
 
 	public String getFullImageUrl() {
 		String fullImageUrl = "";
-		if (null != image) {
+		if (StringUtils.isNotBlank(image)) {
 			fullImageUrl = Global.getConfig("userfiles.baseURL") + image;
 		}
 		return fullImageUrl;

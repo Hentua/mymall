@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.mall.modules.gift.entity.GiftConfigCategory;
 import com.mall.modules.gift.entity.GiftConfigGoods;
 import com.mall.modules.gift.service.GiftConfigCategoryService;
+import com.mall.modules.sys.utils.UserUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,6 +24,8 @@ import com.mall.modules.gift.entity.GiftConfig;
 import com.mall.modules.gift.service.GiftConfigService;
 
 import java.util.List;
+
+import static com.mall.common.service.BaseService.dataScopeFilter;
 
 /**
  * 礼包配置Controller
@@ -54,7 +57,9 @@ public class GiftConfigController extends BaseController {
 	@RequestMapping(value = {"list", ""})
 	public String list(GiftConfig giftConfig, HttpServletRequest request, HttpServletResponse response, Model model) {
 		Page<GiftConfig> page = giftConfigService.findPage(new Page<GiftConfig>(request, response), giftConfig);
-		List<GiftConfigCategory> giftConfigCategoryList = giftConfigCategoryService.findList(new GiftConfigCategory());
+		GiftConfigCategory queryCondition = new GiftConfigCategory();
+		queryCondition.getSqlMap().put("dsf", dataScopeFilter(UserUtils.getUser(), "uoo", "uo"));
+		List<GiftConfigCategory> giftConfigCategoryList = giftConfigCategoryService.findSelectListByPower(queryCondition);
 		model.addAttribute("giftConfigCategoryList", giftConfigCategoryList);
 		model.addAttribute("page", page);
 		return "modules/gift/giftConfigList";
@@ -63,7 +68,9 @@ public class GiftConfigController extends BaseController {
 	@RequiresPermissions("gift:giftConfig:view")
 	@RequestMapping(value = "form")
 	public String form(GiftConfig giftConfig, Model model) {
-		List<GiftConfigCategory> giftConfigCategoryList = giftConfigCategoryService.findList(new GiftConfigCategory());
+		GiftConfigCategory queryCondition = new GiftConfigCategory();
+		queryCondition.getSqlMap().put("dsf", dataScopeFilter(UserUtils.getUser(), "uoo", "uo"));
+		List<GiftConfigCategory> giftConfigCategoryList = giftConfigCategoryService.findSelectListByPower(queryCondition);
 		model.addAttribute("giftConfigCategoryList", giftConfigCategoryList);
 		model.addAttribute("giftConfig", giftConfig);
 		return "modules/gift/giftConfigForm";

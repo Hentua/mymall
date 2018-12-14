@@ -29,7 +29,7 @@
 				<form:input path="giftName" htmlEscape="false" maxlength="20" class="input-medium"/>
 			</li>
 			<li><label>礼包分类：</label>
-				<form:select path="giftCategory">
+				<form:select path="giftCategory" cssStyle="width: 200px;">
 					<form:option value="" label="全部"/>
 					<form:options items="${giftConfigCategoryList}" itemValue="id" itemLabel="categoryName"/>
 				</form:select>

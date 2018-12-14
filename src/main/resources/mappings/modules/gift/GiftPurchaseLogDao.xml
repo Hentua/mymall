@@ -47,6 +47,9 @@
 		left join sys_user uo on uo.id = m.operator_code
 		left join sys_office uoo on uoo.id = uo.office_id
 		<where>
+			<if test="giftCategory != null and giftCategory != ''">
+				and a.gift_category = #{giftCategory}
+			</if>
 			<if test="giftConfigCategoryName != null and giftConfigCategoryName != ''">
 				and c.category_name like concat('%',#{giftConfigCategoryName},'%')
 			</if>

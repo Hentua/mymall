@@ -41,6 +41,10 @@ public class GiftConfigCategoryService extends CrudService<GiftConfigCategoryDao
 	public List<GiftConfigCategory> findList(GiftConfigCategory giftConfigCategory) {
 		return super.findList(giftConfigCategory);
 	}
+
+	public List<GiftConfigCategory> findSelectListByPower(GiftConfigCategory giftConfigCategory) {
+		return dao.findSelectListByPower(giftConfigCategory);
+	}
 	
 	public Page<GiftConfigCategory> findPage(Page<GiftConfigCategory> page, GiftConfigCategory giftConfigCategory) {
 		return super.findPage(page, giftConfigCategory);

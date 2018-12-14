@@ -193,7 +193,7 @@ public class OrderReturnsController extends BaseController {
 			addMessage(redirectAttributes, "请求不合法");
 			return "redirect:"+Global.getAdminPath()+"/order/orderReturns/?repage";
 		}
-		if(StringUtils.isBlank(logistics) || StringUtils.isBlank(expressNo)) {
+		if(StringUtils.isBlank(logistics) || (!"_none".equals(logistics) && StringUtils.isBlank(expressNo))) {
 			addMessage(redirectAttributes, "物流信息有误");
 			return "redirect:"+Global.getAdminPath()+"/order/orderReturns/?repage";
 		}
@@ -214,16 +214,20 @@ public class OrderReturnsController extends BaseController {
 		p.put("schema", "json");
 		p.put("param", req.toString());
 		try {
-			String ret = HttpRequest.postData("http://www.kuaidi100.com/poll", p, "UTF-8");
-			TaskResponse resp = JSON.parseObject(ret, TaskResponse.class);
-			if(resp.getResult()) {
-				orderReturnsService.handle(orderReturns);
-				addMessage(redirectAttributes, "发货成功");
-				return "redirect:"+Global.getAdminPath()+"/order/orderReturns/?repage";
+			if(!"_none".equals(logistics)) {
+				String ret = HttpRequest.postData("http://www.kuaidi100.com/poll", p, "UTF-8");
+				TaskResponse resp = JSON.parseObject(ret, TaskResponse.class);
+				if(resp.getResult()) {
+					orderReturnsService.handle(orderReturns);
+				}else {
+					model.addAttribute("message", "发货失败，物流信息有误");
+					return "redirect:"+Global.getAdminPath()+"/order/orderReturns/?repage";
+				}
 			}else {
-				model.addAttribute("message", "发货失败，物流信息有误");
-				return "redirect:"+Global.getAdminPath()+"/order/orderReturns/?repage";
+				orderReturnsService.handle(orderReturns);
 			}
+			addMessage(redirectAttributes, "发货成功");
+			return "redirect:"+Global.getAdminPath()+"/order/orderReturns/?repage";
 		}catch (Exception e) {
 			e.printStackTrace();
 			addMessage(redirectAttributes, "发货失败");

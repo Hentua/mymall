@@ -64,6 +64,7 @@
 			padding: 1% 1%;
 			font-size: 14px;
 			border-radius: 17px;
+			font-family: SimHei;
 		}
 		.mr_info .mr_info_left{
 			font-weight: bold;

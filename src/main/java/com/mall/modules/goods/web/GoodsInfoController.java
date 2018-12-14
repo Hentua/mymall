@@ -204,7 +204,7 @@ public class GoodsInfoController extends BaseController {
 		g.setStatus(goodsInfo.getStatus());
 		goodsInfoService.save(g);
 		addMessage(redirectAttributes, "操作成功");
-		if(2 == goodsInfo.getGoodsType()){
+		if(2 == g.getGoodsType()){
 			return "redirect:"+Global.getAdminPath()+"/goods/goodsInfo/platList?repage";
 		}else{
 			return "redirect:"+Global.getAdminPath()+"/goods/goodsInfo/list?repage";
@@ -259,12 +259,16 @@ public class GoodsInfoController extends BaseController {
 		}
 		goodsInfo.setMerchantId(UserUtils.getUser().getId());
 		goodsInfo.setStatus(1);
+		String desp = goodsInfo.getGoodsDesp();
+		desp=desp.replace("&quot;/userfiles/","&quot;"+Global.getConfig("userfiles.baseURL")+"/userfiles/");
+		goodsInfo.setGoodsDesp(desp);
+
 		goodsInfoService.save(goodsInfo);
 		if(null != goodsInfo.getDespImages() && goodsInfo.getDespImages().size()>0){
 			for (String image : goodsInfo.getDespImages() ) {
 				GoodsImage goodsImage = new GoodsImage();
 				goodsImage.setGoodsId(goodsInfo.getId());
-				goodsImage.setImageUrl(image.substring(1,image.length()));
+				goodsImage.setImageUrl(image);
 				goodsImageService.save(goodsImage);
 			}
 		}
@@ -280,6 +284,7 @@ public class GoodsInfoController extends BaseController {
 				goodsStandard.setPrice(goodsInfo.getGoodsStandardsPrice()[i]);
 				goodsStandard.setGoodsId(goodsInfo.getId());
 				goodsStandard.setCategoryId(goodsInfo.getGoodsCategoryId());
+				goodsStandard.setCreateDate(new Date());
 				goodsStandardService.save(goodsStandard);
 			 }
 		}

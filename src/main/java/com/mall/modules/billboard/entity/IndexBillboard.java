@@ -1,6 +1,7 @@
 package com.mall.modules.billboard.entity;
 
 import com.mall.common.config.Global;
+import com.mall.common.utils.StringUtils;
 import com.mall.modules.goods.entity.GoodsInfo;
 import org.hibernate.validator.constraints.Length;
 
@@ -106,8 +107,8 @@ public class IndexBillboard extends DataEntity<IndexBillboard> {
 
 	public String getFullImageUrl() {
 		String fullImageUrl = "";
-		if (null != image) {
-			fullImageUrl = Global.getConfig("userfiles.baseURL") + image;
+		if (StringUtils.isNotBlank(this.image)) {
+			fullImageUrl = Global.getConfig("userfiles.baseURL") + this.image;
 		}
 		return fullImageUrl;
 	}

@@ -102,8 +102,10 @@ public class GiftPurchaseLogController extends BaseController {
 	public String operatorList(GiftPurchaseLog giftPurchaseLog, HttpServletRequest request, HttpServletResponse response, Model model) {
 		giftPurchaseLog.getSqlMap().put("dsf", dataScopeFilter(UserUtils.getUser(), "uoo", "uo"));
 		Page<GiftPurchaseLog> page = giftPurchaseLogService.findPage(new Page<GiftPurchaseLog>(request, response), giftPurchaseLog);
+		GiftConfigCategory queryCondition = new GiftConfigCategory();
+		queryCondition.getSqlMap().put("dsf", dataScopeFilter(UserUtils.getUser(), "uoo", "uo"));
 		model.addAttribute("page", page);
-		model.addAttribute("giftConfigCategoryList", giftConfigCategoryService.findList(new GiftConfigCategory()));
+		model.addAttribute("giftConfigCategoryList", giftConfigCategoryService.findSelectListByPower(queryCondition));
 		return "modules/gift/giftPurchaseLogOperatorList";
 	}
 

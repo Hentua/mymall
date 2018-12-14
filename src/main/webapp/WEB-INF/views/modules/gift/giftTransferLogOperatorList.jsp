@@ -46,8 +46,9 @@
 				<form:input path="customerAccount" htmlEscape="false" maxlength="20" class="input-medium"/>
 			</li>
 			<li><label>礼包名称：</label>
-				<form:select path="giftConfigCategoryName" class="input-xlarge ">
-					<form:options items="${giftConfigCategoryList}" itemLabel="categoryName" itemValue="categoryName"
+				<form:select path="giftCategory" class="input-xlarge " cssStyle="width: 200px;">
+					<form:option value="" label="全部"/>
+					<form:options items="${giftConfigCategoryList}" itemLabel="categoryName" itemValue="id"
 								  htmlEscape="false"/>
 				</form:select>
 			</li>

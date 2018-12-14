@@ -167,6 +167,15 @@ public class MemberMerchantCheckController extends BaseController {
 			merchantAccountInfo.setStatus("1");//状态 （1：已到账 2：未到账 3：未提现结算 4：已提现结算 ）
 			merchantAccountInfo.setToAccountDate(new Date());
 			accountInfoService.save(merchantAccountInfo);*/
+		}else {
+			List<Role> roleList = user.getRoleList();
+			if(null == roleList) {
+				roleList = Lists.newArrayList();
+			}
+			roleList.add(new Role("1002"));
+			user.setRoleList(roleList);
+			systemService.saveUser(user);
+			UserUtils.clearCache(user);
 		}
 		User currUser = UserUtils.getUser();
 		memberMerchantCheck.setCheckBy(currUser.getId());

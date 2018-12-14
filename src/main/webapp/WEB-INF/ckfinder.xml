@@ -4,9 +4,10 @@
 	<baseURL>/userfiles/</baseURL>
 	<licenseKey></licenseKey>
 	<licenseName></licenseName>
-	<imgWidth>1024</imgWidth>
-	<imgHeight>768</imgHeight>
-	<imgQuality>80</imgQuality>
+	<imgWidth>10000</imgWidth>
+	<imgHeight>100000</imgHeight>
+	<quality>100</quality>
+	<imgQuality>100</imgQuality>
 	<uriEncoding>UTF-8</uriEncoding>
 	<forceASCII>false</forceASCII>
     <disallowUnsafeCharacters>false</disallowUnsafeCharacters>
@@ -34,7 +35,7 @@
 		<type name="images">
 			<url>%BASE_URL%images/</url>
 			<directory>%BASE_DIR%images</directory>
-			<maxSize>2M</maxSize>
+			<maxSize>10M</maxSize>
 			<allowedExtensions>bmp,gif,jpeg,jpg,png</allowedExtensions>
 			<deniedExtensions></deniedExtensions>
 		</type>

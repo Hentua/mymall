@@ -21,6 +21,7 @@
 				/userfiles/** = anon
 				${adminPath}/api/appLogin = api
 				${adminPath}/registration = anon
+				${adminPath}/customerSchool = anon
 				${adminPath}/api/register = anon
 				${adminPath}/api/genVerifyCode = anon
 				${adminPath}/api/resetPassword = anon

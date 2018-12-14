@@ -166,7 +166,7 @@
                 <div class="controls">
                     <c:choose>
                         <c:when test="${orderReturns.status == '1'}">
-                            <form:input path="expressNo" htmlEscape="false" maxlength="100" class="input-xlarge required"/>
+                            <form:input path="expressNo" htmlEscape="false" maxlength="100" class="input-xlarge "/>
                             <span class="help-inline"><font color="red">*</font> </span>
                         </c:when>
                         <c:otherwise>

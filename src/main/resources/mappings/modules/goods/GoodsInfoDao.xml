@@ -141,7 +141,7 @@
 				AND a.goods_barcode = #{goodsBarcode}
 			</if>
 			<if test="goodsTitle != null and goodsTitle != ''">
-				AND a.goods_title = LIKE CONCAT('%',#{goodsTitle},'%')
+				AND a.goods_title LIKE CONCAT('%',#{goodsTitle},'%')
 			</if>
 			<if test="merchantName != null and merchantName != ''">
 				and merchant.nickname LIKE CONCAT('%',#{merchantName},'%')

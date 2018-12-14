@@ -1,11 +1,10 @@
 package com.mall.modules.goods.entity;
 
 import com.mall.common.config.Global;
+import com.mall.common.persistence.DataEntity;
+import com.mall.common.utils.StringUtils;
 import com.mall.common.utils.TreeNodeData;
 import org.hibernate.validator.constraints.Length;
-import javax.validation.constraints.NotNull;
-
-import com.mall.common.persistence.DataEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -159,8 +158,8 @@ public class GoodsCategory extends DataEntity<GoodsCategory> implements TreeNode
 
 	public String getFullImageUrl() {
 		String fullImageUrl = "";
-		if (null != image) {
-			fullImageUrl = Global.getConfig("userfiles.baseURL") + image;
+		if (StringUtils.isNotBlank(this.image)) {
+			fullImageUrl = Global.getConfig("userfiles.baseURL") + this.image;
 		}
 		return fullImageUrl;
 	}

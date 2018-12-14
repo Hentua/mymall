@@ -116,10 +116,10 @@ public class UserController extends BaseController {
 		if (!beanValidator(model, user)){
 			return form(user, model);
 		}
-		if (!"true".equals(checkLoginName(user.getOldLoginName(), user.getLoginName()))){
-			addMessage(model, "保存用户'" + user.getLoginName() + "'失败，登录名已存在");
-			return form(user, model);
-		}
+//		if (!"true".equals(checkLoginName(user.getOldLoginName(), user.getLoginName()))){
+//			addMessage(model, "保存用户'" + user.getLoginName() + "'失败，登录名已存在");
+//			return form(user, model);
+//		}
 		// 角色数据有效性验证，过滤不在授权内的角色
 		List<Role> roleList = Lists.newArrayList();
 		List<String> roleIdList = user.getRoleIdList();

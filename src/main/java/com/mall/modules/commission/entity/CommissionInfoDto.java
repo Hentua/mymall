@@ -69,7 +69,7 @@ public class CommissionInfoDto extends DataEntity<CommissionInfoDto> {
 	}
 
 
-	@ExcelField(title = "银行账户", sort = 6)
+	@ExcelField(title = "银行账户", sort = 7)
 	public String getBankAccount() {
 		return bankAccount;
 	}
@@ -78,7 +78,7 @@ public class CommissionInfoDto extends DataEntity<CommissionInfoDto> {
 		this.bankAccount = bankAccount;
 	}
 
-	@ExcelField(title = "开户人名称", sort = 7)
+	@ExcelField(title = "开户人名称", sort = 6)
 	public String getBankAccountName() {
 		return bankAccountName;
 	}

@@ -67,7 +67,7 @@
 				<c:choose>
 					<c:when test="${empty giftConfigCategory.id }">
 						<form:input path="merchantMobile" htmlEscape="false" maxlength="20" class="input-xlarge"/>
-						<span class="help-inline"><font color="red">留空则不是定制礼包类别，填写商家手机号码</font> </span>
+						<span class="help-inline"><font color="red">留空则不是定制礼包类别，填写商家账号</font> </span>
 					</c:when>
 					<c:otherwise>
 						${giftConfigCategory.merchantName}

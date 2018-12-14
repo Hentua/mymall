@@ -86,8 +86,8 @@
 			<th>操作时间</th>
 			<th>转账时间</th>
 			<th>平台收款账户</th>
-			<th>付款账号</th>
 			<th>付款人名称</th>
+			<th>付款账号</th>
 			<th>付款银行</th>
 			<th>转账截图</th>
 			<th>审核状态</th>
@@ -140,8 +140,8 @@
 				</td>
 				<td><fmt:formatDate value="${accountFlow.transferDate}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
 				<td>${accountFlow.platBankAccount}</td>
-				<td>${accountFlow.bankAccount}</td>
 				<td>${accountFlow.bankAccountName}</td>
+				<td>${accountFlow.bankAccount}</td>
 				<td>${accountFlow.bankName}</td>
 				<td><a href="${accountFlow.transferImage}" target="view_window"><img width="50" src="${accountFlow.transferImage}"></a></td>
 				<td>

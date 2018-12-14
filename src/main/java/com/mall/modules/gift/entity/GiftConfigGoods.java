@@ -1,10 +1,11 @@
 package com.mall.modules.gift.entity;
 
 import com.mall.common.config.Global;
-import org.hibernate.validator.constraints.Length;
-import javax.validation.constraints.NotNull;
-
 import com.mall.common.persistence.DataEntity;
+import com.mall.common.utils.StringUtils;
+import org.hibernate.validator.constraints.Length;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 礼包配置Entity
@@ -135,8 +136,8 @@ public class GiftConfigGoods extends DataEntity<GiftConfigGoods> {
 
 	public String getFullImageUrl() {
 		String fullImageUrl = "";
-		if (null != image) {
-			fullImageUrl = Global.getConfig("userfiles.baseURL") + image;
+		if (StringUtils.isNotBlank(this.image)) {
+			fullImageUrl = Global.getConfig("userfiles.baseURL") + this.image;
 		}
 		return fullImageUrl;
 	}
