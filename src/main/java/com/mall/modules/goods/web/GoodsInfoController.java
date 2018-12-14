@@ -276,7 +276,7 @@ public class GoodsInfoController extends BaseController {
 		if(null != goodsInfo.getGoodsStandardsName() && goodsInfo.getGoodsStandardsName().length>0){
 			goodsStandardService.deleteByGoodsId(goodsInfo.getId());
 			for(int i=0;i<goodsInfo.getGoodsStandardsName().length;i++){
-				if(null == goodsInfo.getGoodsPrice() || 0 == goodsInfo.getGoodsPrice()){
+				if(i == 0){
 					goodsInfo.setGoodsPrice(goodsInfo.getGoodsStandardsPrice()[i]);
 				}
 				GoodsStandard goodsStandard =new GoodsStandard();
