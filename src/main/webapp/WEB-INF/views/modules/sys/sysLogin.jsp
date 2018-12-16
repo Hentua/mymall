@@ -214,7 +214,7 @@
 		 </table>
 	</div>
 	<div class="footer" style="margin-top: 30px">
-		Copyright &copy; 2012-${fns:getConfig('copyrightYear')} <a href="${pageContext.request.contextPath}${fns:getFrontPath()}">${fns:getConfig('productName')}</a> ${fns:getConfig('version')}
+		Copyright &copy; 2012-${fns:getConfig('copyrightYear')} <a href="https://www.meiyiyouxuan.com/">${fns:getConfig('productName')}</a> ${fns:getConfig('version')}
 	</div>
 	<script src="${ctxStatic}/flash/zoom.min.js" type="text/javascript"></script>
 </body>
