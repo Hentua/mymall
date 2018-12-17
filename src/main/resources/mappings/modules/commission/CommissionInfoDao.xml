@@ -23,7 +23,10 @@
 		a.bank_account_name as "bankAccountName",
 		a.bank_name as "bankName",
 		a.check_status as "checkStatus",
-		a.check_remark as "checkRemark"
+		a.check_remark as "checkRemark",
+		a.province as "province",
+		a.city as "city",
+		a.area as "area"
 	</sql>
 	
 	<sql id="commissionInfoJoins">
@@ -167,7 +170,10 @@
 			bank_account_name,
 			bank_name,
 			check_status,
-			check_remark
+			check_remark,
+			province,
+			city,
+			area
 		) VALUES (
 			#{id},
 			#{type},
@@ -185,7 +191,10 @@
 			#{bankAccountName},
 			#{bankName},
 			#{checkStatus},
-			#{checkRemark}
+			#{checkRemark},
+			#{province},
+			#{city},
+			#{area}
 		)
 	</insert>
 	

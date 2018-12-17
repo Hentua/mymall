@@ -43,6 +43,40 @@ public class CommissionInfoDto extends DataEntity<CommissionInfoDto> {
 	private Date startDate; // 查询开始时间
 	private Date endDate; // 查询结束时间
 
+	//省
+	private String province;
+	//市
+	private String city;
+	//区
+	private String area;
+
+	@ExcelField(title = "省", sort = 9)
+	public String getProvince() {
+		return province;
+	}
+
+	public void setProvince(String province) {
+		this.province = province;
+	}
+
+	@ExcelField(title = "市", sort = 10)
+	public String getCity() {
+		return city;
+	}
+
+	@ExcelField(title = "区", sort = 11)
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public String getArea() {
+		return area;
+	}
+
+	public void setArea(String area) {
+		this.area = area;
+	}
+
 	public Date getStartDate() {
 		return startDate;
 	}
@@ -114,7 +148,7 @@ public class CommissionInfoDto extends DataEntity<CommissionInfoDto> {
 		return "";
 	}
 
-	@ExcelField(title = "备注", sort = 10)
+	@ExcelField(title = "备注", sort = 13)
 	public String getCheckRemark() {
 		return checkRemark;
 	}
@@ -176,7 +210,7 @@ public class CommissionInfoDto extends DataEntity<CommissionInfoDto> {
 	public String getStatus() {
 		return status;
 	}
-	@ExcelField(title = "状态", sort = 9)
+	@ExcelField(title = "状态", sort = 12)
 	public String getStatusText(){
 		if("6".equals(this.getType())){
 			if("1".equals(this.getCheckStatus())){

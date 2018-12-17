@@ -21,7 +21,9 @@ import com.mall.modules.commission.entity.CommissionTakeOut;
 import com.mall.modules.commission.service.CommissionInfoService;
 import com.mall.modules.commission.service.CommissionTakeOutService;
 import com.mall.modules.coupon.service.CouponCustomerService;
+import com.mall.modules.member.entity.MemberBankAccount;
 import com.mall.modules.member.entity.MemberInfo;
+import com.mall.modules.member.service.MemberBankAccountService;
 import com.mall.modules.member.service.MemberInfoService;
 import com.mall.modules.order.entity.OrderPaymentInfo;
 import com.mall.modules.order.service.OrderPaymentInfoService;
@@ -377,6 +379,10 @@ public class AccountApi extends BaseController {
         renderString(response, ResultGenerator.genSuccessResult("成功"));
     }
 
+    @Autowired
+    private MemberBankAccountService memberBankAccountService;
+
+
     /**
      * 佣金提现
      *
@@ -408,9 +414,21 @@ public class AccountApi extends BaseController {
         //新增提现记录
         commissionInfo.setType("6");
         commissionInfo.setAmount(amount);
-        commissionInfo.setBankAccount(request.getParameter("bankAccount"));
-        commissionInfo.setBankAccountName(request.getParameter("bankAccountName"));
-        commissionInfo.setBankName(request.getParameter("bankName"));
+        //获取银行卡id
+//        if(StringUtils.isEmpty(request.getParameter("bankId"))){
+//            renderString(response, ResultGenerator.genFailResult("提现失败：银行卡[id]参数为空"));
+//        }
+        MemberBankAccount memberBankAccount =  memberBankAccountService.get(request.getParameter("bankId"));
+        if(null == memberBankAccount){
+            memberBankAccount = new MemberBankAccount();
+            memberBankAccount.setBankAccount(request.getParameter("bankAccount"));
+            memberBankAccount.setBankAccountName(request.getParameter("bankAccountName"));
+            memberBankAccount.setBankAddress(request.getParameter("bankName"));
+        }
+
+        commissionInfo.setBankAccount(memberBankAccount.getBankAccount());
+        commissionInfo.setBankAccountName(memberBankAccount.getBankAccountName());
+        commissionInfo.setBankName(memberBankAccount.getBankAddress());
         commissionInfo.setCheckStatus("1");
         commissionInfo.setStatus("1");
         commissionInfoService.save(commissionInfo);

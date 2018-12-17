@@ -9,7 +9,10 @@
 		a.bank_account_name AS "bankAccountName",
 		a.bank_address AS "bankAddress",
 		a.create_date AS "createDate",
-		a.del_flag AS "delFlag"
+		a.del_flag AS "delFlag",
+		a.province as "province",
+		a.city as "city",
+		a.area as "area"
 	</sql>
 	
 	<sql id="memberBankAccountJoins">
@@ -80,7 +83,10 @@
 			bank_account_name,
 			bank_address,
 			create_date,
-			del_flag
+			del_flag,
+			province,
+			city,
+			area
 		) VALUES (
 			#{id},
 			#{userId},
@@ -88,7 +94,10 @@
 			#{bankAccountName},
 			#{bankAddress},
 			#{createDate},
-			#{delFlag}
+			#{delFlag},
+			#{province},
+			#{city},
+			#{area}
 		)
 	</insert>
 	

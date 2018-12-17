@@ -172,6 +172,10 @@ public class MerchantApi extends BaseController {
 			String bankAccount = request.getParameter("bankAccount");
 			String bankAccountName = request.getParameter("bankAccountName");
 			String bankAddress = request.getParameter("bankAddress");
+			String province = request.getParameter("province");
+			String city = request.getParameter("city");
+			String area = request.getParameter("area");
+
 			MemberBankAccount memberBankAccount = new MemberBankAccount();
 			memberBankAccount.setUserId(user.getId());
 			memberBankAccount.setBankAccount(bankAccount);
@@ -179,6 +183,9 @@ public class MerchantApi extends BaseController {
 			if(null !=memberBankAccounts && memberBankAccounts.size()>0){
 				renderString(response, ResultGenerator.genFailResult("该卡已绑定"));
 			}
+			memberBankAccount.setProvince(province);
+			memberBankAccount.setCity(city);
+			memberBankAccount.setArea(area);
 			memberBankAccount.setBankAccountName(bankAccountName);
 			memberBankAccount.setBankAddress(bankAddress);
 			memberBankAccountService.save(memberBankAccount);

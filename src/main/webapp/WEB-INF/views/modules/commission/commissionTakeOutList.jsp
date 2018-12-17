@@ -91,6 +91,9 @@
 				<th>开户人名称</th>
 				<th>银行账户</th>
 				<th>开户行</th>
+				<th>省</th>
+				<th>市</th>
+				<th>区</th>
 				<th>状态</th>
 				<th>备注</th>
 				<shiro:hasPermission name="commission:commissionTakeOut:edit"><th>操作</th></shiro:hasPermission>
@@ -127,6 +130,15 @@
 				</td>
 				<td>
 					${commissionTakeOut.bankName}
+				</td>
+				<td>
+						${commissionTakeOut.province}
+				</td>
+				<td>
+						${commissionTakeOut.city}
+				</td>
+				<td>
+						${commissionTakeOut.area}
 				</td>
 				<td>
 					<c:if test="${commissionTakeOut.checkStatus == '1'}">

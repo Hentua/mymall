@@ -434,28 +434,28 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
 			logger.debug("文件压缩失败，目录 " + srcDirName + " 不存在!");
 			return;
 		}
-		String dirPath = fileDir.getAbsolutePath();
-		File descFile = new File(descFileName);
-		try {
-			ZipOutputStream zouts = new ZipOutputStream(new FileOutputStream(
-					descFile));
-			if ("*".equals(fileName) || "".equals(fileName)) {
-				FileUtils.zipDirectoryToZipFile(dirPath, fileDir, zouts);
-			} else {
-				File file = new File(fileDir, fileName);
-				if (file.isFile()) {
-					FileUtils.zipFilesToZipFile(dirPath, file, zouts);
-				} else {
-					FileUtils
-							.zipDirectoryToZipFile(dirPath, file, zouts);
-				}
-			}
-			zouts.close();
-			logger.debug(descFileName + " 文件压缩成功!");
-		} catch (Exception e) {
-			logger.debug("文件压缩失败：" + e.getMessage());
-			e.printStackTrace();
-		}
+//		String dirPath = fileDir.getAbsolutePath();
+//		File descFile = new File(descFileName);
+//		try {
+//			ZipOutputStream zouts = new ZipOutputStream(new FileOutputStream(
+//					descFile));
+//			if ("*".equals(fileName) || "".equals(fileName)) {
+//				FileUtils.zipDirectoryToZipFile(dirPath, fileDir, zouts);
+//			} else {
+//				File file = new File(fileDir, fileName);
+//				if (file.isFile()) {
+//					FileUtils.zipFilesToZipFile(dirPath, file, zouts);
+//				} else {
+//					FileUtils
+//							.zipDirectoryToZipFile(dirPath, file, zouts);
+//				}
+//			}
+//			zouts.close();
+//			logger.debug(descFileName + " 文件压缩成功!");
+//		} catch (Exception e) {
+//			logger.debug("文件压缩失败：" + e.getMessage());
+//			e.printStackTrace();
+//		}
 
 	}
 
