@@ -589,6 +589,31 @@ public class MemberInfoApi extends BaseController {
     }
 
     /**
+     * 根据member id 获取商户信息
+     *
+     * @param request  请求体
+     * @param response 响应体
+     */
+    @RequestMapping(value = "getMerchantInfo", method = RequestMethod.POST)
+    public void getMerchantInfo(HttpServletRequest request, HttpServletResponse response) {
+        String memberId = request.getParameter("memberId");
+        try {
+            if (StringUtils.isBlank(memberId)) {
+                throw new ServiceException("商户ID不能为空");
+            }
+            MemberInfo queryCondition = new MemberInfo();
+            queryCondition.setId(memberId);
+            MemberInfo memberInfo = memberInfoService.get(queryCondition);
+            if (null == memberInfo) {
+                throw new ServiceException("未查询到商户数据");
+            }
+            renderString(response, ResultGenerator.genSuccessResult(memberInfo));
+        } catch (Exception e) {
+            renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
+        }
+    }
+
+    /**
      * 获取当前登录用户 订单、卡券、礼包统计数据
      *
      * @param request  请求体
@@ -796,7 +821,7 @@ public class MemberInfoApi extends BaseController {
             if (StringUtils.isBlank(repeatPassword)) {
                 throw new ServiceException("请确认新密码");
             }
-            if(!SystemService.validatePassword(oldPassword, currUser.getPassword())) {
+            if (!SystemService.validatePassword(oldPassword, currUser.getPassword())) {
                 throw new ServiceException("用户密码错误");
             }
             if (!newPassword.equals(repeatPassword)) {
@@ -938,10 +963,10 @@ public class MemberInfoApi extends BaseController {
             fileName = MemberInfo.USER_PHOTO_BASE_PATH + fileName + fileType;
             File uploadFile = new File(basePath + fileName);
             File dir = new File(Global.getUserfilesBaseDir() + MemberInfo.USER_PHOTO_BASE_PATH);
-            if(!dir.exists()) {
+            if (!dir.exists()) {
                 dir.mkdirs();
             }
-            if(!uploadFile.exists()) {
+            if (!uploadFile.exists()) {
                 uploadFile.createNewFile();
             }
             file.transferTo(uploadFile);
