@@ -608,10 +608,10 @@ public class MemberInfoApi extends BaseController {
             MemberInfo queryCondition = new MemberInfo();
             queryCondition.setId(memberId);
             MemberInfo memberInfo = memberInfoService.get(queryCondition);
-            if (null == memberInfo) {
+            if (null == memberInfo || !"1".equals(memberInfo.getMerchantType()) || !"1".equals(memberInfo.getStatus())) {
                 throw new ServiceException("未查询到商户数据");
             }
-            renderString(response, ResultGenerator.genSuccessResult(memberInfo));
+            renderString(response, ResultGenerator.genSuccessResult(new MerchantQualification(memberInfo)));
         } catch (Exception e) {
             renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
         }

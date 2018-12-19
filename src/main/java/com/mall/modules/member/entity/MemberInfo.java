@@ -65,7 +65,7 @@ public class MemberInfo extends DataEntity<MemberInfo> {
 	@JsonIgnore
 	private String businessLicenseImage; // 营业执照图片
 	@JsonIgnore
-	private String productLicense; // 产品许可证
+	private String productLicense; // 营业执照注册号
 	@JsonIgnore
 	private String permit; // 开户许可证
 	@JsonIgnore
