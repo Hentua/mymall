@@ -594,7 +594,7 @@ public class MemberInfoApi extends BaseController {
      * @param request  请求体
      * @param response 响应体
      */
-    @RequestMapping(value = "getMerchantInfo", method = RequestMethod.POST)
+    @RequestMapping(value = "getMerchantQualificationInfo", method = RequestMethod.POST)
     public void getMerchantInfo(HttpServletRequest request, HttpServletResponse response) {
         String memberId = request.getParameter("memberId");
         try {
