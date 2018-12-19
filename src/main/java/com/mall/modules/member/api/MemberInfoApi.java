@@ -601,6 +601,10 @@ public class MemberInfoApi extends BaseController {
             if (StringUtils.isBlank(memberId)) {
                 throw new ServiceException("商户ID不能为空");
             }
+            User merchantUserInfo = UserUtils.get(memberId);
+            if (null == merchantUserInfo || !"1".equals(merchantUserInfo.getUserType())) {
+                throw new ServiceException("商户不存在");
+            }
             MemberInfo queryCondition = new MemberInfo();
             queryCondition.setId(memberId);
             MemberInfo memberInfo = memberInfoService.get(queryCondition);
