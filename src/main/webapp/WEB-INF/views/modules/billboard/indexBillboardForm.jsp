@@ -197,6 +197,13 @@
 			</div>
 		</div>
 		<div class="control-group">
+			<label class="control-label">广告详情：</label>
+			<div class="controls">
+				<form:textarea id="content" htmlEscape="false" path="content" rows="4" maxlength="200" class="input-xxlarge"/>
+				<sys:ckeditor replace="content" uploadPath="/index/content" />
+			</div>
+		</div>
+		<div class="control-group">
 			<label class="control-label">备注信息：</label>
 			<div class="controls">
 				<form:textarea path="remarks" htmlEscape="false" rows="4" maxlength="500" class="input-xxlarge "/>

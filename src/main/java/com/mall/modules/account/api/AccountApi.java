@@ -429,6 +429,7 @@ public class AccountApi extends BaseController {
         commissionInfo.setBankAccount(memberBankAccount.getBankAccount());
         commissionInfo.setBankAccountName(memberBankAccount.getBankAccountName());
         commissionInfo.setBankName(memberBankAccount.getBankAddress());
+        commissionInfo.setAffiliatedBankName(memberBankAccount.getAffiliatedBankName());
         commissionInfo.setCheckStatus("1");
         commissionInfo.setStatus("1");
         commissionInfoService.save(commissionInfo);

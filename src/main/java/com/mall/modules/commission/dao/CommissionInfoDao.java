@@ -5,6 +5,7 @@ import com.mall.common.persistence.annotation.MyBatisDao;
 import com.mall.modules.commission.entity.CommissionInfo;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -26,4 +27,6 @@ public interface CommissionInfoDao extends CrudDao<CommissionInfo> {
 
 
 	public Map<String,Object> merchantIndexSts(@Param("userId") String userId);
+
+    public List<Map<String,Object>> areaList(Map<String,Object> paramMap);
 }

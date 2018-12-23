@@ -12,7 +12,8 @@
 		a.del_flag AS "delFlag",
 		a.province as "province",
 		a.city as "city",
-		a.area as "area"
+		a.area as "area",
+		a.affiliated_bank_name as "affiliatedBankName"
 	</sql>
 	
 	<sql id="memberBankAccountJoins">
@@ -86,7 +87,8 @@
 			del_flag,
 			province,
 			city,
-			area
+			area,
+			affiliated_bank_name
 		) VALUES (
 			#{id},
 			#{userId},
@@ -97,7 +99,8 @@
 			#{delFlag},
 			#{province},
 			#{city},
-			#{area}
+			#{area},
+			#{affiliatedBankName}
 		)
 	</insert>
 	
@@ -106,7 +109,11 @@
 			user_id = #{userId},
 			bank_account = #{bankAccount},
 			bank_account_name = #{bankAccountName},
-			bank_address = #{bankAddress}
+			bank_address = #{bankAddress},
+			province = #{province},
+			city = #{city},
+			area = #{area},
+			affiliated_bank_name = #{affiliatedBankName}
 		WHERE id = #{id}
 	</update>
 	

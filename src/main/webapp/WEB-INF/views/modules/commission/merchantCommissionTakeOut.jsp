@@ -5,6 +5,11 @@
 	<title>佣金提现管理</title>
 	<meta name="decorator" content="default"/>
 	<script type="text/javascript">
+
+		var areas_1 = eval('${areas_1}');
+        var areas_2 = eval('(${areas_2})');
+        var areas_3 = eval('(${areas_3})');
+
 		$(document).ready(function() {
 			//$("#name").focus();
 			$("#inputForm").validate({
@@ -36,7 +41,45 @@
 					}
 				}
 			});
+			console.log(areas_1)
+            initarea();
 		});
+
+		function initarea() {
+			for(var i=0;i<areas_1.length;i++){
+			    var area = areas_1[i];
+					$("#province").append("<option data-code='"+area["area_code"]+"' value='"+area["area_name"]+"' >"+area["area_name"]+"</option>")
+			}
+        }
+
+        function provinceCk() {
+			var parent_code = $("#province  option:selected").attr("data-code")
+            $("#city").text("")
+
+            $("#city").val("")
+            $("#area").val("")
+			$("#s2id_city").find(".select2-chosen").text("")
+            $("#s2id_area").find(".select2-chosen").text("")
+            for(var i=0;i<areas_2.length;i++){
+                var area = areas_2[i];
+                if(area["parent_code"] == parent_code){
+                    $("#city").append("<option data-code='"+area["area_code"]+"' value='"+area["area_name"]+"' >"+area["area_name"]+"</option>")
+                }
+			}
+        }
+
+        function cityCk() {
+            var parent_code = $("#city  option:selected").attr("data-code")
+            $("#area").text("")
+            $("#area").val("")
+            $("#s2id_area").find(".select2-chosen").text("")
+            for(var i=0;i<areas_3.length;i++){
+                var area = areas_3[i];
+                if(area["parent_code"] == parent_code){
+                    $("#area").append("<option   value='"+area["area_name"]+"' >"+area["area_name"]+"</option>")
+                }
+            }
+        }
 
         function go_a() {
             if($("#amount").val()%1 !=0){
@@ -69,6 +112,17 @@
 			<label class="control-label">收款人账户：</label>
 			<div class="controls">
 				<form:input path="bankAccount" htmlEscape="false" maxlength="200" class="input-xlarge "/>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">收款银行地址：</label>
+			<div class="controls">
+				省：<select onchange="provinceCk()" id="province" name="province" style="width: 170px" >
+				</select>
+				市：<select onchange="cityCk()" id="city" name="city" style="width: 170px" >
+				</select>
+				区：<select id="area" name="area" style="width: 170px">
+				</select>
 			</div>
 		</div>
 		<div class="control-group">

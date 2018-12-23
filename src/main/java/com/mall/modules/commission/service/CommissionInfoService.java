@@ -60,5 +60,8 @@ public class CommissionInfoService extends CrudService<CommissionInfoDao, Commis
 	}
 
 
+	public List<Map<String,Object>> areaList(Map<String,Object> paramMap){
+		return dao.areaList(paramMap);
+	}
 
 }

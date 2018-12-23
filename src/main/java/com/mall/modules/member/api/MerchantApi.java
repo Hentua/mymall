@@ -175,6 +175,7 @@ public class MerchantApi extends BaseController {
 			String province = request.getParameter("province");
 			String city = request.getParameter("city");
 			String area = request.getParameter("area");
+			String affiliatedBankName = request.getParameter("affiliatedBankName");
 
 			MemberBankAccount memberBankAccount = new MemberBankAccount();
 			memberBankAccount.setUserId(user.getId());
@@ -186,6 +187,7 @@ public class MerchantApi extends BaseController {
 			memberBankAccount.setProvince(province);
 			memberBankAccount.setCity(city);
 			memberBankAccount.setArea(area);
+			memberBankAccount.setAffiliatedBankName(affiliatedBankName);
 			memberBankAccount.setBankAccountName(bankAccountName);
 			memberBankAccount.setBankAddress(bankAddress);
 			memberBankAccountService.save(memberBankAccount);

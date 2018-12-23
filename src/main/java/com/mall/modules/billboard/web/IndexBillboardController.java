@@ -90,6 +90,9 @@ public class IndexBillboardController extends BaseController {
 		if("5".equals(indexBillboard.getType())){
 			indexBillboard.setJumpId(indexBillboard.getCategoryId());
 		}
+		String desp = indexBillboard.getContent();
+		desp=desp.replace("&quot;/userfiles/","&quot;"+Global.getConfig("userfiles.baseURL")+"/userfiles/");
+		indexBillboard.setContent(desp);
 		indexBillboardService.save(indexBillboard);
 		addMessage(redirectAttributes, "保存首页广告位成功");
 		return "redirect:"+Global.getAdminPath()+"/billboard/indexBillboard/?repage";

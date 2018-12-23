@@ -27,6 +27,15 @@ public class IndexBillboard extends DataEntity<IndexBillboard> {
 	private String jumpGoodsImage; //商品图片
 	private String jumpGoodsName;
 	private String[] goodsId;   //form表单商品ID集合
+	private String content; //广告描述富文本内容
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
 
 	public String getCategoryId() {
 		return categoryId;

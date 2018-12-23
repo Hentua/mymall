@@ -24,6 +24,17 @@ public class MemberBankAccount extends DataEntity<MemberBankAccount> {
 	//区
 	private String area;
 
+	//所属银行
+	private String affiliatedBankName;
+
+	public String getAffiliatedBankName() {
+		return affiliatedBankName;
+	}
+
+	public void setAffiliatedBankName(String affiliatedBankName) {
+		this.affiliatedBankName = affiliatedBankName;
+	}
+
 	public String getProvince() {
 		return province;
 	}

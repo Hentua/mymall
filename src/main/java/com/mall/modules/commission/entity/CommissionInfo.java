@@ -47,9 +47,20 @@ public class CommissionInfo extends DataEntity<CommissionInfo> {
 	//区
 	private String area;
 
+	//归属银行名称
+	private String affiliatedBankName;
+
 	private Date startDate; // 查询开始时间
 	private Date endDate; // 查询结束时间
 
+
+	public String getAffiliatedBankName() {
+		return affiliatedBankName;
+	}
+
+	public void setAffiliatedBankName(String affiliatedBankName) {
+		this.affiliatedBankName = affiliatedBankName;
+	}
 
 	public String getProvince() {
 		return province;

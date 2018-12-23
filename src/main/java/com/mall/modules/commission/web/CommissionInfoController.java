@@ -3,6 +3,7 @@ package com.mall.modules.commission.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.alibaba.druid.support.json.JSONUtils;
 import com.google.common.collect.Lists;
 import com.mall.common.utils.ResultGenerator;
 import com.mall.common.utils.excel.ExportExcel;
@@ -32,7 +33,9 @@ import com.mall.common.utils.StringUtils;
 import com.mall.modules.commission.entity.CommissionInfo;
 import com.mall.modules.commission.service.CommissionInfoService;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.mall.common.service.BaseService.dataScopeFilter;
 
@@ -122,6 +125,8 @@ public class CommissionInfoController extends BaseController {
 		return "modules/commission/merchantCommissionInfoList";
 	}
 
+
+
 	/**
 	 * 佣金提现
 	 * @param commissionInfo
@@ -142,6 +147,18 @@ public class CommissionInfoController extends BaseController {
 		commissionInfo.setType("6");
 		List<CommissionInfo> list = commissionInfoService.findList(commissionInfo);
 		model.addAttribute("memberInfo", memberInfo);
+		Map<String,Object> paramMap = new HashMap<>();
+		paramMap.put("areaType","1");
+		List<Map<String,Object>> areas = commissionInfoService.areaList(paramMap);
+		model.addAttribute("areas_1", JSONUtils.toJSONString(areas));
+		paramMap.put("areaType","2");
+		areas = commissionInfoService.areaList(paramMap);
+		model.addAttribute("areas_2", JSONUtils.toJSONString(areas));
+		paramMap.put("areaType","3");
+		areas = commissionInfoService.areaList(paramMap);
+		model.addAttribute("areas_3", JSONUtils.toJSONString(areas));
+
+
 		if(null != list && list.size()>0){
 			addMessage(model,"提现失败：您的提现申请正在审核，请等审核通过后再提交新的申请！");
 			model.addAttribute("org","1");
@@ -182,6 +199,9 @@ public class CommissionInfoController extends BaseController {
 		c.setBankAccount(commissionInfo.getBankAccount());
 		c.setBankAccountName(commissionInfo.getBankAccountName());
 		c.setBankName(commissionInfo.getBankName());
+		c.setProvince(commissionInfo.getProvince());
+		c.setCity(commissionInfo.getCity());
+		c.setArea(commissionInfo.getArea());
 		c.setCheckStatus("1");
 		c.setStatus("1");
 		commissionInfoService.save(c);

@@ -16,7 +16,8 @@
 		a.remarks AS "remarks",
 		a.jump_Id as "jumpId",
 		jg.image as "jumpGoodsImage",
-		jg.goods_name as "jumpGoodsName"
+		jg.goods_name as "jumpGoodsName",
+		a.content as "content"
 	</sql>
 	
 	<sql id="indexBillboardJoins">
@@ -92,7 +93,8 @@
 			update_by,
 			update_date,
 			remarks,
-			jump_id
+			jump_id,
+			content
 		) VALUES (
 			#{id},
 			#{title},
@@ -105,7 +107,8 @@
 			#{updateBy.id},
 			#{updateDate},
 			#{remarks},
-			#{jumpId}
+			#{jumpId},
+			#{content}
 		)
 	</insert>
 
@@ -128,7 +131,8 @@
 			update_by = #{updateBy.id},
 			update_date = #{updateDate},
 			remarks = #{remarks},
-			jump_Id = #{jumpId}
+			jump_Id = #{jumpId},
+			content = #{content}
 		WHERE id = #{id}
 	</update>
 	

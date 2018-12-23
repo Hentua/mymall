@@ -26,7 +26,8 @@
 		a.check_remark as "checkRemark",
 		a.province as "province",
 		a.city as "city",
-		a.area as "area"
+		a.area as "area",
+		a.affiliated_bank_name as "affiliatedBankName"
 	</sql>
 	
 	<sql id="commissionInfoJoins">
@@ -151,6 +152,16 @@
 			),2) AS "monthOrderAmountTotal",
 			ROUND(ifnull( ( SELECT sum( a.amount ) FROM commission_info a WHERE a.user_id = #{userId} and a.type != 6 and a.type != 7 ), 0 ),2) AS "commissionTotal"
 	</select>
+
+
+	<select id="areaList" parameterType="java.util.Map" resultType="java.util.Map">
+		select * from js_sys_area
+		<where>
+			<if test="areaType != null and areaType != ''">
+				and area_type = #{areaType}
+			</if>
+		</where>
+	</select>
 	
 	<insert id="insert">
 		INSERT INTO commission_info(
@@ -173,7 +184,8 @@
 			check_remark,
 			province,
 			city,
-			area
+			area,
+			affiliated_bank_name
 		) VALUES (
 			#{id},
 			#{type},
@@ -194,7 +206,8 @@
 			#{checkRemark},
 			#{province},
 			#{city},
-			#{area}
+			#{area},
+			#{affiliatedBankName}
 		)
 	</insert>
 	
