@@ -81,8 +81,15 @@ public class DictController extends BaseController {
 	public String sysConfig(sysConfig sysConfig, Model model) {
 		String settlesmentCycle = DictUtils.getDictValue("account_day_time","account_day_time","0");
 		String serviceCharge = DictUtils.getDictValue("service_charge","service_charge","0");
+		//充值送折扣券
+		String rechargeDiscount = DictUtils.getDictValue("recharge_discount","recharge_discount","0");
+		//佣金转余额送折扣券
+		String toAccountDiscount = DictUtils.getDictValue("toaccount_discount","toaccount_discount","0");
+
 		sysConfig.setServiceCharge(serviceCharge);
 		sysConfig.setSettlementCycle(settlesmentCycle);
+		sysConfig.setRechargeDiscount(rechargeDiscount);
+		sysConfig.setToAccountDiscount(toAccountDiscount);
 		return "modules/sys/sysConfig";
 	}
 
@@ -97,6 +104,14 @@ public class DictController extends BaseController {
 		map.put("type","account_day_time");
 		map.put("label","account_day_time");
 		map.put("value",sysConfig.getSettlementCycle());
+		dictService.editSysConfig(map);
+		map.put("type","recharge_discount");
+		map.put("label","recharge_discount");
+		map.put("value",sysConfig.getRechargeDiscount());
+		dictService.editSysConfig(map);
+		map.put("type","toaccount_discount");
+		map.put("label","toaccount_discount");
+		map.put("value",sysConfig.getToAccountDiscount());
 		dictService.editSysConfig(map);
 		addMessage(redirectAttributes, "更新系统配置成功");
 		return "redirect:" + adminPath + "/sys/dict/sysConfig";

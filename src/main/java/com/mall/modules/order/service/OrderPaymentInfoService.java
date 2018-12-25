@@ -5,6 +5,7 @@ import com.mall.common.service.CrudService;
 import com.mall.modules.account.entity.AccountFlow;
 import com.mall.modules.account.service.AccountFlowService;
 import com.mall.modules.account.service.AccountService;
+import com.mall.modules.coupon.service.CouponCustomerService;
 import com.mall.modules.gift.entity.GiftMerchant;
 import com.mall.modules.gift.entity.GiftPurchaseLog;
 import com.mall.modules.gift.service.GiftMerchantService;
@@ -15,6 +16,7 @@ import com.mall.modules.order.dao.OrderInfoDao;
 import com.mall.modules.order.dao.OrderPaymentInfoDao;
 import com.mall.modules.order.entity.OrderInfo;
 import com.mall.modules.order.entity.OrderPaymentInfo;
+import com.mall.modules.sys.utils.DictUtils;
 import com.sohu.idcenter.IdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,6 +46,9 @@ public class OrderPaymentInfoService extends CrudService<OrderPaymentInfoDao, Or
 	private MemberInfoService memberInfoService;
 	@Autowired
 	private AccountFlowService accountFlowService;
+
+	@Autowired
+	private CouponCustomerService couponCustomerService;
 	@Autowired
 	private GiftPurchaseLogService giftPurchaseLogService;
 	@Autowired
@@ -147,6 +152,14 @@ public class OrderPaymentInfoService extends CrudService<OrderPaymentInfoDao, Or
 		AccountFlow accountFlow = accountFlowService.getByFlowNo(paymentNo);
 		accountFlow.setCheckStatus("2");
 		accountFlowService.save(accountFlow);
+
+		//充值送折扣券
+		String rechargeDiscountStr = DictUtils.getDictValue("recharge_discount","recharge_discount","0");
+		Double rechargeDiscount = Double.parseDouble(rechargeDiscountStr);
+		if(rechargeDiscount>0){
+			//送优惠券函数
+			couponCustomerService.saveCouponCustomerByPlatform(accountFlow.getAmount()*rechargeDiscount, "1", accountFlow.getId(), "余额充值优惠券", "4");
+		}
 		// 新增余额
 		MemberInfo queryCondition = new MemberInfo();
 		queryCondition.setId(accountFlow.getUserId());

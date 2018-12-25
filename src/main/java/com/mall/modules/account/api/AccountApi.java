@@ -29,6 +29,7 @@ import com.mall.modules.order.entity.OrderPaymentInfo;
 import com.mall.modules.order.service.OrderPaymentInfoService;
 import com.mall.modules.order.service.OrderWeixinExpenditureCallbackService;
 import com.mall.modules.sys.entity.User;
+import com.mall.modules.sys.utils.DictUtils;
 import com.mall.modules.sys.utils.UserUtils;
 import com.sohu.idcenter.IdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -359,9 +360,12 @@ public class AccountApi extends BaseController {
 //		accountFlow.setBankName(request.getParameter("bankName"));//开户行
         accountFlow.setCheckStatus("2");
         accountFlowService.save(accountFlow);
-        //送优惠券函数
-        couponCustomerService.saveCouponCustomerByPlatform(amount, "0", user.getId(), "佣金转余额优惠券", "3");
-
+        String toAccountDiscountStr = DictUtils.getDictValue("toaccount_discount","toaccount_discount","0");
+        Double toAccountDiscount = Double.parseDouble(toAccountDiscountStr);
+        if(toAccountDiscount>0){
+            //送优惠券函数
+            couponCustomerService.saveCouponCustomerByPlatform(amount*toAccountDiscount, "0", user.getId(), "佣金转余额优惠券", "3");
+        }
 
         //新增转余额记录
         CommissionInfo commissionInfo = new CommissionInfo();
