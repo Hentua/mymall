@@ -69,10 +69,10 @@ public class MemberVerifyCodeService extends CrudService<MemberVerifyCodeDao, Me
             }
             templateCode = Global.getConfig("sms.template.member.forgetpassword");
         }else if("2".equals(type)) {
-            User user = UserUtils.getByLoginName(telPhone);
+            /*User user = UserUtils.getByLoginName(telPhone);
             if(null == user) {
                 throw new ServiceException("用户不存在");
-            }
+            }*/
             templateCode = Global.getConfig("sms.template.member.modifyinfo");
         }
         //生成短信验证码
