@@ -3,18 +3,16 @@
  */
 package com.mall.common.persistence;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Pattern;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mall.common.config.Global;
 import com.mall.common.utils.CookieUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * 分页类
@@ -530,9 +528,9 @@ public class Page<T> {
 	 */
 	public int getFirstResult(){
 		int firstResult = (getPageNo() - 1) * getPageSize();
-		if (firstResult >= getCount()) {
-			firstResult = 0;
-		}
+//		if (firstResult >= getCount()) {
+//			firstResult = 0;
+//		}
 		return firstResult;
 	}
 	/**
