@@ -368,10 +368,10 @@ public class MemberInfoApi extends BaseController {
             if (null != user) {
                 throw new ServiceException("该用户已存在");
             }
+            UserUtils.clearCache();
             currUser.setMobile(mobile);
             currUser.setLoginName(mobile);
             systemService.saveUser(currUser);
-            UserUtils.clearCache();
             String token = UserUtils.getTokenStr(request);
             JedisUtils.delObject(token);
             renderString(response, ResultGenerator.genSuccessResult());

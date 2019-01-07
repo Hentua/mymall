@@ -3,23 +3,18 @@
  */
 package com.mall.common.security.shiro.cache;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.google.common.collect.Sets;
 import com.mall.common.utils.JedisUtils;
-import com.mall.common.web.Servlets;
 import org.apache.shiro.cache.Cache;
 import org.apache.shiro.cache.CacheException;
 import org.apache.shiro.cache.CacheManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import redis.clients.jedis.Jedis;
 
-import com.google.common.collect.Sets;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Set;
 
 /**
  * 自定义授权缓存管理类
@@ -71,29 +66,29 @@ public class JedisCacheManager implements CacheManager {
 			}
 			
 			V v = null;
-			HttpServletRequest request = Servlets.getRequest();
-			if (request != null){
-				v = (V)request.getAttribute(cacheKeyName);
-				if (v != null){
-					return v;
-				}
-			}
+//			HttpServletRequest request = Servlets.getRequest();
+//			if (request != null){
+//				v = (V)request.getAttribute(cacheKeyName);
+//				if (v != null){
+//					return v;
+//				}
+//			}
 			
 			V value = null;
 			Jedis jedis = null;
 			try {
 				jedis = JedisUtils.getResource();
 				value = (V)JedisUtils.toObject(jedis.hget(JedisUtils.getBytesKey(cacheKeyName), JedisUtils.getBytesKey(key)));
-				logger.debug("get {} {} {}", cacheKeyName, key, request != null ? request.getRequestURI() : "");
+				logger.debug("get {} {} {}", cacheKeyName, key, "");
 			} catch (Exception e) {
-				logger.error("get {} {} {}", cacheKeyName, key, request != null ? request.getRequestURI() : "", e);
+				logger.error("get {} {} {}", cacheKeyName, key, e);
 			} finally {
 				JedisUtils.returnResource(jedis);
 			}
 			
-			if (request != null && value != null){
-				request.setAttribute(cacheKeyName, value);
-			}
+//			if (request != null && value != null){
+//				request.setAttribute(cacheKeyName, value);
+//			}
 			
 			return value;
 		}
