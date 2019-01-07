@@ -371,9 +371,9 @@ public class MemberInfoApi extends BaseController {
             UserUtils.clearCache();
             currUser.setMobile(mobile);
             currUser.setLoginName(mobile);
-            systemService.saveUser(currUser);
             String token = UserUtils.getTokenStr(request);
             JedisUtils.delObject(token);
+            systemService.saveUser(currUser);
             renderString(response, ResultGenerator.genSuccessResult());
         } catch (Exception e) {
             renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
