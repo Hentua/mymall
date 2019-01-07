@@ -100,7 +100,7 @@
                 </c:choose>
             </td>
             <td>
-                    ${fns:getUserById(memberMerchantCheck.checkBy).name}
+                    ${memberMerchantCheck.checkByName}
             </td>
             <td>
                 <fmt:formatDate value="${memberMerchantCheck.checkDate}" pattern="yyyy-MM-dd HH:mm:ss"/>

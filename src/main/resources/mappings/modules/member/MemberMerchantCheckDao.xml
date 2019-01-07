@@ -20,7 +20,8 @@
 		u.user_type AS "memberType",
 		m.merchant_type AS "merchantType",
 		mr.nickname AS "merchantRefereeName",
-		umr.login_name AS "merchantRefereeAccount"
+		umr.login_name AS "merchantRefereeAccount",
+		checkUser.name AS "checkByName"
 	</sql>
 	
 	<sql id="memberMerchantCheckJoins">
@@ -28,6 +29,7 @@
 		left join sys_user u on u.id = a.merchant_code
 		left join member_info mr on mr.id = m.merchant_referee_id
 		left join sys_user umr on umr.id = m.merchant_referee_id
+		left join sys_user checkUser on checkUser.id = a.check_by
 	</sql>
     
 	<select id="get" resultType="MemberMerchantCheck">

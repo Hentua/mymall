@@ -17,6 +17,7 @@ public class MemberMerchantCheck extends DataEntity<MemberMerchantCheck> {
 	private String merchantCode;		// 商户ID
 	private String status;		// 审核状态
 	private String checkBy;		// 审核人
+	private String checkByName; // 审核人名字
 	private Date checkDate;		// 审核时间
 
 	private String merchantName; // 商户名称
@@ -36,6 +37,14 @@ public class MemberMerchantCheck extends DataEntity<MemberMerchantCheck> {
 
 	public MemberMerchantCheck(String id){
 		super(id);
+	}
+
+	public String getCheckByName() {
+		return checkByName;
+	}
+
+	public void setCheckByName(String checkByName) {
+		this.checkByName = checkByName;
 	}
 
 	public String getMerchantRefereeName() {
