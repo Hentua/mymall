@@ -110,6 +110,7 @@ public class MemberMerchantCheckController extends BaseController {
 	@RequestMapping(value = "checkPass")
 	@Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
 	public String checkPass(MemberMerchantCheck memberMerchantCheck, HttpServletRequest request, Model model, RedirectAttributes redirectAttributes) {
+		User currUser = UserUtils.getUser();
 		String remarks = memberMerchantCheck.getRemarks();
 		memberMerchantCheck = this.get(memberMerchantCheck.getId());
 		memberMerchantCheck.setRemarks(remarks);
@@ -139,7 +140,6 @@ public class MemberMerchantCheckController extends BaseController {
 			roleList.add(new Role("1001"));
 			user.setRoleList(roleList);
 			systemService.saveUser(user);
-			UserUtils.clearCache(user);
 			//  商户入驻返佣金
 			//商家信息
 			/*memberInfo = memberInfoService.get(memberInfo);
@@ -175,15 +175,12 @@ public class MemberMerchantCheckController extends BaseController {
 			roleList.add(new Role("1002"));
 			user.setRoleList(roleList);
 			systemService.saveUser(user);
-			UserUtils.clearCache(user);
 		}
-		User currUser = UserUtils.getUser();
 		memberMerchantCheck.setCheckBy(currUser.getId());
 		memberMerchantCheck.setCheckDate(new Date());
 		memberMerchantCheck.setStatus("1");
 		memberMerchantCheckService.save(memberMerchantCheck);
-
-
+		UserUtils.clearCache();
 		addMessage(redirectAttributes, "审核成功");
 		return "redirect:"+Global.getAdminPath()+"/member/memberMerchantCheck/?repage";
 	}
