@@ -26,7 +26,7 @@
 		
 		function addStandard() {
 			$("#standardTab").append("<tr>\n" +
-                "\t\t\t\t\t\t<td>名称：<input id=\"goodsStandardsName\" name=\"goodsStandardsName\" class=\"input-xlarge required\" type=\"text\" value=\"\" maxlength=\"10\"></td>\n" +
+                "\t\t\t\t\t\t<td>名称：<input id=\"goodsStandardsName\" name=\"goodsStandardsName\" class=\"input-xlarge required\" type=\"text\" value=\"\" maxlength=\"200\"></td>\n" +
                 "\t\t\t\t\t\t<td>价格：<input id=\"goodsStandardsPrice\" name=\"goodsStandardsPrice\" class=\"input-xlarge  number required\" type=\"text\" value=\"\"></td>\n" +
                 "\t\t\t\t\t\t<td>&nbsp;&nbsp;<a style=\"cursor: pointer\" onclick=\"delStandard(this)\">×</a></td>\n" +
                 "\t\t\t\t\t</tr>")

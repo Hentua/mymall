@@ -40,12 +40,13 @@
 			if(2 != $(t).val() ){
                 $("#selGoods").hide();
 			}
+			console.log(3 == $(t).val() || 4 == $(t).val() || 5 == $(t).val())
+			console.log(3 !=  $(t).val() || 4 != $(t).val() && 5 != $(t).val())
 
-
-            if(4 == $(t).val() || 5 == $(t).val()){
+            if(3 == $(t).val() || 4 == $(t).val() || 5 == $(t).val()){
                 $("#uninGoods").hide();
             }
-            if(4 != $(t).val() && 5 != $(t).val()){
+            if(3 !=  $(t).val() && 4 != $(t).val() && 5 != $(t).val()){
                 $("#uninGoods").show();
             }
 

@@ -37,12 +37,14 @@ public class IndexBillboardService extends CrudService<IndexBillboardDao, IndexB
 	public void save(IndexBillboard indexBillboard) {
 		super.save(indexBillboard);
 		if("2".equals(indexBillboard.getType())){
-			dao.delIndexGoodsInfo(indexBillboard.getId());
-			for (String goodsId: indexBillboard.getGoodsId()) {
-				Map<String,Object> map = new HashMap<>();
-				map.put("goodsId",goodsId);
-				map.put("billboardId",indexBillboard.getId());
-				dao.insertGoodsInfo(map);
+			if(null != indexBillboard.getGoodsId() && indexBillboard.getGoodsId().length>0){
+				dao.delIndexGoodsInfo(indexBillboard.getId());
+				for (String goodsId: indexBillboard.getGoodsId()) {
+					Map<String,Object> map = new HashMap<>();
+					map.put("goodsId",goodsId);
+					map.put("billboardId",indexBillboard.getId());
+					dao.insertGoodsInfo(map);
+				}
 			}
 		}
 	}
