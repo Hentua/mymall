@@ -289,7 +289,6 @@
 		UPDATE member_info SET 	
 			nickname = #{nickname},
 			sex = #{sex},
-			avatar = #{avatar},
 			merchant_head_img = #{merchantHeadImg},
 			merchant_service_phone = #{merchantServicePhone}
 		WHERE id = #{id}
