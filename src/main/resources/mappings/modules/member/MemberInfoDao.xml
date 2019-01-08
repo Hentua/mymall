@@ -288,9 +288,13 @@
 	<update id="update">
 		UPDATE member_info SET 	
 			nickname = #{nickname},
-			sex = #{sex},
-			merchant_head_img = #{merchantHeadImg},
-			merchant_service_phone = #{merchantServicePhone}
+			sex = #{sex}
+				<if test="merchantHeadImg != null and merchantHeadImg != ''">
+					,merchant_head_img = #{merchantHeadImg}
+				</if>
+		        <if test="merchantServicePhone != null and merchantServicePhone != ''">
+					,merchant_service_phone = #{merchantServicePhone}
+				</if>
 		WHERE id = #{id}
 	</update>
 
