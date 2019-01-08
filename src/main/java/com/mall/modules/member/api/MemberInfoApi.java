@@ -645,6 +645,7 @@ public class MemberInfoApi extends BaseController {
             memberBaseInfo.put("mobile", memberInfo.getMobile());
             memberBaseInfo.put("referee", memberInfo.getReferee());
             memberBaseInfo.put("sex", memberInfo.getSex());
+            memberBaseInfo.put("nickname", memberInfo.getNickname());
 
             memberDataCount.putAll(memberBaseInfo);
             memberDataCount.putAll(orderCount);
