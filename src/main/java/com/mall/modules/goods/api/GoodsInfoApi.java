@@ -94,6 +94,7 @@ public class GoodsInfoApi extends BaseController {
         String sortType = request.getParameter("sortType");
         String sortWay = request.getParameter("sortWay");
         String keyWord = request.getParameter("keyWord");
+        String adId = request.getParameter("adId");
 
         GoodsInfo goodsInfo = new GoodsInfo();
         goodsInfo.setGoodsCategoryId(request.getParameter("goodsCategoryId"));
@@ -101,6 +102,7 @@ public class GoodsInfoApi extends BaseController {
             goodsInfo.setKeyWord(keyWord);
         }
         goodsInfo.setMerchantId(request.getParameter("merchantId"));
+        goodsInfo.setAdId(adId);
         Page<GoodsInfo> page = new Page<GoodsInfo>(request,response);
         //排序类型 1综合排序 2销量排序 3价格排序
         if(StringUtils.isEmpty(sortType) || "1".equals(sortType)){

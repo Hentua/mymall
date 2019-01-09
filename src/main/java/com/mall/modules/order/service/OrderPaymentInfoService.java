@@ -156,9 +156,11 @@ public class OrderPaymentInfoService extends CrudService<OrderPaymentInfoDao, Or
 		//充值送折扣券
 		String rechargeDiscountStr = DictUtils.getDictValue("recharge_discount","recharge_discount","0");
 		Double rechargeDiscount = Double.parseDouble(rechargeDiscountStr);
+		logger.info("充值送折扣券比例 "+rechargeDiscountStr);
 		if(rechargeDiscount>0){
+			logger.info("充值送折扣券");
 			//送优惠券函数
-			couponCustomerService.saveCouponCustomerByPlatform(accountFlow.getAmount()*rechargeDiscount, "1", accountFlow.getId(), "余额充值优惠券", "4");
+			couponCustomerService.saveCouponCustomerByPlatform(accountFlow.getAmount()*rechargeDiscount, "1", accountFlow.getUserId(), "余额充值优惠券", "4");
 		}
 		// 新增余额
 		MemberInfo queryCondition = new MemberInfo();

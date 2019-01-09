@@ -59,6 +59,7 @@ public class GoodsInfo extends DataEntity<GoodsInfo> {
     private String standardName; // 商品规格名称
     private String keyWord;
     private String checkRemarks;
+    private String adId;
 
     //商品规格
     private List<GoodsStandard> goodsStandards = new ArrayList<GoodsStandard>();
@@ -94,6 +95,14 @@ public class GoodsInfo extends DataEntity<GoodsInfo> {
             return df.format(0.5*this.getGoodsPrice());
         }
         return null;
+    }
+
+    public String getAdId() {
+        return adId;
+    }
+
+    public void setAdId(String adId) {
+        this.adId = adId;
     }
 
     public String getCheckRemarks() {
