@@ -63,7 +63,7 @@
 		<div class="control-group">
 			<label class="control-label">商品标题：</label>
 			<div class="controls">
-				<form:input path="goodsTitle" htmlEscape="false" maxlength="200" class="input-xlarge "/>
+				<form:input path="goodsTitle" htmlEscape="false" maxlength="200" class="input-xlarge required"/>
 			</div>
 		</div>
 		<div class="control-group">
@@ -102,7 +102,8 @@
 			<label class="control-label">商品图片：</label>
 			<div class="controls">
 				<form:hidden id="nameImage" path="image" htmlEscape="false" maxlength="255" class="input-xlarge"/>
-				<sys:ckfinder input="nameImage" type="images" uploadPath="/goods" selectMultiple="false" maxWidth="100" maxHeight="100"/>
+				<sys:ckfinder input="nameImage" type="images" uploadPath="/goods" selectMultiple="false"  />
+				<span style="color: silver"><span style="color: red">*</span>商品图片最佳尺寸300*300</span>
 			</div>
 		</div>
 		<div class="control-group">
@@ -111,7 +112,7 @@
 				<form:hidden id="nameImage1" path="despImages" htmlEscape="false" maxlength="255" class="input-xlarge"/>
 					<%--<form:hidden id="files" path="despImages" htmlEscape="false" maxlength="255" class="input-xlarge"/>--%>
 					<%--<sys:ckfinder input="files" type="files" uploadPath="/goods" selectMultiple="false"/>--%>
-				<sys:ckfinder input="nameImage1" type="images" uploadPath="/goods" selectMultiple="true" maxWidth="100" maxHeight="100"/>
+				<sys:ckfinder input="nameImage1" type="images" uploadPath="/goods" selectMultiple="true" />
 			</div>
 		</div>
 		<div class="control-group">

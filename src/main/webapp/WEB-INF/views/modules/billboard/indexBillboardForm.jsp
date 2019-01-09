@@ -25,14 +25,6 @@
 		});
 
 		function showHide(t){
-			//
-            <%--<form:option value="1" label="APP首页轮播图广告位"/>--%>
-            <%--<form:option value="2"  label="APP首页标题广告"/>--%>
-            <%--<form:option value="3"  label="APP开机广告"/>--%>
-            <%--<form:option value="5"  label="APP首页推荐分类"/>--%>
-            <%--<form:option value="4"  label="后台首页广告"/>--%>
-
-
 		    console.log($(t).val());
 		    if(2 == $(t).val()  ){
                 $("#selGoods").show();
@@ -55,6 +47,28 @@
 			}
             if(5 == $(t).val()){
                 $("#uninGoodsCategory").show();
+            }
+//
+            <%--<form:option value="1" label="APP首页轮播图广告位"/>--%>
+            <%--<form:option value="2"  label="APP首页标题广告"/>--%>
+            <%--<form:option value="3"  label="APP开机广告"/>--%>
+            <%--<form:option value="5"  label="APP首页推荐分类"/>--%>
+            <%--<form:option value="4"  label="后台首页广告"/>--%>
+            //
+            if(1 == $(t).val()){
+                $("#war_text").text("APP首页轮播图广告图片最佳尺寸1080*450");
+			}
+            if(2 == $(t).val()){
+                $("#war_text").text("APP首页标题广告图片最佳尺寸1080*400");
+            }
+            if(3 == $(t).val()){
+                $("#war_text").text("AAPP开机广告图片最佳尺寸1242*2208,1242*2688");
+            }
+            if(4 == $(t).val()){
+                $("#war_text").text("后台首页广告图片最佳尺寸1920*600");
+            }
+            if(5 == $(t).val()){
+                $("#war_text").text("APP首页推荐分类图片最佳尺寸200*200");
             }
 
 		}
@@ -145,6 +159,7 @@
 			<div class="controls">
 				<form:hidden id="image" path="image" htmlEscape="false" maxlength="255" class="input-xlarge"/>
 				<sys:ckfinder input="image" type="images" uploadPath="/billboard/indexBillboard" selectMultiple="false" maxWidth="100" maxHeight="100"/>
+				<span style="color: silver"><span style="color: red">*</span><span id="war_text">APP首页轮播图广告图片最佳尺寸1080*450</span></span>
 			</div>
 		</div>
 		<div class="control-group" id="uninGoods" style="${(indexBillboard.type != 5)?'':'display: none'}">
