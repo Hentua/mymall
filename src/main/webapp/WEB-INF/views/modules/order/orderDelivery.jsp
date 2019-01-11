@@ -171,7 +171,7 @@
                     </form:select>
                 </c:when>
                 <c:otherwise>
-                    ${orderInfo.orderLogistics.logisticsType}
+                    ${fns:getDictLabel(orderInfo.orderLogistics.logisticsType, 'express_type', '')}
                 </c:otherwise>
             </c:choose>
         </div>
