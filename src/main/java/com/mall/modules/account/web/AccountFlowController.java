@@ -35,6 +35,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.List;
 
+import static com.mall.common.service.BaseService.dataScopeFilter;
+
 /**
  * 账户流水Controller
  * @author hub
@@ -116,6 +118,7 @@ public class AccountFlowController extends BaseController {
 //		accountFlow.setMode("1");
 //		accountFlow.setIncomeExpenditureMode("2");
 		accountFlow.setCheckStatus("2");
+		accountFlow.getSqlMap().put("dsf", dataScopeFilter(UserUtils.getUser(), "uoo", "u"));
 		Page<AccountFlow> page = accountFlowService.findPage(new Page<AccountFlow>(request, response), accountFlow);
 		model.addAttribute("page", page);
 		return "modules/account/memberAccountFlowList";

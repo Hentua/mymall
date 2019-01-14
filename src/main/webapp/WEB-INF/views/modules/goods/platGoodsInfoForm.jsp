@@ -109,7 +109,7 @@
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">商品图片：</label>
+			<label class="control-label">商品主图：</label>
 			<div class="controls">
 				<form:hidden id="nameImage" path="image" htmlEscape="false" maxlength="255" class="input-xlarge"/>
 				<sys:ckfinder input="nameImage" type="images" uploadPath="/goods" selectMultiple="false"  />
@@ -126,7 +126,7 @@
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">商品描述：</label>
+			<label class="control-label">商品详情：</label>
 			<div class="controls">
 				<form:textarea id="goodsDesp" htmlEscape="false" path="goodsDesp" rows="4" maxlength="200" class="input-xxlarge"/>
 				<sys:ckeditor replace="goodsDesp" uploadPath="/goods/goodsDesp" />

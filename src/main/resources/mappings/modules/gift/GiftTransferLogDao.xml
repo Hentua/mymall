@@ -49,7 +49,7 @@
 			<include refid="giftTransferLogColumns"/>
 		FROM gift_transfer_log a
 		<include refid="giftTransferLogJoins"/>
-		left join sys_user uo on uo.id = m.operator_code
+		left join sys_user uo on uo.id = mm.operator_code
 		left join sys_office uoo on uoo.id = uo.office_id
 		<where>
 			<if test="giftCategory != null and giftCategory != ''">

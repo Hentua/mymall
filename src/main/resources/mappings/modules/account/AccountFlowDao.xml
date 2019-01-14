@@ -85,7 +85,10 @@
 			<if test="transferEndDate != null ">
 				<![CDATA[ and a.transfer_date <= #{transferEndDate} ]]>
 			</if>
+			<!-- 数据范围过滤 -->
+			${sqlMap.dsf}
 		</where>
+
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
 				ORDER BY ${page.orderBy}
