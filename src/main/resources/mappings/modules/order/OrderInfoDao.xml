@@ -206,6 +206,9 @@
             <if test="customerCode != null and customerCode != ''">
                 and a.customer_code = #{customerCode}
             </if>
+            <if test="merchantCode != null and merchantCode != ''">
+                and a.merchant_code = #{merchantCode}
+            </if>
             <if test="orderStatus != null and orderStatus != ''">
                 <choose>
 					<when test="orderStatus == '3'">
