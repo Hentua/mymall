@@ -69,14 +69,6 @@
                 <form:option value="6" label="售后处理完成"/>
             </form:select>
         </li>
-        <li><label>结算状态 ：</label>
-            <form:select path="status" class="input-medium">
-                <form:option value="" label="全部"/>
-                <form:option value="1" label="未清算" />
-                <form:option value="2" label="已清算" />
-                <form:option value="3" label="已结算" />
-            </form:select>
-        </li>
         <li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
         <li class="btns"><input id="btnExport" class="btn btn-primary" type="button" value="导出" onclick="exportData()"/></li>
         <li class="clearfix"></li>
@@ -171,7 +163,7 @@
     </tbody>
     <tfoot>
     <tr>
-        <td colspan="6"  style="text-align: center;font-weight: bolder;">合计</td>
+        <td colspan="10"  style="text-align: center;font-weight: bolder;">合计</td>
         <td>${total.orderAmountTotal}</td>
         <td>${total.settlementAmountTotal}</td>
         <td></td>
