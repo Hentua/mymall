@@ -28,6 +28,15 @@ public class IndexBillboard extends DataEntity<IndexBillboard> {
 	private String jumpGoodsName;
 	private String[] goodsId;   //form表单商品ID集合
 	private String content; //广告描述富文本内容
+	private String scale; //屏幕比例
+
+	public String getScale() {
+		return scale;
+	}
+
+	public void setScale(String scale) {
+		this.scale = scale;
+	}
 
 	public String getContent() {
 		return content;
