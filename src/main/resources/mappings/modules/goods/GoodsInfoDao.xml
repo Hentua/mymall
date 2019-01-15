@@ -99,8 +99,10 @@
 		a.merchant_id as "merchantId",
 		a.discount_Type as "discountType"
 		FROM goods_info a
-		left join index_billboard_goods ibg on a.id = ibg.goods_id
 		left join member_info m on a.merchant_id = m.id
+		<if test="adId != null and adId != ''">
+			left join index_billboard_goods ibg on a.id = ibg.goods_id
+		</if>
 		<where>
 			a.status = 3
 			<if test="goodsCategoryId != null and goodsCategoryId != ''">
@@ -113,7 +115,7 @@
 				AND a.merchant_id = #{merchantId}
 			</if>
 			<if test="adId != null and adId != ''">
-				and ibg.id = #{adId}
+				and ibg.billboard_id = #{adId}
 			</if>
 			and goods_type = 1
 			and a.del_flag = #{DEL_FLAG_NORMAL}

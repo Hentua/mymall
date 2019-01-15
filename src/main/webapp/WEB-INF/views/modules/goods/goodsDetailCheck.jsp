@@ -112,7 +112,7 @@
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">商品图片：</label>
+			<label class="control-label">商品主图：</label>
 			<div class="controls">
 				<img src="${goodsInfo.image}" width="50px" alt="商品图片"/>
 			</div>
@@ -127,7 +127,7 @@
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">商品描述：</label>
+			<label class="control-label">商品描述图片：</label>
 			<div class="controls">
 					<%--${goodsInfo.goodsDesp}--%>
 						<form:textarea id="goodsDesp" htmlEscape="false" disabled="true" path="goodsDesp" rows="4" maxlength="200" class="input-xxlarge"/>
