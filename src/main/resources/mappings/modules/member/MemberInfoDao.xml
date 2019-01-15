@@ -295,6 +295,9 @@
 		        <if test="merchantServicePhone != null and merchantServicePhone != ''">
 					,merchant_service_phone = #{merchantServicePhone}
 				</if>
+				<if test="merchantServicePhone != null and merchantServicePhone != ''">
+					,avatar = #{avatar}
+				</if>
 		WHERE id = #{id}
 	</update>
 
