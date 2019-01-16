@@ -35,7 +35,7 @@
 		<type name="images">
 			<url>%BASE_URL%images/</url>
 			<directory>%BASE_DIR%images</directory>
-			<maxSize>10M</maxSize>
+			<maxSize>1M</maxSize>
 			<allowedExtensions>bmp,gif,jpeg,jpg,png</allowedExtensions>
 			<deniedExtensions></deniedExtensions>
 		</type>
@@ -81,7 +81,7 @@
 				<param name="largeThumb" value="180x180"></param>
 			</params>
 		</plugin>
-		<plugin>
+		<plugin> d
 			<name>fileeditor</name>
 			<class>com.ckfinder.connector.plugins.FileEditor</class>
 			<params></params>
