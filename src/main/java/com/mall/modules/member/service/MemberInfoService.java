@@ -122,7 +122,7 @@ public class MemberInfoService extends CrudService<MemberInfoDao, MemberInfo> {
         } else {
             memberRefereeIdMax = memberRefereeIdMaxes.get(0);
             Random random = new Random();
-            maxId = memberRefereeIdMax.getMaxRefereeId() + random.nextInt(3) +1;
+            maxId = memberRefereeIdMax.getMaxRefereeId() + random.nextInt(3) + 1;
             memberRefereeIdMax.setMaxRefereeId(maxId);
             memberRefereeIdMax.preUpdate();
             memberRefereeIdMaxDao.update(memberRefereeIdMax);
