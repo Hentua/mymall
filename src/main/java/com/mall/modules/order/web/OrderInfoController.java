@@ -151,6 +151,9 @@ public class OrderInfoController extends BaseController {
 		headList.add("扩展字段1");
 		headList.add("扩展字段2");
 		headList.add("扩展字段3");
+		headList.add("商品名称");
+		headList.add("商品规格");
+		headList.add("购买数量");
 		ExportExcel exportExcel = new ExportExcel(null, headList);
 		try {
 			List<OrderLogistics> orderLogistics = Lists.newArrayList();
@@ -167,9 +170,9 @@ public class OrderInfoController extends BaseController {
 				exportExcel.addCell(row, 11, o.getOrderLogistics().getProduct());
 				for (int i = 0; i < o.getOrderGoodsList().size(); i++) {
 					OrderGoods orderGoods = o.getOrderGoodsList().get(i);
-					exportExcel.addCell(row, 21 + i, orderGoods.getGoodsName());
-					exportExcel.addCell(row, 22 + i, orderGoods.getGoodsStandardName());
-					exportExcel.addCell(row, 23 + i, orderGoods.getCount());
+					exportExcel.addCell(row, 21 + i * 3, orderGoods.getGoodsName());
+					exportExcel.addCell(row, 22 + i * 3, orderGoods.getGoodsStandardName());
+					exportExcel.addCell(row, 23 + i * 3, orderGoods.getCount());
 				}
 			}
 			exportExcel.write(response, "待发货物流信息.xlsx");
