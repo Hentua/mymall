@@ -138,7 +138,7 @@
 			update_date = #{updateDate},
 			remarks = #{remarks},
 			jump_Id = #{jumpId},
-			content = #{content}
+			content = #{content},
 			scale = #{scale}
 		WHERE id = #{id}
 	</update>
