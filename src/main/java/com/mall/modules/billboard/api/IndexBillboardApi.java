@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -82,9 +83,12 @@ public class IndexBillboardApi extends BaseController {
 	public void getOpenBillboards(HttpServletRequest request, HttpServletResponse response) {
 		//1轮播图广告位 2独立广告
 		IndexBillboard billboard = new IndexBillboard();
+		billboard.setScale(request.getParameter("scale"));
 		billboard.setType("3");
 		List<IndexBillboard> list = indexBillboardService.findList(billboard);
-		renderString(response, ResultGenerator.genSuccessResult(list));
+		List<IndexBillboard> rList = new ArrayList<>();
+		rList.add(list.get(0));
+		renderString(response, ResultGenerator.genSuccessResult(rList));
 	}
 
 }

@@ -9,6 +9,8 @@ import com.mall.common.utils.*;
 import com.mall.common.utils.api.ApiExceptionHandleUtil;
 import com.mall.common.utils.api.ApiPageEntityHandleUtil;
 import com.mall.common.web.BaseController;
+import com.mall.modules.commission.entity.CommissionInfo;
+import com.mall.modules.commission.service.CommissionInfoService;
 import com.mall.modules.coupon.service.CouponCustomerService;
 import com.mall.modules.goods.entity.GoodsInfo;
 import com.mall.modules.goods.service.GoodsInfoService;
@@ -54,6 +56,9 @@ public class MemberInfoApi extends BaseController {
 
     @Autowired
     private MemberInfoService memberInfoService;
+
+    @Autowired
+    private CommissionInfoService commissionInfoService;
 
     @Autowired
     private SystemService systemService;
@@ -654,6 +659,21 @@ public class MemberInfoApi extends BaseController {
             m.setId(currUser.getId());
             m = memberInfoService.get(m);
             memberDataCount.put("balance", m.getBalance() == null ? "0.0" : m.getBalance().toString());
+
+            //2019-01-16 加上冻结金额
+            CommissionInfo c = new CommissionInfo();
+            c.setUserId(customerCode);
+            c.setStatus("0");
+            List<CommissionInfo> list= commissionInfoService.findList(c);
+            Double sum = 0.0;
+            if(null != list){
+                for (CommissionInfo cm: list) {
+                    if(!"6".equals(cm.getType()) && !"7".equals(cm.getType())){
+                        sum+=cm.getAmount();
+                    }
+                }
+            }
+            m.setCommission(m.getCommission()+sum);
             memberDataCount.put("commission", m.getCommission() == null ? "0.0" : m.getCommission().toString());
             renderString(response, ResultGenerator.genSuccessResult(memberDataCount));
         } catch (Exception e) {

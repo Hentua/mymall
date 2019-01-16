@@ -391,11 +391,13 @@ public class AccountService extends CrudService<AccountFlowDao, AccountFlow> {
 		accountFlow.setUserId(userId);
 		accountFlow.setAmount(amount);
 		accountFlow.setType("1");//收入
-		accountFlow.setMode("5");//消费
+		accountFlow.setMode("5");//退款
 		accountFlow.setOrderId(refundNo);
 		accountFlow.setCheckStatus("2");
 		accountFlow.setCreateDate(new Date());
 		accountFlowDao.insert(accountFlow);
+		//清除佣金
+		accountFlowDao.delCommissionInfo(refundNo);
 		Map<String,Object> paramMap = new HashMap<>();
 		paramMap.put("balance",memberInfo.getBalance() + amount);
 		paramMap.put("commission",null);

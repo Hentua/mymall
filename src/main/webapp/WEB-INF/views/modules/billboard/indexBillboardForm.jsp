@@ -62,7 +62,7 @@
                 $("#war_text").text("APP首页标题广告图片最佳尺寸1080*400");
             }
             if(3 == $(t).val()){
-                $("#war_text").text("AAPP开机广告图片最佳尺寸1242*2208,1242*2688");
+                $("#war_text").text("");
             }
             if(4 == $(t).val()){
                 $("#war_text").text("后台首页广告图片最佳尺寸1920*600");
@@ -70,6 +70,12 @@
             if(5 == $(t).val()){
                 $("#war_text").text("APP首页推荐分类图片最佳尺寸200*200");
             }
+
+            if(3 == $(t).val()){
+                $("#scale_div").show();
+			}else{
+                $("#scale_div").hide();
+			}
 
 		}
 
@@ -152,6 +158,14 @@
 			<label class="control-label">标题：</label>
 			<div class="controls">
 				<form:input path="title" htmlEscape="false" maxlength="100" class="input-xlarge "/>
+			</div>
+		</div>
+		<div class="control-group" id="scale_div" style="display: none">
+			<label class="control-label">开机广告图片比例：</label>
+			<div class="controls">
+				<form:radiobutton path="scale" value="16:9" label="16:9" checked="checked" />
+				<form:radiobutton path="scale" value="19.5:9" label="19.5:9" />
+				&nbsp;&nbsp;&nbsp;<span style="color: silver"><span style="color: red">*</span><span>16:9最佳尺寸（1920*1080），19.5:9最佳尺寸（2340*1080）</span></span>
 			</div>
 		</div>
 		<div class="control-group"  >

@@ -102,7 +102,7 @@
 			<label class="control-label">商品主图：</label>
 			<div class="controls">
 				<form:hidden id="nameImage" path="image" htmlEscape="false" maxlength="255" class="input-xlarge"/>
-				<sys:ckfinder input="nameImage" type="images" uploadPath="/goods" selectMultiple="false"  />
+				<sys:ckfinder input="nameImage" type="images" uploadPath="/goods" selectMultiple="false"    />
 				<span style="color: silver"><span style="color: red">*</span>商品图片最佳尺寸300*300</span>
 			</div>
 		</div>
