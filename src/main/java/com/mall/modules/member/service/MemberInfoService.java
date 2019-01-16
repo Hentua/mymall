@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -120,7 +121,8 @@ public class MemberInfoService extends CrudService<MemberInfoDao, MemberInfo> {
             memberRefereeIdMaxDao.insert(memberRefereeIdMax);
         } else {
             memberRefereeIdMax = memberRefereeIdMaxes.get(0);
-            maxId = memberRefereeIdMax.getMaxRefereeId() + 1;
+            Random random = new Random();
+            maxId = memberRefereeIdMax.getMaxRefereeId() + random.nextInt(3) +1;
             memberRefereeIdMax.setMaxRefereeId(maxId);
             memberRefereeIdMax.preUpdate();
             memberRefereeIdMaxDao.update(memberRefereeIdMax);

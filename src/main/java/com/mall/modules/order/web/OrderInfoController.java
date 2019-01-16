@@ -10,10 +10,7 @@ import com.mall.common.utils.excel.ExportExcel;
 import com.mall.common.web.BaseController;
 import com.mall.modules.member.entity.MemberInfo;
 import com.mall.modules.member.service.MemberInfoService;
-import com.mall.modules.order.entity.OrderInfo;
-import com.mall.modules.order.entity.OrderLogistics;
-import com.mall.modules.order.entity.TaskRequest;
-import com.mall.modules.order.entity.TaskResponse;
+import com.mall.modules.order.entity.*;
 import com.mall.modules.order.service.OrderInfoService;
 import com.mall.modules.order.utils.HttpRequest;
 import com.mall.modules.sys.utils.UserUtils;
@@ -168,6 +165,12 @@ public class OrderInfoController extends BaseController {
 				exportExcel.addCell(row, 7, o.getOrderLogistics().getContent());
 				exportExcel.addCell(row, 8, o.getGoodsCount());
 				exportExcel.addCell(row, 11, o.getOrderLogistics().getProduct());
+				for (int i = 0; i < o.getOrderGoodsList().size(); i++) {
+					OrderGoods orderGoods = o.getOrderGoodsList().get(i);
+					exportExcel.addCell(row, 21 + i, orderGoods.getGoodsName());
+					exportExcel.addCell(row, 22 + i, orderGoods.getGoodsStandardName());
+					exportExcel.addCell(row, 23 + i, orderGoods.getCount());
+				}
 			}
 			exportExcel.write(response, "待发货物流信息.xlsx");
 		}catch (Exception e) {

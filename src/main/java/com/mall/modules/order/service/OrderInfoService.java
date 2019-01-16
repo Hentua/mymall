@@ -299,7 +299,9 @@ public class OrderInfoService extends CrudService<OrderInfoDao, OrderInfo> {
     }
 
     public OrderInfo getOrderDetail(String id) {
-        return dao.getOrderDetail(id);
+        OrderInfo o = dao.getOrderDetail(id);
+        o.setOrderGoodsList(orderGoodsDao.findList(new OrderGoods(o.getOrderNo())));
+        return o;
     }
 
 }
