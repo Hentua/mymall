@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.mall.common.persistence.DataEntity;
 import com.mall.common.utils.StringUtils;
 import com.mall.common.utils.excel.annotation.ExcelField;
+import com.mall.modules.sys.utils.DictUtils;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotNull;
@@ -55,6 +56,15 @@ public class OrderReturns extends DataEntity<OrderReturns> {
 
 	public OrderReturns(String id){
 		super(id);
+	}
+
+
+	public String getLogisticsTypeName() {
+		String logisticsTypeName = "";
+		if(StringUtils.isNotBlank(this.logisticsType)) {
+			logisticsTypeName = DictUtils.getDictLabel(this.logisticsType, "express_type", "");
+		}
+		return logisticsTypeName;
 	}
 
 	@ExcelField(title = "商家", sort = 3)
