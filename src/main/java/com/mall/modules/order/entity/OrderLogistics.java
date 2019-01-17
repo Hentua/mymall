@@ -2,7 +2,9 @@ package com.mall.modules.order.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.mall.common.persistence.DataEntity;
+import com.mall.common.utils.StringUtils;
 import com.mall.common.utils.excel.annotation.ExcelField;
+import com.mall.modules.sys.utils.DictUtils;
 import org.hibernate.validator.constraints.Length;
 
 import java.util.Date;
@@ -49,6 +51,14 @@ public class OrderLogistics extends DataEntity<OrderLogistics> {
 
 	public OrderLogistics(String orderNo){
 		this.orderNo = orderNo;
+	}
+
+	public String getLogisticsTypeName() {
+		String logisticsTypeName = "";
+		if(StringUtils.isNotBlank(this.logisticsType)) {
+			logisticsTypeName = DictUtils.getDictLabel(this.logisticsType, "express_type", "");
+		}
+		return logisticsTypeName;
 	}
 
 	@ExcelField(title = "省", sort = 4)
