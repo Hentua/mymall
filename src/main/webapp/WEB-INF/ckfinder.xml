@@ -81,7 +81,7 @@
 				<param name="largeThumb" value="180x180"></param>
 			</params>
 		</plugin>
-		<plugin> d
+		<plugin>
 			<name>fileeditor</name>
 			<class>com.ckfinder.connector.plugins.FileEditor</class>
 			<params></params>

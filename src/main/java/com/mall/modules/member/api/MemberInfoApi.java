@@ -666,6 +666,7 @@ public class MemberInfoApi extends BaseController {
             c.setStatus("0");
             List<CommissionInfo> list= commissionInfoService.findList(c);
             Double sum = 0.0;
+            Double commissionAll = 0.0;
             if(null != list){
                 for (CommissionInfo cm: list) {
                     if(!"6".equals(cm.getType()) && !"7".equals(cm.getType())){
@@ -673,8 +674,13 @@ public class MemberInfoApi extends BaseController {
                     }
                 }
             }
-            m.setCommission(m.getCommission()+sum);
+            commissionAll = m.getCommission()+sum;
             memberDataCount.put("commission", m.getCommission() == null ? "0.0" : m.getCommission().toString());
+            memberDataCount.put("commissionAll", commissionAll.toString());
+
+
+
+
             renderString(response, ResultGenerator.genSuccessResult(memberDataCount));
         } catch (Exception e) {
             renderString(response, ApiExceptionHandleUtil.normalExceptionHandle(e));
