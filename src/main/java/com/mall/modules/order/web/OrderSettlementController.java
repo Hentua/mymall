@@ -145,7 +145,7 @@ public class OrderSettlementController extends BaseController {
 		if(null != itemIds && itemIds.length > 0) {
 			orderSettlementList = Lists.newArrayList();
 			for (String itemId : itemIds) {
-				orderSettlementList.add(orderSettlementService.getWithGoods(itemId));
+				orderSettlementList.addAll(orderSettlementService.getWithGoods(itemId));
 			}
 		}else {
 			Page<OrderSettlement> page = orderSettlementService.findListWithGoods(new Page<>(request, response, -1), orderSettlement);

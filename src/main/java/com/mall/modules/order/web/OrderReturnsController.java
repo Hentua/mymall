@@ -209,6 +209,7 @@ public class OrderReturnsController extends BaseController {
 		req.setTo(orderReturns.getConsigneeAddress());
 		req.setNumber(orderReturns.getExpressNo());
 		req.getParameters().put("callbackurl", Global.getConfig("server.baseUrl") + Global.getConfig("adminPath") + "/api/kuaidi100Callback");
+		req.getParameters().put("mobiletelephone", orderReturns.getConsigneeTelphone());
 		req.setKey(Global.getConfig("kuaidi.key"));
 		HashMap<String, String> p = new HashMap<String, String>();
 		p.put("schema", "json");

@@ -50,7 +50,7 @@ public class OrderSettlementService extends CrudService<OrderSettlementDao, Orde
 		return dao.findTotal(orderSettlement);
 	}
 
-	public OrderSettlement getWithGoods(String id) {
+	public List<OrderSettlement> getWithGoods(String id) {
 		return dao.getWithGoods(id);
 	}
 	
