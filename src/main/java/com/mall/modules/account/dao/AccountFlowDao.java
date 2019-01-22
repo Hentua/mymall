@@ -3,6 +3,7 @@ package com.mall.modules.account.dao;
 import com.mall.common.persistence.CrudDao;
 import com.mall.common.persistence.annotation.MyBatisDao;
 import com.mall.modules.account.entity.AccountFlow;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.Map;
 
@@ -21,5 +22,8 @@ public interface AccountFlowDao extends CrudDao<AccountFlow> {
     public Map<String,Object> stsFlow(AccountFlow accountFlow);
 
     AccountFlow getByFlowNo(String flowNo);
+
+
+    void delCommissionInfo(@Param("orderNo") String orderNo);
 	
 }

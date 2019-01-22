@@ -93,6 +93,18 @@ public class IndexBillboardController extends BaseController {
 		String desp = indexBillboard.getContent();
 		desp=desp.replace("&quot;/userfiles/","&quot;"+Global.getConfig("userfiles.baseURL")+"/userfiles/");
 		indexBillboard.setContent(desp);
+
+		if("3".equals(indexBillboard.getType()) && StringUtils.isEmpty(indexBillboard.getId())){
+			IndexBillboard b=new IndexBillboard();
+			b.setType("3");
+			b.setScale(indexBillboard.getScale());
+			List<IndexBillboard> list= indexBillboardService.findList(b);
+			if(list!=null && list.size()>0){
+				addMessage(redirectAttributes,"保存首页广告位失败，已有"+indexBillboard.getScale()+"尺寸开机广告");
+//				model.addAttribute("indexBillboard", indexBillboard);
+				return "redirect:"+Global.getAdminPath()+"/billboard/indexBillboard/?repage";
+			}
+		}
 		indexBillboardService.save(indexBillboard);
 		addMessage(redirectAttributes, "保存首页广告位成功");
 		return "redirect:"+Global.getAdminPath()+"/billboard/indexBillboard/?repage";

@@ -51,6 +51,7 @@
 				<th>轮播图片</th>
 				<th>排序</th>
 				<th>类型</th>
+				<th>广告图片比例</th>
 				<th>更新时间</th>
 				<th>备注信息</th>
 				<shiro:hasPermission name="billboard:indexBillboard:edit"><th>操作</th></shiro:hasPermission>
@@ -85,6 +86,9 @@
 					<c:if test="${indexBillboard.type == 4}">
 						后台首页广告
 					</c:if>
+				</td>
+				<td>
+						${indexBillboard.scale}
 				</td>
 				<td>
 					<fmt:formatDate value="${indexBillboard.updateDate}" pattern="yyyy-MM-dd HH:mm:ss"/>

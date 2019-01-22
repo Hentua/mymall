@@ -2,6 +2,7 @@ package com.mall.modules.order.web;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import com.mall.common.config.Global;
 import com.mall.common.persistence.Page;
 import com.mall.common.utils.StringUtils;
@@ -23,8 +24,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.DecimalFormat;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static com.mall.common.service.BaseService.dataScopeFilter;
 
@@ -143,9 +146,10 @@ public class OrderSettlementController extends BaseController {
 		String [] itemIds = request.getParameterValues("itemIds");
 		List<OrderSettlement> orderSettlementList;
 		if(null != itemIds && itemIds.length > 0) {
+			Set<String> itemIdsSet = Sets.newHashSet(Arrays.asList(itemIds));
 			orderSettlementList = Lists.newArrayList();
-			for (String itemId : itemIds) {
-				orderSettlementList.add(orderSettlementService.getWithGoods(itemId));
+			for (String itemId : itemIdsSet) {
+				orderSettlementList.addAll(orderSettlementService.getWithGoods(itemId));
 			}
 		}else {
 			Page<OrderSettlement> page = orderSettlementService.findListWithGoods(new Page<>(request, response, -1), orderSettlement);

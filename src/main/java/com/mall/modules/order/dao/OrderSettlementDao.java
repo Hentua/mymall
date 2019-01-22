@@ -30,6 +30,6 @@ public interface OrderSettlementDao extends CrudDao<OrderSettlement> {
 
     List<OrderSettlement> findListWithGoods(OrderSettlement orderSettlement);
 
-    OrderSettlement getWithGoods(String id);
+    List<OrderSettlement> getWithGoods(String id);
 
 }
