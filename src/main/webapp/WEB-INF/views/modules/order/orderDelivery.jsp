@@ -209,7 +209,7 @@
                 <tr>
                     <th class="hide"></th>
                     <th>商品名称</th>
-                    <th>商品条码</th>
+                    <th>商品规格</th>
                     <th>商品标题</th>
                     <th>购买数量</th>
                     <th>商品单位</th>
@@ -229,7 +229,7 @@
 								{{row.goodsName}}
 							</td>
 							<td>
-								{{row.goodsBarcode}}
+								{{row.goodsStandardName}}
 							</td>
 							<td>
 								{{row.goodsTitle}}
