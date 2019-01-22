@@ -29,6 +29,7 @@ import com.sohu.idcenter.SidWorker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.NumberUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -38,6 +39,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -675,8 +677,8 @@ public class MemberInfoApi extends BaseController {
                 }
             }
             commissionAll = m.getCommission()+sum;
-            memberDataCount.put("commission", m.getCommission() == null ? "0.0" : m.getCommission().toString());
-            memberDataCount.put("commissionAll", commissionAll.toString());
+            memberDataCount.put("commission", m.getCommission() == null ? "0.00" : new DecimalFormat("#.##%").format( m.getCommission()));
+            memberDataCount.put("commissionAll",new DecimalFormat("#.##%").format(commissionAll));
 
 
 
