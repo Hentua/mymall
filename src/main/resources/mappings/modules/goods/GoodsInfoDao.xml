@@ -288,15 +288,17 @@
 
 	</select>
 	<select id="monthSalesTotal" parameterType="java.lang.String" resultType="java.util.Map">
-		SELECT
-			IFNULL(sum( og.count ),0) as "monthSalesTotal"
-		FROM
-			order_goods og
-			LEFT JOIN order_info oi ON og.order_no = oi.order_no
-		WHERE
-			oi.merchant_code = #{userId}
-			AND oi.order_status = 3
-			AND DATE_FORMAT( oi.create_date, '%Y-%m' ) = DATE_FORMAT( now( ), '%Y-%m' )
+-- 		SELECT
+-- 			IFNULL(sum( og.count ),0) as "monthSalesTotal"
+-- 		FROM
+-- 			order_goods og
+-- 			LEFT JOIN order_info oi ON og.order_no = oi.order_no
+-- 		WHERE
+-- 			oi.merchant_code = #{userId}
+-- 			AND oi.order_status = 3
+-- 			AND DATE_FORMAT( oi.create_date, '%Y-%m' ) = DATE_FORMAT( now( ), '%Y-%m' )
+select IFNULL(sum(sales_total),0)  as "monthSalesTotal" from goods_info
+where merchant_id = #{userId}
 	</select>
 
 	

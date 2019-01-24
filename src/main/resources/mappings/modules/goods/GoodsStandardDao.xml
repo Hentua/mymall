@@ -79,13 +79,15 @@
 			name,
 			price,
 			goods_id,
-			category_id
+			category_id,
+			sort
 		) VALUES (
 			#{id},
 			#{name},
 			#{price},
 			#{goodsId},
-			#{categoryId}
+			#{categoryId},
+			#{sort}
 		)
 	</insert>
 	
