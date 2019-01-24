@@ -677,8 +677,8 @@ public class MemberInfoApi extends BaseController {
                 }
             }
             commissionAll = m.getCommission()+sum;
-            memberDataCount.put("commission", m.getCommission() == null ? "0.00" : new DecimalFormat("#.##%").format( m.getCommission()));
-            memberDataCount.put("commissionAll",new DecimalFormat("#.##%").format(commissionAll));
+            memberDataCount.put("commission", m.getCommission() == null ? "0.00" : new DecimalFormat("#.##").format( m.getCommission()));
+            memberDataCount.put("commissionAll",new DecimalFormat("#.##").format(commissionAll));
 
 
 
