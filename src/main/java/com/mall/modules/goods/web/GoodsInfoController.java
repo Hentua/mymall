@@ -285,6 +285,7 @@ public class GoodsInfoController extends BaseController {
 				goodsStandard.setGoodsId(goodsInfo.getId());
 				goodsStandard.setCategoryId(goodsInfo.getGoodsCategoryId());
 				goodsStandard.setCreateDate(new Date());
+				goodsStandard.setSort(i);
 				goodsStandardService.save(goodsStandard);
 			 }
 		}

@@ -17,7 +17,16 @@ public class GoodsStandard extends DataEntity<GoodsStandard> {
 	private String goodsId;		// goods_id
 	private String categoryId;		// category_id
 	private Double settlementsAmount; //结算金额
-	
+	private Integer sort;
+
+	public Integer getSort() {
+		return sort;
+	}
+
+	public void setSort(Integer sort) {
+		this.sort = sort;
+	}
+
 	public GoodsStandard() {
 		super();
 	}
