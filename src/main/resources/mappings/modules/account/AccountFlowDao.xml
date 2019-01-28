@@ -202,7 +202,7 @@
 	</update>
 
 	<delete id="delCommissionInfo" parameterType="java.lang.String">
-		  delete commission_info where union_id = #{orderNo};
+		  delete commission_info where union_id = #{orderNo}
 	</delete>
 	
 </mapper>
