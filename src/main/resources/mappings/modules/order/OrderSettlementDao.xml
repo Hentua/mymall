@@ -127,7 +127,7 @@
         SELECT
         <include refid="orderSettlementColumns"/>,
         g.goods_name AS "goodsName",
-        g.settlements_amount AS "goodsSettlementAmount",
+		convert(g.settlements_amount*g.count,decimal(10,2)) AS "goodsSettlementAmount",
         g.count AS "goodsCount",
         g.subtotal AS "subtotal"
         FROM order_settlement a

@@ -152,8 +152,7 @@ public class OrderSettlementController extends BaseController {
 				orderSettlementList.addAll(orderSettlementService.getWithGoods(itemId));
 			}
 		}else {
-			Page<OrderSettlement> page = orderSettlementService.findListWithGoods(new Page<>(request, response, -1), orderSettlement);
-			orderSettlementList = page.getList();
+			orderSettlementList = orderSettlementService.findListWithGoods(orderSettlement);
 		}
 		ExportExcel exportExcel = new ExportExcel("货款结算", OrderSettlement.class, 1, 0, 1);
 		try {

@@ -31,6 +31,10 @@ public class OrderSettlementService extends CrudService<OrderSettlementDao, Orde
 		orderSettlement.setPage(page);
 		return page.setList(dao.findListWithGoods(orderSettlement));
 	}
+
+	public List<OrderSettlement> findListWithGoods(OrderSettlement orderSettlement) {
+		return dao.findListWithGoods(orderSettlement);
+	}
 	
 	public Page<OrderSettlement> findPage(Page<OrderSettlement> page, OrderSettlement orderSettlement) {
 		return super.findPage(page, orderSettlement);
