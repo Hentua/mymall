@@ -42,7 +42,7 @@ public class CheckAccountTimer {
     /**
      * 每分钟执行
      */
-    @Scheduled(cron = "0 */1 * * * ?")
+//    @Scheduled(cron = "0 */1 * * * ?")
     public void execute() {
         accountInfoService = SpringContextHolder.getBean(AccountInfoService.class);
         orderInfoService = SpringContextHolder.getBean(OrderInfoService.class);
