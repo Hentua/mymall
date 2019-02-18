@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 /**
  * 商品信息Controller
@@ -231,6 +232,14 @@ public class GoodsInfoController extends BaseController {
 				goodsStandardService.save(goodsStandards.get(i));
 			}
 			g.setDiscountType(goodsInfo.getDiscountType());
+
+			/**
+			 * 商品审核通过后如果不存在销量的话 把销量填充为一个50-200的随机数
+			 */
+			if(0 >= g.getSalesTotal()){
+				Random rand = new Random();
+				g.setSalesTotal(rand.nextInt(150)+50);
+			}
 		}
 		if(1 == goodsInfo.getStatus()){
 			g.setOnlinetime(null);
